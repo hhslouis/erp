@@ -18,54 +18,116 @@ where SUCURSAL.IDE_EMPR=$P{ide_empr}
 and SUCURSAL.IDE_SUCU=$P{ide_sucu}
 and USUARIO_SUCURSAL.IDE_USUA=$P{ide_usua}]]>
 	</queryString>
-	<field name="IDE_EMPR" class="java.math.BigDecimal"/>
-	<field name="NOM_EMPR" class="java.lang.String"/>
-	<field name="CONTACTO_EMPR" class="java.lang.String"/>
-	<field name="REPRESENTANTE_EMPR" class="java.lang.String"/>
-	<field name="NOM_CORTO_EMPR" class="java.lang.String"/>
-	<field name="MAIL_EMPR" class="java.lang.String"/>
-	<field name="PAGINA_EMPR" class="java.lang.String"/>
-	<field name="IDENTIFICACION_EMPR" class="java.lang.String"/>
-	<field name="DIRECCION_EMPR" class="java.lang.String"/>
-	<field name="TELEFONO_EMPR" class="java.lang.String"/>
-	<field name="LOGO_EMPR" class="java.lang.String"/>
-	<field name="IDE_SUCU" class="java.math.BigDecimal"/>
-	<field name="NOM_SUCU" class="java.lang.String"/>
-	<field name="TELEFONOS_SUCU" class="java.lang.String"/>
-	<field name="DIRECCION_SUCU" class="java.lang.String"/>
-	<field name="CONTACTO_SUCU" class="java.lang.String"/>
-	<field name="IDE_USSU" class="java.math.BigDecimal"/>
-	<field name="SIS_IDE_SUCU" class="java.math.BigDecimal"/>
-	<field name="IDE_USUA" class="java.math.BigDecimal"/>
-	<field name="IDE_PERF" class="java.math.BigDecimal"/>
-	<field name="NOM_USUA" class="java.lang.String"/>
-	<field name="NICK_USUA" class="java.lang.String"/>
-	<field name="MAIL_USUA" class="java.lang.String"/>
-	<field name="FECHA_REG_USUA" class="java.sql.Timestamp"/>
-	<field name="FECHA_CADUC_USUA" class="java.sql.Timestamp"/>
-	<field name="ACTIVO_USUA" class="java.math.BigDecimal"/>
-	<field name="TEMA_USUA" class="java.lang.String"/>
-	<field name="BLOQUEADO_USUA" class="java.math.BigDecimal"/>
-	<field name="CAMBIA_CLAVE_USUA" class="java.math.BigDecimal"/>
+	<field name="ide_empr" class="java.lang.Integer"/>
+	<field name="nom_empr" class="java.lang.String">
+		<fieldDescription><![CDATA[nom_empr]]></fieldDescription>
+	</field>
+	<field name="contacto_empr" class="java.lang.String">
+		<fieldDescription><![CDATA[contacto_empr]]></fieldDescription>
+	</field>
+	<field name="representante_empr" class="java.lang.String">
+		<fieldDescription><![CDATA[representante_empr]]></fieldDescription>
+	</field>
+	<field name="nom_corto_empr" class="java.lang.String">
+		<fieldDescription><![CDATA[nom_corto_empr]]></fieldDescription>
+	</field>
+	<field name="mail_empr" class="java.lang.String">
+		<fieldDescription><![CDATA[mail_empr]]></fieldDescription>
+	</field>
+	<field name="pagina_empr" class="java.lang.String">
+		<fieldDescription><![CDATA[pagina_empr]]></fieldDescription>
+	</field>
+	<field name="identificacion_empr" class="java.lang.String">
+		<fieldDescription><![CDATA[identificacion_empr]]></fieldDescription>
+	</field>
+	<field name="direccion_empr" class="java.lang.String">
+		<fieldDescription><![CDATA[direccion_empr]]></fieldDescription>
+	</field>
+	<field name="telefono_empr" class="java.lang.String">
+		<fieldDescription><![CDATA[telefono_empr]]></fieldDescription>
+	</field>
+	<field name="logo_empr" class="java.lang.String">
+		<fieldDescription><![CDATA[logo_empr]]></fieldDescription>
+	</field>
+	<field name="usuario_ingre" class="java.lang.String"/>
+	<field name="fecha_ingre" class="java.sql.Date"/>
+	<field name="usuario_actua" class="java.lang.String"/>
+	<field name="fecha_actua" class="java.sql.Date"/>
+	<field name="hora_ingre" class="java.sql.Time"/>
+	<field name="hora_actua" class="java.sql.Time"/>
+	<field name="ide_sucu" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_sucu]]></fieldDescription>
+	</field>
+	<field name="ide_gedip" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_gedip]]></fieldDescription>
+	</field>
+	<field name="ide_sbofi" class="java.lang.Integer"/>
+	<field name="nom_sucu" class="java.lang.String">
+		<fieldDescription><![CDATA[nom_sucu]]></fieldDescription>
+	</field>
+	<field name="telefonos_sucu" class="java.lang.String">
+		<fieldDescription><![CDATA[telefonos_sucu]]></fieldDescription>
+	</field>
+	<field name="direccion_sucu" class="java.lang.String">
+		<fieldDescription><![CDATA[direccion_sucu]]></fieldDescription>
+	</field>
+	<field name="contacto_sucu" class="java.lang.String">
+		<fieldDescription><![CDATA[contacto_sucu]]></fieldDescription>
+	</field>
+	<field name="activo_sucu" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[Este campo define si el registro se encuentra activo o no para su transaccionalidad, 1 SI / 0 No]]></fieldDescription>
+	</field>
+	<field name="ide_ussu" class="java.lang.Integer"/>
+	<field name="sis_ide_sucu" class="java.lang.Integer"/>
+	<field name="ide_usua" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_usua]]></fieldDescription>
+	</field>
+	<field name="ide_perf" class="java.lang.Integer"/>
+	<field name="ide_gtemp" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gth_empleado, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="nom_usua" class="java.lang.String">
+		<fieldDescription><![CDATA[nom_usua]]></fieldDescription>
+	</field>
+	<field name="nick_usua" class="java.lang.String">
+		<fieldDescription><![CDATA[nick_usua]]></fieldDescription>
+	</field>
+	<field name="mail_usua" class="java.lang.String">
+		<fieldDescription><![CDATA[mail_usua]]></fieldDescription>
+	</field>
+	<field name="fecha_reg_usua" class="java.sql.Date">
+		<fieldDescription><![CDATA[fecha_reg_usua]]></fieldDescription>
+	</field>
+	<field name="fecha_caduc_usua" class="java.sql.Date">
+		<fieldDescription><![CDATA[fecha_caduc_usua]]></fieldDescription>
+	</field>
+	<field name="activo_usua" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[Este campo define si el anticipo tiene o no abono.]]></fieldDescription>
+	</field>
+	<field name="tema_usua" class="java.lang.String">
+		<fieldDescription><![CDATA[tema_usua]]></fieldDescription>
+	</field>
+	<field name="bloqueado_usua" class="java.lang.Boolean"/>
+	<field name="cambia_clave_usua" class="java.lang.Boolean"/>
 	<title>
 		<band height="81" splitType="Stretch">
 			<image scaleImage="RetainShape">
 				<reportElement uuid="d5c00b06-65f2-4781-b061-08710acdf763" x="0" y="11" width="82" height="44"/>
-				<imageExpression><![CDATA[$P{SUBREPORT_DIR}+$F{LOGO_EMPR}]]></imageExpression>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR}+$F{logo_empr}]]></imageExpression>
 			</image>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="00503b86-f390-4a05-aded-2a2c7baa396d" x="0" y="56" width="82" height="10"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DIRECCION_EMPR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{direccion_empr}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="f741c9dd-ddd3-413b-8a5c-6dda48632717" x="0" y="69" width="82" height="10"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Teléfono: "+$F{TELEFONO_EMPR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Teléfono: "+$F{telefono_empr}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="50b64175-d8ce-45f9-913c-8d1dbe5e25f1" x="85" y="11" width="356" height="62"/>
@@ -86,7 +148,7 @@ and USUARIO_SUCURSAL.IDE_USUA=$P{ide_usua}]]>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NICK_USUA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nick_usua}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="1aff2c3f-ff78-4cc7-978b-8bf06ee9cef4" x="442" y="44" width="31" height="13"/>
@@ -121,7 +183,7 @@ and USUARIO_SUCURSAL.IDE_USUA=$P{ide_usua}]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Teléfono: "+$F{TELEFONO_EMPR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Teléfono: "+$F{telefono_empr}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
