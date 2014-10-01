@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_datos_anticipo" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="852c4d6a-0081-4cb4-999b-90b0ee43d843">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="201"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["D:\\workspace\\biess\\WebContent\\reportes\\rep_gestion\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ide_sucu" class="java.lang.Integer"/>
+	<parameter name="ide_empr" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="usuario" class="java.lang.Integer"/>
+	<parameter name="titulo" class="java.lang.String"/>
+	<parameter name="ACTIVO_NRANT" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="IDE_NRANT" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_firma_resp_solicitud_debito" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+ANT.IDE_NRANT,
+ EDP.IDE_GEEDP,
+EDP.IDE_GTEMP,
+ANT.MONTO_SOLICITADO_NRANT AS MONTO,
+EDP.RMU_GEEDP AS RMU,
+CAP.NRO_MES_NRCAP AS PLAZO,
+dp.detalle_gedip as LUGAR,
+ANT.FECHA_SOLICITUD_NRANT AS FECHA,
+MAN.DETALLE_NRMOA AS MOTIVO,
+ANT.OBSERVACION_NRANT
+
+
+FROM NRH_ANTICIPO ANT
+
+LEFT JOIN NRH_CAPACIDAD_PAGO CAP ON CAP.IDE_NRANT=ANT.IDE_NRANT
+LEFT JOIN GEN_EMPLEADOS_DEPARTAMENTO_PAR EDP ON EDP.IDE_GEEDP=ANT.IDE_GEEDP
+LEFT JOIN NRH_MOTIVO_ANTICIPO MAN ON MAN.IDE_NRMOA=ANT.IDE_NRMOA
+left join SIS_SUCURSAL suc on suc.ide_sucu=edp.ide_sucu
+left join GEN_DIVISION_POLITICA dp on dp.ide_gedip=suc.ide_gedip
+WHERE ANT.IDE_NRANT =$P{IDE_NRANT}]]>
+	</queryString>
+	<field name="IDE_NRANT" class="java.math.BigDecimal"/>
+	<field name="IDE_GEEDP" class="java.math.BigDecimal"/>
+	<field name="IDE_GTEMP" class="java.math.BigDecimal"/>
+	<field name="MONTO" class="java.math.BigDecimal"/>
+	<field name="RMU" class="java.math.BigDecimal"/>
+	<field name="PLAZO" class="java.math.BigDecimal"/>
+	<field name="LUGAR" class="java.lang.String"/>
+	<field name="FECHA" class="java.sql.Timestamp"/>
+	<field name="MOTIVO" class="java.lang.String"/>
+	<field name="OBSERVACION_NRANT" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="37" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="7ef617b6-546b-42bf-9d03-8f3a01b334a9" x="0" y="0" width="555" height="37"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="ide_sucu">
+					<subreportParameterExpression><![CDATA[$P{ide_sucu}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="ide_empr">
+					<subreportParameterExpression><![CDATA[$P{ide_empr}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="ide_usua">
+					<subreportParameterExpression><![CDATA[$P{usuario}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="titulo">
+					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema_biess/rep_cabecera.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="12" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="387e1e3e-1290-4e83-aa56-24deba556e23" x="0" y="0" width="555" height="12"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true" isPdfEmbedded="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[DATOS DEL ANTICIPO]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="45" splitType="Stretch">
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="18f5608f-2cc8-4d42-a569-02b3d60bab0b" x="82" y="0" width="63" height="10"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isItalic="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MONTO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy/MM/dd" isBlankWhenNull="true">
+				<reportElement uuid="4cab519d-4f3c-460e-994b-72de6fe23df7" x="459" y="0" width="96" height="10"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FECHA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="64a3e43b-b321-419d-a616-5e9a91e5602a" x="0" y="0" width="82" height="10"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7" isBold="true" isPdfEmbedded="true"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[MONTO SOLICITADO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="40590f73-4ee1-4cf7-a711-cf561cc1d94c" x="250" y="0" width="62" height="10"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7" isBold="true" isPdfEmbedded="true"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[LUGAR Y FECHA:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="715cc9a7-a185-4b58-9200-553ccfe11514" x="190" y="0" width="60" height="10"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7" isItalic="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PLAZO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="61f00386-1d87-4d03-b75f-b1e4e6e9e20b" x="145" y="0" width="46" height="10"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7" isBold="true" isPdfEmbedded="true"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[PLAZO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6cc641d8-880e-4a6e-b5a4-03f1cd7ace6a" positionType="Float" x="0" y="10" width="145" height="10"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true" isPdfEmbedded="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[MOTIVO DEL ANTICIPO:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="7381ce8c-f046-4e95-9a6f-baccb4b4cb5b" positionType="Float" x="145" y="10" width="410" height="10"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MOTIVO}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement uuid="1ed5bf29-323a-4bac-9611-69b5c017d2f8" positionType="Float" x="0" y="20" width="555" height="25" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true"/>
+				<subreportParameter name="IDE_NRANT">
+					<subreportParameterExpression><![CDATA[$P{IDE_NRANT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_anticipos/sub_rep_datos_personales.jasper"]]></subreportExpression>
+			</subreport>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="79e66afc-7c3f-41f0-8890-8dd602bc974d" x="312" y="0" width="147" height="10"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LUGAR}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="25">
+			<subreport>
+				<reportElement uuid="1201bf3f-46da-427b-ad56-fadebecfb1f7" positionType="Float" x="0" y="0" width="555" height="25" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true"/>
+				<subreportParameter name="IDE_NRANT">
+					<subreportParameterExpression><![CDATA[$P{IDE_NRANT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_anticipos/rep_datos_conyuge.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="25">
+			<subreport>
+				<reportElement uuid="eeedbbf8-786c-478b-9dd5-f65760c26704" positionType="Float" x="0" y="0" width="555" height="25" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true"/>
+				<subreportParameter name="IDE_NRANT">
+					<subreportParameterExpression><![CDATA[$P{IDE_NRANT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_anticipos/sub_rep_garante.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="25">
+			<subreport>
+				<reportElement uuid="d60c4296-7ac0-4ae9-86f2-0eb4cfd402bf" positionType="Float" x="0" y="0" width="555" height="25" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true"/>
+				<subreportParameter name="IDE_NRANT">
+					<subreportParameterExpression><![CDATA[$P{IDE_NRANT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_anticipos/sub_rep_refer_financieras.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="25">
+			<subreport>
+				<reportElement uuid="29dfcd4c-484a-4965-89ae-f1ccc410f3ef" positionType="Float" x="0" y="0" width="555" height="25" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true"/>
+				<subreportParameter name="IDE_NRANT">
+					<subreportParameterExpression><![CDATA[$P{IDE_NRANT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_anticipos/sub_rep_tarjetas_credito.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="25">
+			<subreport>
+				<reportElement uuid="972015ac-613c-4304-8cf2-e1f6a32fb8cc" positionType="Float" x="0" y="0" width="555" height="25" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true"/>
+				<subreportParameter name="IDE_NRANT">
+					<subreportParameterExpression><![CDATA[$P{IDE_NRANT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_anticipos/sub_rep_creditos_vigentes.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="211" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="94115a80-3f89-4486-ae13-6fc0a9826148" positionType="Float" x="82" y="46" width="138" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[FIRMA DEL GARANTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="babd70a4-deeb-4371-8f8f-03cd43513a1a" positionType="Float" x="299" y="46" width="179" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[FIRMA DEL CONYUGE GARANTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f7e44160-8fc8-4d60-947f-710c5a8e6616" positionType="Float" x="0" y="61" width="555" height="12"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[APROBACION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="38e48910-0c74-41ec-8413-30070f388acf" positionType="Float" x="74" y="117" width="138" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[FIRMA DEL SOLICITANTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="0ec22dd8-ef9c-4f6b-93ee-5404d244b731" positionType="Float" x="213" y="117" width="138" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[FIRMA  JEFE DE AREA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9ca7ef3c-e98f-4720-b713-07fe578171dc" positionType="Float" x="351" y="117" width="138" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[FIRMA  GERENTE DE AREA]]></text>
+			</staticText>
+			<subreport>
+				<reportElement uuid="c7625cc7-cc0b-40da-9f01-7018d6579946" positionType="Float" x="0" y="135" width="555" height="25" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true"/>
+				<subreportParameter name="IDE_NRANT">
+					<subreportParameterExpression><![CDATA[$P{IDE_NRANT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_anticipos/sub_rep_exclusivo_tthh.jasper"]]></subreportExpression>
+			</subreport>
+			<line>
+				<reportElement uuid="9781b686-23b3-4294-b633-eda8ae7eb7a7" positionType="Float" x="161" y="193" width="200" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="c9e91718-6b2b-4cda-b547-fba2b5c48903" positionType="Float" x="93" y="114" width="100" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="094c749e-f138-44ca-9e50-66fe5837b6b3" positionType="Float" x="372" y="114" width="100" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="7f15afbf-4b52-4adf-b48f-e82232dc0042" positionType="Float" x="234" y="115" width="100" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="2903f675-4164-415b-8423-5527da93bd6f" positionType="Float" x="107" y="44" width="100" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="fb9adacd-53ac-484d-8ad5-1576551ed588" positionType="Float" x="339" y="44" width="100" height="1"/>
+			</line>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="e970f3a2-293f-4cb0-b0d6-27b11caf23e1" positionType="Float" x="0" y="195" width="555" height="12"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{p_firma_resp_solicitud_debito}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>
