@@ -11,6 +11,8 @@ import framework.componentes.FormatoTabla;
 import framework.componentes.Grupo;
 import framework.componentes.ImportarTabla;
 import framework.componentes.Notificacion;
+import framework.componentes.SeleccionArchivo;
+import framework.componentes.Tabla;
 import framework.componentes.TerminalTabla;
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,6 +28,7 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.naming.Context;
@@ -40,6 +43,8 @@ import javax.servlet.http.HttpSession;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
+import org.primefaces.push.PushContext;
+import org.primefaces.push.PushContextFactory;
 import org.primefaces.util.Constants;
 
 /**
@@ -48,8 +53,62 @@ import org.primefaces.util.Constants;
  */
 public class Utilitario extends Framework {
 
-    /**
-     * Agrega un mensaje de notificaciÃ³n que bloquea el menu y es necesario que
+	
+	
+
+    public boolean isNumeroPositivo(String numero_validar){    	
+    	try {    		
+			double dou_num_val=Double.parseDouble(numero_validar);
+				if (dou_num_val>0){
+					return true;
+				}
+		} catch (Exception e) {			
+			return false;
+		}
+    	return false;
+    }
+    
+    
+    
+
+	
+	/*Valida el ingreso de solo numeros enteros positivos (telefono)
+	 * 
+	 */
+    public boolean isEnteroPositivo(String numero_validar){    	
+    	try {    		
+    		int int_num_val=Integer.parseInt(numero_validar);
+			double dou_num_val=Double.parseDouble(numero_validar);
+			if (int_num_val==dou_num_val){
+				if (int_num_val>0){
+					return true;
+				}
+			}
+		} catch (Exception e) {			
+			return false;
+		}
+    	return false;
+    }
+    
+    
+    public boolean isEnteroPositivoyCero(String numero_validar){    	
+    	try {    		
+    		int int_num_val=Integer.parseInt(numero_validar);
+			double dou_num_val=Double.parseDouble(numero_validar);
+			if (int_num_val==dou_num_val){
+				if (int_num_val>=0){
+					return true;
+				}
+			}
+		} catch (Exception e) {			
+			return false;
+		}
+    	return false;
+    }
+
+	
+	/**
+     * Agrega un mensaje de notificación que bloquea el menu y es necesario que
      * el usuario la cierre
      *
      * @param titulo
@@ -66,7 +125,7 @@ public class Utilitario extends Framework {
     }
 
     /**
-     * Agrega un mensaje de notificaciÃ³n que bloquea el menu y es necesario que
+     * Agrega un mensaje de notificación que bloquea el menu y es necesario que
      * el usuario la cierre
      *
      * @param titulo
@@ -115,7 +174,7 @@ public class Utilitario extends Framework {
 
  
     /**
-     * Verifica que un nÃºmero de ruc sea vÃ¡lido
+     * Verifica que un número de ruc sea válido
      *
      * @param str_ruc
      * @return
@@ -190,7 +249,7 @@ public class Utilitario extends Framework {
     }
 
     /**
-     * Verifica que un nÃºmero de cÃ©dula sea vÃ¡lido
+     * Verifica que un número de cédula sea válido
      *
      * @param str_cedula
      * @return
@@ -240,7 +299,7 @@ public class Utilitario extends Framework {
     }
 
     /**
-     * Calcula la diferencia en nÃºmero de dÃ­as entre dos fechas
+     * Calcula la diferencia en número de días entre dos fechas
      *
      * @param fechaInicial
      * @param fechaFinal
@@ -267,8 +326,8 @@ public class Utilitario extends Framework {
     }
 
     /**
-     * Calcula el nÃºmero de dÃ­a de la semana de una fecha, considera que el dÃ­a
-     * lunes es el dÃ­a 1
+     * Calcula el número de día de la semana de una fecha, considera que el día
+     * lunes es el día 1
      *
      * @param fecha
      * @return
@@ -295,7 +354,7 @@ public class Utilitario extends Framework {
     }
 
     /**
-     * VÃ¡lida que un correo electrÃ³nico sea vÃ¡lido
+     * Válida que un correo electrónico sea válido
      *
      * @param email
      * @return
@@ -311,7 +370,7 @@ public class Utilitario extends Framework {
     }
 
     /**
-     * Asigna un formato con una cantidad de decimales a una cantidad numÃ©rica
+     * Asigna un formato con una cantidad de decimales a una cantidad numérica
      *
      * @param numero
      * @param numero_decimales
@@ -347,7 +406,7 @@ public class Utilitario extends Framework {
     }
 
     /**
-     * Retorna el componente Buscar del menÃº contextual (click derecho)
+     * Retorna el componente Buscar del menú contextual (click derecho)
      *
      * @return
      */
@@ -356,7 +415,7 @@ public class Utilitario extends Framework {
     }
 
     /**
-     * Retorna el componente ImportarTabla del menÃº contextual (click derecho)
+     * Retorna el componente ImportarTabla del menú contextual (click derecho)
      *
      * @return
      */
@@ -365,7 +424,7 @@ public class Utilitario extends Framework {
     }
 
     /**
-     * Retorna el componente FormatoTabla del menÃº contextual (click derecho)
+     * Retorna el componente FormatoTabla del menú contextual (click derecho)
      *
      * @return
      */
@@ -374,7 +433,7 @@ public class Utilitario extends Framework {
     }
 
     /**
-     * Retorna el componente Terminal del menÃº contextual (click derecho)
+     * Retorna el componente Terminal del menú contextual (click derecho)
      *
      * @return
      */
@@ -384,7 +443,7 @@ public class Utilitario extends Framework {
 
  
     /**
-     * Evalua una expresiÃ³n aritmÃ©tica, y retorna el resultado, ejemplo
+     * Evalua una expresión aritmética, y retorna el resultado, ejemplo
      * 2*2/(4-2) retorna 2
      *
      * @param expresion
@@ -415,7 +474,7 @@ public class Utilitario extends Framework {
     }
 
     /**
-     * Retorna en letras una cantidad numÃ©rica
+     * Retorna en letras una cantidad numérica
      *
      * @param numero
      * @return
@@ -434,7 +493,7 @@ public class Utilitario extends Framework {
     }
 
     /**
-     * Retorna en letras con dolares y centavos una cantidad numÃ©rica
+     * Retorna en letras con dolares y centavos una cantidad numérica
      *
      * @param numero
      * @return
@@ -751,7 +810,7 @@ public class Utilitario extends Framework {
     }
 
     /**
-     * Retorna el nombre del proyecto de la aplicaciÃ³n web
+     * Retorna el nombre del proyecto de la aplicación web
      *
      * @return
      */
@@ -765,7 +824,7 @@ public class Utilitario extends Framework {
     }
 
     /**
-     * Retorna el id de sessiÃ³n asignado al usuario logeado
+     * Retorna el id de sessión asignado al usuario logeado
      *
      * @return
      */
@@ -801,7 +860,7 @@ public class Utilitario extends Framework {
     }
 
     /**
-     * Retorna el nombre de un mes a partir del nÃºmero de mes
+     * Retorna el nombre de un mes a partir del número de mes
      *
      * @param numero
      * @return
@@ -892,7 +951,7 @@ public class Utilitario extends Framework {
     }
 
     /**
-     * VÃ¡lida que un rango de fecha sea correcto
+     * Válida que un rango de fecha sea correcto
      *
      * @param fechaInicial
      * @param fechaFinal
@@ -906,6 +965,8 @@ public class Utilitario extends Framework {
                 return true;
             }
         }
+        else
+        	agregarMensaje("Debe Seleccionar 2 Fechas", "Para Iniciar Busqueda");
 
         return false;
     }
@@ -924,7 +985,7 @@ public class Utilitario extends Framework {
     }
 
     /**
-     * Convierte a Date una hora usando los mÃ©todos de la clase Calendar
+     * Convierte a Date una hora usando los métodos de la clase Calendar
      *
      * @param hora
      * @return
