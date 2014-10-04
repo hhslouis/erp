@@ -472,7 +472,7 @@ public class pre_vacaciones extends Pantalla {
 				"from GTH_EMPLEADO EMP " +
 				"left join GEN_EMPLEADOS_DEPARTAMENTO_PAR EDP ON EDP.IDE_GTEMP=EMP.IDE_GTEMP " +
 				"LEFT JOIN GEN_DEPARTAMENTO DEP ON DEP.IDE_GEDEP=EDP.IDE_GEDEP " +
-				"WHERE ACTIVO_GTEMP =-1", "IDE_GTEMP");
+				"WHERE ACTIVO_GTEMP = null", "IDE_GTEMP");
 		sel_tab_empleado.getBot_aceptar().setMetodo("aceptarReporte");
 		sel_tab_empleado.setTitle("SELECCIONE EMPLEADO");
 		agregarComponente(sel_tab_empleado);
