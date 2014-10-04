@@ -281,7 +281,7 @@ public class pre_empleado extends Pantalla {
 				"FROM GEN_DEPARTAMENTO DEP " +
 				"LEFT JOIN GEN_EMPLEADOS_DEPARTAMENTO_PAR EDP ON EDP.IDE_GEDEP=DEP.IDE_GEDEP " +
 				"LEFT JOIN SIS_SUCURSAL SUCU ON SUCU.IDE_SUCU=EDP.IDE_SUCU " +
-				"WHERE DEP.ACTIVO_GEDEP IN(0,1) " +
+				"WHERE DEP.ACTIVO_GEDEP IN(FALSE,TRUE) " +
 				"GROUP BY DEP.IDE_GEDEP,DEP.DETALLE_GEDEP " +
 				"ORDER BY DEP.DETALLE_GEDEP", "IDE_GEDEP");
 		set_departamento.getBot_aceptar().setMetodo("aceptarReporte");
@@ -925,7 +925,7 @@ public class pre_empleado extends Pantalla {
 							"FROM GEN_DEPARTAMENTO DEP " +
 							"LEFT JOIN GEN_EMPLEADOS_DEPARTAMENTO_PAR EDP ON EDP.IDE_GEDEP=DEP.IDE_GEDEP " +
 							"LEFT JOIN SIS_SUCURSAL SUCU ON SUCU.IDE_SUCU=EDP.IDE_SUCU " +
-							"WHERE DEP.ACTIVO_GEDEP IN(0,1) " +
+							"WHERE DEP.ACTIVO_GEDEP IN(FALSE,TRUE) " +
 							"GROUP BY DEP.IDE_GEDEP,DEP.DETALLE_GEDEP " +
 							"ORDER BY DEP.DETALLE_GEDEP");
 					set_departamento.getTab_seleccion().getColumna("DETALLE_GEDEP").setFiltro(true);
