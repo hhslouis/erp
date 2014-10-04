@@ -138,7 +138,7 @@ public class pre_vacaciones extends Pantalla {
 				"(case when SUM(DIA_ADICIONAL_ASDEV) is null then 0 else SUM(DIA_ADICIONAL_ASDEV) end) as NRO_DIAS_ADICIONAL, " +
 				"(case when SUM(DIA_DESCONTADO_ASDEV) is null then 0 else SUM(DIA_DESCONTADO_ASDEV) end)AS DIA_DESCONTADO, " +
 				"(case when SUM(DIA_SOLICITADO_ASDEV) is null then 0 else SUM(DIA_SOLICITADO_ASDEV) end)AS DIA_SOLICITADO " +
-				"FROM ASI_DETALLE_VACACION WHERE ACTIVO_ASDEV = 1 GROUP BY IDE_ASVAC " +
+				"FROM ASI_DETALLE_VACACION WHERE ACTIVO_ASDEV = true GROUP BY IDE_ASVAC " +
 				") a where IDE_ASVAC=-1","IDE_ASVAC");
 		con_ver_vacaciones.getTab_consulta_dialogo().setTipoFormulario(true);
 		con_ver_vacaciones.getTab_consulta_dialogo().getGrid().setColumns(4);
@@ -277,7 +277,7 @@ public class pre_vacaciones extends Pantalla {
 				"(case when DIA_ADICIONAL_ASDEV is null then 0 else DIA_ADICIONAL_ASDEV end) as NRO_DIAS_ADICIONAL, " +
 				"(case when DIA_DESCONTADO_ASDEV is null then 0 else DIA_DESCONTADO_ASDEV end)AS DIA_DESCONTADO, " +
 				"(case when DIA_SOLICITADO_ASDEV is null then 0 else DIA_SOLICITADO_ASDEV end)AS DIA_SOLICITADO " +
-				"FROM ASI_DETALLE_VACACION WHERE ACTIVO_ASDEV = 1 AND IDE_ASVAC=-1 " +
+				"FROM ASI_DETALLE_VACACION WHERE ACTIVO_ASDEV = true AND IDE_ASVAC=-1 " +
 				")a GROUP BY a.periodo,a.IDE_ASVAC " +
 				")b ORDER BY PERIODO DESC");
 		tab_tabla3.getColumna("DIA_ACUMULADO").setNombreVisual("DIAS ACUMULADOS");
