@@ -391,7 +391,7 @@ public class pre_vacaciones extends Pantalla {
 				"PRIMER_NOMBRE_GTEMP || ' ' ||  " +
 				"SEGUNDO_NOMBRE_GTEMP AS NOMBRES  " +
 				"from GTH_EMPLEADO " +
-				"WHERE ACTIVO_GTEMP IN(0,1) " +
+				"WHERE ACTIVO_GTEMP IN(false,true) " +
 				"ORDER BY IDE_GTEMP ASC, " +
 				"NOMBRES ASC ","IDE_GTEMP");
 		set_empleado.getTab_seleccion().getColumna("NOMBRES").setFiltro(true);
