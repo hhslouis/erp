@@ -1489,7 +1489,7 @@ public class pre_anticipos extends Pantalla {
 							&& !tab_anticipo.getValor("ACTIVO_NRANT").isEmpty()
 							&& (tab_anticipo.getValor("ACTIVO_NRANT").equalsIgnoreCase("1")
 									|| tab_anticipo.getValor("ACTIVO_NRANT").equalsIgnoreCase("true"))){
-						utilitario.getConexion().ejecutarSql("update NRH_ANTICIPO set ACTIVO_NRANT=0 where IDE_NRANT="+tab_anticipo.getValorSeleccionado());
+						utilitario.getConexion().ejecutarSql("update NRH_ANTICIPO set ACTIVO_NRANT=FALSE where IDE_NRANT="+tab_anticipo.getValorSeleccionado());
 
 						String ide_nrant_anterior=tab_anticipo.getValorSeleccionado(); 
 						tab_anticipo.setCondicion("ANTICIPO_NRANT=1 AND IDE_GTEMP="+aut_empleado.getValor());
@@ -1499,7 +1499,7 @@ public class pre_anticipos extends Pantalla {
 				}else{
 					String ide_nrant_anterior=tab_anticipo.getValorSeleccionado(); 
 
-					utilitario.getConexion().ejecutarSql("update NRH_ANTICIPO set ACTIVO_NRANT=1 where IDE_NRANT="+tab_anticipo.getValorSeleccionado());
+					utilitario.getConexion().ejecutarSql("update NRH_ANTICIPO set ACTIVO_NRANT=TRUE where IDE_NRANT="+tab_anticipo.getValorSeleccionado());
 					tab_anticipo.setCondicion("ANTICIPO_NRANT=1 AND IDE_GTEMP="+aut_empleado.getValor());
 					tab_anticipo.ejecutarSql();
 					tab_anticipo.setFilaActual(ide_nrant_anterior);
