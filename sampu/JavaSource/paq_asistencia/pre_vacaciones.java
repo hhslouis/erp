@@ -255,7 +255,7 @@ public class pre_vacaciones extends Pantalla {
 		sel_tab_fecha_periodos.setId("sel_tab_fecha_periodos");
 		sel_tab_fecha_periodos.setSeleccionTabla("SELECT IDE_ASVAC,FECHA_INGRESO_ASVAC FROM ASI_VACACION WHERE IDE_GTEMP " +
 				"in (select IDE_GTEMP from GEN_EMPLEADOS_DEPARTAMENTO_PAR where IDE_GEEDP=-1 ) " +
-				" AND ACTIVO_ASVAC=1","IDE_ASVAC");
+				" AND ACTIVO_ASVAC=true","IDE_ASVAC");
 		sel_tab_fecha_periodos.getBot_aceptar().setMetodo("aceptarSelTablaPeriodos");
 		sel_tab_fecha_periodos.setTitle("SELECCIONE LA FECHA");
 		sel_tab_fecha_periodos.setRadio();
@@ -689,7 +689,7 @@ public class pre_vacaciones extends Pantalla {
 			if (ide_geedp_activo!=null && !ide_geedp_activo.isEmpty()){
 				sel_tab_fecha_periodos.getTab_seleccion().setSql("SELECT IDE_ASVAC,FECHA_INGRESO_ASVAC FROM ASI_VACACION WHERE IDE_GTEMP " +
 						"in (select IDE_GTEMP from GEN_EMPLEADOS_DEPARTAMENTO_PAR where IDE_GEEDP= "+ide_geedp_activo+") " +
-						" AND ACTIVO_ASVAC=1");
+						" AND ACTIVO_ASVAC=true");
 				sel_tab_fecha_periodos.getTab_seleccion().ejecutarSql();				
 				sel_tab_fecha_periodos.dibujar();
 			}else{
@@ -854,7 +854,7 @@ public class pre_vacaciones extends Pantalla {
 	//inserta en la tabla de asi_vacacion cuando guarda la solicitud e la vacacion
 	public void insertarDatosDetalleVacacion() {  
 					
-		TablaGenerica tab_codigo_vacacion=utilitario.consultar("select * from asi_vacacion where activo_asvac=1 and ide_gtemp in(select ide_gtemp from GEN_EMPLEADOS_DEPARTAMENTO_PAR where IDE_GEEDP="+ide_geedp_activo+")");
+		TablaGenerica tab_codigo_vacacion=utilitario.consultar("select * from asi_vacacion where activo_asvac=true and ide_gtemp in(select ide_gtemp from GEN_EMPLEADOS_DEPARTAMENTO_PAR where IDE_GEEDP="+ide_geedp_activo+")");
 		
 
 		TablaGenerica tab_detalle_vacacion = new  TablaGenerica();
