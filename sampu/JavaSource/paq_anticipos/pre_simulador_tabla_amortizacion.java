@@ -45,7 +45,7 @@ public class pre_simulador_tabla_amortizacion extends Pantalla {
 		tab_datos.setId("tab_datos");
 		tab_datos.setSql("select 0 as ide_datos , 0 as monto , 0 as plazo , 0 as tasa_interes, " +
 				"30 as  amortizacion_cada,  " +
-				"to_date ('"+utilitario.getFechaActual()+"','yy-mm-dd') as fecha_inicio from dual ");
+				" ('"+utilitario.getFechaActual()+"','yy-mm-dd') as fecha_inicio ");
 		tab_datos.setCampoPrimaria("ide_datos");
 		tab_datos.setLectura(false);
 		tab_datos.getColumna("monto").setMetodoChange("cambiaDatos");
