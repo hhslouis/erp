@@ -54,7 +54,7 @@ public class pre_anticipos extends Pantalla {
 	private Tabla tab_anticipo=new Tabla();
 	private Tabla tab_capacidad=new Tabla();
 	private Tabla tab_amortizacion=new Tabla();
-	private Tabla tab_garante=new Tabla();
+	private Tabla tab_garante=new Tabla();	
 	private Tabla tab_anticipo_interes=new Tabla();
 	private Tabla tab_anticipo_abonos=new Tabla();
 	private AutoCompletar aut_empleado = new AutoCompletar();
