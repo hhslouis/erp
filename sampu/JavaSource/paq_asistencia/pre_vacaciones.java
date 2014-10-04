@@ -488,7 +488,7 @@ public class pre_vacaciones extends Pantalla {
 					tab_permisos.setValor("fecha_anula_aspvh", cal_fecha_anula.getFecha());
 					tab_permisos.modificar(tab_permisos.getFilaActual());
 					tab_permisos.guardar();
-					utilitario.getConexion().agregarSqlPantalla("update asi_detalle_vacacion set activo_asdev=0, anulado_asdev=1 where ide_aspvh="+tab_permisos.getValorSeleccionado());
+					utilitario.getConexion().agregarSqlPantalla("update asi_detalle_vacacion set activo_asdev=false, anulado_asdev=1 where ide_aspvh="+tab_permisos.getValorSeleccionado());
 					utilitario.getConexion().agregarSqlPantalla("update asi_permisos_vacacion_hext set activo_aspvh=0, ide_geest="+utilitario.getVariable("p_gen_estado_inactivo")+" where ide_aspvh="+tab_permisos.getValorSeleccionado());
 					tab_permisos.imprimirSql();
 					guardarPantalla();
@@ -711,7 +711,7 @@ public class pre_vacaciones extends Pantalla {
 					"(case when SUM(DIA_ADICIONAL_ASDEV) is null then 0 else SUM(DIA_ADICIONAL_ASDEV) end) as NRO_DIAS_ADICIONAL, " +
 					"(case when SUM(DIA_DESCONTADO_ASDEV) is null then 0 else SUM(DIA_DESCONTADO_ASDEV) end)AS DIA_DESCONTADO, " +
 					"(case when SUM(DIA_SOLICITADO_ASDEV) is null then 0 else SUM(DIA_SOLICITADO_ASDEV) end)AS DIA_SOLICITADO " +
-					"FROM ASI_DETALLE_VACACION WHERE ACTIVO_ASDEV = 1 GROUP BY IDE_ASVAC " +
+					"FROM ASI_DETALLE_VACACION WHERE ACTIVO_ASDEV = true GROUP BY IDE_ASVAC " +
 					") a where IDE_ASVAC="+Long.parseLong(sel_tab_fecha_periodos.getValorSeleccionado()));
 			con_ver_vacaciones.getTab_consulta_dialogo().ejecutarSql();
 			tab_tabla3.setSql("SELECT " +
@@ -727,7 +727,7 @@ public class pre_vacaciones extends Pantalla {
 					"(case when DIA_ADICIONAL_ASDEV is null then 0 else DIA_ADICIONAL_ASDEV end) as NRO_DIAS_ADICIONAL, " +
 					"(case when DIA_DESCONTADO_ASDEV is null then 0 else DIA_DESCONTADO_ASDEV end)AS DIA_DESCONTADO, " +
 					"(case when DIA_SOLICITADO_ASDEV is null then 0 else DIA_SOLICITADO_ASDEV end)AS DIA_SOLICITADO " +
-					"FROM ASI_DETALLE_VACACION WHERE ACTIVO_ASDEV = 1 AND IDE_ASVAC="+Long.parseLong(sel_tab_fecha_periodos.getValorSeleccionado())+
+					"FROM ASI_DETALLE_VACACION WHERE ACTIVO_ASDEV = true AND IDE_ASVAC="+Long.parseLong(sel_tab_fecha_periodos.getValorSeleccionado())+
 					")a GROUP BY a.periodo,a.IDE_ASVAC " +
 					")b ORDER BY PERIODO DESC");													
 			tab_tabla3.ejecutarSql();
@@ -867,7 +867,7 @@ public class pre_vacaciones extends Pantalla {
 		tab_detalle_vacacion.setValor("fecha_novedad_asdev",tab_permisos.getValor("fecha_solicitud_aspvh"));
 		tab_detalle_vacacion.setValor("dia_descontado_asdev", tab_permisos.getValor("nro_dias_aspvh"));
 		tab_detalle_vacacion.setValor("observacion_asdev", tab_permisos.getValor("detalle_aspvh"));
-		tab_detalle_vacacion.setValor("activo_asdev", "1");		
+		tab_detalle_vacacion.setValor("activo_asdev", "true");		
 		tab_detalle_vacacion.guardar();         
 	}
 	//carga los meses y años dependiendo de la fecha de la solicitud
