@@ -1171,7 +1171,7 @@ public void cambiarPartida(){
 		TablaGenerica tab_contrato_anterior=utilitario.consultar("SELECT * FROM GEN_EMPLEADOS_DEPARTAMENTO_PAR where IDE_GEDED in ( " +
 				"SELECT IDE_GEDED FROM GEN_DETALLE_EMPLEADO_DEPARTAME WHERE IDE_GEDED IN ( " +
 				"select GEN_IDE_GEDED from GEN_DETALLE_EMPLEADO_DEPARTAME " +
-				"where IDE_GTEMP="+aut_empleado.getValor()+" and ACTIVO_GEDED=true))");
+				"where IDE_GTEMP="+aut_empleado.getValor()+" and ACTIVO_GEDED=TRUE))");
 		
 		System.out.println("tab con "+tab_contrato_anterior.getSql());
 		tab_empleado_departamento.setValor("IDE_GEPGC", tab_contrato_anterior.getValor("IDE_GEPGC"));
@@ -1474,7 +1474,7 @@ public void cambiarPartida(){
 		}
 		
 		if (tab_deta_empleado_depar.getTotalFilas()>1){
-		String ide_geedp_activo=utilitario.consultar("select * from GEN_EMPLEADOS_DEPARTAMENTO_PAR where ide_geded in ( select ide_geded from GEN_DETALLE_EMPLEADO_DEPARTAME where IDE_GTEMP="+aut_empleado.getValor()+" and ACTIVO_GEDED=true)").getValor("ide_geedp");
+		String ide_geedp_activo=utilitario.consultar("select * from GEN_EMPLEADOS_DEPARTAMENTO_PAR where ide_geded in ( select ide_geded from GEN_DETALLE_EMPLEADO_DEPARTAME where IDE_GTEMP="+aut_empleado.getValor()+" and ACTIVO_GEDED=TRUE )").getValor("ide_geedp");
 		String fecha_accion=tab_deta_empleado_depar.getValor("FECHA_INGRESO_GEDED");
 		
 		String str_valida_accion=ser_nomina.validarAccionPersonalPermitida(ide_geedp_activo,fecha_accion);
