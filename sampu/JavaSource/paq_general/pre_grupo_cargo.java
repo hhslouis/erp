@@ -318,7 +318,7 @@ public class pre_grupo_cargo extends Pantalla {
 						"LEFT JOIN   GEN_EMPLEADOS_DEPARTAMENTO_PAR EDP ON EDP.IDE_GTEMP=EMP.IDE_GTEMP " +
 						"left join GEN_GRUPO_CARGO GEMP ON GEMP.IDE_GeGRo=EDP.IDE_GeGRo " +
 						"WHERE  EMP.ACTIVO_GTEMP=TRUE  and EDP.IDE_GEGRO is not null " +
-						"AND EDP.ACTIVO_GEEDP=TRUE" +
+						"AND EDP.ACTIVO_GEEDP=TRUE " +
 						"group by edp.IDE_Geedp, " +
 						"EMP.DOCUMENTO_IDENTIDAD_GTEMP, " +
 						"EMP.APELLIDO_PATERNO_GTEMP, " +
