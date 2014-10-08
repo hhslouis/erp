@@ -1,4 +1,4 @@
-package paq_seleccion_personal;
+package paq_general;
 
 import java.text.DateFormat;
 import java.text.ParseException;
