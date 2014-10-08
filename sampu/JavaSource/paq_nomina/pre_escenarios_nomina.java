@@ -64,7 +64,7 @@ public class pre_escenarios_nomina extends Pantalla{
 		tab_rol_escenario.getColumna("ACTIVO_NRROE").setCheck();
 		tab_rol_escenario.getColumna("ACTIVO_NRROE").setValorDefecto("true");
 		tab_rol_escenario.getColumna("APROBADO_NRROE").setCheck();
-		tab_rol_escenario.getColumna("APROBADO_NRROE").setValorDefecto("false");
+		tab_rol_escenario.getColumna("APROBADO_NRROE").setValorDefecto("0");
 		
 		tab_rol_escenario.agregarRelacion(tab_deta_rol_escenario);
 		tab_rol_escenario.setTipoFormulario(true);
