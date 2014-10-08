@@ -403,9 +403,9 @@ public class pre_grupo_cargo extends Pantalla {
 		if(band==1){
 			if(rad_grupo.getValue().equals("1"))	{
 				System.out.println("EMPLEADOS"+set_empleado.getSeleccionados());
-				utilitario.getConexion().agregarSql("update  GEN_EMPLEADOS_DEPARTAMENTO_PAR set LINEA_SUPERVICION_GEEDP=1  " +
+				utilitario.getConexion().agregarSql("update  GEN_EMPLEADOS_DEPARTAMENTO_PAR set LINEA_SUPERVICION_GEEDP=true  " +
 						"WHERE IDE_GEGRO="+tab_tabla1.getValorSeleccionado()+"  " + 
-						" and ACTIVO_GEEDP=1" +
+						" and ACTIVO_GEEDP=true" +
 						" and IDE_GEEDP in("+set_empleado.getSeleccionados()+")");
 				guardarPantalla();	
 				rad_grupo.setValue(null);
@@ -414,9 +414,9 @@ public class pre_grupo_cargo extends Pantalla {
 				dia_actualizar_grupo_ocupacional.cerrar();
 
 			}else if (rad_grupo.getValue().equals("0")) {
-				utilitario.getConexion().agregarSql("update  GEN_EMPLEADOS_DEPARTAMENTO_PAR set LINEA_SUPERVICION_GEEDP=1  " +
+				utilitario.getConexion().agregarSql("update  GEN_EMPLEADOS_DEPARTAMENTO_PAR set LINEA_SUPERVICION_GEEDP=true  " +
 						"WHERE IDE_GEGRO="+tab_tabla1.getValorSeleccionado()+"  " +
-						" and ACTIVO_GEEDP=1" +
+						" and ACTIVO_GEEDP=true" +
 						" and IDE_GEEDP in("+set_empleado.getSeleccionados()+")");
 				guardarPantalla();	
 				rad_grupo.setValue(null);
@@ -436,7 +436,7 @@ public class pre_grupo_cargo extends Pantalla {
 					System.out.println("empleados"+set_empleado.getSeleccionados());
 					utilitario.getConexion().agregarSql("update  GEN_EMPLEADOS_DEPARTAMENTO_PAR set ide_gtgre="+cmb_tipo_emp.getValue()+" " +
 							" WHERE IDE_GEGRO="+tab_tabla1.getValorSeleccionado()+" " +
-							" and ACTIVO_GEEDP=1" +
+							" and ACTIVO_GEEDP=true" +
 							" and IDE_GEEDP in("+set_empleado.getSeleccionados()+")");
 					guardarPantalla();	
 					rad_grupo.setValue(null);
