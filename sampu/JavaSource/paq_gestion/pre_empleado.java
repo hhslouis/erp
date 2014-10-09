@@ -1678,6 +1678,7 @@ public class pre_empleado extends Pantalla {
 		itm_datos_capacitacion.setUpdate("pan_opcion");
 		sum_datos_experiencia_laboral.getChildren().add(itm_datos_capacitacion);
 
+		
 		// ITEM 2 : OPCION 26
 		ItemMenu itm_datos_membresia = new ItemMenu();
 		itm_datos_membresia.setValue("DATOS DE MEMBRESIAS");
@@ -1703,11 +1704,10 @@ public class pre_empleado extends Pantalla {
 		sum_datos_experiencia_laboral.getChildren().add(itm_datos_experiencia_laboral);
 
 		// SUB MENU 9
-				Submenu sum_datos_situacion_financiera = new Submenu();
-				sum_datos_situacion_financiera.setLabel("INFORMACION SITUACION ECONOMICA");
-				pam_menu.getChildren().add(sum_datos_situacion_financiera);
+		Submenu sum_datos_situacion_financiera = new Submenu();
+		sum_datos_situacion_financiera.setLabel("INFORMACION SITUACION ECONOMICA");
+		pam_menu.getChildren().add(sum_datos_situacion_financiera);
 		
-					
 		// ITEM 7 : OPCION 22
 		ItemMenu itm_datos_cuenta_bancaria = new ItemMenu();
 		itm_datos_cuenta_bancaria.setValue("CUENTAS BANCARIAS");
@@ -1715,8 +1715,6 @@ public class pre_empleado extends Pantalla {
 		itm_datos_cuenta_bancaria.setMetodo("dibujarDatosCuentaBancaria");
 		itm_datos_cuenta_bancaria.setUpdate("pan_opcion");
 		sum_datos_situacion_financiera.getChildren().add(itm_datos_cuenta_bancaria);
-
-		
 				
 		// SUB MENU 11
 		Submenu sum_sri_proy_ing = new Submenu();
