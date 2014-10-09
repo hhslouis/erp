@@ -615,7 +615,7 @@ public class ServicioControl {
 		TablaGenerica tab_marc=utilitario.consultar("SELECT IDE_ASVAA,PAR.IDE_GTEMP,FECHA_MARCACION_ASVAA,HORA_MARCACION_ASVAA,EVENTO_ASVAA,DIFERENCIA_ASVAA,DIFERENCIA_SALIDA_ASVAA,HORA_MARCA_SALIDA_ASVAA FROM ASI_VALIDA_ASISTENCIA ava " +
 				"inner join GEN_EMPLEADOS_DEPARTAMENTO_PAR par on AVA.IDE_GEEDP = PAR.IDE_GEEDP " +
 				"WHERE FECHA_MARCACION_ASVAA BETWEEN TO_DATE('"+fechaInicio+"','YYYY-MM-DD') AND TO_DATE('"+fechaFin+"','YYYY-MM-DD') " +
-				"AND NOVEDAD_ASVAA=1 " +
+				"AND NOVEDAD_ASVAA=true " +
 				"and IDE_ASNOV IS NULL " +
 				"order by FECHA_MARCACION_ASVAA,HORA_MARCACION_ASVAA");
 
@@ -781,7 +781,7 @@ public class ServicioControl {
 				tab_marc=utilitario.consultar("SELECT IDE_ASVAA,PAR.IDE_GTEMP,FECHA_MARCACION_ASVAA,HORA_MARCACION_ASVAA,EVENTO_ASVAA,DIFERENCIA_ASVAA,DIFERENCIA_SALIDA_ASVAA,HORA_MARCA_SALIDA_ASVAA FROM ASI_VALIDA_ASISTENCIA ava " +
 						"inner join GEN_EMPLEADOS_DEPARTAMENTO_PAR par on AVA.IDE_GEEDP = PAR.IDE_GEEDP " +
 						"WHERE FECHA_MARCACION_ASVAA BETWEEN TO_DATE('"+fechaInicio+"','YYYY-MM-DD') AND TO_DATE('"+fechaFin+"','YYYY-MM-DD') " +
-						"AND NOVEDAD_ASVAA=1 and IDE_ASNOV IS NULL order by FECHA_MARCACION_ASVAA,HORA_MARCACION_ASVAA");
+						"AND NOVEDAD_ASVAA=true and IDE_ASNOV IS NULL order by FECHA_MARCACION_ASVAA,HORA_MARCACION_ASVAA");
 				//System.out.println("insertar novedades extras "+tab_marc.getSql());
 				TablaGenerica tab_deta_novedad=insertarNovedades(tab_marc, fechaInicio, fechaFin);
 				if (tab_deta_novedad!=null){
