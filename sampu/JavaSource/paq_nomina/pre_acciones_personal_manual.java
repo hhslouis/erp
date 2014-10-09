@@ -236,7 +236,7 @@ public class pre_acciones_personal_manual extends Pantalla {
 				guardarPantalla();
 			}
 		}
-	}
+	} 
 	public void cargarCargoFuncional(AjaxBehaviorEvent evt){		
 		tab_tabla2.modificar(evt);
 		tab_tabla2.getColumna("IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL", "IDE_GECAF", "DETALLE_GECAF", "PRINCIPAL_SECUNDARIO_GECAF=TRUE AND IDE_GECAF IN (SELECT IDE_GECAF FROM GEN_GRUPO_CARGO where IDE_GEGRO="+tab_tabla2.getValor("IDE_GEGRO")+")");
