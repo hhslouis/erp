@@ -38,24 +38,40 @@ SELECT ide_gedep,detalle_gedep FROM gen_departamento
 LEFT JOIN (
 SELECT ide_sucu,nom_sucu FROM sis_sucursal
 )e ON e.ide_sucu=a.ide_sucu
-WHERE a.activo_geedp=1
+WHERE a.activo_geedp=true
 AND a.ide_geare IN($P!{ide_geare})
 AND a.ide_gedep IN($P!{ide_gedep})
 AND a.ide_sucu IN ($P!{ide_sucu_t})
 ORDER BY
 e.nom_sucu,c.detalle_geare,d.detalle_gedep,b.EMPLEADO]]>
 	</queryString>
-	<field name="IDE_GTEMP" class="java.lang.Long"/>
-	<field name="DOCUMENTO_IDENTIDAD_GTEMP" class="java.lang.String"/>
-	<field name="EMPLEADO" class="java.lang.String"/>
-	<field name="IDE_SUCU" class="java.math.BigDecimal"/>
-	<field name="NOM_SUCU" class="java.lang.String"/>
-	<field name="IDE_GEARE" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GEARE" class="java.lang.String"/>
-	<field name="IDE_GEDEP" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GEDEP" class="java.lang.String"/>
+	<field name="ide_gtemp" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gth_empleado, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="documento_identidad_gtemp" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el numero de documento de identidad que posee el empleado.]]></fieldDescription>
+	</field>
+	<field name="empleado" class="java.lang.String"/>
+	<field name="ide_sucu" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_sucu]]></fieldDescription>
+	</field>
+	<field name="nom_sucu" class="java.lang.String">
+		<fieldDescription><![CDATA[nom_sucu]]></fieldDescription>
+	</field>
+	<field name="ide_geare" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_area, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="detalle_geare" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del area ejemplo: Directorio, Auditoria Interna, etc.]]></fieldDescription>
+	</field>
+	<field name="ide_gedep" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_gedep]]></fieldDescription>
+	</field>
+	<field name="detalle_gedep" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del departamento, ejemplo: DIRECTORIO, TECNOLOGIA, INFRAESTRUCTURA, etc.]]></fieldDescription>
+	</field>
 	<group name="SUCURSAL">
-		<groupExpression><![CDATA[$F{IDE_SUCU}]]></groupExpression>
+		<groupExpression><![CDATA[$F{ide_sucu}]]></groupExpression>
 		<groupHeader>
 			<band height="12">
 				<textField>
@@ -63,7 +79,7 @@ e.nom_sucu,c.detalle_geare,d.detalle_gedep,b.EMPLEADO]]>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{NOM_SUCU}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{nom_sucu}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -72,7 +88,7 @@ e.nom_sucu,c.detalle_geare,d.detalle_gedep,b.EMPLEADO]]>
 		</groupFooter>
 	</group>
 	<group name="AREA">
-		<groupExpression><![CDATA[$F{IDE_GEARE}]]></groupExpression>
+		<groupExpression><![CDATA[$F{ide_geare}]]></groupExpression>
 		<groupHeader>
 			<band height="12">
 				<textField>
@@ -81,7 +97,7 @@ e.nom_sucu,c.detalle_geare,d.detalle_gedep,b.EMPLEADO]]>
 					<textElement verticalAlignment="Middle">
 						<font size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{DETALLE_GEARE}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{detalle_geare}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -90,7 +106,7 @@ e.nom_sucu,c.detalle_geare,d.detalle_gedep,b.EMPLEADO]]>
 		</groupFooter>
 	</group>
 	<group name="DEPARTAMENTO">
-		<groupExpression><![CDATA[$F{IDE_GEDEP}]]></groupExpression>
+		<groupExpression><![CDATA[$F{ide_gedep}]]></groupExpression>
 		<groupHeader>
 			<band height="12">
 				<textField>
@@ -99,7 +115,7 @@ e.nom_sucu,c.detalle_geare,d.detalle_gedep,b.EMPLEADO]]>
 					<textElement verticalAlignment="Middle">
 						<font size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{DETALLE_GEDEP}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{detalle_gedep}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -108,7 +124,7 @@ e.nom_sucu,c.detalle_geare,d.detalle_gedep,b.EMPLEADO]]>
 		</groupFooter>
 	</group>
 	<group name="EMPLEADO">
-		<groupExpression><![CDATA[$F{IDE_GTEMP}]]></groupExpression>
+		<groupExpression><![CDATA[$F{ide_gtemp}]]></groupExpression>
 		<groupHeader>
 			<band height="12">
 				<textField>
@@ -116,14 +132,14 @@ e.nom_sucu,c.detalle_geare,d.detalle_gedep,b.EMPLEADO]]>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{DOCUMENTO_IDENTIDAD_GTEMP}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{documento_identidad_gtemp}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement uuid="15f4ebc1-93da-42fb-8704-cd5d38803940" x="65" y="0" width="327" height="12"/>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{EMPLEADO}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{empleado}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement uuid="d309641f-c58e-4bba-aa11-777a95b1f2f8" x="0" y="0" width="65" height="12"/>
@@ -168,7 +184,7 @@ e.nom_sucu,c.detalle_geare,d.detalle_gedep,b.EMPLEADO]]>
 					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema_biess/rep_cabecera.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
@@ -177,7 +193,7 @@ e.nom_sucu,c.detalle_geare,d.detalle_gedep,b.EMPLEADO]]>
 			<subreport>
 				<reportElement uuid="d138613b-5fb2-41f5-9948-e9f03b4baf14" x="0" y="0" width="555" height="20" isRemoveLineWhenBlank="true"/>
 				<subreportParameter name="ide_gtemp">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_datos_adicionales/sub_rep_direccion.jasper"]]></subreportExpression>
@@ -187,7 +203,7 @@ e.nom_sucu,c.detalle_geare,d.detalle_gedep,b.EMPLEADO]]>
 			<subreport>
 				<reportElement uuid="0945cc08-d446-4ee0-a04f-343135dc8db4" x="0" y="0" width="555" height="20"/>
 				<subreportParameter name="ide_gtemp">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_datos_adicionales/sub_rep_correo.jasper"]]></subreportExpression>
@@ -197,7 +213,7 @@ e.nom_sucu,c.detalle_geare,d.detalle_gedep,b.EMPLEADO]]>
 			<subreport>
 				<reportElement uuid="3e39bd1b-db0e-4b55-9657-860402815816" x="0" y="0" width="555" height="20"/>
 				<subreportParameter name="ide_gtemp">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_datos_adicionales/sub_rep_telefono.jasper"]]></subreportExpression>
