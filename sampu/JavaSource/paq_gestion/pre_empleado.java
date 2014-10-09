@@ -1599,14 +1599,7 @@ public class pre_empleado extends Pantalla {
 		itm_datos_empl.setMetodo("dibujarDatosPersona");
 		itm_datos_empl.setUpdate("pan_opcion");
 		sum_empleado.getChildren().add(itm_datos_empl);
-
-		// ITEM 2 : OPCION 1
-		ItemMenu itm_conyuge = new ItemMenu();
-		itm_conyuge.setValue("CONYUGUE");
-		itm_conyuge.setIcon("ui-icon-person");
-		itm_conyuge.setMetodo("dibujarDatosConyuge");
-		itm_conyuge.setUpdate("pan_opcion");
-		sum_empleado.getChildren().add(itm_conyuge);
+	
 
 		// ITEM 3 : OPCION 2
 		ItemMenu itm_empleado_departamento = new ItemMenu();
@@ -1632,41 +1625,8 @@ public class pre_empleado extends Pantalla {
 		itm_datos_emergencia.setUpdate("pan_opcion");
 		sum_empleado.getChildren().add(itm_datos_emergencia);
 
-		// SUB MENU 2
-		Submenu sum_datos_familiares = new Submenu();
-		sum_datos_familiares.setLabel("DATOS DEPENDIENTES Y FAMILIARES");
-		pam_menu.getChildren().add(sum_datos_familiares);
-
-
-		// ITEM 1 : OPCION 5
-		ItemMenu itm_datos_cargas_familiares = new ItemMenu();
-		itm_datos_cargas_familiares.setValue("DEPENDIENTES (HIJOS)");
-		itm_datos_cargas_familiares.setIcon("ui-icon-person");
-		itm_datos_cargas_familiares.setMetodo("dibujarDatosCargasFamiliares");
-		itm_datos_cargas_familiares.setUpdate("pan_opcion");
-		sum_datos_familiares.getChildren().add(itm_datos_cargas_familiares);
-
-		// ITEM 2 : OPCION 6
-		ItemMenu itm_datos_familiares = new ItemMenu();
-		itm_datos_familiares.setValue("FAMILIARES (PADRES / HERMANOS)");
-		itm_datos_familiares.setIcon("ui-icon-person");
-		itm_datos_familiares.setMetodo("dibujarDatosFamiliares");
-		itm_datos_familiares.setUpdate("pan_opcion");
-		sum_datos_familiares.getChildren().add(itm_datos_familiares);
-
-
-		// SUB MENU 3
-		Submenu sum_datos_seguro_vida = new Submenu();
-		sum_datos_seguro_vida.setLabel("SEGURO DE VIDA");
-		pam_menu.getChildren().add(sum_datos_seguro_vida);
-
-		// ITEM 1 : OPCION 7
-		ItemMenu itm_datos_seguro_vida = new ItemMenu();
-		itm_datos_seguro_vida.setValue("SEGURO DE VIDA");
-		itm_datos_seguro_vida.setIcon("ui-icon-person");
-		itm_datos_seguro_vida.setMetodo("dibujarDatosSeguroVida");
-		itm_datos_seguro_vida.setUpdate("pan_opcion");
-		sum_datos_seguro_vida.getChildren().add(itm_datos_seguro_vida);
+		
+		
 
 		// SUB MENU 4
 		Submenu sum_datos_registro_militar = new Submenu();
@@ -1681,19 +1641,7 @@ public class pre_empleado extends Pantalla {
 		itm_datos_registro_militar.setUpdate("pan_opcion");
 		sum_datos_registro_militar.getChildren().add(itm_datos_registro_militar);
 
-		// SUB MENU 5
-		Submenu sum_datos_hobbies = new Submenu();
-		sum_datos_hobbies.setLabel("HOBBIES");
-		pam_menu.getChildren().add(sum_datos_hobbies);
-
-		// ITEM 1 : OPCION 9
-		ItemMenu itm_datos_hobbies = new ItemMenu();
-		itm_datos_hobbies.setValue("HOBBIES");
-		itm_datos_hobbies.setIcon("ui-icon-person");
-		itm_datos_hobbies.setMetodo("dibujarDatosHobbies");
-		itm_datos_hobbies.setUpdate("pan_opcion");
-		sum_datos_hobbies.getChildren().add(itm_datos_hobbies);
-
+		
 
 		// SUB MENU 6
 		Submenu sum_datos_formacion_academica = new Submenu();
@@ -1782,14 +1730,7 @@ public class pre_empleado extends Pantalla {
 		itm_datos_situacion_economica.setUpdate("pan_opcion");
 		sum_datos_situacion_financiera.getChildren().add(itm_datos_situacion_economica);
 
-		// ITEM 2 : OPCION 17
-		ItemMenu itm_datos_negocio = new ItemMenu();
-		itm_datos_negocio.setValue("NEGOCIO PROPIO");
-		itm_datos_negocio.setIcon("ui-icon-person");
-		itm_datos_negocio.setMetodo("dibujarDatosNegocio");
-		itm_datos_negocio.setUpdate("pan_opcion");
-		sum_datos_situacion_financiera.getChildren().add(itm_datos_negocio);
-
+		
 		// ITEM 3 : OPCION 18
 		ItemMenu itm_datos_bienes_inmuebles = new ItemMenu();
 		itm_datos_bienes_inmuebles.setValue("BIENES INMUEBLES (Terrenos)");
@@ -1805,14 +1746,6 @@ public class pre_empleado extends Pantalla {
 		itm_datos_casa.setMetodo("dibujarDatosCasa");
 		itm_datos_casa.setUpdate("pan_opcion");
 		sum_datos_situacion_financiera.getChildren().add(itm_datos_casa);
-
-		// ITEM 5 : OPCION 20
-		ItemMenu itm_datos_vehiculo = new ItemMenu();
-		itm_datos_vehiculo.setValue("VEHICULO");
-		itm_datos_vehiculo.setIcon("ui-icon-person");
-		itm_datos_vehiculo.setMetodo("dibujarDatosVehiculo");
-		itm_datos_vehiculo.setUpdate("pan_opcion");
-		sum_datos_situacion_financiera.getChildren().add(itm_datos_vehiculo);
 
 		// ITEM 6 : OPCION 21
 		ItemMenu itm_datos_situacion_financiera = new ItemMenu();
@@ -1846,15 +1779,7 @@ public class pre_empleado extends Pantalla {
 		itm_datos_endeudamiento.setUpdate("pan_opcion");
 		sum_datos_situacion_financiera.getChildren().add(itm_datos_endeudamiento);
 
-		// ITEM 10 : OPCION 25
-		ItemMenu itm_datos_tarjeta_credito = new ItemMenu();
-		itm_datos_tarjeta_credito.setValue("DATOS DE TARJETA DE CREDITO");
-		itm_datos_tarjeta_credito.setIcon("ui-icon-person");
-		itm_datos_tarjeta_credito.setMetodo("dibujarDatosTarjetaCredito");
-		itm_datos_tarjeta_credito.setUpdate("pan_opcion");
-		sum_datos_situacion_financiera.getChildren().add(itm_datos_tarjeta_credito);
-
-
+		
 		// SUB MENU 11
 		Submenu sum_sri_proy_ing = new Submenu();
 		sum_sri_proy_ing.setLabel("SRI");
