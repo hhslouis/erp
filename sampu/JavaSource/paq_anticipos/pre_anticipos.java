@@ -2765,7 +2765,7 @@ public class pre_anticipos extends Pantalla {
 		aut_empleado.onSelect(evt);
 		ide_geedp_activo=ser_gestion.getIdeContratoActivo(aut_empleado.getValor());
 
-		tab_anticipo.setCondicion("ANTICIPO_NRANT=1 AND IDE_GTEMP="+aut_empleado.getValor());
+		tab_anticipo.setCondicion("ANTICIPO_NRANT=true AND IDE_GTEMP="+aut_empleado.getValor());
 		tab_anticipo.ejecutarSql();
 
 		cargarTablasPantalla();
