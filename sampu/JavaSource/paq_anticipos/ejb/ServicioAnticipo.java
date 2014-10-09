@@ -24,9 +24,9 @@ public class ServicioAnticipo{
 				"where GAR.IDE_GEEDP in ( " +
 				"select IDE_GEEDP from NRH_GARANTE where IDE_GEEDP="+ide_geedp+" " +
 				") " +
-				"AND ANT.ANTICIPO_NRANT=1 " +
-				"AND ANT.APROBADO_NRANT=1 " +
-				"AND ANT.ACTIVO_NRANT=1");
+				"AND ANT.ANTICIPO_NRANT=true " +
+				"AND ANT.APROBADO_NRANT=true " +
+				"AND ANT.ACTIVO_NRANT=true");
 		
 		if (tab_garante.getTotalFilas()>0){
 			return tab_garante.getTotalFilas();
@@ -68,7 +68,7 @@ public class ServicioAnticipo{
 //		}else{
 			utilitario.getConexion().agregarSqlPantalla("DELETE FROM NRH_AMORTIZACION AMO " +
 					"WHERE IDE_NRANI IN (SELECT IDE_NRANI FROM NRH_ANTICIPO_INTERES WHERE IDE_NRANT="+ide_nrant+") " +
-					"and ACTIVO_NRAMO=0");
+					"and ACTIVO_NRAMO=false");
 //		}
 
 
@@ -128,7 +128,7 @@ public class ServicioAnticipo{
 	public String getTotalPagarAnticipo(String IDE_NRANT){
 		TablaGenerica tab_amor=utilitario.consultar("select IDE_NRANI,sum (CUOTA_NRAMO) as total_pagar_anticipo from NRH_AMORTIZACION " +
 				"WHERE IDE_NRANI IN (SELECT IDE_NRANI FROM NRH_ANTICIPO_INTERES WHERE IDE_NRANT="+IDE_NRANT+") " +
-				"and ACTIVO_NRAMO=0 " +
+				"and ACTIVO_NRAMO=false " +
 				"GROUP BY IDE_NRANI");
 		if (tab_amor.getTotalFilas()>0){
 			return tab_amor.getValor("total_pagar_anticipo");
@@ -153,12 +153,12 @@ public class ServicioAnticipo{
 			// solo anticipos pagados
 			tab_amor=utilitario.consultar("select * from NRH_AMORTIZACION " +
 					"WHERE IDE_NRANI IN (SELECT IDE_NRANI FROM NRH_ANTICIPO_INTERES WHERE IDE_NRANT="+IDE_NRANT+") " +
-					"and ACTIVO_NRAMO=1 ORDER BY NRO_CUOTA_NRAMO ASC");		
+					"and ACTIVO_NRAMO=true ORDER BY NRO_CUOTA_NRAMO ASC");		
 		}else{
 			// solo anticipos no pagados
 			tab_amor=utilitario.consultar("select * from NRH_AMORTIZACION " +
 					"WHERE IDE_NRANI IN (SELECT IDE_NRANI FROM NRH_ANTICIPO_INTERES WHERE IDE_NRANT="+IDE_NRANT+") " +
-					"and ACTIVO_NRAMO=0 ORDER BY NRO_CUOTA_NRAMO ASC");		
+					"and ACTIVO_NRAMO=false ORDER BY NRO_CUOTA_NRAMO ASC");		
 		}
 		return tab_amor;
 	}
@@ -188,7 +188,7 @@ public class ServicioAnticipo{
 				"from NRH_AMORTIZACION " +
 				"WHERE IDE_NRANI " +
 				"IN (SELECT IDE_NRANI FROM NRH_ANTICIPO_INTERES WHERE IDE_NRANT="+IDE_NRANT+") " +
-				"and ACTIVO_NRAMO=1 " +
+				"and ACTIVO_NRAMO=true " +
 				"ORDER BY FECHA_VENCIMIENTO_NRAMO ASC");
 		if (tab_amort.getTotalFilas()>0){
 			return true;
@@ -214,7 +214,7 @@ public class ServicioAnticipo{
 				"WHERE IDE_NRANT IN ( " +
 				"SELECT IDE_NRANT FROM NRH_ANTICIPO " +
 				"WHERE IDE_GEEDP="+IDE_GEEDP+" AND ANTICIPO_NRANT=TRUE AND ACTIVO_NRANT=true)) " +
-				"AND ACTIVO_NRAMO != 1 " +
+				"AND ACTIVO_NRAMO != true " +
 				"ORDER BY FECHA_VENCIMIENTO_NRAMO ASC ");
 
 		if (tab_amort.getTotalFilas()>0){
@@ -230,7 +230,7 @@ public class ServicioAnticipo{
 		}
 		return utilitario.consultar("select * from NRH_AMORTIZACION " +
 				"where IDE_NRANI=(select ide_nrani from NRH_ANTICIPO_INTERES where IDE_NRANT="+ide_nrant+") " +
-				"and ACTIVO_NRAMO=1 " +
+				"and ACTIVO_NRAMO=true " +
 				"ORDER BY FECHA_VENCIMIENTO_NRAMO ASC");
 	}
 
@@ -241,7 +241,7 @@ public class ServicioAnticipo{
 
 		return utilitario.consultar("select * from NRH_AMORTIZACION " +
 				"where IDE_NRANI=(select ide_nrani from NRH_ANTICIPO_INTERES where IDE_NRANT="+ide_nrant+") " +
-				"and (ACTIVO_NRAMO=0 or ACTIVO_NRAMO!=1) " +
+				"and (ACTIVO_NRAMO=false or ACTIVO_NRAMO!=true) " +
 				"ORDER BY FECHA_VENCIMIENTO_NRAMO ASC");
 
 	}
@@ -263,8 +263,8 @@ public class ServicioAnticipo{
 				"WHERE IDE_NRANT IN ( " +
 				"SELECT IDE_NRANT FROM NRH_ANTICIPO " +
 				"WHERE IDE_GTEMP="+IDE_GTEMP+" " +
-				"AND CALIFICADO_NRANT=1 AND APROBADO_NRANT=1 AND ACTIVO_NRANT=1)) " +
-				"AND ACTIVO_NRAMO != 1 " +
+				"AND CALIFICADO_NRANT=true AND APROBADO_NRANT=true AND ACTIVO_NRANT=true)) " +
+				"AND ACTIVO_NRAMO != true " +
 				"and FECHA_VENCIMIENTO_NRAMO BETWEEN TO_DATE('"+str_fecha_ini_per_rol+"','yy-mm-dd') " +
 				"and TO_DATE('"+str_fecha_fin_per_rol+"', 'yy-mm-dd') " +
 				"ORDER BY FECHA_VENCIMIENTO_NRAMO ASC ");
@@ -330,7 +330,7 @@ public class ServicioAnticipo{
 				"inner join NRH_ANTICIPO ant on ant.ide_nrant=cap.ide_nrant " +
 				"inner join NRH_ANTICIPO_INTERES ani on ani.ide_nrant=ant.ide_nrant and amo.ide_nrani=ani.ide_nrani " +
 				"where ant.IDE_NRANT="+ide_nrant+" " +
-				"and AMO.ACTIVO_NRAMO!=1 ");
+				"and AMO.ACTIVO_NRAMO!=true ");
 		return tab_trp;
 
 	}
@@ -876,7 +876,7 @@ public class ServicioAnticipo{
 	}
 
 	private TablaGenerica getTablaCondicionAnticipo(String IDE_GTTCO){
-		TablaGenerica tab_cond_antp=utilitario.consultar("select * from NRH_CONDICION_ANTICIPO where IDE_GTTCO="+IDE_GTTCO+" and ACTIVO_NRCOA=1");
+		TablaGenerica tab_cond_antp=utilitario.consultar("select * from NRH_CONDICION_ANTICIPO where IDE_GTTCO="+IDE_GTTCO+" and ACTIVO_NRCOA=true");
 		return tab_cond_antp;
 	}
 
