@@ -109,7 +109,7 @@ public class ServicioGestion {
 		for (int i = 0; i < tab_emp_dep.getTotalFilas(); i++) {
 			if (tab_emp_dep.getValor(i, "ACTIVO_GEEDP")!=null
 					&& !tab_emp_dep.getValor(i, "ACTIVO_GEEDP").isEmpty()
-					&& tab_emp_dep.getValor(i, "ACTIVO_GEEDP").equalsIgnoreCase("1")){
+					&& tab_emp_dep.getValor(i, "ACTIVO_GEEDP").equalsIgnoreCase("true")){
 				return tab_emp_dep.getValor(i, "IDE_GEEDP");
 			}
 		}
