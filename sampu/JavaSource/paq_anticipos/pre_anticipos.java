@@ -361,7 +361,7 @@ public class pre_anticipos extends Pantalla {
 
 		tab_rubro_detalle_pago.getColumna("ACTIVO_NRRDP").setCheck();
 		tab_rubro_detalle_pago.getColumna("ACTIVO_NRRDP").setValorDefecto("true");
-		tab_rubro_detalle_pago.getColumna("IDE_NRRUB").setCombo("NRH_RUBRO", "IDE_NRRUB", "DETALLE_NRRUB", "ANTICIPO_NRRUB=1");
+		tab_rubro_detalle_pago.getColumna("IDE_NRRUB").setCombo("NRH_RUBRO", "IDE_NRRUB", "DETALLE_NRRUB", "ANTICIPO_NRRUB=true");
 		tab_rubro_detalle_pago.getColumna("IDE_NRRUB").setMetodoChange("seleccionaRubroDetallePago");
 		tab_rubro_detalle_pago.getColumna("IDE_NRRUB").setUnico(true);
 		tab_rubro_detalle_pago.getColumna("IDE_NRCAP").setUnico(true);
