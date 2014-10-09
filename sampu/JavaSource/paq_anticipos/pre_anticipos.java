@@ -872,7 +872,7 @@ public class pre_anticipos extends Pantalla {
 				"LEFT JOIN SIS_SUCURSAL SUCU ON SUCU.IDE_SUCU=EPAR.IDE_SUCU " +
 				"LEFT JOIN GEN_DEPARTAMENTO DEPA ON DEPA.IDE_GEDEP=EPAR.IDE_GEDEP " +
 				"LEFT JOIN GEN_AREA AREA ON AREA.IDE_GEARE=EPAR.IDE_GEARE " +
-				"INNER JOIN GTH_TIPO_CONTRATO TCO ON TCO.IDE_GTTCO=EPAR.IDE_GTTCO AND TCO.GARANTE_GTTCO=1 "+
+				"INNER JOIN GTH_TIPO_CONTRATO TCO ON TCO.IDE_GTTCO=EPAR.IDE_GTTCO AND TCO.GARANTE_GTTCO=true "+
 				"WHERE EPAR.ACTIVO_GEEDP=true and EPAR.IDE_GEEDP!="+ide_geedp_activo);
 		eti_empleado.setValue("Empleado Garante: ");
 		aut_empleado_autoriza_memo.setValue(null);
@@ -982,7 +982,7 @@ public class pre_anticipos extends Pantalla {
 				
 				"where edp.IDE_GEEDP="+aut_empleado_autoriza_memo.getValor());
 		
-		TablaGenerica tab_tel=utilitario.consultar("SELECT * FROM gth_telefono WHERE activo_gttel=1 and ide_gtemp in(select ide_gtemp from gen_empleados_departamento_par " +
+		TablaGenerica tab_tel=utilitario.consultar("SELECT * FROM gth_telefono WHERE activo_gttel=true and ide_gtemp in(select ide_gtemp from gen_empleados_departamento_par " +
 				"where ide_geedp="+aut_empleado_autoriza_memo.getValor()+") " +
 				"order by ide_gttel asc");
 		if (tab_garante.isFilaInsertada()){	
@@ -1073,7 +1073,7 @@ public class pre_anticipos extends Pantalla {
 		tab_datos_precancelacion.setSql("select IDE_NRPRE,AMO.NRO_CUOTA_NRAMO,AMO.CUOTA_NRAMO,DETALLE_GEINS,DOC_DEPOSITO_NRPRE,FECHA_DEPOSITO_NRPRE,FECHA_PRECANCELADO_NRPRE,PATH_FOTO_NRPRE from NRH_PRECANCELACION PRE " +
 				"INNER JOIN NRH_AMORTIZACION AMO ON AMO.IDE_NRAMO=PRE.IDE_NRAMO " +
 				"INNER JOIN GEN_INSTITUCION INS ON INS.IDE_GEINS=PRE.IDE_GEINS " +
-				"AND AMO.PRE_CANCELADO_NRAMO=1 " +
+				"AND AMO.PRE_CANCELADO_NRAMO=true " +
 				"and amo.ide_nrani="+tab_amortizacion.getValor("IDE_NRANI"));
 		tab_datos_precancelacion.ejecutarSql();
 		if (tab_datos_precancelacion.getTotalFilas()>0){
@@ -1382,7 +1382,7 @@ public class pre_anticipos extends Pantalla {
 
 				for (int i = 0; i < tab_pagos_anticipos.getListaFilasSeleccionadas().size(); i++) {
 					fila=tab_pagos_anticipos.getListaFilasSeleccionadas().get(i);
-					utilitario.getConexion().agregarSql("update NRH_AMORTIZACION set ACTIVO_NRAMO=TRUE,PRE_CANCELADO_NRAMO=1,FECHA_CANCELADO_NRAMO=TO_DATE('"+utilitario.getFechaActual()+"', 'yy-mm-dd') " +
+					utilitario.getConexion().agregarSql("update NRH_AMORTIZACION set ACTIVO_NRAMO=TRUE,PRE_CANCELADO_NRAMO=true,FECHA_CANCELADO_NRAMO=TO_DATE('"+utilitario.getFechaActual()+"', 'yy-mm-dd') " +
 							"where IDE_NRAMO ="+fila.getRowKey());
 					if (i>0){
 						tab_precancelacion.insertar();
