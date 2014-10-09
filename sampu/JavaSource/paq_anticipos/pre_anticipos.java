@@ -1425,7 +1425,7 @@ public class pre_anticipos extends Pantalla {
 			tab_anticipo.ejecutarSql();
 			tab_anticipo.setFilaActual(ide_nrant_anterior);
 
-			cargarTablasPantalla();
+			cargarTablasPantalla(); 
 		}else{
 			if (aut_empleado.getValor()==null){
 				utilitario.agregarMensajeInfo("No se puede anular el anticipo", "No existen anticipos por anular en pantalla");
