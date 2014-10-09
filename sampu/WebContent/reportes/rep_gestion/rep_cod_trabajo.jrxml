@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_cod_trabajo" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="af411a02-4f12-4509-89ea-5786108f92a7">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="41"/>
 	<property name="ireport.y" value="0"/>
 	<subDataset name="dataset1" uuid="5a571823-3b0c-4bd9-82af-93c1351534a6"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
@@ -89,31 +89,39 @@ NOMBRES ASC,
 CARGO_FUNCIONAL ASC
 )a ORDER BY IDE_GTTEM,NOMBRES]]>
 	</queryString>
-	<field name="IDE_GTTEM" class="java.math.BigDecimal"/>
-	<field name="NOMBRES" class="java.lang.String"/>
-	<field name="CARGO_FUNCIONAL" class="java.lang.String"/>
-	<field name="VACANTE_GEPGC" class="java.math.BigDecimal"/>
-	<field name="NUMERO_PARTIDA" class="java.lang.String"/>
-	<field name="CEDULA" class="java.lang.String"/>
-	<field name="IDE_GEEDP" class="java.math.BigDecimal"/>
-	<field name="GENERO" class="java.lang.String"/>
-	<field name="GRUPO_OCUPACIONAL" class="java.lang.String"/>
-	<field name="AREA" class="java.lang.String"/>
-	<field name="CIUDAD" class="java.lang.String"/>
-	<field name="T_CONTRATO" class="java.lang.String"/>
-	<field name="RMU" class="java.math.BigDecimal"/>
-	<field name="VICULACION" class="java.lang.String"/>
-	<field name="PAIS" class="java.lang.String"/>
-	<field name="TIPO_EMP" class="java.lang.String"/>
-	<field name="FEC_CONTRATO" class="java.sql.Timestamp"/>
-	<field name="ACTIVO_GTEMP" class="java.math.BigDecimal"/>
-	<field name="NOM_SUCU" class="java.lang.String"/>
+	<field name="ide_gttem" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave foranea que proviene de la tabla gth_tipo_empleado.]]></fieldDescription>
+	</field>
+	<field name="nombres" class="java.lang.String"/>
+	<field name="cargo_funcional" class="java.lang.String"/>
+	<field name="vacante_gepgc" class="java.lang.Boolean"/>
+	<field name="numero_partida" class="java.lang.String"/>
+	<field name="cedula" class="java.lang.String"/>
+	<field name="ide_geedp" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_empleados_departamento_par, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="genero" class="java.lang.String"/>
+	<field name="grupo_ocupacional" class="java.lang.String"/>
+	<field name="area" class="java.lang.String"/>
+	<field name="ciudad" class="java.lang.String"/>
+	<field name="t_contrato" class="java.lang.String"/>
+	<field name="rmu" class="java.math.BigDecimal"/>
+	<field name="viculacion" class="java.lang.String"/>
+	<field name="pais" class="java.lang.String"/>
+	<field name="tipo_emp" class="java.lang.String"/>
+	<field name="fec_contrato" class="java.sql.Date"/>
+	<field name="activo_gtemp" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[Este campo define si el registro se encuentra activo o no para su transaccionalidad, 1 SI / 0 No]]></fieldDescription>
+	</field>
+	<field name="nom_sucu" class="java.lang.String">
+		<fieldDescription><![CDATA[nom_sucu]]></fieldDescription>
+	</field>
 	<variable name="contador" class="java.lang.Integer" calculation="Count">
-		<variableExpression><![CDATA[$F{IDE_GEEDP}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_geedp}]]></variableExpression>
 		<initialValueExpression><![CDATA[1]]></initialValueExpression>
 	</variable>
 	<group name="tipo_empleado">
-		<groupExpression><![CDATA[$F{IDE_GTTEM}]]></groupExpression>
+		<groupExpression><![CDATA[$F{ide_gttem}]]></groupExpression>
 		<groupHeader>
 			<band height="24">
 				<textField>
@@ -128,7 +136,7 @@ CARGO_FUNCIONAL ASC
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="9" isBold="true" pdfFontName="Courier-Bold" isPdfEmbedded="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{TIPO_EMP}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{tipo_emp}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement uuid="c9a43bb9-d69a-4965-846c-f67b7853e9c5" x="20" y="0" width="69" height="12"/>
@@ -335,7 +343,7 @@ CARGO_FUNCIONAL ASC
 					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema_biess/rep_cabecera_horizontal.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera_horizontal.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
@@ -356,7 +364,7 @@ CARGO_FUNCIONAL ASC
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NUMERO_PARTIDA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{numero_partida}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="ae33484d-137f-4dc1-acbd-e0a497c950ad" positionType="Float" stretchType="RelativeToBandHeight" x="89" y="0" width="58" height="12" isPrintWhenDetailOverflows="true"/>
@@ -370,7 +378,7 @@ CARGO_FUNCIONAL ASC
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CEDULA}==null?new String("0000000000"):$F{CEDULA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cedula}==null?new String("0000000000"):$F{cedula}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="54100623-d695-48e5-90f2-9bee38d049f3" positionType="Float" stretchType="RelativeToBandHeight" x="306" y="0" width="87" height="12" isPrintWhenDetailOverflows="true"/>
@@ -384,7 +392,7 @@ CARGO_FUNCIONAL ASC
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{GRUPO_OCUPACIONAL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{grupo_ocupacional}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="7f1d4574-51e7-4676-86da-18e56494f723" positionType="Float" stretchType="RelativeToBandHeight" x="393" y="0" width="72" height="12" isPrintWhenDetailOverflows="true"/>
@@ -398,7 +406,7 @@ CARGO_FUNCIONAL ASC
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CARGO_FUNCIONAL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cargo_funcional}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="1f4a5318-c331-4e83-a991-be10aebdcadb" positionType="Float" stretchType="RelativeToBandHeight" x="632" y="0" width="75" height="12" isPrintWhenDetailOverflows="true"/>
@@ -412,7 +420,7 @@ CARGO_FUNCIONAL ASC
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{VICULACION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{viculacion}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="2f585daf-f0f1-4ee1-ab1e-4453c521b713" positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="20" height="12" isPrintWhenDetailOverflows="true"/>
@@ -440,7 +448,7 @@ CARGO_FUNCIONAL ASC
 				<textElement verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NOMBRES}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nombres}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="93274cde-6e9b-4d37-a7b2-146689c354d3" positionType="Float" stretchType="RelativeToBandHeight" x="465" y="0" width="96" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -454,7 +462,7 @@ CARGO_FUNCIONAL ASC
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{AREA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{area}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="1b713d0e-e52a-4b02-b946-3761a9558b0a" positionType="Float" stretchType="RelativeToBandHeight" x="779" y="0" width="23" height="12" isPrintWhenDetailOverflows="true"/>
@@ -468,8 +476,8 @@ CARGO_FUNCIONAL ASC
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{VACANTE_GEPGC}==1?"SI":
-$F{VACANTE_GEPGC}==0?"NO":""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{vacante_gepgc}==1?"SI":
+$F{vacante_gepgc}==0?"NO":""]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="e9b1d8a4-1076-406d-8528-978434aeb0f5" positionType="Float" stretchType="RelativeToBandHeight" x="707" y="0" width="22" height="12"/>
@@ -483,7 +491,7 @@ $F{VACANTE_GEPGC}==0?"NO":""]]></textFieldExpression>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{RMU}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{rmu}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="139e188a-67a5-4248-8546-2fcc32dbbe77" positionType="Float" stretchType="RelativeToBandHeight" x="263" y="0" width="43" height="12" isPrintWhenDetailOverflows="true"/>
@@ -497,7 +505,7 @@ $F{VACANTE_GEPGC}==0?"NO":""]]></textFieldExpression>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{GENERO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{genero}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="yyyy/MM/dd" isBlankWhenNull="true">
 				<reportElement uuid="5ed75e02-9fa6-479b-8a26-8e16f23d7ab4" positionType="Float" stretchType="RelativeToBandHeight" x="729" y="0" width="50" height="12" isPrintWhenDetailOverflows="true"/>
@@ -511,7 +519,7 @@ $F{VACANTE_GEPGC}==0?"NO":""]]></textFieldExpression>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FEC_CONTRATO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fec_contrato}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="42e078f8-1676-4338-8bef-fa452b444b06" stretchType="RelativeToBandHeight" x="561" y="0" width="71" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -525,7 +533,7 @@ $F{VACANTE_GEPGC}==0?"NO":""]]></textFieldExpression>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NOM_SUCU}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nom_sucu}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
