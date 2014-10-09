@@ -81,7 +81,7 @@ public class pre_nomina_global_empleado extends Pantalla {
 	private AutoCompletar aut_rubros_tip_formula=new AutoCompletar();
 	private Grid gri=new Grid();
 
-	@EJB
+	@EJB 
 	private ServicioNomina ser_nomina = (ServicioNomina) utilitario.instanciarEJB(ServicioNomina.class);
 
 	public pre_nomina_global_empleado() {        
