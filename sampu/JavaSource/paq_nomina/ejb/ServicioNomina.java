@@ -1419,7 +1419,7 @@ public class ServicioNomina {
 	 * @return resultado TablaGenerica
 	 */
 	public TablaGenerica getPeriodoRol(String IDE_GEPRO){
-		TablaGenerica tab_per_rol=utilitario.consultar("SELECT * from GEN_PERIDO_ROL where IDE_GEPRO in ("+IDE_GEPRO+") and ACTIVO_GEPRO=1");
+		TablaGenerica tab_per_rol=utilitario.consultar("SELECT * from GEN_PERIDO_ROL where IDE_GEPRO in ("+IDE_GEPRO+") and ACTIVO_GEPRO=TRUE");
 		return tab_per_rol;
 	}
 
@@ -1429,7 +1429,7 @@ public class ServicioNomina {
 	 * @return resultado TablaGenerica
 	 */
 	public TablaGenerica getPeriodoRol(String IDE_GEMES,String IDE_GEANI){
-		TablaGenerica tab_per_rol=utilitario.consultar("SELECT * FROM GEN_PERIDO_ROL WHERE IDE_GEMES="+IDE_GEMES+" AND IDE_GEANI="+IDE_GEANI+" and ACTIVO_GEPRO=1");
+		TablaGenerica tab_per_rol=utilitario.consultar("SELECT * FROM GEN_PERIDO_ROL WHERE IDE_GEMES="+IDE_GEMES+" AND IDE_GEANI="+IDE_GEANI+" and ACTIVO_GEPRO=TRUE");
 		return tab_per_rol;
 	}
 
