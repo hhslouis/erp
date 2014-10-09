@@ -9,7 +9,7 @@ import framework.componentes.Division;
 import framework.componentes.PanelTabla;
 import framework.componentes.Tabla;
 
-
+ 
 public class pre_forma_calculo extends Pantalla {
     
     private Tabla tab_tabla = new Tabla();
