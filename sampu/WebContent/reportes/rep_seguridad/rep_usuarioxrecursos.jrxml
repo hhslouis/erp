@@ -19,11 +19,19 @@ left join sis_opcion sisop on sisop.ide_opci=perfop.ide_opci
 where perfop.ide_opci in ($P!{ide_opci})
 ORDER BY sisop.nom_opci asc]]>
 	</queryString>
-	<field name="NOM_USUA" class="java.lang.String"/>
-	<field name="NICK_USUA" class="java.lang.String"/>
-	<field name="NOM_PERF" class="java.lang.String"/>
-	<field name="IDE_OPCI" class="java.math.BigDecimal"/>
-	<field name="NOM_OPCI" class="java.lang.String"/>
+	<field name="nom_usua" class="java.lang.String">
+		<fieldDescription><![CDATA[nom_usua]]></fieldDescription>
+	</field>
+	<field name="nick_usua" class="java.lang.String">
+		<fieldDescription><![CDATA[nick_usua]]></fieldDescription>
+	</field>
+	<field name="nom_perf" class="java.lang.String">
+		<fieldDescription><![CDATA[nom_perf]]></fieldDescription>
+	</field>
+	<field name="ide_opci" class="java.lang.Integer"/>
+	<field name="nom_opci" class="java.lang.String">
+		<fieldDescription><![CDATA[nom_opci]]></fieldDescription>
+	</field>
 	<variable name="estado" class="java.lang.String">
 		<variableExpression><![CDATA[]]></variableExpression>
 	</variable>
@@ -34,7 +42,7 @@ ORDER BY sisop.nom_opci asc]]>
 		<groupExpression><![CDATA[]]></groupExpression>
 	</group>
 	<group name="ide_opci">
-		<groupExpression><![CDATA[$F{IDE_OPCI}]]></groupExpression>
+		<groupExpression><![CDATA[$F{ide_opci}]]></groupExpression>
 		<groupHeader>
 			<band height="52">
 				<textField>
@@ -42,7 +50,7 @@ ORDER BY sisop.nom_opci asc]]>
 					<textElement verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Recurso: "+$F{NOM_OPCI}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Recurso: "+$F{nom_opci}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement uuid="b05fb542-a85d-4cbb-8601-2a97e7aa0810" x="0" y="32" width="178" height="20"/>
@@ -115,7 +123,7 @@ ORDER BY sisop.nom_opci asc]]>
 					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"/reportes/rep_sistema_biess/rep_cabecera.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"/reportes/rep_sistema/rep_cabecera.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
@@ -156,7 +164,7 @@ ORDER BY sisop.nom_opci asc]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NICK_USUA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nick_usua}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="3aeb5903-0851-407c-98e6-b666bc3bb8d6" x="367" y="0" width="188" height="18"/>
@@ -171,7 +179,7 @@ ORDER BY sisop.nom_opci asc]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NOM_PERF}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nom_perf}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="4bafb4d6-e219-4bd1-994c-7983333e5a3f" x="0" y="0" width="178" height="18"/>
@@ -186,7 +194,7 @@ ORDER BY sisop.nom_opci asc]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NOM_USUA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nom_usua}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
