@@ -45,7 +45,7 @@ LEFT JOIN GEN_TIPO_DIVISION_POLITICA TDP ON TDP.IDE_GETDP=DP.IDE_GETDP AND TDP.N
 LEFT JOIN GEN_DIVISION_POLITICA DP1 ON DP1.IDE_GEDIP=DP.GEN_IDE_GEDIP
 LEFT JOIN GTH_GENERO GEN ON EMP.IDE_GTGEN=GEN.IDE_GTGEN
 LEFT JOIN GTH_TIPO_SANGRE TSA ON EMP.IDE_GTTIS=TSA.IDE_GTTIS
-LEFT JOIN GTH_DIRECCION DIR ON DIR.IDE_GTEMP=EMP.IDE_GTEMP and dir.activo_gtdir=1 and dir.ide_gtdir in (  select max(ide_gtdir) as ide_gtdir from GTH_DIRECCION group by ide_gtemp )
+LEFT JOIN GTH_DIRECCION DIR ON DIR.IDE_GTEMP=EMP.IDE_GTEMP and dir.activo_gtdir=true and dir.ide_gtdir in (  select max(ide_gtdir) as ide_gtdir from GTH_DIRECCION group by ide_gtemp )
 LEFT JOIN GEN_DIVISION_POLITICA DP2 ON DIR.IDE_GEDIP=DP2.IDE_GEDIP
 LEFT JOIN GEN_TIPO_DIVISION_POLITICA TDP1 ON TDP1.IDE_GETDP=DP2.IDE_GETDP AND TDP1.NIVEL_GETDP IN(5)
 LEFT JOIN GEN_DIVISION_POLITICA DP3 ON DP3.IDE_GEDIP=DP2.GEN_IDE_GEDIP
@@ -54,27 +54,29 @@ LEFT JOIN GEN_DIVISION_POLITICA DP5 ON DP5.IDE_GEDIP=DP4.GEN_IDE_GEDIP
 WHERE EMP.IDE_GTEMP IN ($P!{IDE_GTEMP})
 order by NOMBRES ASC]]>
 	</queryString>
-	<field name="IDE_GTEMP" class="java.lang.Long"/>
-	<field name="NOMBRES" class="java.lang.String"/>
-	<field name="ESTADO_CIVIL" class="java.lang.String"/>
-	<field name="PROVINCIA" class="java.lang.String"/>
-	<field name="CANTON" class="java.lang.String"/>
-	<field name="FECHA_NACIMIENTO" class="java.sql.Timestamp"/>
-	<field name="NACIONALIDAD" class="java.lang.String"/>
-	<field name="TIPO_DOCUMENTO" class="java.lang.String"/>
-	<field name="NUMERO_DOCUMENTO" class="java.lang.String"/>
-	<field name="CARNET_EXTRANJERIA" class="java.lang.String"/>
-	<field name="FECHA_INGRESO_PAIS" class="java.sql.Timestamp"/>
-	<field name="GENERO" class="java.lang.String"/>
-	<field name="DIRECCION" class="java.lang.String"/>
-	<field name="TIPO_SANGRE" class="java.lang.String"/>
-	<field name="SEPARACION_BIENES" class="java.math.BigDecimal"/>
-	<field name="CARGO_PUBLICO" class="java.math.BigDecimal"/>
-	<field name="PROVINCIA_VIVE" class="java.lang.String"/>
-	<field name="CANTON_VIVE" class="java.lang.String"/>
-	<field name="PARROQUIA_VIVE" class="java.lang.String"/>
+	<field name="ide_gtemp" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gth_empleado, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="nombres" class="java.lang.String"/>
+	<field name="estado_civil" class="java.lang.String"/>
+	<field name="provincia" class="java.lang.String"/>
+	<field name="canton" class="java.lang.String"/>
+	<field name="fecha_nacimiento" class="java.sql.Date"/>
+	<field name="nacionalidad" class="java.lang.String"/>
+	<field name="tipo_documento" class="java.lang.String"/>
+	<field name="numero_documento" class="java.lang.String"/>
+	<field name="carnet_extranjeria" class="java.lang.String"/>
+	<field name="fecha_ingreso_pais" class="java.sql.Date"/>
+	<field name="genero" class="java.lang.String"/>
+	<field name="direccion" class="java.lang.String"/>
+	<field name="tipo_sangre" class="java.lang.String"/>
+	<field name="separacion_bienes" class="java.lang.Boolean"/>
+	<field name="cargo_publico" class="java.lang.Integer"/>
+	<field name="provincia_vive" class="java.lang.String"/>
+	<field name="canton_vive" class="java.lang.String"/>
+	<field name="parroquia_vive" class="java.lang.String"/>
 	<group name="IDE_GTEMP" isStartNewPage="true">
-		<groupExpression><![CDATA[$F{IDE_GTEMP}]]></groupExpression>
+		<groupExpression><![CDATA[$F{ide_gtemp}]]></groupExpression>
 		<groupHeader>
 			<band height="15">
 				<subreport>
@@ -95,7 +97,7 @@ order by NOMBRES ASC]]>
 						<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema_biess/rep_cabecera.jasper"]]></subreportExpression>
+					<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera.jasper"]]></subreportExpression>
 				</subreport>
 			</band>
 		</groupHeader>
@@ -148,7 +150,7 @@ order by NOMBRES ASC]]>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NOMBRES}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nombres}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="b45d9ff6-d112-44b5-a6ec-bed8b501ee7d" x="195" y="35" width="60" height="15"/>
@@ -162,7 +164,7 @@ order by NOMBRES ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ESTADO_CIVIL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{estado_civil}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="d161a886-ca7c-4b85-94ae-26dcb95322cc" x="255" y="35" width="65" height="15"/>
@@ -176,7 +178,7 @@ order by NOMBRES ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{PROVINCIA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{provincia}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="cb9838b0-fe01-4702-9c96-c0f7d4891c9b" x="320" y="35" width="60" height="15"/>
@@ -190,7 +192,7 @@ order by NOMBRES ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CANTON}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{canton}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="yyyy/MM/dd" isBlankWhenNull="true">
 				<reportElement uuid="7213d2b9-d475-4b3c-a4b8-d47073f13127" x="380" y="35" width="65" height="15"/>
@@ -204,7 +206,7 @@ order by NOMBRES ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_NACIMIENTO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_nacimiento}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="f2c363d9-4118-4f4b-bdd7-487b5d218d76" x="445" y="35" width="125" height="15"/>
@@ -218,7 +220,7 @@ order by NOMBRES ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NACIONALIDAD}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nacionalidad}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="0c3895ad-d2b5-413d-b64c-fc04b0e80eb6" mode="Transparent" x="0" y="15" width="195" height="20" backcolor="#FFFFFF"/>
@@ -316,7 +318,7 @@ order by NOMBRES ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{TIPO_DOCUMENTO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tipo_documento}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="18eb1b00-1e78-4281-9340-4fcb367398a5" positionType="Float" x="0" y="50" width="70" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -344,7 +346,7 @@ order by NOMBRES ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NUMERO_DOCUMENTO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{numero_documento}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="59788848-e42d-4eae-8713-844c638200e1" positionType="Float" x="70" y="50" width="50" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -372,7 +374,7 @@ order by NOMBRES ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_INGRESO_PAIS}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_ingreso_pais}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="9e51ac5a-9d5e-455a-9a03-b4db3da43dc0" positionType="Float" x="120" y="50" width="75" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -400,7 +402,7 @@ order by NOMBRES ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CARNET_EXTRANJERIA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{carnet_extranjeria}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="4014ecf0-4eb2-4aa5-acc6-94f3268f2107" positionType="Float" x="195" y="50" width="60" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -442,7 +444,7 @@ order by NOMBRES ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{GENERO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{genero}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="02afbfc8-8aac-47a4-a978-c4f1b04af8f6" positionType="Float" x="0" y="85" width="320" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -470,7 +472,7 @@ order by NOMBRES ASC]]>
 				<textElement verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DIRECCION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="d6197cf8-ef81-477b-9607-ece58be91b11" positionType="Float" x="320" y="85" width="80" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -498,7 +500,7 @@ order by NOMBRES ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{TIPO_SANGRE}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tipo_sangre}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="e2d4c6c4-461b-4e7f-a892-151b7386e7b2" positionType="Float" x="400" y="85" width="85" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -526,7 +528,7 @@ order by NOMBRES ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{SEPARACION_BIENES}.toString().equals("0")?new String("NO"):new String("SI")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{separacion_bienes}.toString().equals("0")?new String("NO"):new String("SI")]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="87fb2aec-026c-4493-b727-c46135d5a72a" positionType="Float" x="485" y="85" width="85" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -554,7 +556,7 @@ order by NOMBRES ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CARGO_PUBLICO}.toString().equals("0")?new String("NO"):new String("SI")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cargo_publico}.toString().equals("0")?new String("NO"):new String("SI")]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="84307cd1-edde-4b31-bdb6-347fc9663566" mode="Transparent" x="0" y="0" width="570" height="15" backcolor="#FFFFFF"/>
@@ -587,7 +589,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="217e82c2-49b2-4444-adc2-66743aec6fc4" positionType="Float" stretchType="RelativeToBandHeight" x="510" y="70" width="60" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_telefono_empleado.jasper"]]></subreportExpression>
@@ -646,7 +648,7 @@ order by NOMBRES ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{PROVINCIA_VIVE}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{provincia_vive}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="aaeb4929-7d60-414c-a9e8-c149304bbc06" positionType="Float" stretchType="RelativeToBandHeight" x="380" y="70" width="65" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -660,7 +662,7 @@ order by NOMBRES ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CANTON_VIVE}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{canton_vive}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="bb116ae5-19ff-40be-9859-20c1c89ce4b4" positionType="Float" stretchType="RelativeToBandHeight" x="445" y="70" width="65" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -674,14 +676,14 @@ order by NOMBRES ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{PARROQUIA_VIVE}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{parroquia_vive}]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="40">
 			<subreport>
 				<reportElement uuid="6914fda5-f08e-457f-87c7-121e21319d7d" positionType="Float" x="1" y="20" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="SUBREPORT_DIR">
 					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
@@ -692,7 +694,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="7e4a1b82-58ac-4852-afa7-6c252f69ffe8" positionType="Float" x="0" y="0" width="569" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_correos.jasper"]]></subreportExpression>
@@ -702,7 +704,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="5abfee07-3a5f-4b77-bd0c-33162df0bb9a" x="0" y="0" width="570" height="20"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_reporte_union_libre.jasper"]]></subreportExpression>
@@ -712,7 +714,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="022abc7a-cfa6-4a6c-b6c1-b2328020115c" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="SUBREPORT_DIR">
 					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
@@ -725,7 +727,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="53653492-52dd-442c-8ffc-5a11b2f3855e" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_dependientes.jasper"]]></subreportExpression>
@@ -735,7 +737,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="dac8e3c2-11b8-4f0b-9a11-282aa4eec8d6" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_familiares.jasper"]]></subreportExpression>
@@ -745,7 +747,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="2e4a2300-f00b-4cf5-9cb2-3716b4c03d21" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_seguro.jasper"]]></subreportExpression>
@@ -755,7 +757,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="78695515-48c2-47f0-9851-cf6d093f2720" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_situacion_militar.jasper"]]></subreportExpression>
@@ -765,7 +767,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="8c43ca92-ff80-4121-9509-0f4cb3683a3d" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_hobies.jasper"]]></subreportExpression>
@@ -775,7 +777,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="8df1353d-54be-4301-82d1-d9bb0fc5fa7e" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_primaria.jasper"]]></subreportExpression>
@@ -785,7 +787,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="225e539e-e3e0-4826-b919-ee50d43ef6e2" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_secundaria.jasper"]]></subreportExpression>
@@ -795,7 +797,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="ff6cc37f-da0d-4bb8-ad96-2b7f609993e6" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_superior.jasper"]]></subreportExpression>
@@ -805,7 +807,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="3a32f44b-65d0-41bd-8b85-59b4584157b3" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_postgrados.jasper"]]></subreportExpression>
@@ -815,7 +817,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="ac54de21-cf32-4b00-83c8-00319065a098" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_idiomas.jasper"]]></subreportExpression>
@@ -825,7 +827,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="3428aac8-d9bf-4af3-920d-14fed4fb9e00" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_capacitaciones.jasper"]]></subreportExpression>
@@ -835,7 +837,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="8b61c700-55ef-42d5-8865-1dc285d4280e" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_membresias_empleado.jasper"]]></subreportExpression>
@@ -845,7 +847,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="a0452e53-0887-451d-8702-bbe685b46271" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_experiencia.jasper"]]></subreportExpression>
@@ -855,7 +857,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="0f75c8e6-ed61-460f-bed1-b2278a38bb8d" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_experiencia_laboral.jasper"]]></subreportExpression>
@@ -865,7 +867,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="f8f8cafc-ad29-411e-825e-dbcfb0eb5c7e" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_amigos_conocidos.jasper"]]></subreportExpression>
@@ -875,7 +877,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="4f3843c9-f3e1-482a-910a-66f497916a26" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_situacion_eco1.jasper"]]></subreportExpression>
@@ -885,7 +887,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="456a77fd-6f44-46b1-99db-bb134d2208b8" positionType="Float" x="1" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="SUBREPORT_DIR">
 					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
@@ -898,7 +900,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="10709f50-f094-44e2-bb58-9f10c300cae3" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep1_situacion_economica.jasper"]]></subreportExpression>
@@ -908,7 +910,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="69e3082f-8f24-4fbe-8b0f-f42500c512bb" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name=" IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_bienes_inmuebles.jasper"]]></subreportExpression>
@@ -918,7 +920,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="936f1039-5d65-41a2-9fdf-62a065b0ae1d" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_casa.jasper"]]></subreportExpression>
@@ -928,7 +930,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="83e07249-4154-4cf6-914d-5e737dc885f2" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_vehiculo.jasper"]]></subreportExpression>
@@ -938,7 +940,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="2e9b7b77-e206-4ea4-944b-721e95a3e80f" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_situacion_financiera.jasper"]]></subreportExpression>
@@ -948,7 +950,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="f2c55494-b805-47a1-bbe8-0dadef080c00" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_cuentas_bancarias.jasper"]]></subreportExpression>
@@ -958,7 +960,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="08276d80-4480-4e5e-8c54-4e61b745053f" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_inversiones.jasper"]]></subreportExpression>
@@ -968,7 +970,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="7505721c-aa9b-4edf-a4ad-4b4b0af917af" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_endeudamiento.jasper"]]></subreportExpression>
@@ -978,7 +980,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="909df8d5-2114-464c-b0b0-58614fa8d034" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_tarjetas_credito.jasper"]]></subreportExpression>
@@ -1024,7 +1026,7 @@ order by NOMBRES ASC]]>
 			<subreport>
 				<reportElement uuid="97121ded-b41c-450c-917f-4f40abfa787a" positionType="Float" x="0" y="0" width="570" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_uso_exclusivo_gth.jasper"]]></subreportExpression>
