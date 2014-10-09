@@ -273,10 +273,10 @@ public class pre_partida_grupo_cargo extends Pantalla {
 	public void cambiaEstado() {
 		if(tab_tabla.getValor("ACTIVO_GEPGC").equals("false")){
 			dia_activacion_desactivacion.setTitle("ACTIVAR PARTIDA");
-			eti_fecha.setValue("FECHA ACTIVACIï¿½N");
+			eti_fecha.setValue("FECHA ACTIVACIÓN");
 		}else{
 			dia_activacion_desactivacion.setTitle("DESACTIVAR PARTIDA");
-			eti_fecha.setValue("FECHA DESACTIVACIï¿½N");				
+			eti_fecha.setValue("FECHA DESACTIVACIÓN");				
 
 		}	
 		art_motivo.limpiar();
