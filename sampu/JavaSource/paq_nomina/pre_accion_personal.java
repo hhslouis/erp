@@ -445,7 +445,7 @@ public class pre_accion_personal extends Pantalla {
 		aut_part_gru_cargo.setId("aut_part_gru_cargo");
 		aut_part_gru_cargo.setAutoCompletar("SELECT IDE_GEPGC,PAP.CODIGO_PARTIDA_GEPAP,PAP.DETALLE_GEPAP,pgc.TITULO_CARGO_GEPGC "
 				+"from GEN_PARTIDA_GRUPO_CARGO pgc "
-				+ "left join GEN_PARTIDA_PRESUPUESTARIA pap on PAP.IDE_GEPAP=PGC.IDE_GEPAP where pgc.VACANTE_GEPGC=1 and pgc.ACTIVO_GEPGC=TRUE ");
+				+ "left join GEN_PARTIDA_PRESUPUESTARIA pap on PAP.IDE_GEPAP=PGC.IDE_GEPAP where pgc.VACANTE_GEPGC=TRUE and pgc.ACTIVO_GEPGC=TRUE ");
 		
 		Grid gri=new Grid();
 		gri.setColumns(2);
@@ -483,12 +483,7 @@ public class pre_accion_personal extends Pantalla {
 		set_encargo.setWidth("70%");
 		set_encargo.setHeight("60%");
 		set_encargo.setTitle("ENCARGO DE PUESTO");
-		//		set_encargo
-		//		.setSeleccionTabla(
-		//				"select a.ide_gepgc,IDE_GEARE,a.ide_gegro,a.ide_gecaf,a.ide_sucu,a.ide_gedep,a.ide_gttem, titulo_cargo_gepgc,c.detalle_gegro as grupo_ocuapcional,detalle_gecaf as cargo,salario_encargo_gepgc from gen_partida_grupo_cargo a, gen_cargo_funcional b,gen_grupo_ocupacional c where a.ide_gecaf = b.ide_gecaf and a.ide_gegro = c.ide_gegro and vacante_gepgc=1 and encargo_gepgc=1 order by titulo_cargo_gepgc ",
-		//				"ide_gepgc");
-		set_encargo
-		.setSeleccionTabla(
+		set_encargo.setSeleccionTabla(
 				"select a.ide_gepgc,IDE_GEARE,a.ide_gegro,a.ide_gecaf,a.ide_sucu,a.ide_gedep,a.ide_gttem, titulo_cargo_gepgc,c.detalle_gegro as grupo_ocuapcional,detalle_gecaf as cargo,salario_encargo_gepgc from gen_partida_grupo_cargo a, gen_cargo_funcional b,gen_grupo_ocupacional c where a.ide_gecaf = b.ide_gecaf and a.ide_gegro = c.ide_gegro and encargo_gepgc=1 order by titulo_cargo_gepgc ",
 				"ide_gepgc");
 
@@ -626,7 +621,7 @@ public void cambiarPartida(){
 
 		aut_part_gru_cargo.setAutoCompletar("SELECT IDE_GEPGC,PAP.CODIGO_PARTIDA_GEPAP,PAP.DETALLE_GEPAP,pgc.TITULO_CARGO_GEPGC "
 				+"from GEN_PARTIDA_GRUPO_CARGO pgc "
-				+ "left join GEN_PARTIDA_PRESUPUESTARIA pap on PAP.IDE_GEPAP=PGC.IDE_GEPAP where pgc.VACANTE_GEPGC=1 and pgc.ACTIVO_GEPGC=TRUE ");
+				+ "left join GEN_PARTIDA_PRESUPUESTARIA pap on PAP.IDE_GEPAP=PGC.IDE_GEPAP where pgc.VACANTE_GEPGC=TRUE and pgc.ACTIVO_GEPGC=TRUE ");
 
 		aut_part_gru_cargo.setValor(null);
 
@@ -927,6 +922,7 @@ public void cambiarPartida(){
 				"and IDE_SUCU="+tab_empleado_departamento.getValor("IDE_SUCU")+" " +
 				"and ide_gedep="+tab_empleado_departamento.getValor("IDE_GEDEP")+" " +
 				"and IDE_GEARE="+tab_empleado_departamento.getValor("IDE_GEARE")+" ");
+		System.out.println("imprimo metodo  tab_empleado_departamento "+tab_empleado_departamento.getSql());
 		utilitario.addUpdate("tab_tabulador:tab_empleado_departamento");
 	}
 
@@ -1265,7 +1261,7 @@ public void cambiarPartida(){
 				List lis_finiquito=new ArrayList();		
 				lis_finiquito=utilitario.getConexion().consultar("SELECT finiquito_contrato_geaed FROM gen_accion_empleado_depa where ide_geaed in (select ide_geaed from  gen_accion_motivo_empleado where ide_geame="+tab_deta_empleado_depar.getValor("IDE_GEAME")+")");
 				if(lis_finiquito.get(0)!=null && !lis_finiquito.get(0).toString().isEmpty()){
-					if(lis_finiquito.get(0).toString().equals("TRUE")){				
+					if(lis_finiquito.get(0).toString().equals("1")){				
 						cal_terminacion.setValue(null);
 						are_tex_observacion.setValue(null);
 						dia_terminacion.getBot_aceptar().setMetodo("cargarFechaTerminacion");
@@ -1618,7 +1614,7 @@ try {
 		if(tab_deta_empleado_depar.guardar()){
 			if(tab_empleado_departamento.guardar()){
 				
-				utilitario.getConexion().agregarSqlPantalla("update GEN_PARTIDA_GRUPO_CARGO set VACANTE_GEPGC=0 where IDE_GEPGC="+tab_empleado_departamento.getValor("IDE_GEPGC"));
+				utilitario.getConexion().agregarSqlPantalla("update GEN_PARTIDA_GRUPO_CARGO set VACANTE_GEPGC=FALSE where IDE_GEPGC="+tab_empleado_departamento.getValor("IDE_GEPGC"));
 				if(guardarPantalla().isEmpty()){
 
 					if(ser_gestion.validarAccionFiniquito(tab_deta_empleado_depar.getValor(tab_deta_empleado_depar.getFilaActual(), "IDE_GEAME"))){
