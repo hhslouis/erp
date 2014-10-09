@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_acciones" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ca385c9f-5faf-42b6-88f2-0285d319eff8">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="438"/>
+	<property name="ireport.x" value="487"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["D:\\workspace\\biess\\WebContent\\reportes\\rep_gestion\\"]]></defaultValueExpression>
@@ -97,32 +97,63 @@ AND A.IDE_GEARE IN($P!{IDE_GEARE})
 AND TO_CHAR(A.fecha_ingreso_geded,'YYYY-MM-DD') BETWEEN $P{FECHA_INICIO} and $P{FECHA_FIN}
 ORDER BY a.fecha_geedp asc,
 A.IDE_GTEMP ASC,
-A.NOMBRES ASC
-]]>
+A.NOMBRES ASC]]>
 	</queryString>
-	<field name="FECHA_INGRESO_GEDED" class="java.sql.Timestamp"/>
-	<field name="FECHA_GEEDP" class="java.sql.Timestamp"/>
-	<field name="IDE_GEEDP" class="java.math.BigDecimal"/>
-	<field name="IDE_GEDED" class="java.math.BigDecimal"/>
-	<field name="GEN_IDE_GEDED" class="java.math.BigDecimal"/>
-	<field name="IDE_GTEMP" class="java.math.BigDecimal"/>
-	<field name="DOCUMENTO_IDENTIDAD_GTEMP" class="java.lang.String"/>
-	<field name="NOMBRES" class="java.lang.String"/>
-	<field name="IDE_SUCU" class="java.math.BigDecimal"/>
-	<field name="NOM_SUCU" class="java.lang.String"/>
-	<field name="IDE_GEARE" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GEARE" class="java.lang.String"/>
-	<field name="IDE_GEMED" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GEMED" class="java.lang.String"/>
-	<field name="IDE_GEAED" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GEAED" class="java.lang.String"/>
-	<field name="RMU_GEEDP" class="java.math.BigDecimal"/>
+	<field name="fecha_ingreso_geded" class="java.sql.Date">
+		<fieldDescription><![CDATA[Este campo define la fecha de ingreso del registro al sistema]]></fieldDescription>
+	</field>
+	<field name="fecha_geedp" class="java.sql.Date">
+		<fieldDescription><![CDATA[Este campo define la fecha de cada contrato que mantiene el empleado con la institucion.]]></fieldDescription>
+	</field>
+	<field name="ide_geedp" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_empleados_departamento_par, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="ide_geded" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_detalle_empleado_departame, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="gen_ide_geded" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_detalle_empleado_departame, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="ide_gtemp" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gth_empleado, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="documento_identidad_gtemp" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el numero de documento de identidad que posee el empleado.]]></fieldDescription>
+	</field>
+	<field name="nombres" class="java.lang.String"/>
+	<field name="ide_sucu" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_sucu]]></fieldDescription>
+	</field>
+	<field name="nom_sucu" class="java.lang.String">
+		<fieldDescription><![CDATA[nom_sucu]]></fieldDescription>
+	</field>
+	<field name="ide_geare" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_area, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="detalle_geare" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del area ejemplo: Directorio, Auditoria Interna, etc.]]></fieldDescription>
+	</field>
+	<field name="ide_gemed" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_motivo_empleado_depa, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="detalle_gemed" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del motivo de contratacion del empleado ejemplo:puesto vacante, renuncia, cambio de contrato.]]></fieldDescription>
+	</field>
+	<field name="ide_geaed" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_accion_empleado_depa, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="detalle_geaed" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del de la accion ejemplo: contrato, cambio de contrato, terminacion.]]></fieldDescription>
+	</field>
+	<field name="rmu_geedp" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Este campo define la remuneracion unificada del empleado, que mantiene con su respectivo contrato.]]></fieldDescription>
+	</field>
 	<variable name="CONTADOR" class="java.lang.Integer" incrementType="Group" incrementGroup="EMPLEADO" calculation="Count">
-		<variableExpression><![CDATA[$F{IDE_GTEMP}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_gtemp}]]></variableExpression>
 		<initialValueExpression><![CDATA[1]]></initialValueExpression>
 	</variable>
 	<group name="EMPLEADO">
-		<groupExpression><![CDATA[$F{IDE_GTEMP}]]></groupExpression>
+		<groupExpression><![CDATA[$F{ide_gtemp}]]></groupExpression>
 		<groupHeader>
 			<band/>
 		</groupHeader>
@@ -354,7 +385,7 @@ A.NOMBRES ASC
 				<textElement verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NOMBRES}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nombres}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="43f92c26-d71f-4dce-88d1-e20b6dda10de" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="15" y="0" width="41" height="10" isPrintWhenDetailOverflows="true"/>
@@ -368,7 +399,7 @@ A.NOMBRES ASC
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DOCUMENTO_IDENTIDAD_GTEMP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{documento_identidad_gtemp}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="996c7526-bd33-4c47-9dd3-731593b614be" stretchType="RelativeToBandHeight" x="202" y="0" width="70" height="10" isPrintWhenDetailOverflows="true"/>
@@ -382,7 +413,7 @@ A.NOMBRES ASC
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GEMED}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_gemed}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="fe29a436-d60c-45e0-9f4f-9780238b31ab" stretchType="RelativeToBandHeight" x="272" y="0" width="77" height="10" isPrintWhenDetailOverflows="true"/>
@@ -396,7 +427,7 @@ A.NOMBRES ASC
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GEAED}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_geaed}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="58b0d6be-1cff-4169-8ec3-b38d4b54b082" stretchType="RelativeToBandHeight" x="349" y="0" width="49" height="10" isPrintWhenDetailOverflows="true"/>
@@ -410,7 +441,7 @@ A.NOMBRES ASC
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NOM_SUCU}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nom_sucu}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="a38a0210-a61c-4788-bbdd-3c5078a0c460" stretchType="RelativeToBandHeight" x="398" y="0" width="81" height="10" isPrintWhenDetailOverflows="true"/>
@@ -424,7 +455,7 @@ A.NOMBRES ASC
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GEARE}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_geare}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="yyyy/MM/dd" isBlankWhenNull="true">
 				<reportElement uuid="ec3fd181-aeaa-46f6-9fd6-b5bf1d3afd94" stretchType="RelativeToBandHeight" x="479" y="0" width="43" height="10" isPrintWhenDetailOverflows="true"/>
@@ -438,7 +469,7 @@ A.NOMBRES ASC
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_INGRESO_GEDED}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_ingreso_geded}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement uuid="d1079c26-2ef6-4a0a-bb00-5f37812629eb" stretchType="RelativeToBandHeight" x="522" y="0" width="33" height="10" isPrintWhenDetailOverflows="true"/>
@@ -452,7 +483,7 @@ A.NOMBRES ASC
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{RMU_GEEDP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{rmu_geedp}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
