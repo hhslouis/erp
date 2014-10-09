@@ -289,7 +289,7 @@ public class pre_anticipos extends Pantalla {
 		tab_anticipo.agregarRelacion(tab_garante);
 
 
-		tab_anticipo.setCondicion("ANTICIPO_NRANT=true AND IDE_GTEMP=-1");
+		tab_anticipo.setCondicion("ANTICIPO_NRANT=TRUE AND IDE_GTEMP=-1");
 		tab_anticipo.setCampoOrden("IDE_NRANT DESC");
 		tab_anticipo.dibujar();
 
@@ -1032,7 +1032,7 @@ public class pre_anticipos extends Pantalla {
 		if (tab_anticipo.getValor("APROBADO_NRANT") !=null 
 				&& !tab_anticipo.getValor("APROBADO_NRANT").isEmpty()
 				&& (tab_anticipo.getValor("APROBADO_NRANT").equalsIgnoreCase("true")
-						|| tab_anticipo.getValor("APROBADO_NRANT").equalsIgnoreCase("1"))){
+						|| tab_anticipo.getValor("APROBADO_NRANT").equalsIgnoreCase("true"))){
 			utilitario.agregarMensajeInfo("No se puede agregar un garante", "El anticipo ya se encuentra aprobado");
 			return;
 		}
@@ -1382,7 +1382,7 @@ public class pre_anticipos extends Pantalla {
 
 				for (int i = 0; i < tab_pagos_anticipos.getListaFilasSeleccionadas().size(); i++) {
 					fila=tab_pagos_anticipos.getListaFilasSeleccionadas().get(i);
-					utilitario.getConexion().agregarSql("update NRH_AMORTIZACION set ACTIVO_NRAMO=TRUE,PRE_CANCELADO_NRAMO=true,FECHA_CANCELADO_NRAMO=TO_DATE('"+utilitario.getFechaActual()+"', 'yy-mm-dd') " +
+					utilitario.getConexion().agregarSql("update NRH_AMORTIZACION set ACTIVO_NRAMO=TRUE,PRE_CANCELADO_NRAMO=true ,FECHA_CANCELADO_NRAMO=TO_DATE('"+utilitario.getFechaActual()+"', 'yy-mm-dd') " +
 							"where IDE_NRAMO ="+fila.getRowKey());
 					if (i>0){
 						tab_precancelacion.insertar();
@@ -1421,7 +1421,7 @@ public class pre_anticipos extends Pantalla {
 			utilitario.getConexion().guardarPantalla();
 
 			String ide_nrant_anterior=tab_anticipo.getValorSeleccionado();
-			tab_anticipo.setCondicion("ANTICIPO_NRANT=true AND IDE_GTEMP="+aut_empleado.getValor());
+			tab_anticipo.setCondicion("ANTICIPO_NRANT=TRUE AND IDE_GTEMP="+aut_empleado.getValor());
 			tab_anticipo.ejecutarSql();
 			tab_anticipo.setFilaActual(ide_nrant_anterior);
 
@@ -1487,12 +1487,12 @@ public class pre_anticipos extends Pantalla {
 				if (tab_cuotas.getTotalFilas()==tab_cuotas_pagadas.getTotalFilas()){
 					if (tab_anticipo.getValor("ACTIVO_NRANT")!=null
 							&& !tab_anticipo.getValor("ACTIVO_NRANT").isEmpty()
-							&& (tab_anticipo.getValor("ACTIVO_NRANT").equalsIgnoreCase("1")
+							&& (tab_anticipo.getValor("ACTIVO_NRANT").equalsIgnoreCase("true")
 									|| tab_anticipo.getValor("ACTIVO_NRANT").equalsIgnoreCase("true"))){
 						utilitario.getConexion().ejecutarSql("update NRH_ANTICIPO set ACTIVO_NRANT=FALSE where IDE_NRANT="+tab_anticipo.getValorSeleccionado());
 
 						String ide_nrant_anterior=tab_anticipo.getValorSeleccionado(); 
-						tab_anticipo.setCondicion("ANTICIPO_NRANT=true AND IDE_GTEMP="+aut_empleado.getValor());
+						tab_anticipo.setCondicion("ANTICIPO_NRANT=TRUE AND IDE_GTEMP="+aut_empleado.getValor());
 						tab_anticipo.ejecutarSql();
 						tab_anticipo.setFilaActual(ide_nrant_anterior);
 					}
@@ -1500,7 +1500,7 @@ public class pre_anticipos extends Pantalla {
 					String ide_nrant_anterior=tab_anticipo.getValorSeleccionado(); 
 
 					utilitario.getConexion().ejecutarSql("update NRH_ANTICIPO set ACTIVO_NRANT=TRUE where IDE_NRANT="+tab_anticipo.getValorSeleccionado());
-					tab_anticipo.setCondicion("ANTICIPO_NRANT=true AND IDE_GTEMP="+aut_empleado.getValor());
+					tab_anticipo.setCondicion("ANTICIPO_NRANT=TRUE AND IDE_GTEMP="+aut_empleado.getValor());
 					tab_anticipo.ejecutarSql();
 					tab_anticipo.setFilaActual(ide_nrant_anterior);
 
@@ -1794,7 +1794,7 @@ public class pre_anticipos extends Pantalla {
 		guardarPantalla();
 		con_guardar.cerrar();
 		String ide_nrant_anterior=tab_anticipo.getValorSeleccionado();
-		tab_anticipo.setCondicion("ANTICIPO_NRANT=true AND IDE_GTEMP="+aut_empleado.getValor());
+		tab_anticipo.setCondicion("ANTICIPO_NRANT=TRUE AND IDE_GTEMP="+aut_empleado.getValor());
 		tab_anticipo.ejecutarSql();
 		tab_anticipo.setFilaActual(ide_nrant_anterior);
 
@@ -1876,7 +1876,7 @@ public class pre_anticipos extends Pantalla {
 		guardarPantalla();
 		con_guardar.cerrar();
 		String ide_nrant_anterior=tab_anticipo.getValorSeleccionado();
-		tab_anticipo.setCondicion("ANTICIPO_NRANT=true AND IDE_GTEMP="+aut_empleado.getValor());
+		tab_anticipo.setCondicion("ANTICIPO_NRANT=TRUE AND IDE_GTEMP="+aut_empleado.getValor());
 		tab_anticipo.ejecutarSql();
 		tab_anticipo.setFilaActual(ide_nrant_anterior);
 
@@ -2765,7 +2765,7 @@ public class pre_anticipos extends Pantalla {
 		aut_empleado.onSelect(evt);
 		ide_geedp_activo=ser_gestion.getIdeContratoActivo(aut_empleado.getValor());
 
-		tab_anticipo.setCondicion("ANTICIPO_NRANT=true AND IDE_GTEMP="+aut_empleado.getValor());
+		tab_anticipo.setCondicion("ANTICIPO_NRANT=TRUE AND IDE_GTEMP="+aut_empleado.getValor());
 		tab_anticipo.ejecutarSql();
 
 		cargarTablasPantalla();
