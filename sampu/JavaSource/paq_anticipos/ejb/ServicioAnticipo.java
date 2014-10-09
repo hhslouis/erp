@@ -943,7 +943,7 @@ public class ServicioAnticipo{
 	}
 
 	public String getNumeroAnticipo(String IDE_GTEMP){
-		TablaGenerica tab_num_max_anticipos=utilitario.consultar("select IDE_GTEMP,max(NRO_ANTICIPO_NRANT) as max_anticipos from NRH_ANTICIPO where ANTICIPO_NRANT=1 AND IDE_GTEMP="+IDE_GTEMP+" GROUP BY IDE_GTEMP");
+		TablaGenerica tab_num_max_anticipos=utilitario.consultar("select IDE_GTEMP,max(NRO_ANTICIPO_NRANT) as max_anticipos from NRH_ANTICIPO where ANTICIPO_NRANT=TRUE AND IDE_GTEMP="+IDE_GTEMP+" GROUP BY IDE_GTEMP");
 		if (tab_num_max_anticipos.getTotalFilas()>0){
 			if (tab_num_max_anticipos.getValor(0,"max_anticipos")!=null && !tab_num_max_anticipos.getValor(0,"max_anticipos").isEmpty()){
 				try {
