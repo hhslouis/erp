@@ -1702,59 +1702,12 @@ public class pre_empleado extends Pantalla {
 		itm_datos_experiencia_laboral.setUpdate("pan_opcion");
 		sum_datos_experiencia_laboral.getChildren().add(itm_datos_experiencia_laboral);
 
-
-		// SUB MENU 8
-		Submenu sum_datos_amigos = new Submenu();
-		sum_datos_amigos.setLabel("AMIGOS Y CONOCIDOS");
-		pam_menu.getChildren().add(sum_datos_amigos);
-
-		// ITEM 1 : OPCION 15
-		ItemMenu itm_datos_amigos = new ItemMenu();
-		itm_datos_amigos.setValue("DENTRO DEL BIESS ANTES SU INCORPORACION (AMIGOS O CONOCIDOS)");
-		itm_datos_amigos.setIcon("ui-icon-person");
-		itm_datos_amigos.setMetodo("dibujarDatosAmigos");
-		itm_datos_amigos.setUpdate("pan_opcion");
-		sum_datos_amigos.getChildren().add(itm_datos_amigos);
-
-
 		// SUB MENU 9
-		Submenu sum_datos_situacion_financiera = new Submenu();
-		sum_datos_situacion_financiera.setLabel("INFORMACION SITUACION ECONOMICA");
-		pam_menu.getChildren().add(sum_datos_situacion_financiera);
-
-		// ITEM 1 : OPCION 16
-		ItemMenu itm_datos_situacion_economica = new ItemMenu();
-		itm_datos_situacion_economica.setValue("SITUACION ECONOMICA");
-		itm_datos_situacion_economica.setIcon("ui-icon-person");
-		itm_datos_situacion_economica.setMetodo("dibujarDatosSituacionEconomica");
-		itm_datos_situacion_economica.setUpdate("pan_opcion");
-		sum_datos_situacion_financiera.getChildren().add(itm_datos_situacion_economica);
-
+				Submenu sum_datos_situacion_financiera = new Submenu();
+				sum_datos_situacion_financiera.setLabel("INFORMACION SITUACION ECONOMICA");
+				pam_menu.getChildren().add(sum_datos_situacion_financiera);
 		
-		// ITEM 3 : OPCION 18
-		ItemMenu itm_datos_bienes_inmuebles = new ItemMenu();
-		itm_datos_bienes_inmuebles.setValue("BIENES INMUEBLES (Terrenos)");
-		itm_datos_bienes_inmuebles.setIcon("ui-icon-person");
-		itm_datos_bienes_inmuebles.setMetodo("dibujarDatosBienesInmuebles");
-		itm_datos_bienes_inmuebles.setUpdate("pan_opcion");
-		sum_datos_situacion_financiera.getChildren().add(itm_datos_bienes_inmuebles);
-
-		// ITEM 4 : OPCION 19
-		ItemMenu itm_datos_casa = new ItemMenu();
-		itm_datos_casa.setValue("CASA");
-		itm_datos_casa.setIcon("ui-icon-person");
-		itm_datos_casa.setMetodo("dibujarDatosCasa");
-		itm_datos_casa.setUpdate("pan_opcion");
-		sum_datos_situacion_financiera.getChildren().add(itm_datos_casa);
-
-		// ITEM 6 : OPCION 21
-		ItemMenu itm_datos_situacion_financiera = new ItemMenu();
-		itm_datos_situacion_financiera.setValue("SITUACION FINANCIERA");
-		itm_datos_situacion_financiera.setIcon("ui-icon-person");
-		itm_datos_situacion_financiera.setMetodo("dibujarDatosSituacionFinanciera");
-		itm_datos_situacion_financiera.setUpdate("pan_opcion");
-		sum_datos_situacion_financiera.getChildren().add(itm_datos_situacion_financiera);
-
+					
 		// ITEM 7 : OPCION 22
 		ItemMenu itm_datos_cuenta_bancaria = new ItemMenu();
 		itm_datos_cuenta_bancaria.setValue("CUENTAS BANCARIAS");
@@ -1763,23 +1716,8 @@ public class pre_empleado extends Pantalla {
 		itm_datos_cuenta_bancaria.setUpdate("pan_opcion");
 		sum_datos_situacion_financiera.getChildren().add(itm_datos_cuenta_bancaria);
 
-		// ITEM 8 : OPCION 23
-		ItemMenu itm_datos_inversion = new ItemMenu();
-		itm_datos_inversion.setValue("DATOS DE INVERSION");
-		itm_datos_inversion.setIcon("ui-icon-person");
-		itm_datos_inversion.setMetodo("dibujarDatosInversion");
-		itm_datos_inversion.setUpdate("pan_opcion");
-		sum_datos_situacion_financiera.getChildren().add(itm_datos_inversion);
-
-		// ITEM 9 : OPCION 24
-		ItemMenu itm_datos_endeudamiento = new ItemMenu();
-		itm_datos_endeudamiento.setValue("DATOS DE ENDEUDAMIENTO");
-		itm_datos_endeudamiento.setIcon("ui-icon-person");
-		itm_datos_endeudamiento.setMetodo("dibujarDatosEndeudamiento");
-		itm_datos_endeudamiento.setUpdate("pan_opcion");
-		sum_datos_situacion_financiera.getChildren().add(itm_datos_endeudamiento);
-
 		
+				
 		// SUB MENU 11
 		Submenu sum_sri_proy_ing = new Submenu();
 		sum_sri_proy_ing.setLabel("SRI");
