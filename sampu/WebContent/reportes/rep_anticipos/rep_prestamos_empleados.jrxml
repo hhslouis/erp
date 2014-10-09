@@ -19,7 +19,7 @@
 	<parameter name="usuario" class="java.lang.Integer"/>
 	<parameter name="titulo" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[select a.IDE_NRANT,a.ACTIVO_NRANT,(case when a.ACTIVO_NRANT=0 then 'ANTICIPOS LIQUIDADOS' ELSE 'ANTICIPOS PENDIENTES' end)as ACTIVO_DESCRIPCION,b.ide_gtemp,b.documento,b.nombre_empleado,a.NRO_ANTICIPO_NRANT,a.FECHA_APROBACION_NRANT,a.FECHA_VENCIMIENTO_NRANT,i.DETALLE_NRMOA,
+		<![CDATA[select a.IDE_NRANT,a.ACTIVO_NRANT,(case when a.ACTIVO_NRANT=false then 'ANTICIPOS LIQUIDADOS' ELSE 'ANTICIPOS PENDIENTES' end)as ACTIVO_DESCRIPCION,b.ide_gtemp,b.documento,b.nombre_empleado,a.NRO_ANTICIPO_NRANT,a.FECHA_APROBACION_NRANT,a.FECHA_VENCIMIENTO_NRANT,i.DETALLE_NRMOA,
 f.nombre_garante,f.documento_garante,a.MONTO_APROBADO_NRANT,c.plazo_nrani,j.CUOTA_MENSUAL_NRCAP,(case when d.num_cuota_pagada is null then 0 else d.num_cuota_pagada end) as n_cuota_pagada,
 (case when d.cuota_pagado is null then 0 else d.cuota_pagado end)as valor_pagado,
 (case when e.num_cuota_deuda is null then 0 else e.num_cuota_deuda end) as num_deuda,
@@ -34,15 +34,15 @@ select ide_nrant,plazo_nrani,ide_nrani from nrh_anticipo_interes
 )c on c.ide_nrant=a.ide_nrant
 left join (
 select count(nro_cuota_nramo) as num_cuota_pagada,ide_nrani,sum(cuota_nramo) as cuota_pagado
-from nrh_amortizacion where activo_nramo=1 group by ide_nrani
+from nrh_amortizacion where activo_nramo=true group by ide_nrani
 )d on d.ide_nrani=c.ide_nrani
 left join (
 select count(nro_cuota_nramo) as num_cuota_deuda,ide_nrani,sum(cuota_nramo) as cuota_deuda
-from nrh_amortizacion where activo_nramo=0 group by ide_nrani
+from nrh_amortizacion where activo_nramo=false group by ide_nrani
 )e on e.ide_nrani=c.ide_nrani
 left join (
 select ide_nrant,apellido_paternog_nrgar||' '||apellido_maternog_nrgar||' '||primer_nombreg_nrgar||' '||segundo_nombreg_nrgar as nombre_garante,documento_identidadg_nrgar as documento_garante
-from nrh_garante where ROWNUM =1
+from nrh_garante limit 1
 )f on f.ide_nrant=a.ide_nrant
 left join (
 select IDE_NRANT,VALOR_ABONO_NRANA,FECHA_PAGO_NRANA from NRH_ANTICIPO_ABONO
@@ -56,60 +56,84 @@ select  IDE_NRANT,CUOTA_MENSUAL_NRCAP from NRH_CAPACIDAD_PAGO
 where a.ACTIVO_NRANT in($P!{ACTIVO_NRANT}) AND b.ide_gtemp in ($P!{ide_gtemp})
 ORDER BY  a.ACTIVO_NRANT,b.nombre_empleado,a.NRO_ANTICIPO_NRANT]]>
 	</queryString>
-	<field name="IDE_NRANT" class="java.math.BigDecimal"/>
-	<field name="ACTIVO_NRANT" class="java.math.BigDecimal"/>
-	<field name="ACTIVO_DESCRIPCION" class="java.lang.String"/>
-	<field name="IDE_GTEMP" class="java.math.BigDecimal"/>
-	<field name="DOCUMENTO" class="java.lang.String"/>
-	<field name="NOMBRE_EMPLEADO" class="java.lang.String"/>
-	<field name="NRO_ANTICIPO_NRANT" class="java.math.BigDecimal"/>
-	<field name="FECHA_APROBACION_NRANT" class="java.sql.Timestamp"/>
-	<field name="FECHA_VENCIMIENTO_NRANT" class="java.sql.Timestamp"/>
-	<field name="DETALLE_NRMOA" class="java.lang.String"/>
-	<field name="NOMBRE_GARANTE" class="java.lang.String"/>
-	<field name="DOCUMENTO_GARANTE" class="java.lang.String"/>
-	<field name="MONTO_APROBADO_NRANT" class="java.math.BigDecimal"/>
-	<field name="PLAZO_NRANI" class="java.math.BigDecimal"/>
-	<field name="CUOTA_MENSUAL_NRCAP" class="java.math.BigDecimal"/>
-	<field name="N_CUOTA_PAGADA" class="java.math.BigDecimal"/>
-	<field name="VALOR_PAGADO" class="java.math.BigDecimal"/>
-	<field name="NUM_DEUDA" class="java.math.BigDecimal"/>
-	<field name="VALOR_DEUDA" class="java.math.BigDecimal"/>
-	<field name="FECHA_PAGO_NRANA" class="java.sql.Timestamp"/>
-	<field name="VALOR_ABONO_NRANA" class="java.math.BigDecimal"/>
+	<field name="ide_nrant" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla nrh_anticipo, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="activo_nrant" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[Este campo define si el registro se encuentra activo o no para su transaccionalidad, 1 SI / 0 No.]]></fieldDescription>
+	</field>
+	<field name="activo_descripcion" class="java.lang.String"/>
+	<field name="ide_gtemp" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gth_empleado, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="documento" class="java.lang.String"/>
+	<field name="nombre_empleado" class="java.lang.String"/>
+	<field name="nro_anticipo_nrant" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define el numero de anticipo que solicita el empleado.]]></fieldDescription>
+	</field>
+	<field name="fecha_aprobacion_nrant" class="java.sql.Date">
+		<fieldDescription><![CDATA[Este campo define la fecha de aprobacion del anticipo.]]></fieldDescription>
+	</field>
+	<field name="fecha_vencimiento_nrant" class="java.sql.Date">
+		<fieldDescription><![CDATA[Este campo define la fecha de vencimiento del anticipo.]]></fieldDescription>
+	</field>
+	<field name="detalle_nrmoa" class="java.lang.String">
+		<fieldDescription><![CDATA[detalle_nrmoa]]></fieldDescription>
+	</field>
+	<field name="nombre_garante" class="java.lang.String"/>
+	<field name="documento_garante" class="java.lang.String"/>
+	<field name="monto_aprobado_nrant" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Este campo define el monto aprobado para el anticipo de acuerdo a la capacidad de pago.]]></fieldDescription>
+	</field>
+	<field name="plazo_nrani" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define el numero de meses plazo solicitado para cancelar el anticipo.]]></fieldDescription>
+	</field>
+	<field name="cuota_mensual_nrcap" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Este campo define el valor de la cuota mensual que tendria que pagar el empleado por el monto del anticipo solicitado.]]></fieldDescription>
+	</field>
+	<field name="n_cuota_pagada" class="java.lang.Long"/>
+	<field name="valor_pagado" class="java.math.BigDecimal"/>
+	<field name="num_deuda" class="java.lang.Long"/>
+	<field name="valor_deuda" class="java.math.BigDecimal"/>
+	<field name="fecha_pago_nrana" class="java.sql.Date">
+		<fieldDescription><![CDATA[Este campo define la fecha de inicio del nuevo pago, a partir de esta fecha se generan los las nuevas fechas para el cobro del resto de cuotas.]]></fieldDescription>
+	</field>
+	<field name="valor_abono_nrana" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[valor_abono_nrana]]></fieldDescription>
+	</field>
 	<variable name="MONTO_APROBADO_NRANT_1" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
-		<variableExpression><![CDATA[$F{MONTO_APROBADO_NRANT}]]></variableExpression>
+		<variableExpression><![CDATA[$F{monto_aprobado_nrant}]]></variableExpression>
 	</variable>
 	<variable name="VALOR_PAGADO_1" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
-		<variableExpression><![CDATA[$F{VALOR_PAGADO}]]></variableExpression>
+		<variableExpression><![CDATA[$F{valor_pagado}]]></variableExpression>
 	</variable>
 	<variable name="VALOR_DEUDA_1" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
-		<variableExpression><![CDATA[$F{VALOR_DEUDA}]]></variableExpression>
+		<variableExpression><![CDATA[$F{valor_deuda}]]></variableExpression>
 	</variable>
 	<variable name="VALOR_ABONO_NRANA_1" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
-		<variableExpression><![CDATA[$F{VALOR_ABONO_NRANA}]]></variableExpression>
+		<variableExpression><![CDATA[$F{valor_abono_nrana}]]></variableExpression>
 	</variable>
 	<variable name="MONTO_APROBADO_NRANT_2" class="java.math.BigDecimal" resetType="Group" resetGroup="ACTIVO_NRANT" calculation="Sum">
-		<variableExpression><![CDATA[$F{MONTO_APROBADO_NRANT}]]></variableExpression>
+		<variableExpression><![CDATA[$F{monto_aprobado_nrant}]]></variableExpression>
 	</variable>
 	<variable name="CUOTA_MENSUAL_NRCAP_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ACTIVO_NRANT" calculation="Sum">
-		<variableExpression><![CDATA[$F{CUOTA_MENSUAL_NRCAP}]]></variableExpression>
+		<variableExpression><![CDATA[$F{cuota_mensual_nrcap}]]></variableExpression>
 	</variable>
 	<variable name="VALOR_PAGADO_2" class="java.math.BigDecimal" resetType="Group" resetGroup="ACTIVO_NRANT" calculation="Sum">
-		<variableExpression><![CDATA[$F{VALOR_PAGADO}]]></variableExpression>
+		<variableExpression><![CDATA[$F{valor_pagado}]]></variableExpression>
 	</variable>
 	<variable name="VALOR_DEUDA_2" class="java.math.BigDecimal" resetType="Group" resetGroup="ACTIVO_NRANT" calculation="Sum">
-		<variableExpression><![CDATA[$F{VALOR_DEUDA}]]></variableExpression>
+		<variableExpression><![CDATA[$F{valor_deuda}]]></variableExpression>
 	</variable>
 	<variable name="VALOR_ABONO_NRANA_2" class="java.math.BigDecimal" resetType="Group" resetGroup="ACTIVO_NRANT" calculation="Sum">
-		<variableExpression><![CDATA[$F{VALOR_ABONO_NRANA}]]></variableExpression>
+		<variableExpression><![CDATA[$F{valor_abono_nrana}]]></variableExpression>
 	</variable>
 	<variable name="contador" class="java.lang.Integer" calculation="Count">
-		<variableExpression><![CDATA[$F{IDE_NRANT}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_nrant}]]></variableExpression>
 		<initialValueExpression><![CDATA[1]]></initialValueExpression>
 	</variable>
 	<group name="ACTIVO_NRANT">
-		<groupExpression><![CDATA[$F{ACTIVO_NRANT}]]></groupExpression>
+		<groupExpression><![CDATA[$F{activo_nrant}]]></groupExpression>
 		<groupHeader>
 			<band height="12">
 				<textField>
@@ -117,7 +141,7 @@ ORDER BY  a.ACTIVO_NRANT,b.nombre_empleado,a.NRO_ANTICIPO_NRANT]]>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="7" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{ACTIVO_DESCRIPCION}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{activo_descripcion}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -219,7 +243,7 @@ ORDER BY  a.ACTIVO_NRANT,b.nombre_empleado,a.NRO_ANTICIPO_NRANT]]>
 					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema_biess/rep_cabecera_horizontal.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera_horizontal.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
@@ -482,7 +506,7 @@ ORDER BY  a.ACTIVO_NRANT,b.nombre_empleado,a.NRO_ANTICIPO_NRANT]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DOCUMENTO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{documento}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="f6d06b48-4a06-4edd-b1ca-5fec22a3385a" stretchType="RelativeToBandHeight" x="58" y="0" width="159" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -496,7 +520,7 @@ ORDER BY  a.ACTIVO_NRANT,b.nombre_empleado,a.NRO_ANTICIPO_NRANT]]>
 				<textElement verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NOMBRE_EMPLEADO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nombre_empleado}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="428a7581-3c12-4384-8a86-50cb895502ce" stretchType="RelativeToBandHeight" x="217" y="0" width="20" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -510,7 +534,7 @@ ORDER BY  a.ACTIVO_NRANT,b.nombre_empleado,a.NRO_ANTICIPO_NRANT]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NRO_ANTICIPO_NRANT}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nro_anticipo_nrant}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="yyyy/MM/dd" isBlankWhenNull="true">
 				<reportElement uuid="31ef2e38-d328-4c56-be94-7afe95847137" stretchType="RelativeToBandHeight" x="237" y="0" width="37" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -524,7 +548,7 @@ ORDER BY  a.ACTIVO_NRANT,b.nombre_empleado,a.NRO_ANTICIPO_NRANT]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_APROBACION_NRANT}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_aprobacion_nrant}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="081d0bb9-b5a3-4fb0-a00f-8757c9bd4da4" stretchType="RelativeToBandHeight" x="426" y="0" width="115" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -538,7 +562,7 @@ ORDER BY  a.ACTIVO_NRANT,b.nombre_empleado,a.NRO_ANTICIPO_NRANT]]>
 				<textElement verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NOMBRE_GARANTE}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nombre_garante}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement uuid="b64f1673-2222-4254-ac49-b6b5ba80f537" stretchType="RelativeToBandHeight" x="541" y="0" width="37" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -552,7 +576,7 @@ ORDER BY  a.ACTIVO_NRANT,b.nombre_empleado,a.NRO_ANTICIPO_NRANT]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{MONTO_APROBADO_NRANT}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{monto_aprobado_nrant}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="08ff4726-22cd-40cc-93ef-d6bb3e1fb85c" stretchType="RelativeToBandHeight" x="578" y="0" width="24" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -566,7 +590,7 @@ ORDER BY  a.ACTIVO_NRANT,b.nombre_empleado,a.NRO_ANTICIPO_NRANT]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{PLAZO_NRANI}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{plazo_nrani}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement uuid="cf095946-99f6-440f-b51c-63ef3ee1aae6" stretchType="RelativeToBandHeight" x="602" y="0" width="33" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -580,7 +604,7 @@ ORDER BY  a.ACTIVO_NRANT,b.nombre_empleado,a.NRO_ANTICIPO_NRANT]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CUOTA_MENSUAL_NRCAP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cuota_mensual_nrcap}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true">
 				<reportElement uuid="421c55f5-39be-485a-bb84-6db0d0405107" stretchType="RelativeToBandHeight" x="635" y="0" width="15" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -594,7 +618,7 @@ ORDER BY  a.ACTIVO_NRANT,b.nombre_empleado,a.NRO_ANTICIPO_NRANT]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{N_CUOTA_PAGADA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{n_cuota_pagada}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="yyyy/MM/dd" isBlankWhenNull="true">
 				<reportElement uuid="3867defa-0aa9-41c8-8c00-ff23ae7781f4" stretchType="RelativeToBandHeight" x="274" y="0" width="37" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -608,7 +632,7 @@ ORDER BY  a.ACTIVO_NRANT,b.nombre_empleado,a.NRO_ANTICIPO_NRANT]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_VENCIMIENTO_NRANT}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_vencimiento_nrant}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="d398c30e-c2e4-4b63-85df-abf6eeb70a8c" stretchType="RelativeToBandHeight" x="311" y="0" width="115" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -622,7 +646,7 @@ ORDER BY  a.ACTIVO_NRANT,b.nombre_empleado,a.NRO_ANTICIPO_NRANT]]>
 				<textElement verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_NRMOA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_nrmoa}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement uuid="eae40ba4-5105-492b-b113-a5809cb635e3" stretchType="RelativeToBandHeight" x="650" y="0" width="33" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -636,7 +660,7 @@ ORDER BY  a.ACTIVO_NRANT,b.nombre_empleado,a.NRO_ANTICIPO_NRANT]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{VALOR_PAGADO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{valor_pagado}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="718b79e9-693c-452d-afa4-1d337f4e8605" stretchType="RelativeToBandHeight" x="683" y="0" width="16" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -650,7 +674,7 @@ ORDER BY  a.ACTIVO_NRANT,b.nombre_empleado,a.NRO_ANTICIPO_NRANT]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NUM_DEUDA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{num_deuda}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement uuid="5525d160-0f67-4789-a775-6d3b67bed71a" stretchType="RelativeToBandHeight" x="699" y="0" width="33" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -664,7 +688,7 @@ ORDER BY  a.ACTIVO_NRANT,b.nombre_empleado,a.NRO_ANTICIPO_NRANT]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{VALOR_DEUDA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{valor_deuda}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="yyyy/MM/dd" isBlankWhenNull="true">
 				<reportElement uuid="88c71401-b60f-45e1-8cfa-40cc94715148" stretchType="RelativeToBandHeight" x="732" y="0" width="37" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -678,7 +702,7 @@ ORDER BY  a.ACTIVO_NRANT,b.nombre_empleado,a.NRO_ANTICIPO_NRANT]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_PAGO_NRANA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_pago_nrana}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement uuid="99cd895e-f1f7-4d8a-9613-8e7b5286b43a" stretchType="RelativeToBandHeight" x="769" y="0" width="33" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -692,7 +716,7 @@ ORDER BY  a.ACTIVO_NRANT,b.nombre_empleado,a.NRO_ANTICIPO_NRANT]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{VALOR_ABONO_NRANA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{valor_abono_nrana}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="b7c7e904-5ef6-4434-a21b-f3bd5f98d8c9" x="0" y="0" width="18" height="10"/>
