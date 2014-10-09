@@ -2049,7 +2049,7 @@ public class pre_empleado extends Pantalla {
 			tab_empleado_departamento.setMostrarNumeroRegistros(false);
 			tab_empleado_departamento.getColumna("IDE_GEGRO").setCombo("GEN_GRUPO_OCUPACIONAL", "IDE_GEGRO", "DETALLE_GEGRO", "");
 			tab_empleado_departamento.getColumna("IDE_GEGRO").setMetodoChange("cargarCargoFuncional");
-			tab_empleado_departamento.getColumna("IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL", "IDE_GECAF", "DETALLE_GECAF", "PRINCIPAL_SECUNDARIO_GECAF=1 AND IDE_GECAF IN (SELECT IDE_GECAF FROM GEN_GRUPO_CARGO where IDE_GEGRO=-1)");
+			tab_empleado_departamento.getColumna("IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL", "IDE_GECAF", "DETALLE_GECAF", "PRINCIPAL_SECUNDARIO_GECAF=TRUE AND IDE_GECAF IN (SELECT IDE_GECAF FROM GEN_GRUPO_CARGO where IDE_GEGRO=-1)");
 			tab_empleado_departamento.getColumna("IDE_GECAF").setMetodoChange("cargarPartidaGrupoCargo");
 			tab_empleado_departamento.getColumna("IDE_GECAF").setBuscarenCombo(false);
 			tab_empleado_departamento.getColumna("GEN_IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL", "IDE_GECAF", "DETALLE_GECAF","");
@@ -2119,14 +2119,14 @@ public class pre_empleado extends Pantalla {
 
 
 	private void actualizarCombosDepartamentoEmpleado(){
-		tab_empleado_departamento.getColumna("IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL", "IDE_GECAF", "DETALLE_GECAF", "PRINCIPAL_SECUNDARIO_GECAF=1 AND IDE_GECAF IN (SELECT IDE_GECAF FROM GEN_GRUPO_CARGO where IDE_GEGRO="+tab_empleado_departamento.getValor("IDE_GEGRO")+")");
+		tab_empleado_departamento.getColumna("IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL", "IDE_GECAF", "DETALLE_GECAF", "PRINCIPAL_SECUNDARIO_GECAF=TRUE AND IDE_GECAF IN (SELECT IDE_GECAF FROM GEN_GRUPO_CARGO where IDE_GEGRO="+tab_empleado_departamento.getValor("IDE_GEGRO")+")");
 		tab_empleado_departamento.getColumna("IDE_GEARE").setCombo("GEN_AREA","IDE_GEARE", "DETALLE_GEARE", "IDE_GEARE IN (SELECT IDE_GEARE from GEN_DEPARTAMENTO_SUCURSAL where IDE_SUCU="+tab_empleado_departamento.getValor("ide_sucu")+")");
 		tab_empleado_departamento.actualizarCombosFormulario();
 		tab_empleado_departamento.getColumna("IDE_GEDEP").setCombo("GEN_DEPARTAMENTO", "IDE_GEDEP", "DETALLE_GEDEP", "IDE_GEDEP IN (SELECT IDE_GEDEP from GEN_DEPARTAMENTO_SUCURSAL where IDE_SUCU="+tab_empleado_departamento.getValor("IDE_SUCU")+" AND IDE_GEARE="+tab_empleado_departamento.getValor("IDE_GEARE")+")");
 		tab_empleado_departamento.actualizarCombosFormulario();
 	}
 	private void limpiarCombosDepartamentoEmpleado(){
-		tab_empleado_departamento.getColumna("IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL", "IDE_GECAF", "DETALLE_GECAF", "PRINCIPAL_SECUNDARIO_GECAF=1 AND IDE_GECAF IN (SELECT IDE_GECAF FROM GEN_GRUPO_CARGO where IDE_GEGRO=-1)");
+		tab_empleado_departamento.getColumna("IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL", "IDE_GECAF", "DETALLE_GECAF", "PRINCIPAL_SECUNDARIO_GECAF=TRUE AND IDE_GECAF IN (SELECT IDE_GECAF FROM GEN_GRUPO_CARGO where IDE_GEGRO=-1)");
 		tab_empleado_departamento.getColumna("IDE_GEARE").setCombo("GEN_AREA","IDE_GEARE", "DETALLE_GEARE", "IDE_GEARE IN (SELECT IDE_GEARE from GEN_DEPARTAMENTO_SUCURSAL where IDE_SUCU=-1)");
 		tab_empleado_departamento.getColumna("IDE_GEDEP").setCombo("GEN_DEPARTAMENTO", "IDE_GEDEP", "DETALLE_GEDEP", "IDE_GEDEP IN (SELECT IDE_GEDEP from GEN_DEPARTAMENTO_SUCURSAL where IDE_SUCU=-1 AND IDE_GEARE=-1)");
 		tab_empleado_departamento.getColumna("IDE_GETIV").setCombo("GEN_TIPO_VINCULACION", "IDE_GETIV", "DETALLE_GETIV", "IDE_GECAE=-1");
@@ -2135,8 +2135,8 @@ public class pre_empleado extends Pantalla {
 
 	public void cargarCargoFuncional(AjaxBehaviorEvent evt){
 		tab_empleado_departamento.modificar(evt);
-		tab_empleado_departamento.getColumna("IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL", "IDE_GECAF", "DETALLE_GECAF", "PRINCIPAL_SECUNDARIO_GECAF=1 AND IDE_GECAF IN (SELECT IDE_GECAF FROM GEN_GRUPO_CARGO where IDE_GEGRO="+tab_empleado_departamento.getValor("IDE_GEGRO")+")");
-		tab_empleado_departamento.getColumna("GEN_IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL", "IDE_GECAF", "DETALLE_GECAF", "PRINCIPAL_SECUNDARIO_GECAF=0 AND IDE_GECAF IN (SELECT IDE_GECAF FROM GEN_GRUPO_CARGO where IDE_GEGRO="+tab_empleado_departamento.getValor("IDE_GEGRO")+")");
+		tab_empleado_departamento.getColumna("IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL", "IDE_GECAF", "DETALLE_GECAF", "PRINCIPAL_SECUNDARIO_GECAF=TRUE AND IDE_GECAF IN (SELECT IDE_GECAF FROM GEN_GRUPO_CARGO where IDE_GEGRO="+tab_empleado_departamento.getValor("IDE_GEGRO")+")");
+		tab_empleado_departamento.getColumna("GEN_IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL", "IDE_GECAF", "DETALLE_GECAF", "PRINCIPAL_SECUNDARIO_GECAF=FALSE AND IDE_GECAF IN (SELECT IDE_GECAF FROM GEN_GRUPO_CARGO where IDE_GEGRO="+tab_empleado_departamento.getValor("IDE_GEGRO")+")");
 		utilitario.addUpdateTabla(tab_empleado_departamento, "IDE_GECAF,GEN_IDE_GECAF", "");
 		tab_empleado_departamento.getColumna("IDE_GEPGC").setCombo("SELECT IDE_GEPGC,PAP.CODIGO_PARTIDA_GEPAP,PAP.DETALLE_GEPAP " +
 				"from GEN_PARTIDA_GRUPO_CARGO pgc " +
