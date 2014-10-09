@@ -436,7 +436,7 @@ public class pre_partida_grupo_cargo extends Pantalla {
 	@Override
 	public void guardar() {
 				if (tab_tabla.getTotalFilas() > 0) {			
-					TablaGenerica tab_partida = utilitario.consultar("SELECT * FROM GEN_PARTIDA_GRUPO_CARGO WHERE IDE_GEPAP="+ tab_tabla.getValor("IDE_GEPAP")+ " AND vacante_gepgc=false");
+					TablaGenerica tab_partida = utilitario.consultar("SELECT * FROM GEN_PARTIDA_GRUPO_CARGO WHERE IDE_GEPAP="+ tab_tabla.getValor("IDE_GEPAP")+ " AND vacante_gepgc=0");
 					if (tab_partida.getTotalFilas() > 0) {
 						utilitario.agregarMensajeInfo("No se puede guardar","Esta partida ya se encuentra en uso");
 					} else {
@@ -470,7 +470,7 @@ public class pre_partida_grupo_cargo extends Pantalla {
 	
 	public void validarVacante(){
 		con_guardar.cerrar();
-		utilitario.getConexion().agregarSqlPantalla("update GEN_PARTIDA_GRUPO_CARGO set vacante_gepgc=true where ide_gepgc="+tab_tabla.getValorSeleccionado());
+		utilitario.getConexion().agregarSqlPantalla("update GEN_PARTIDA_GRUPO_CARGO set vacante_gepgc=1 where ide_gepgc="+tab_tabla.getValorSeleccionado());
 		guardarPantalla();
 		tab_tabla.ejecutarSql();		
 	}
