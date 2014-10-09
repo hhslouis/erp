@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_vencimiento_contrato" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="14af47a1-95d0-43fe-8a13-b27e6718cb59">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="130"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="ide_sucu" class="java.lang.Integer"/>
 	<parameter name="ide_empr" class="java.lang.Integer">
@@ -46,35 +46,55 @@ SELECT ide_gedep,detalle_gedep FROM gen_departamento
 LEFT JOIN (
 SELECT ide_sucu,nom_sucu FROM sis_sucursal
 )f ON f.ide_sucu=a.ide_sucu
-WHERE a.activo_geedp=1
+WHERE a.activo_geedp=true
 AND a.ide_geare IN($P!{ide_geare})
 AND a.ide_gedep IN($P!{ide_gedep})
 AND a.ide_sucu IN ($P!{ide_sucu_t})
 AND a.fecha_finctr_geedp between TO_DATE($P{fecha_inicial},'yyyy-mm-dd') AND TO_DATE($P{fecha_final},'yyyy-mm-dd')
 order by f.nom_sucu,d.detalle_geare,e.detalle_gedep,c.EMPLEADO]]>
 	</queryString>
-	<field name="IDE_GTEMP" class="java.math.BigDecimal"/>
-	<field name="DOCUMENTO_IDENTIDAD_GTEMP" class="java.lang.String"/>
-	<field name="EMPLEADO" class="java.lang.String"/>
-	<field name="NOM_SUCU" class="java.lang.String"/>
-	<field name="DETALLE_GTTCO" class="java.lang.String"/>
-	<field name="FECHA_GEEDP" class="java.sql.Timestamp"/>
-	<field name="FECHA_FINCTR_GEEDP" class="java.sql.Timestamp"/>
-	<field name="IDE_GEARE" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GEARE" class="java.lang.String"/>
-	<field name="IDE_GEDEP" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GEDEP" class="java.lang.String"/>
+	<field name="ide_gtemp" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gth_empleado, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="documento_identidad_gtemp" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el numero de documento de identidad que posee el empleado.]]></fieldDescription>
+	</field>
+	<field name="empleado" class="java.lang.String"/>
+	<field name="nom_sucu" class="java.lang.String">
+		<fieldDescription><![CDATA[nom_sucu]]></fieldDescription>
+	</field>
+	<field name="detalle_gttco" class="java.lang.String">
+		<fieldDescription><![CDATA[detalle_gttco]]></fieldDescription>
+	</field>
+	<field name="fecha_geedp" class="java.sql.Date">
+		<fieldDescription><![CDATA[Este campo define la fecha de cada contrato que mantiene el empleado con la institucion.]]></fieldDescription>
+	</field>
+	<field name="fecha_finctr_geedp" class="java.sql.Date">
+		<fieldDescription><![CDATA[fecha_finctr_geedp]]></fieldDescription>
+	</field>
+	<field name="ide_geare" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_area, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="detalle_geare" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del area ejemplo: Directorio, Auditoria Interna, etc.]]></fieldDescription>
+	</field>
+	<field name="ide_gedep" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_gedep]]></fieldDescription>
+	</field>
+	<field name="detalle_gedep" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del departamento, ejemplo: DIRECTORIO, TECNOLOGIA, INFRAESTRUCTURA, etc.]]></fieldDescription>
+	</field>
 	<variable name="IDE_GTEMP_1" class="java.lang.Integer" resetType="Group" resetGroup="DEPARTAMENTO" calculation="Count">
-		<variableExpression><![CDATA[$F{IDE_GTEMP}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_gtemp}]]></variableExpression>
 	</variable>
 	<variable name="IDE_GTEMP_2" class="java.lang.Integer" resetType="Group" resetGroup="AREA" calculation="Count">
-		<variableExpression><![CDATA[$F{IDE_GTEMP}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_gtemp}]]></variableExpression>
 	</variable>
 	<variable name="IDE_GTEMP_3" class="java.lang.Integer" calculation="Count">
-		<variableExpression><![CDATA[$F{IDE_GTEMP}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_gtemp}]]></variableExpression>
 	</variable>
 	<group name="AREA">
-		<groupExpression><![CDATA[$F{IDE_GEARE}]]></groupExpression>
+		<groupExpression><![CDATA[$F{ide_geare}]]></groupExpression>
 		<groupHeader>
 			<band height="12">
 				<textField>
@@ -82,7 +102,7 @@ order by f.nom_sucu,d.detalle_geare,e.detalle_gedep,c.EMPLEADO]]>
 					<textElement verticalAlignment="Middle">
 						<font size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{DETALLE_GEARE}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{detalle_geare}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -93,16 +113,16 @@ order by f.nom_sucu,d.detalle_geare,e.detalle_gedep,c.EMPLEADO]]>
 					<textElement textAlignment="Right">
 						<font size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{DETALLE_GEARE}.equals(null)?
-$F{DETALLE_GEARE}.equals(null)?"TOTAL:":" TOTAL: "+$V{IDE_GTEMP_2}
-:$V{IDE_GTEMP_2}.equals(null)?"TOTAL "+$F{DETALLE_GEARE}+":"
-:"TOTAL "+$F{DETALLE_GEARE}+": "+$V{IDE_GTEMP_2}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{detalle_geare}.equals(null)?
+$F{detalle_geare}.equals(null)?"TOTAL:":" TOTAL: "+$V{IDE_GTEMP_2}
+:$V{IDE_GTEMP_2}.equals(null)?"TOTAL "+$F{detalle_geare}+":"
+:"TOTAL "+$F{detalle_geare}+": "+$V{IDE_GTEMP_2}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
 	</group>
 	<group name="DEPARTAMENTO">
-		<groupExpression><![CDATA[$F{IDE_GEDEP}]]></groupExpression>
+		<groupExpression><![CDATA[$F{ide_gedep}]]></groupExpression>
 		<groupHeader>
 			<band height="12">
 				<textField>
@@ -111,7 +131,7 @@ $F{DETALLE_GEARE}.equals(null)?"TOTAL:":" TOTAL: "+$V{IDE_GTEMP_2}
 					<textElement verticalAlignment="Middle">
 						<font size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{DETALLE_GEDEP}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{detalle_gedep}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -122,10 +142,10 @@ $F{DETALLE_GEARE}.equals(null)?"TOTAL:":" TOTAL: "+$V{IDE_GTEMP_2}
 					<textElement textAlignment="Right">
 						<font size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{DETALLE_GEDEP}.equals(null)?
+					<textFieldExpression><![CDATA[$F{detalle_gedep}.equals(null)?
 $V{IDE_GTEMP_1}.equals(null)?"TOTAL:":" TOTAL: "+$V{IDE_GTEMP_1}
-:$V{IDE_GTEMP_1}.equals(null)?"TOTAL "+$F{DETALLE_GEDEP}+":"
-:"TOTAL "+$F{DETALLE_GEDEP}+": "+$V{IDE_GTEMP_1}]]></textFieldExpression>
+:$V{IDE_GTEMP_1}.equals(null)?"TOTAL "+$F{detalle_gedep}+":"
+:"TOTAL "+$F{detalle_gedep}+": "+$V{IDE_GTEMP_1}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -153,7 +173,7 @@ $V{IDE_GTEMP_1}.equals(null)?"TOTAL:":" TOTAL: "+$V{IDE_GTEMP_1}
 					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema_biess/rep_cabecera.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
@@ -273,7 +293,7 @@ $V{IDE_GTEMP_1}.equals(null)?"TOTAL:":" TOTAL: "+$V{IDE_GTEMP_1}
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{IDE_GTEMP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ide_gtemp}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="04a9d611-17af-4f7c-96e9-3dd0ead716ed" stretchType="RelativeToBandHeight" x="34" y="0" width="66" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -287,7 +307,7 @@ $V{IDE_GTEMP_1}.equals(null)?"TOTAL:":" TOTAL: "+$V{IDE_GTEMP_1}
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DOCUMENTO_IDENTIDAD_GTEMP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{documento_identidad_gtemp}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="6515179c-5df9-4039-88c8-9b16fca98369" stretchType="RelativeToBandHeight" x="100" y="0" width="168" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -301,7 +321,7 @@ $V{IDE_GTEMP_1}.equals(null)?"TOTAL:":" TOTAL: "+$V{IDE_GTEMP_1}
 				<textElement verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{EMPLEADO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{empleado}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="6920f576-074e-49fd-9291-ddecf66ff670" stretchType="RelativeToBandHeight" x="268" y="0" width="68" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -315,7 +335,7 @@ $V{IDE_GTEMP_1}.equals(null)?"TOTAL:":" TOTAL: "+$V{IDE_GTEMP_1}
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NOM_SUCU}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nom_sucu}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="0b222ea5-103e-430d-bb3d-93322349712f" stretchType="RelativeToBandHeight" x="336" y="0" width="134" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -329,7 +349,7 @@ $V{IDE_GTEMP_1}.equals(null)?"TOTAL:":" TOTAL: "+$V{IDE_GTEMP_1}
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GTTCO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_gttco}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="yyyy/MM/dd" isBlankWhenNull="true">
 				<reportElement uuid="2d3cfcca-2be6-4e4a-a170-2301cc5f91d3" stretchType="RelativeToBandHeight" x="470" y="0" width="48" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -343,7 +363,7 @@ $V{IDE_GTEMP_1}.equals(null)?"TOTAL:":" TOTAL: "+$V{IDE_GTEMP_1}
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_GEEDP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_geedp}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="yyyy/MM/dd" isBlankWhenNull="true">
 				<reportElement uuid="1593e3d9-2ca1-45f1-bc57-db3711aec707" stretchType="RelativeToBandHeight" x="518" y="0" width="37" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -357,7 +377,7 @@ $V{IDE_GTEMP_1}.equals(null)?"TOTAL:":" TOTAL: "+$V{IDE_GTEMP_1}
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_FINCTR_GEEDP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_finctr_geedp}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
