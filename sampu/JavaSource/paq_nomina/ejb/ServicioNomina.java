@@ -143,7 +143,7 @@ public class ServicioNomina {
 				"AND DTN.IDE_NRTIN=TIA.IDE_NRTIN INNER JOIN GEN_EMPLEADOS_DEPARTAMENTO_PAR EDP ON EDP.IDE_GEEDP=DRO.IDE_GEEDP " +
 				"INNER JOIN SIS_SUCURSAL SUC ON SUC.IDE_SUCU=EDP.IDE_SUCU " +
 				"INNER JOIN GEN_AREA ARE ON rua.ide_geare=are.ide_geare " +
-				"WHERE ROL.IDE_NRROL in ("+ide_nrrol+") AND RUA.IDE_GETIA=1 and todos_nrrua=0 " +
+				"WHERE ROL.IDE_NRROL in ("+ide_nrrol+") AND RUA.IDE_GETIA=1 and todos_nrrua=FALSE " +
 				//				"and dro.ide_geedp in (54,403) " +
 				"GROUP BY rua.IDE_GEARE,SUC.IDE_SUCU,SUC.NOM_SUCU,ARE.DETALLE_GEARE,RUB.IDE_NRRUB,RUA.IDE_GELUA,RUB.DETALLE_NRRUB, " +
 				"CUC.IDE_GECUC,ROL.IDE_NRDTN,dro.ide_geedp " +
@@ -166,7 +166,7 @@ public class ServicioNomina {
 				"INNER JOIN GEN_TIPO_ASIENTO TIA ON TIA.IDE_GETIA=RUA.IDE_GETIA and TIA.IDE_NRTIN=TIN.IDE_NRTIN " +
 				"AND DTN.IDE_NRTIN=TIA.IDE_NRTIN INNER JOIN GEN_EMPLEADOS_DEPARTAMENTO_PAR EDP ON EDP.IDE_GEEDP=DRO.IDE_GEEDP " +
 				"INNER JOIN SIS_SUCURSAL SUC ON SUC.IDE_SUCU=EDP.IDE_SUCU INNER JOIN GEN_AREA ARE ON ARE.IDE_GEARE=EDP.IDE_GEARE " +
-				"WHERE ROL.IDE_NRROL in ("+ide_nrrol+") AND RUA.IDE_GETIA=1 and todos_nrrua=1 " +
+				"WHERE ROL.IDE_NRROL in ("+ide_nrrol+") AND RUA.IDE_GETIA=1 and todos_nrrua=TRUE " +
 				//				"and dro.ide_geedp in (54,403) " +
 				"GROUP BY EDP.IDE_GEARE,SUC.IDE_SUCU,SUC.NOM_SUCU,ARE.DETALLE_GEARE,RUB.IDE_NRRUB,RUA.IDE_GELUA,RUB.DETALLE_NRRUB, " +
 				"CUC.IDE_GECUC,ROL.IDE_NRDTN, dro.ide_geedp " +
@@ -277,9 +277,9 @@ public class ServicioNomina {
 	public String getSqlSeleccionTablaPeriodoRol(){
 		String sql_combo_gepro="SELECT PER.IDE_GEPRO, " +
 				"mes.detalle_gemes, ani.detalle_geani ," +
-				"TIR.DETALLE_NRTIT ||' '|| CASE WHEN PER.DETALLE_PERIODO_GEPRO IS NULL THEN ' ' ELSE PER.DETALLE_PERIODO_GEPRO END as DETALLE_NRTIT,  " +
-				"case when to_char(PER.FECHA_INICIAL_GEPRO) is null then ' ' else to_char(PER.FECHA_INICIAL_GEPRO) END as fecha_ini, " +
-				"case when to_char(PER.FECHA_FINAL_GEPRO) is null then ' ' else to_char(PER.FECHA_FINAL_GEPRO) end as fecha_fin  " +
+				"TIR.DETALLE_NRTIT ||' '|| CASE WHEN PER.DETALLE_PERIODO_GEPRO IS NULL THEN NULL ELSE PER.DETALLE_PERIODO_GEPRO END as DETALLE_NRTIT,  " +
+				"case when (PER.FECHA_INICIAL_GEPRO) is null then NULL else (PER.FECHA_INICIAL_GEPRO) END as fecha_ini, " +
+				"case when (PER.FECHA_FINAL_GEPRO) is null then NULL else (PER.FECHA_FINAL_GEPRO) end as fecha_fin  " +
 				"FROM GEN_PERIDO_ROL PER " +
 				"INNER JOIN NRH_TIPO_ROL TIR ON TIR.IDE_NRTIT=PER.IDE_NRTIT " +
 				"INNER JOIN GEN_MES MES ON MES.IDE_GEMES=PER.IDE_GEMES " +
@@ -638,7 +638,7 @@ public class ServicioNomina {
 				"inner join SIS_SUCURSAL SUC ON SUC.IDE_SUCU=EDP.IDE_SUCU " +
 				"LEFT JOIN GEN_DIVISION_POLITICA DIP ON DIP.IDE_GEDIP=SUC.IDE_GEDIP "+
 				"WHERE DTN.IDE_NRDTN="+ide_nrdtn+" " +
-				"AND EDP.ACTIVO_GEEDP=1 "+
+				"AND EDP.ACTIVO_GEEDP=TRUE "+
 				"AND EDP.IDE_GEEDP NOT IN (select IDE_GEEDP FROM NRH_DETALLE_ROL WHERE IDE_NRROL IN ( " +
 				"select IDE_NRROL from NRH_ROL WHERE IDE_NRROL="+ide_nrrol+" ) " +
 				"GROUP BY IDE_GEEDP) "+
@@ -666,10 +666,10 @@ public class ServicioNomina {
 				"(case when SUM(DIA_ADICIONAL_ASDEV) is null then 0 else SUM(DIA_ADICIONAL_ASDEV) end) as NRO_DIAS_ADICIONAL, " +
 				"(case when SUM(DIA_DESCONTADO_ASDEV) is null then 0 else SUM(DIA_DESCONTADO_ASDEV) end)AS DIA_DESCONTADO, " +
 				"(case when SUM(DIA_SOLICITADO_ASDEV) is null then 0 else SUM(DIA_SOLICITADO_ASDEV) end)AS DIA_SOLICITADO " +
-				"FROM ASI_DETALLE_VACACION WHERE ACTIVO_ASDEV = 1 GROUP BY IDE_ASVAC " +
+				"FROM ASI_DETALLE_VACACION WHERE ACTIVO_ASDEV = TRUE GROUP BY IDE_ASVAC " +
 				") a " +
 				"inner join ASI_VACACION vac on VAC.IDE_ASVAC=a.IDE_ASVAC " +
-				"inner join GEN_EMPLEADOS_DEPARTAMENTO_PAR edp on edp.ide_gtemp=vac.ide_gtemp  and edp.activo_geedp=1 and vac.ACTIVO_ASVAC=1 " +
+				"inner join GEN_EMPLEADOS_DEPARTAMENTO_PAR edp on edp.ide_gtemp=vac.ide_gtemp  and edp.activo_geedp=TRUE and vac.ACTIVO_ASVAC=TRUE " +
 				") a " +
 				"GROUP BY IDE_ASVAC,IDE_GTEMP,DIAS_VACACION  " +
 				")b  " +
@@ -772,11 +772,11 @@ public class ServicioNomina {
 				"(case when SUM(DIA_ADICIONAL_ASDEV) is null then 0 else SUM(DIA_ADICIONAL_ASDEV) end) as NRO_DIAS_ADICIONAL, " +
 				"(case when SUM(DIA_DESCONTADO_ASDEV) is null then 0 else SUM(DIA_DESCONTADO_ASDEV) end)AS DIA_DESCONTADO, " +
 				"(case when SUM(DIA_SOLICITADO_ASDEV) is null then 0 else SUM(DIA_SOLICITADO_ASDEV) end)AS DIA_SOLICITADO " +
-				"FROM ASI_DETALLE_VACACION WHERE ACTIVO_ASDEV = 1 GROUP BY IDE_ASVAC " +
+				"FROM ASI_DETALLE_VACACION WHERE ACTIVO_ASDEV = TRUE GROUP BY IDE_ASVAC " +
 				") a " +
 				"inner join ASI_VACACION vac on VAC.IDE_ASVAC=a.IDE_ASVAC " +
 				"inner join GEN_EMPLEADOS_DEPARTAMENTO_PAR edp on edp.ide_gtemp=vac.ide_gtemp  " +
-				"and vac.ACTIVO_ASVAC=1 " +
+				"and vac.ACTIVO_ASVAC=TRUE " +
 				") a " +
 				"GROUP BY IDE_ASVAC,IDE_GTEMP,DIAS_VACACION  " +
 				")b  " +
@@ -2198,7 +2198,7 @@ public class ServicioNomina {
 				"select edp.ide_geedp,PORCENTAJE_GTDIE from GTH_DISCAPACIDAD_EMPLEADO die " +
 				"inner join GTH_EMPLEADO emp on DIE.IDE_GTEMP=EMP.IDE_GTEMP " +
 				"inner join GEN_EMPLEADOS_DEPARTAMENTO_PAR edp on edp.ide_gtemp=emp.ide_gtemp " +
-				"where DISCAPACITADO_GTEMP=1 " +
+				"where DISCAPACITADO_GTEMP=TRUE " +
 				")e on a.ide_geedp=e.ide_geedp "+
 				"left join  ( " +
 				"select  DROL.IDE_NRROL,DROL.IDE_GEEDP, DROL.VALOR_NRDRO as imp_renta_mensual " +
@@ -4419,7 +4419,7 @@ public class ServicioNomina {
 				"FROM GEN_EMPLEADOS_DEPARTAMENTO_PAR EDP " +
 				"INNER JOIN NRH_DETALLE_ROL DROL ON DROL.IDE_GEEDP=EDP.IDE_GEEDP AND IDE_NRROL="+IDE_NRROL+" " +
 				"INNER JOIN GTH_EMPLEADO EMP ON EMP.IDE_GTEMP=EDP.IDE_GTEMP " +
-				//				"WHERE EDP.ACTIVO_GEEDP=1 " +
+				//				"WHERE EDP.ACTIVO_GEEDP=TRUE " +
 				"GROUP BY EDP.IDE_GEEDP,EMP.DOCUMENTO_IDENTIDAD_GTEMP,EMP.APELLIDO_PATERNO_GTEMP , " +
 				"EMP.APELLIDO_MATERNO_GTEMP , " +
 				"EMP.PRIMER_NOMBRE_GTEMP , " +
@@ -4558,7 +4558,7 @@ public class ServicioNomina {
 				"(case when SUM(DIA_ADICIONAL_ASDEV) is null then 0 else SUM(DIA_ADICIONAL_ASDEV) end) as NRO_DIAS_ADICIONAL, " +
 				"(case when SUM(DIA_DESCONTADO_ASDEV) is null then 0 else SUM(DIA_DESCONTADO_ASDEV) end)AS DIA_DESCONTADO, " +
 				"(case when SUM(DIA_SOLICITADO_ASDEV) is null then 0 else SUM(DIA_SOLICITADO_ASDEV) end)AS DIA_SOLICITADO " +
-				"FROM ASI_DETALLE_VACACION WHERE ACTIVO_ASDEV = 1 GROUP BY IDE_ASVAC " +
+				"FROM ASI_DETALLE_VACACION WHERE ACTIVO_ASDEV = TRUE GROUP BY IDE_ASVAC " +
 				") a " +
 				"inner join ASI_VACACION vac on VAC.IDE_ASVAC=a.IDE_ASVAC " +
 				"inner join GEN_EMPLEADOS_DEPARTAMENTO_PAR edp on edp.ide_gtemp=vac.ide_gtemp  " +
@@ -4587,7 +4587,7 @@ public class ServicioNomina {
 				"on a.ide_gtemp=b.ide_gtemp "+
 				"left join ( " +
 				"select IDE_GTEMP,PORCENTAJE_GTDIE from GTH_DISCAPACIDAD_EMPLEADO where ide_gtemp in ( " +
-				"select IDE_GTEMP from GTH_EMPLEADO  where DISCAPACITADO_GTEMP=1) " +
+				"select IDE_GTEMP from GTH_EMPLEADO  where DISCAPACITADO_GTEMP=TRUE) " +
 				")c on c.ide_gtemp=a.ide_gtemp and c.ide_gtemp=b.ide_gtemp " +
 				"order by nombres ";
 
@@ -4688,17 +4688,17 @@ public class ServicioNomina {
 				"(case when SUM(DIA_ADICIONAL_ASDEV) is null then 0 else SUM(DIA_ADICIONAL_ASDEV) end) as NRO_DIAS_ADICIONAL, " +
 				"(case when SUM(DIA_DESCONTADO_ASDEV) is null then 0 else SUM(DIA_DESCONTADO_ASDEV) end)AS DIA_DESCONTADO, " +
 				"(case when SUM(DIA_SOLICITADO_ASDEV) is null then 0 else SUM(DIA_SOLICITADO_ASDEV) end)AS DIA_SOLICITADO " +
-				"FROM ASI_DETALLE_VACACION WHERE ACTIVO_ASDEV = 1 GROUP BY IDE_ASVAC " +
+				"FROM ASI_DETALLE_VACACION WHERE ACTIVO_ASDEV = TRUE GROUP BY IDE_ASVAC " +
 				") a " +
 				"inner join ASI_VACACION vac on VAC.IDE_ASVAC=a.IDE_ASVAC " +
-				"inner join GEN_EMPLEADOS_DEPARTAMENTO_PAR edp on edp.ide_gtemp=vac.ide_gtemp  and edp.activo_geedp=1 and vac.ACTIVO_ASVAC=1 " +
+				"inner join GEN_EMPLEADOS_DEPARTAMENTO_PAR edp on edp.ide_gtemp=vac.ide_gtemp  and edp.activo_geedp=TRUE and vac.ACTIVO_ASVAC=TRUE " +
 				") a " +
 				"GROUP BY IDE_ASVAC,IDE_GTEMP,DIAS_VACACION  " +
 				")b  " +
 				"on a.ide_gtemp=b.ide_gtemp "+
 				"left join ( " +
 				"select IDE_GTEMP,PORCENTAJE_GTDIE from GTH_DISCAPACIDAD_EMPLEADO where ide_gtemp in ( " +
-				"select IDE_GTEMP from GTH_EMPLEADO  where DISCAPACITADO_GTEMP=1) " +
+				"select IDE_GTEMP from GTH_EMPLEADO  where DISCAPACITADO_GTEMP=TRUE) " +
 				")c on c.ide_gtemp=a.ide_gtemp and c.ide_gtemp=b.ide_gtemp " +
 				"order by nombres ";
 
@@ -4798,17 +4798,17 @@ public class ServicioNomina {
 				"(case when SUM(DIA_ADICIONAL_ASDEV) is null then 0 else SUM(DIA_ADICIONAL_ASDEV) end) as NRO_DIAS_ADICIONAL, " +
 				"(case when SUM(DIA_DESCONTADO_ASDEV) is null then 0 else SUM(DIA_DESCONTADO_ASDEV) end)AS DIA_DESCONTADO, " +
 				"(case when SUM(DIA_SOLICITADO_ASDEV) is null then 0 else SUM(DIA_SOLICITADO_ASDEV) end)AS DIA_SOLICITADO " +
-				"FROM ASI_DETALLE_VACACION WHERE ACTIVO_ASDEV = 1 GROUP BY IDE_ASVAC " +
+				"FROM ASI_DETALLE_VACACION WHERE ACTIVO_ASDEV = TRUE GROUP BY IDE_ASVAC " +
 				") a " +
 				"inner join ASI_VACACION vac on VAC.IDE_ASVAC=a.IDE_ASVAC " +
-				"inner join GEN_EMPLEADOS_DEPARTAMENTO_PAR edp on edp.ide_gtemp=vac.ide_gtemp  and vac.ACTIVO_ASVAC=1 " +
+				"inner join GEN_EMPLEADOS_DEPARTAMENTO_PAR edp on edp.ide_gtemp=vac.ide_gtemp  and vac.ACTIVO_ASVAC=TRUE " +
 				") a " +
 				"GROUP BY IDE_ASVAC,IDE_GTEMP,DIAS_VACACION  " +
 				")b  " +
 				"on a.ide_gtemp=b.ide_gtemp "+
 				"left join ( " +
 				"select IDE_GTEMP,PORCENTAJE_GTDIE from GTH_DISCAPACIDAD_EMPLEADO where ide_gtemp in ( " +
-				"select IDE_GTEMP from GTH_EMPLEADO  where DISCAPACITADO_GTEMP=1) " +
+				"select IDE_GTEMP from GTH_EMPLEADO  where DISCAPACITADO_GTEMP=TRUE) " +
 				")c on c.ide_gtemp=a.ide_gtemp and c.ide_gtemp=b.ide_gtemp " +
 				"order by nombres ";
 
