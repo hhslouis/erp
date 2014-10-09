@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_localidades_trabajo" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e4632dbe-9cea-4f86-a7e3-0a6c83fa70cd">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="651"/>
+	<property name="ireport.x" value="180"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="ide_sucu" class="java.lang.Integer"/>
 	<parameter name="ide_empr" class="java.lang.Integer">
@@ -51,18 +51,20 @@ where a.ide_gtemp in ($P!{ide_gtemp})
 and a.ide_geare in ($P!{ide_geare})
 and a.ide_gedep in ($P!{ide_gedep})
 and a.ide_sucu in ($P!{ide_sucu_t})
-and a.activo_geedp=1
+and a.activo_geedp=true
 order by b.nombre_empleado,e.area,f.departamento,g.gocupacional,c.cargo,d.sucursal]]>
 	</queryString>
-	<field name="IDE_GTEMP" class="java.math.BigDecimal"/>
-	<field name="NOMBRE_EMPLEADO" class="java.lang.String"/>
-	<field name="AREA" class="java.lang.String"/>
-	<field name="DEPARTAMENTO" class="java.lang.String"/>
-	<field name="GOCUPACIONAL" class="java.lang.String"/>
-	<field name="CARGO" class="java.lang.String"/>
-	<field name="SUCURSAL" class="java.lang.String"/>
+	<field name="ide_gtemp" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gth_empleado, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="nombre_empleado" class="java.lang.String"/>
+	<field name="area" class="java.lang.String"/>
+	<field name="departamento" class="java.lang.String"/>
+	<field name="gocupacional" class="java.lang.String"/>
+	<field name="cargo" class="java.lang.String"/>
+	<field name="sucursal" class="java.lang.String"/>
 	<variable name="contador" class="java.lang.Integer" calculation="Count">
-		<variableExpression><![CDATA[$F{IDE_GTEMP}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_gtemp}]]></variableExpression>
 		<initialValueExpression><![CDATA[1]]></initialValueExpression>
 	</variable>
 	<background>
@@ -88,7 +90,7 @@ order by b.nombre_empleado,e.area,f.departamento,g.gocupacional,c.cargo,d.sucurs
 					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema_biess/rep_cabecera_horizontal.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera_horizontal.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
@@ -222,7 +224,7 @@ order by b.nombre_empleado,e.area,f.departamento,g.gocupacional,c.cargo,d.sucurs
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{IDE_GTEMP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ide_gtemp}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="c5f5b6c1-b25f-4e76-9fdf-0f95ca049c36" stretchType="RelativeToBandHeight" x="60" y="0" width="181" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -236,7 +238,7 @@ order by b.nombre_empleado,e.area,f.departamento,g.gocupacional,c.cargo,d.sucurs
 				<textElement verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NOMBRE_EMPLEADO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nombre_empleado}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="784aa535-9186-4018-bcc4-8c4db610db86" stretchType="RelativeToBandHeight" x="593" y="0" width="125" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -250,7 +252,7 @@ order by b.nombre_empleado,e.area,f.departamento,g.gocupacional,c.cargo,d.sucurs
 				<textElement verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CARGO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cargo}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="ad8ac931-298f-44c4-b2c5-ba609f168b3d" stretchType="RelativeToBandHeight" x="718" y="0" width="84" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -264,7 +266,7 @@ order by b.nombre_empleado,e.area,f.departamento,g.gocupacional,c.cargo,d.sucurs
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{SUCURSAL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{sucursal}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="23752ca9-577c-4507-8646-7a0299603ee8" stretchType="RelativeToBandHeight" x="241" y="0" width="125" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -278,7 +280,7 @@ order by b.nombre_empleado,e.area,f.departamento,g.gocupacional,c.cargo,d.sucurs
 				<textElement verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{AREA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{area}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="25c3e701-291b-49a3-bcee-d9e159d166d6" stretchType="RelativeToBandHeight" x="366" y="0" width="110" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -292,7 +294,7 @@ order by b.nombre_empleado,e.area,f.departamento,g.gocupacional,c.cargo,d.sucurs
 				<textElement verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DEPARTAMENTO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{departamento}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="3cd4cc9a-ac1e-427b-96df-416d3513ae0b" stretchType="RelativeToBandHeight" x="476" y="0" width="117" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -306,7 +308,7 @@ order by b.nombre_empleado,e.area,f.departamento,g.gocupacional,c.cargo,d.sucurs
 				<textElement verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{GOCUPACIONAL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{gocupacional}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="ec594e58-a6ca-44a1-b573-aff12f819aa0" stretchType="RelativeToBandHeight" x="0" y="0" width="30" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
