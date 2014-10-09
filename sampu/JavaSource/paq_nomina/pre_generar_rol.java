@@ -170,7 +170,7 @@ public class pre_generar_rol extends Pantalla{
 				"from NRH_DETALLE_TIPO_NOMINA DTN " +
 				"LEFT JOIN NRH_TIPO_NOMINA TIN ON TIN.IDE_NRTIN=DTN.IDE_NRTIN " +
 				"LEFT JOIN GTH_TIPO_EMPLEADO TEM ON TEM.IDE_GTTEM=DTN.IDE_GTTEM " +
-				"WHERE ACTIVO_NRDTN=1 " +
+				"WHERE ACTIVO_NRDTN=TRUE " +
 				"and DTN.IDE_NRTIN="+utilitario.getVariable("p_nrh_tipo_nomina_pago_decimos")+" ", "IDE_NRDTN");
 		set_pago_decimos.setTitle("seleccion de Nomina para Pago de Decimos");
 		set_pago_decimos.getBot_aceptar().setMetodo("aceptarPagoDecimos");
@@ -453,7 +453,7 @@ public class pre_generar_rol extends Pantalla{
 
 					String fecha_pago_rubro=""+anio_periodo+"-"+fecha_pago_nrder;
 					TablaGenerica tab_per=utilitario.consultar("select * from GEN_PERIDO_ROL where IDE_GEPRO="+ide_gepro+" " +
-							"and to_date('"+fecha_pago_rubro+"','yy-mm-dd') BETWEEN FECHA_INICIAL_GEPRO and FECHA_FINAL_GEPRO ");
+							"and ('"+fecha_pago_rubro+"','yy-mm-dd') BETWEEN FECHA_INICIAL_GEPRO and FECHA_FINAL_GEPRO ");
 
 					if (tab_per.getTotalFilas()>0){
 						str_ide_nrder_decimos+=tab_decimos.getValor(j,"IDE_NRDER")+",";
