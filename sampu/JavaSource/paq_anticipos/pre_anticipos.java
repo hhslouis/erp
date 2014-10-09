@@ -1417,7 +1417,7 @@ public class pre_anticipos extends Pantalla {
 	public void anularAnticipo(){
 		if (con_guardar.isVisible()){
 			con_guardar.cerrar();
-			utilitario.getConexion().agregarSql("update NRH_ANTICIPO set ACTIVO_NRANT=0,ANULADO_NRANT=1 where IDE_NRANT="+tab_anticipo.getValorSeleccionado());
+			utilitario.getConexion().agregarSql("update NRH_ANTICIPO set ACTIVO_NRANT=false,ANULADO_NRANT=true where IDE_NRANT="+tab_anticipo.getValorSeleccionado());
 			utilitario.getConexion().guardarPantalla();
 
 			String ide_nrant_anterior=tab_anticipo.getValorSeleccionado();
