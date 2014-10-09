@@ -52,30 +52,64 @@ left join GTH_NACIONALIDAD NAC on NAC.IDE_GTNAC=EMP.IDE_GTNAC
 where  EMP.IDE_GTEMP in($P!{IDE_GTEMP}) and EMP.ACTIVO_GTEMP IN($P!{ACTIVO_GTEMP})
 ORDER BY EMP.ACTIVO_GTEMP ASC,NOMBRES ASC]]>
 	</queryString>
-	<field name="ACTIVO_GTEMP" class="java.math.BigDecimal"/>
-	<field name="IDE_GTEMP" class="java.math.BigDecimal"/>
-	<field name="DOCUMENTO_IDENTIDAD_GTEMP" class="java.lang.String"/>
-	<field name="NOMBRES" class="java.lang.String"/>
-	<field name="IDE_GTGEN" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GTGEN" class="java.lang.String"/>
-	<field name="IDE_GTTDI" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GTTDI" class="java.lang.String"/>
-	<field name="IDE_GTESC" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GTESC" class="java.lang.String"/>
-	<field name="IDE_GEDIP" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GEDIP" class="java.lang.String"/>
-	<field name="IDE_GTTIS" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GTTIS" class="java.lang.String"/>
-	<field name="IDE_GTNAC" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GTNAC" class="java.lang.String"/>
-	<field name="FECHA_NACIMIENTO_GTEMP" class="java.sql.Timestamp"/>
-	<field name="CARGO_PUBLICO_GTEMP" class="java.math.BigDecimal"/>
+	<field name="activo_gtemp" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[Este campo define si el registro se encuentra activo o no para su transaccionalidad, 1 SI / 0 No]]></fieldDescription>
+	</field>
+	<field name="ide_gtemp" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gth_empleado, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="documento_identidad_gtemp" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el numero de documento de identidad que posee el empleado.]]></fieldDescription>
+	</field>
+	<field name="nombres" class="java.lang.String"/>
+	<field name="ide_gtgen" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave foranea que proviene de la tabla gth_genero.]]></fieldDescription>
+	</field>
+	<field name="detalle_gtgen" class="java.lang.String">
+		<fieldDescription><![CDATA[detalle_gtgen]]></fieldDescription>
+	</field>
+	<field name="ide_gttdi" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo proviene de la tabla tipo gth_tipo_documento_identidad y define el tipo de documento del titular beneficiario.]]></fieldDescription>
+	</field>
+	<field name="detalle_gttdi" class="java.lang.String">
+		<fieldDescription><![CDATA[detalle_gttdi]]></fieldDescription>
+	</field>
+	<field name="ide_gtesc" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave foranea que proviene de la tabla gth_estado_civil.]]></fieldDescription>
+	</field>
+	<field name="detalle_gtesc" class="java.lang.String">
+		<fieldDescription><![CDATA[detalle_gtesc]]></fieldDescription>
+	</field>
+	<field name="ide_gedip" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_gedip]]></fieldDescription>
+	</field>
+	<field name="detalle_gedip" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre de la division politica, ejemplo, ecuador, pichincha, quito, etc]]></fieldDescription>
+	</field>
+	<field name="ide_gttis" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave foranea que proviene de la tabla gth_tipo_sangre.]]></fieldDescription>
+	</field>
+	<field name="detalle_gttis" class="java.lang.String">
+		<fieldDescription><![CDATA[detalle_gttis]]></fieldDescription>
+	</field>
+	<field name="ide_gtnac" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_gtnac]]></fieldDescription>
+	</field>
+	<field name="detalle_gtnac" class="java.lang.String">
+		<fieldDescription><![CDATA[detalle_gtnac]]></fieldDescription>
+	</field>
+	<field name="fecha_nacimiento_gtemp" class="java.sql.Date">
+		<fieldDescription><![CDATA[Este campo define la fecha de nacimiento del empleado.]]></fieldDescription>
+	</field>
+	<field name="cargo_publico_gtemp" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define si empleado desempena un cargo publico o privado. 1 pulbico, 0 privado]]></fieldDescription>
+	</field>
 	<variable name="contador" class="java.lang.Integer" calculation="Count">
-		<variableExpression><![CDATA[$F{IDE_GTEMP}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_gtemp}]]></variableExpression>
 		<initialValueExpression><![CDATA[1]]></initialValueExpression>
 	</variable>
 	<group name="ACTIVO">
-		<groupExpression><![CDATA[$F{ACTIVO_GTEMP}]]></groupExpression>
+		<groupExpression><![CDATA[$F{activo_gtemp}]]></groupExpression>
 		<groupHeader>
 			<band height="27">
 				<textField>
@@ -90,7 +124,7 @@ ORDER BY EMP.ACTIVO_GTEMP ASC,NOMBRES ASC]]>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="9" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{ACTIVO_GTEMP}==1?"EMPLEADOS ACTIVOS":"EMPLEADOS INACTIVOS"]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{activo_gtemp}==1?"EMPLEADOS ACTIVOS":"EMPLEADOS INACTIVOS"]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement uuid="cc2257c8-5a27-4edf-abdf-62a71f477584" x="269" y="15" width="45" height="12"/>
@@ -264,7 +298,7 @@ ORDER BY EMP.ACTIVO_GTEMP ASC,NOMBRES ASC]]>
 		</groupHeader>
 	</group>
 	<group name="EMPLEADO">
-		<groupExpression><![CDATA[$F{IDE_GTEMP}]]></groupExpression>
+		<groupExpression><![CDATA[$F{ide_gtemp}]]></groupExpression>
 		<groupHeader>
 			<band/>
 		</groupHeader>
@@ -289,7 +323,7 @@ ORDER BY EMP.ACTIVO_GTEMP ASC,NOMBRES ASC]]>
 					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema_biess/rep_cabecera_horizontal.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera_horizontal.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
@@ -307,7 +341,7 @@ ORDER BY EMP.ACTIVO_GTEMP ASC,NOMBRES ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GTGEN}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_gtgen}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="5f999b6d-6a5f-424c-847d-84250ec74c8e" positionType="Float" stretchType="RelativeToBandHeight" x="314" y="0" width="43" height="12" isPrintWhenDetailOverflows="true"/>
@@ -321,7 +355,7 @@ ORDER BY EMP.ACTIVO_GTEMP ASC,NOMBRES ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GTTDI}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_gttdi}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="0bf83cc6-10f7-4051-8dc8-bdfd6467c067" positionType="Float" stretchType="RelativeToBandHeight" x="357" y="0" width="60" height="12" isPrintWhenDetailOverflows="true"/>
@@ -335,7 +369,7 @@ ORDER BY EMP.ACTIVO_GTEMP ASC,NOMBRES ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DOCUMENTO_IDENTIDAD_GTEMP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{documento_identidad_gtemp}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="1aa0d251-16a9-4550-ad0d-1a96aee13260" positionType="Float" stretchType="RelativeToBandHeight" x="417" y="0" width="60" height="12" isPrintWhenDetailOverflows="true"/>
@@ -349,7 +383,7 @@ ORDER BY EMP.ACTIVO_GTEMP ASC,NOMBRES ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GTESC}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_gtesc}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="e593e681-c27e-4c4b-b746-7ed316c29a72" positionType="Float" stretchType="RelativeToBandHeight" x="477" y="0" width="41" height="12" isPrintWhenDetailOverflows="true"/>
@@ -363,7 +397,7 @@ ORDER BY EMP.ACTIVO_GTEMP ASC,NOMBRES ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GTTIS}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_gttis}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="41862237-75e0-47e1-be9b-ff1de62b970d" positionType="Float" stretchType="RelativeToBandHeight" x="593" y="0" width="69" height="12" isPrintWhenDetailOverflows="true"/>
@@ -377,7 +411,7 @@ ORDER BY EMP.ACTIVO_GTEMP ASC,NOMBRES ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GTNAC}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_gtnac}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="2bfa261d-c42d-484c-b0f6-3fc60ab86c34" positionType="Float" stretchType="RelativeToBandHeight" x="518" y="0" width="75" height="12" isPrintWhenDetailOverflows="true"/>
@@ -391,7 +425,7 @@ ORDER BY EMP.ACTIVO_GTEMP ASC,NOMBRES ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GEDIP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_gedip}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="ee66a5ee-7262-424a-a7a5-0644ed707341" positionType="Float" stretchType="RelativeToBandHeight" x="30" y="0" width="239" height="12" isPrintWhenDetailOverflows="true"/>
@@ -405,7 +439,7 @@ ORDER BY EMP.ACTIVO_GTEMP ASC,NOMBRES ASC]]>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="6" isBold="false" isStrikeThrough="false" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NOMBRES}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nombres}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="yyyy/MM/dd" isBlankWhenNull="true">
 				<reportElement uuid="62719648-c582-4637-83f6-502ac375d2a9" stretchType="RelativeToBandHeight" x="662" y="0" width="58" height="12"/>
@@ -419,7 +453,7 @@ ORDER BY EMP.ACTIVO_GTEMP ASC,NOMBRES ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_NACIMIENTO_GTEMP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_nacimiento_gtemp}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="2b7f754c-6080-4fc2-a8c0-417d52e7f269" stretchType="RelativeToBandHeight" x="720" y="0" width="58" height="12"/>
@@ -433,8 +467,8 @@ ORDER BY EMP.ACTIVO_GTEMP ASC,NOMBRES ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CARGO_PUBLICO_GTEMP}==1?"PUBLICO":
-$F{CARGO_PUBLICO_GTEMP}==null?"PRIVADO":"PRIVADO"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cargo_publico_gtemp}==1?"PUBLICO":
+$F{cargo_publico_gtemp}==null?"PRIVADO":"PRIVADO"]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="c9ea69a4-d0f8-4d9a-a679-90e39e374919" stretchType="RelativeToBandHeight" x="0" y="0" width="30" height="12"/>
@@ -462,7 +496,7 @@ $F{CARGO_PUBLICO_GTEMP}==null?"PRIVADO":"PRIVADO"]]></textFieldExpression>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ACTIVO_GTEMP}==1?"SI":"NO"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{activo_gtemp}==1?"SI":"NO"]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
