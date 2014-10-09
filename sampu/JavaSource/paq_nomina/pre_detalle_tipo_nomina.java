@@ -41,7 +41,7 @@ import paq_gestion.ejb.ServicioGestion;
 import paq_nomina.ejb.ServicioNomina;
 import paq_sistema.aplicacion.Pantalla;
 
-
+ 
 public class pre_detalle_tipo_nomina extends Pantalla {
 
 	private Tabla tab_tabla = new Tabla();
