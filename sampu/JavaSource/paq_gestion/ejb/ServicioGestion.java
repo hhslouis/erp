@@ -109,7 +109,7 @@ public class ServicioGestion {
 		for (int i = 0; i < tab_emp_dep.getTotalFilas(); i++) {
 			if (tab_emp_dep.getValor(i, "ACTIVO_GEEDP")!=null
 					&& !tab_emp_dep.getValor(i, "ACTIVO_GEEDP").isEmpty()
-					&& tab_emp_dep.getValor(i, "ACTIVO_GEEDP").equalsIgnoreCase("true")){
+					&& tab_emp_dep.getValor(i, "ACTIVO_GEEDP").equalsIgnoreCase("TRUE")){
 				return tab_emp_dep.getValor(i, "IDE_GEEDP");
 			}
 		}
@@ -193,7 +193,7 @@ public class ServicioGestion {
 
 	public boolean validarAccionFiniquito(String IDE_GEAME){
 		TablaGenerica tab_ame=utilitario.consultar("select * from GEN_ACCION_MOTIVO_EMPLEADO where IDE_GEAED in ( " +
-				"select IDE_GEAED from GEN_ACCION_EMPLEADO_DEPA where FINIQUITO_CONTRATO_GEAED=1)");
+				"select IDE_GEAED from GEN_ACCION_EMPLEADO_DEPA where FINIQUITO_CONTRATO_GEAED=TRUE)");
 		for (int i = 0; i < tab_ame.getTotalFilas(); i++) {
 			if (tab_ame.getValor(i, "IDE_GEAME")!=null && !tab_ame.getValor(i, "IDE_GEAME").isEmpty()){
 				if (tab_ame.getValor(i, "IDE_GEAME").equalsIgnoreCase(IDE_GEAME)){
@@ -205,7 +205,7 @@ public class ServicioGestion {
 	}
 
 	public boolean inactivarEmpleado(String IDE_GEEDP){
-		if (utilitario.getConexion().ejecutarSql("update GTH_EMPLEADO set ACTIVO_GTEMP=0 where IDE_GTEMP in ( " +
+		if (utilitario.getConexion().ejecutarSql("update GTH_EMPLEADO set ACTIVO_GTEMP=FALSE where IDE_GTEMP in ( " +
 				"select IDE_GTEMP from GEN_EMPLEADOS_DEPARTAMENTO_PAR where IDE_GEEDP="+IDE_GEEDP+")").isEmpty()){
 			return true;
 		}
@@ -213,7 +213,7 @@ public class ServicioGestion {
 	}
 
 	public boolean activarEmpleado(String IDE_GEEDP){
-		if (utilitario.getConexion().ejecutarSql("update GTH_EMPLEADO set ACTIVO_GTEMP=1 where IDE_GTEMP in ( " +
+		if (utilitario.getConexion().ejecutarSql("update GTH_EMPLEADO set ACTIVO_GTEMP=TRUE where IDE_GTEMP in ( " +
 				"select IDE_GTEMP from GEN_EMPLEADOS_DEPARTAMENTO_PAR where IDE_GEEDP="+IDE_GEEDP+")").isEmpty()){
 			return true;
 		}
