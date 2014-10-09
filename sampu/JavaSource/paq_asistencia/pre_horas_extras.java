@@ -448,7 +448,7 @@ public class pre_horas_extras extends Pantalla {
 	public void seleccionaHoraExtra(SelectEvent evt){
 		tab_horas_extra.seleccionarFila(evt);
 		//	sumarHorasExtras();		
-		TablaGenerica tab_horas_aprobadas=utilitario.consultar("SELECT ide_asdhe,fecha_asdhe,hora_inicial_asdhe,hora_final_asdhe,nro_horas_asdhe,(case when nro_horas_aprobadas_asdhe is null then nro_horas_asdhe else nro_horas_aprobadas_asdhe end) as nro_horas_aprobadas,actividades_asdhe,registro_novedad_asdhe,activo_asdhe FROM ASI_DETALLE_HORAS_EXTRAS where activo_asdhe=0 and ide_aspvh="+tab_permisos.getValorSeleccionado()+" and ide_asdhe="+tab_horas_extra.getValorSeleccionado());
+		TablaGenerica tab_horas_aprobadas=utilitario.consultar("SELECT ide_asdhe,fecha_asdhe,hora_inicial_asdhe,hora_final_asdhe,nro_horas_asdhe,(case when nro_horas_aprobadas_asdhe is null then nro_horas_asdhe else nro_horas_aprobadas_asdhe end) as nro_horas_aprobadas,actividades_asdhe,registro_novedad_asdhe,activo_asdhe FROM ASI_DETALLE_HORAS_EXTRAS where activo_asdhe=falso and ide_aspvh="+tab_permisos.getValorSeleccionado()+" and ide_asdhe="+tab_horas_extra.getValorSeleccionado());
 		String str_fecha_solicitada="";
 		String str_nro_horas_solicitadas="";
 		if (tab_horas_aprobadas.getTotalFilas()>0) {			
@@ -552,7 +552,7 @@ public class pre_horas_extras extends Pantalla {
 					return;
 				}
 				if (tab_permisos.getValor("aprobado_aspvh").equalsIgnoreCase("true")) {
-					TablaGenerica tab_horas_extras=utilitario.consultar("SELECT ide_asdhe,fecha_asdhe,hora_inicial_asdhe,hora_final_asdhe,nro_horas_asdhe,actividades_asdhe,registro_novedad_asdhe,activo_asdhe FROM ASI_DETALLE_HORAS_EXTRAS where activo_asdhe=0 and ide_aspvh="+tab_permisos.getValorSeleccionado());
+					TablaGenerica tab_horas_extras=utilitario.consultar("SELECT ide_asdhe,fecha_asdhe,hora_inicial_asdhe,hora_final_asdhe,nro_horas_asdhe,actividades_asdhe,registro_novedad_asdhe,activo_asdhe FROM ASI_DETALLE_HORAS_EXTRAS where activo_asdhe=false and ide_aspvh="+tab_permisos.getValorSeleccionado());
 					if(tab_horas_extras.getTotalFilas()>0){
 						tab_horas_extra.setSql("SELECT ide_asdhe,fecha_asdhe,hora_inicial_asdhe,hora_final_asdhe,nro_horas_asdhe,(case when nro_horas_aprobadas_asdhe is null then nro_horas_asdhe else nro_horas_aprobadas_asdhe end)as nro_horas_aprobadas,actividades_asdhe,registro_novedad_asdhe,activo_asdhe FROM ASI_DETALLE_HORAS_EXTRAS where (case when aprobado_asdhe is null then 0 else aprobado_asdhe end) !=1 and ide_aspvh="+tab_permisos.getValorSeleccionado());
 						tab_horas_extra.ejecutarSql();
