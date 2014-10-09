@@ -484,7 +484,7 @@ public class pre_accion_personal extends Pantalla {
 		set_encargo.setHeight("60%");
 		set_encargo.setTitle("ENCARGO DE PUESTO");
 		set_encargo.setSeleccionTabla(
-				"select a.ide_gepgc,IDE_GEARE,a.ide_gegro,a.ide_gecaf,a.ide_sucu,a.ide_gedep,a.ide_gttem, titulo_cargo_gepgc,c.detalle_gegro as grupo_ocuapcional,detalle_gecaf as cargo,salario_encargo_gepgc from gen_partida_grupo_cargo a, gen_cargo_funcional b,gen_grupo_ocupacional c where a.ide_gecaf = b.ide_gecaf and a.ide_gegro = c.ide_gegro and encargo_gepgc=1 order by titulo_cargo_gepgc ",
+				"select a.ide_gepgc,IDE_GEARE,a.ide_gegro,a.ide_gecaf,a.ide_sucu,a.ide_gedep,a.ide_gttem, titulo_cargo_gepgc,c.detalle_gegro as grupo_ocuapcional,detalle_gecaf as cargo,salario_encargo_gepgc from gen_partida_grupo_cargo a, gen_cargo_funcional b,gen_grupo_ocupacional c where a.ide_gecaf = b.ide_gecaf and a.ide_gegro = c.ide_gegro and encargo_gepgc=TRUE order by titulo_cargo_gepgc ",
 				"ide_gepgc");
 
 		set_encargo.getTab_seleccion().getColumna("ide_gepgc").setVisible(false);
