@@ -25,7 +25,7 @@ public class ServicioEmpleado {
 		TablaGenerica tab_reg=utilitario.consultar("select * from GEN_REGION where IDE_GEREG in ( " +
 				"select IDE_GEREG from GEN_DIVISION_POLITICA where IDE_GEDIP in ( " +
 				"select IDE_GEDIP from SIS_SUCURSAL where ide_sucu in ( " +
-				"select IDE_SUCU from GEN_EMPLEADOS_DEPARTAMENTO_PAR where IDE_GTEMP="+ide_gtemp+" and ACTIVO_GEEDP=1)))");
+				"select IDE_SUCU from GEN_EMPLEADOS_DEPARTAMENTO_PAR where IDE_GTEMP="+ide_gtemp+" and ACTIVO_GEEDP=TRUE)))");
 		return tab_reg;
 		}
 		return null;
@@ -36,7 +36,7 @@ public class ServicioEmpleado {
 		TablaGenerica tab_emp_dep_par=utilitario.consultar("select * from GEN_EMPLEADOS_DEPARTAMENTO_PAR WHERE IDE_GEEDP="+IDE_GEEDP);
 		if (tab_emp_dep_par.getTotalFilas()>0){
 			if (tab_emp_dep_par.getValor("ACTIVO_GEEDP")!=null && !tab_emp_dep_par.getValor("ACTIVO_GEEDP").isEmpty()){
-				if (tab_emp_dep_par.getValor("ACTIVO_GEEDP").equals("1")){
+				if (tab_emp_dep_par.getValor("ACTIVO_GEEDP").equals("TRUE")){
 					return true;
 				}
 			}
@@ -152,7 +152,7 @@ public class ServicioEmpleado {
 				"APELLIDO_MATERNO_GTEMP || ' ' || " +
 				"PRIMER_NOMBRE_GTEMP || ' ' || " +
 				"SEGUNDO_NOMBRE_GTEMP AS NOMBRES " +
-				"from GTH_EMPLEADO WHERE ACTIVO_GTEMP=1 ORDER BY APELLIDO_PATERNO_GTEMP";
+				"from GTH_EMPLEADO WHERE ACTIVO_GTEMP=TRUE ORDER BY APELLIDO_PATERNO_GTEMP";
 	}
 	
 	public double getPorcentajeDiscapacidad(String IDE_GTEMP){
@@ -216,7 +216,7 @@ public class ServicioEmpleado {
   		return utilitario.consultar("select detalle_gtcor,apellido_paterno_gtemp||' '||apellido_materno_gtemp||' '||primer_nombre_gtemp||' '||segundo_nombre_gtemp as empleado, " +
   				"ide_geedp from GTH_CORREO a, GEN_EMPLEADOS_DEPARTAMENTO_PAR b,GTH_EMPLEADO c " +
   				"where a.IDE_GTEMP = c.IDE_GTEMP and b.ide_gtemp = c.IDE_GTEMP " +
-  				"and activo_geedp=1 and notificacion_gtcor=1 and ide_geedp in("+IDE_GEEDP+") ");
+  				"and activo_geedp=TRUE and notificacion_gtcor=TRUE and ide_geedp in("+IDE_GEEDP+") ");
   	}
 	
 }
