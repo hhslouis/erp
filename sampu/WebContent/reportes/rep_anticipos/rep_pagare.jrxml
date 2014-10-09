@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_pagare" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0361d88c-697a-4be3-9ca9-af54be246ef7">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="311"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["D:\\workspace\\biess\\WebContent\\reportes\\rep_gestion\\"]]></defaultValueExpression>
 	</parameter>
@@ -38,11 +38,11 @@ where b.IDE_GTEMP=a.IDE_GTEMP
 )c ON c.ide_geedp=a.ide_geedp
 LEFT JOIN (
 SELECT IDE_NRGAR,IDE_nrant,IDE_GEEDP, APELLIDO_PATERNOG_NRGAR||' '|| APELLIDO_MATERNOG_NRGAR ||' '|| PRIMER_NOMBREG_NRGAR ||' '|| SEGUNDO_NOMBREG_NRGAR AS GARANTE,
-DOCUMENTO_IDENTIDADG_NRGAR AS DOCUMENTO_GARANTE,lugar_trabajo_nrgar as DIRECCION_GARANTE FROM NRH_GARANTE WHERE ACTIVO_NRGAR =1
+DOCUMENTO_IDENTIDADG_NRGAR AS DOCUMENTO_GARANTE,lugar_trabajo_nrgar as DIRECCION_GARANTE FROM NRH_GARANTE WHERE ACTIVO_NRGAR =true
 )d ON a.ide_nrant=d.ide_nrant
 LEFT JOIN (
 SELECT ide_gtdir,ide_gtemp,detalle_gtdir DIRECCION_EMPLEADO FROM gth_direccion where ide_gtdir in (
-SELECT max(ide_gtdir) FROM GTH_DIRECCION where activo_gtdir=1
+SELECT max(ide_gtdir) FROM GTH_DIRECCION where activo_gtdir=true
 group by ide_gtemp)
 )e ON e.IDE_GTEMP=c.IDE_GTEMP
 LEFT JOIN (
@@ -50,18 +50,26 @@ SELECT IDE_SUCU,NOM_SUCU FROM SIS_SUCURSAL
 )g ON g.IDE_SUCU=c.IDE_SUCU
 WHERE  a.IDE_NRANT=$P{IDE_NRANT}]]>
 	</queryString>
-	<field name="IDE_NRANT" class="java.lang.Long"/>
-	<field name="IDE_GTEMP" class="java.math.BigDecimal"/>
-	<field name="EMPLEADO" class="java.lang.String"/>
-	<field name="DOCUMENTO" class="java.lang.String"/>
-	<field name="FECHA_APROBACION" class="java.sql.Timestamp"/>
-	<field name="FECHA_VENCIMIENTO" class="java.sql.Timestamp"/>
-	<field name="MONTO_APROBADO_NRANT" class="java.math.BigDecimal"/>
-	<field name="NOM_SUCU" class="java.lang.String"/>
-	<field name="DIRECCION_EMPLEADO" class="java.lang.String"/>
-	<field name="GARANTE" class="java.lang.String"/>
-	<field name="DOCUMENTO_GARANTE" class="java.lang.String"/>
-	<field name="DIRECCION_GARANTE" class="java.lang.String"/>
+	<field name="ide_nrant" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla nrh_anticipo, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="ide_gtemp" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gth_empleado, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="empleado" class="java.lang.String"/>
+	<field name="documento" class="java.lang.String"/>
+	<field name="fecha_aprobacion" class="java.sql.Date"/>
+	<field name="fecha_vencimiento" class="java.sql.Date"/>
+	<field name="monto_aprobado_nrant" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Este campo define el monto aprobado para el anticipo de acuerdo a la capacidad de pago.]]></fieldDescription>
+	</field>
+	<field name="nom_sucu" class="java.lang.String">
+		<fieldDescription><![CDATA[nom_sucu]]></fieldDescription>
+	</field>
+	<field name="direccion_empleado" class="java.lang.String"/>
+	<field name="garante" class="java.lang.String"/>
+	<field name="documento_garante" class="java.lang.String"/>
+	<field name="direccion_garante" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -85,7 +93,7 @@ WHERE  a.IDE_NRANT=$P{IDE_NRANT}]]>
 					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema_biess/rep_cabecera.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
@@ -102,7 +110,7 @@ WHERE  a.IDE_NRANT=$P{IDE_NRANT}]]>
 				<textElement verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_VENCIMIENTO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_vencimiento}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="cd08502f-663e-4265-b679-633819ca5505" x="0" y="28" width="44" height="15"/>
@@ -123,21 +131,21 @@ WHERE  a.IDE_NRANT=$P{IDE_NRANT}]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NOM_SUCU}+", "]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nom_sucu}+", "]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement uuid="14952107-4707-4325-adb7-0f9c5e11f3a9" x="44" y="28" width="100" height="15"/>
 				<textElement verticalAlignment="Middle">
 					<font size="10" isBold="true" isItalic="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{MONTO_APROBADO_NRANT}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{monto_aprobado_nrant}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="EEEEE dd MMMMM yyyy" isBlankWhenNull="true">
 				<reportElement uuid="be5c437d-006c-4619-bb72-4f2b3eeaf107" x="129" y="0" width="239" height="15"/>
 				<textElement verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_APROBACION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_aprobacion}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="01c8f651-e345-4c98-a967-3f4250b626ee" x="0" y="0" width="77" height="15"/>
@@ -199,13 +207,12 @@ WHERE  a.IDE_NRANT=$P{IDE_NRANT}]]>
 			<subreport>
 				<reportElement uuid="d30ef477-1afc-4d0d-a419-87e13f91df17" x="-3" y="0" width="558" height="32"/>
 				<subreportParameter name="IDE_NRANT">
-					<subreportParameterExpression><![CDATA[$F{IDE_NRANT}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_nrant}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_anticipos/sub_rep_pagare.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</summary>
