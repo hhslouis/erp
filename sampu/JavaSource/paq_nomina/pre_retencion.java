@@ -80,7 +80,7 @@ public class pre_retencion extends Pantalla{
 		tab_retencion_rubros_descuento.setId("tab_retencion_rubros_descuento");
 		tab_retencion_rubros_descuento.setIdCompleto("tab_tabulador:tab_retencion_rubros_descuento");
 		tab_retencion_rubros_descuento.setTabla("NRH_RETENCION_RUBRO_DESCUENTO","IDE_NRRRD", 3);
-		tab_retencion_rubros_descuento.getColumna("IDE_NRRUB").setCombo("NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB","ANTICIPO_NRRUB=1");
+		tab_retencion_rubros_descuento.getColumna("IDE_NRRUB").setCombo("NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB","ANTICIPO_NRRUB=TRUE");
 		tab_retencion_rubros_descuento.getColumna("IDE_NRRUB").setMetodoChange("seleccionaRubroDetallePago");
 		tab_retencion_rubros_descuento.getColumna("PORCENTAJE_NRRRD").setMetodoChange("calculaValorDescuento");
 		tab_retencion_rubros_descuento.getColumna("ACTIVO_NRRRD").setCheck();
