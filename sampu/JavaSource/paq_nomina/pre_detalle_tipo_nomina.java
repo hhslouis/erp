@@ -49,7 +49,7 @@ public class pre_detalle_tipo_nomina extends Pantalla {
 	private Dialogo dia_formula = new Dialogo();
 	private Etiqueta eti_formula = new Etiqueta();
 	private Etiqueta eti_mensaje = new Etiqueta();
-	@EJB
+	@EJB 
 	private ServicioNomina ser_nomina = (ServicioNomina) utilitario.instanciarEJB(ServicioNomina.class);
 	@EJB
 	private ServicioGestion ser_gestion = (ServicioGestion) utilitario.instanciarEJB(ServicioGestion.class);
