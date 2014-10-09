@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_nomina_global_empleado_periodo" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ccf6d0cd-05f7-4996-aae0-d467e0321434">
 	<property name="ireport.zoom" value="3.0"/>
-	<property name="ireport.x" value="412"/>
+	<property name="ireport.x" value="90"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["D:\\workspace\\biess\\WebContent\\reportes\\rep_gestion\\"]]></defaultValueExpression>
@@ -79,43 +79,99 @@ AND EMP.IDE_GTEMP IN ($P!{IDE_GTEMP})
 AND DRO.VALOR_NRDRO != 0
 order by  EMPLEADO,PRO.IDE_GEPRO,ANI.IDE_GEANI,MES.IDE_GEMES,der.orden_imprime_nrder]]>
 	</queryString>
-	<field name="IDE_GEEDP" class="java.math.BigDecimal"/>
-	<field name="IDE_GTEMP" class="java.math.BigDecimal"/>
-	<field name="EMPLEADO" class="java.lang.String"/>
-	<field name="DOCUMENTO_IDENTIDAD_GTEMP" class="java.lang.String"/>
-	<field name="IDE_NRRUB" class="java.math.BigDecimal"/>
-	<field name="DETALLE_NRRUB" class="java.lang.String"/>
-	<field name="VALOR_NRDRO" class="java.math.BigDecimal"/>
-	<field name="IDE_NRROL" class="java.math.BigDecimal"/>
-	<field name="FECHA_NRROL" class="java.sql.Timestamp"/>
-	<field name="IDE_GEMES" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GEMES" class="java.lang.String"/>
-	<field name="IDE_GEANI" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GEANI" class="java.lang.String"/>
-	<field name="IDE_SUCU" class="java.math.BigDecimal"/>
-	<field name="NOM_SUCU" class="java.lang.String"/>
-	<field name="IDE_GEARE" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GEARE" class="java.lang.String"/>
-	<field name="IDE_GEDEP" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GEDEP" class="java.lang.String"/>
-	<field name="IDE_GEPRO" class="java.math.BigDecimal"/>
-	<field name="IDE_GEGRO" class="java.math.BigDecimal"/>
-	<field name="IDE_GTTEM" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GTTEM" class="java.lang.String"/>
-	<field name="IDE_NRTIR" class="java.math.BigDecimal"/>
-	<field name="DETALLE_NRTIR" class="java.lang.String"/>
-	<field name="IDE_NRDTN" class="java.math.BigDecimal"/>
-	<field name="DETALLE_NRTIN" class="java.lang.String"/>
-	<field name="ORDEN_IMPRIME_NRDER" class="java.math.BigDecimal"/>
-	<field name="DETALLE_PERIODO_GEPRO" class="java.lang.String"/>
+	<field name="ide_geedp" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_empleados_departamento_par, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="ide_gtemp" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gth_empleado, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="empleado" class="java.lang.String"/>
+	<field name="documento_identidad_gtemp" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el numero de documento de identidad que posee el empleado.]]></fieldDescription>
+	</field>
+	<field name="ide_nrrub" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla nrh_rubro, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="detalle_nrrub" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del rubro para la generacion del respectivo rol, ejemplo DECIMO TERCER SUELDO, DECIMO CUARTO SUELDO, RETENCION A LA FUENTE, etc.]]></fieldDescription>
+	</field>
+	<field name="valor_nrdro" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Este campo define el valor generado por rubro sea ingreso o egreso para el empleado.]]></fieldDescription>
+	</field>
+	<field name="ide_nrrol" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla nrh_rol, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="fecha_nrrol" class="java.sql.Date">
+		<fieldDescription><![CDATA[Este campo define la fecha de creacion del rol de pagos.]]></fieldDescription>
+	</field>
+	<field name="ide_gemes" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_gemes]]></fieldDescription>
+	</field>
+	<field name="detalle_gemes" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el detalle del mes, ejemplo: enero, febrero, marzo, etc.]]></fieldDescription>
+	</field>
+	<field name="ide_geani" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_geani]]></fieldDescription>
+	</field>
+	<field name="detalle_geani" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del ano ejemplo: 2013, 2014, etc]]></fieldDescription>
+	</field>
+	<field name="ide_sucu" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_sucu]]></fieldDescription>
+	</field>
+	<field name="nom_sucu" class="java.lang.String">
+		<fieldDescription><![CDATA[nom_sucu]]></fieldDescription>
+	</field>
+	<field name="ide_geare" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_area, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="detalle_geare" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del area ejemplo: Directorio, Auditoria Interna, etc.]]></fieldDescription>
+	</field>
+	<field name="ide_gedep" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_gedep]]></fieldDescription>
+	</field>
+	<field name="detalle_gedep" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del departamento, ejemplo: DIRECTORIO, TECNOLOGIA, INFRAESTRUCTURA, etc.]]></fieldDescription>
+	</field>
+	<field name="ide_gepro" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_gepro]]></fieldDescription>
+	</field>
+	<field name="ide_gegro" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_gegro]]></fieldDescription>
+	</field>
+	<field name="ide_gttem" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave foranea que proviene de la tabla gth_tipo_empleado.]]></fieldDescription>
+	</field>
+	<field name="detalle_gttem" class="java.lang.String">
+		<fieldDescription><![CDATA[detalle_gttem]]></fieldDescription>
+	</field>
+	<field name="ide_nrtir" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave foranea que proviene de la tabla nrh_tipo_rubro. Para imprimir las liquidaciones se debe considerar que los rubros que se imprimen son los INGRESOS, EGRESOS, EGRESO INFORMATIVO, INGRESO INFORMATIVO, los informativos nunca s eimprimen, ejemplo: dias vacacion ingreso informativo.]]></fieldDescription>
+	</field>
+	<field name="detalle_nrtir" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del tipo de rubro, ejmeplo: egreso, egreso informativo, ingreso, etc.]]></fieldDescription>
+	</field>
+	<field name="ide_nrdtn" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_nrdtn]]></fieldDescription>
+	</field>
+	<field name="detalle_nrtin" class="java.lang.String">
+		<fieldDescription><![CDATA[detalle_nrtin]]></fieldDescription>
+	</field>
+	<field name="orden_imprime_nrder" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define el orden de los rubros para la consulta de la snominas globales.]]></fieldDescription>
+	</field>
+	<field name="detalle_periodo_gepro" class="java.lang.String">
+		<fieldDescription><![CDATA[Esta campo define el detalle del periodo del rol ejemplo:  NOMINA 2014, NOMINA LIQUIDACION LUIS TOAPANTA]]></fieldDescription>
+	</field>
 	<variable name="VALOR_NRDRO_1" class="java.math.BigDecimal" resetType="Group" resetGroup="IDE_NRROL" calculation="Sum">
-		<variableExpression><![CDATA[$F{VALOR_NRDRO}]]></variableExpression>
+		<variableExpression><![CDATA[$F{valor_nrdro}]]></variableExpression>
 	</variable>
 	<variable name="VALOR_NRDRO_2" class="java.math.BigDecimal" resetType="Group" resetGroup="IDE_GTEMP" calculation="Sum">
-		<variableExpression><![CDATA[$F{VALOR_NRDRO}]]></variableExpression>
+		<variableExpression><![CDATA[$F{valor_nrdro}]]></variableExpression>
 	</variable>
 	<group name="IDE_GTEMP">
-		<groupExpression><![CDATA[$F{IDE_GTEMP}]]></groupExpression>
+		<groupExpression><![CDATA[$F{ide_gtemp}]]></groupExpression>
 		<groupHeader>
 			<band height="12">
 				<staticText>
@@ -144,7 +200,7 @@ order by  EMPLEADO,PRO.IDE_GEPRO,ANI.IDE_GEANI,MES.IDE_GEMES,der.orden_imprime_n
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{EMPLEADO}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{empleado}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement uuid="ca0a58b8-e079-4101-ad30-17142b335c97" x="375" y="0" width="117" height="12"/>
@@ -158,7 +214,7 @@ order by  EMPLEADO,PRO.IDE_GEPRO,ANI.IDE_GEANI,MES.IDE_GEMES,der.orden_imprime_n
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{DOCUMENTO_IDENTIDAD_GTEMP}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{documento_identidad_gtemp}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement uuid="f6341077-e2d0-4da6-909d-220f42d24387" x="309" y="0" width="67" height="12"/>
@@ -181,7 +237,7 @@ order by  EMPLEADO,PRO.IDE_GEPRO,ANI.IDE_GEANI,MES.IDE_GEMES,der.orden_imprime_n
 		</groupFooter>
 	</group>
 	<group name="IDE_NRROL">
-		<groupExpression><![CDATA[$F{IDE_NRROL}]]></groupExpression>
+		<groupExpression><![CDATA[$F{ide_nrrol}]]></groupExpression>
 		<groupHeader>
 			<band height="38">
 				<staticText>
@@ -238,7 +294,7 @@ order by  EMPLEADO,PRO.IDE_GEPRO,ANI.IDE_GEANI,MES.IDE_GEMES,der.orden_imprime_n
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="7"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{DETALLE_GTTEM}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{detalle_gttem}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement uuid="79df7347-8591-443b-b7ce-e8b7c4e3a8f5" x="0" y="0" width="33" height="14"/>
@@ -266,14 +322,14 @@ order by  EMPLEADO,PRO.IDE_GEPRO,ANI.IDE_GEANI,MES.IDE_GEMES,der.orden_imprime_n
 					<textElement verticalAlignment="Middle">
 						<font size="7"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{DETALLE_GEARE}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{detalle_geare}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement uuid="5b337094-9a8b-4a63-86a4-01561e5c76bb" positionType="Float" x="131" y="14" width="37" height="14"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="8" isBold="false" pdfFontName="Courier-Bold"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{DETALLE_GEANI}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{detalle_geani}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement uuid="8851e4d8-4682-48db-80e5-955429d827c6" positionType="Float" x="109" y="14" width="23" height="14"/>
@@ -294,14 +350,14 @@ order by  EMPLEADO,PRO.IDE_GEPRO,ANI.IDE_GEANI,MES.IDE_GEMES,der.orden_imprime_n
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{DETALLE_GEMES}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{detalle_gemes}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="yyyy/MM/dd" isBlankWhenNull="true">
 					<reportElement uuid="156eeeb2-3020-4cfb-bb78-1693309653bf" x="54" y="14" width="56" height="14"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{FECHA_NRROL}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{fecha_nrrol}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement uuid="826d2b45-5250-4839-9e26-ed86ec2be77f" positionType="Float" x="0" y="14" width="55" height="14"/>
@@ -357,14 +413,14 @@ order by  EMPLEADO,PRO.IDE_GEPRO,ANI.IDE_GEANI,MES.IDE_GEMES,der.orden_imprime_n
 					<textElement verticalAlignment="Middle">
 						<font size="7"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{DETALLE_GEDEP}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{detalle_gedep}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement uuid="bfa1a915-0128-46ae-ae21-f3e75a4fb9c8" stretchType="RelativeToBandHeight" x="343" y="14" width="212" height="14" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 					<textElement verticalAlignment="Middle">
 						<font size="7"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{DETALLE_PERIODO_GEPRO}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{detalle_periodo_gepro}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement uuid="0e47e466-8f14-422f-ad4e-fe745e9400ca" x="270" y="14" width="73" height="14"/>
@@ -409,7 +465,7 @@ order by  EMPLEADO,PRO.IDE_GEPRO,ANI.IDE_GEANI,MES.IDE_GEMES,der.orden_imprime_n
 					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema_biess/rep_cabecera.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
@@ -433,7 +489,7 @@ order by  EMPLEADO,PRO.IDE_GEPRO,ANI.IDE_GEANI,MES.IDE_GEMES,der.orden_imprime_n
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{VALOR_NRDRO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{valor_nrdro}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="6d24e95c-5a3e-4968-8153-80e8b96a0f0e" stretchType="RelativeToBandHeight" x="0" y="0" width="499" height="10" isPrintWhenDetailOverflows="true"/>
@@ -447,7 +503,7 @@ order by  EMPLEADO,PRO.IDE_GEPRO,ANI.IDE_GEANI,MES.IDE_GEMES,der.orden_imprime_n
 				<textElement verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_NRRUB}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_nrrub}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
