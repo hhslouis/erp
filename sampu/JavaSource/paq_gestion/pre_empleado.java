@@ -1624,23 +1624,6 @@ public class pre_empleado extends Pantalla {
 		itm_datos_emergencia.setMetodo("dibujarDatosEmergencia");
 		itm_datos_emergencia.setUpdate("pan_opcion");
 		sum_empleado.getChildren().add(itm_datos_emergencia);
-
-		
-		
-
-		// SUB MENU 4
-		Submenu sum_datos_registro_militar = new Submenu();
-		sum_datos_registro_militar.setLabel("SITUACION MILITAR");
-		pam_menu.getChildren().add(sum_datos_registro_militar);
-
-		// ITEM 1 : OPCION 8
-		ItemMenu itm_datos_registro_militar = new ItemMenu();
-		itm_datos_registro_militar.setValue("SITUACION MILITAR");
-		itm_datos_registro_militar.setIcon("ui-icon-person");
-		itm_datos_registro_militar.setMetodo("dibujarDatosRegistroMilitar");
-		itm_datos_registro_militar.setUpdate("pan_opcion");
-		sum_datos_registro_militar.getChildren().add(itm_datos_registro_militar);
-
 		
 
 		// SUB MENU 6
@@ -1679,14 +1662,7 @@ public class pre_empleado extends Pantalla {
 		sum_datos_experiencia_laboral.getChildren().add(itm_datos_capacitacion);
 
 		
-		// ITEM 2 : OPCION 26
-		ItemMenu itm_datos_membresia = new ItemMenu();
-		itm_datos_membresia.setValue("DATOS DE MEMBRESIAS");
-		itm_datos_membresia.setIcon("ui-icon-person");
-		itm_datos_membresia.setMetodo("dibujarDatosMembresias");
-		itm_datos_membresia.setUpdate("pan_opcion");
-		sum_datos_experiencia_laboral.getChildren().add(itm_datos_membresia);
-
+		
 		// ITEM 3 : OPCION 13
 		ItemMenu itm_datos_experiencia_docente = new ItemMenu();
 		itm_datos_experiencia_docente.setValue("EXPERIENCIA DOCENTE");
