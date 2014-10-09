@@ -16,7 +16,7 @@
 	<queryString>
 		<![CDATA[select a.ide_nrrua,a.ide_getia,a.ide_gelua,a.ide_gecuc,a.ide_nrrub,a.ide_geben,a.ide_geare,todos_nrrua,
 detalle_getia,detalle_gelua,codigo_cuenta_gecuc,detalle_nrrub,
-(case when todos_nrrua =1 then 'DEFAULT' else 'TODOS' end ) as detalle_todos, detalle_geare,titular_geben
+(case when todos_nrrua =true then 'DEFAULT' else 'TODOS' end ) as detalle_todos, detalle_geare,titular_geben
 from nrh_rubro_asiento a
 left join gen_tipo_asiento b on a.ide_getia = b.ide_getia
 left join gen_lugar_aplica c on a.ide_gelua = c.ide_gelua
@@ -27,23 +27,49 @@ left join gen_area g on a.ide_geare = g.ide_geare
 where a.IDE_GETIA=$P{IDE_GETIA}
 order by a.ide_gelua,codigo_cuenta_gecuc]]>
 	</queryString>
-	<field name="IDE_NRRUA" class="java.math.BigDecimal"/>
-	<field name="IDE_GETIA" class="java.lang.Long"/>
-	<field name="IDE_GELUA" class="java.math.BigDecimal"/>
-	<field name="IDE_GECUC" class="java.math.BigDecimal"/>
-	<field name="IDE_NRRUB" class="java.math.BigDecimal"/>
-	<field name="IDE_GEBEN" class="java.math.BigDecimal"/>
-	<field name="IDE_GEARE" class="java.math.BigDecimal"/>
-	<field name="TODOS_NRRUA" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GETIA" class="java.lang.String"/>
-	<field name="DETALLE_GELUA" class="java.lang.String"/>
-	<field name="CODIGO_CUENTA_GECUC" class="java.lang.String"/>
-	<field name="DETALLE_NRRUB" class="java.lang.String"/>
-	<field name="DETALLE_TODOS" class="java.lang.String"/>
-	<field name="DETALLE_GEARE" class="java.lang.String"/>
-	<field name="TITULAR_GEBEN" class="java.lang.String"/>
+	<field name="ide_nrrua" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla nrh_rubro_asiento, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="ide_getia" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_tipo_asiento valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="ide_gelua" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_lugar_aplica valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="ide_gecuc" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_cuenta_contable valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="ide_nrrub" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla nrh_rubro, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="ide_geben" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_beneficiario, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="ide_geare" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_area, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="todos_nrrua" class="java.lang.Boolean"/>
+	<field name="detalle_getia" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del tipo de asiento ejemplo: mensual]]></fieldDescription>
+	</field>
+	<field name="detalle_gelua" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del lugar de aplicioc d ela cuenta contable, debe, haber.]]></fieldDescription>
+	</field>
+	<field name="codigo_cuenta_gecuc" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el codigo de la cuenta contable]]></fieldDescription>
+	</field>
+	<field name="detalle_nrrub" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del rubro para la generacion del respectivo rol, ejemplo DECIMO TERCER SUELDO, DECIMO CUARTO SUELDO, RETENCION A LA FUENTE, etc.]]></fieldDescription>
+	</field>
+	<field name="detalle_todos" class="java.lang.String"/>
+	<field name="detalle_geare" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del area ejemplo: Directorio, Auditoria Interna, etc.]]></fieldDescription>
+	</field>
+	<field name="titular_geben" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del titular beneficiario. ejemplo: supermaxi, Marathon sports, etc.]]></fieldDescription>
+	</field>
 	<variable name="contador" class="java.lang.Integer" calculation="Count">
-		<variableExpression><![CDATA[$F{IDE_NRRUA}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_nrrua}]]></variableExpression>
 		<initialValueExpression><![CDATA[1]]></initialValueExpression>
 	</variable>
 	<background>
@@ -90,7 +116,7 @@ order by a.ide_gelua,codigo_cuenta_gecuc]]>
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GETIA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_getia}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -199,7 +225,7 @@ order by a.ide_gelua,codigo_cuenta_gecuc]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CODIGO_CUENTA_GECUC}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{codigo_cuenta_gecuc}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="da699d74-e515-4bf9-98d8-d8c7d5951460" stretchType="RelativeToBandHeight" x="278" y="0" width="73" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -213,7 +239,7 @@ order by a.ide_gelua,codigo_cuenta_gecuc]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GELUA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_gelua}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="45143325-236b-4715-b354-dd1dc8f2fd74" stretchType="RelativeToBandHeight" x="35" y="0" width="189" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -227,7 +253,7 @@ order by a.ide_gelua,codigo_cuenta_gecuc]]>
 				<textElement verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_NRRUB}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_nrrub}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="da2a4c5e-18ef-4dab-a987-0a69e03596bf" stretchType="RelativeToBandHeight" x="351" y="0" width="68" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -241,7 +267,7 @@ order by a.ide_gelua,codigo_cuenta_gecuc]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_TODOS}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_todos}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="60de8a00-3784-4f8a-9479-53b726394b18" stretchType="RelativeToBandHeight" x="419" y="0" width="136" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -255,7 +281,7 @@ order by a.ide_gelua,codigo_cuenta_gecuc]]>
 				<textElement verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GEARE}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_geare}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="ea60203c-f753-44d2-9d7b-68b7d8caee8d" stretchType="RelativeToBandHeight" x="0" y="0" width="35" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
