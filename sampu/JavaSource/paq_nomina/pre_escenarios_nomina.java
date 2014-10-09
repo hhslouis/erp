@@ -304,6 +304,7 @@ public class pre_escenarios_nomina extends Pantalla{
 			}
 		}
 	}
+	
 
 	@Override
 	public void eliminar() {
