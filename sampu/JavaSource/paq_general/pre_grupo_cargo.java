@@ -252,7 +252,7 @@ public class pre_grupo_cargo extends Pantalla {
 				"LEFT JOIN  GEN_EMPLEADOS_DEPARTAMENTO_PAR EDP ON EDP.IDE_GTEMP=EMP.IDE_GTEMP " +
 				"left join GTH_GRUPO_EMPLEADO GEMP ON GEMP.IDE_GTGRE=EDP.IDE_GTGRE " +
 				"WHERE  EMP.ACTIVO_GTEMP=TRUE AND EDP.IDE_GEGRO=0 " +
-				"AND EDP.ACTIVO_GEEDP=TRUE" +
+				"AND EDP.ACTIVO_GEEDP=TRUE " +
 				" order by nombres asc","IDE_GEEDP");
 		set_empleado.getTab_seleccion().getColumna("NOMBRES").setFiltro(true);
 		set_empleado.getTab_seleccion().getColumna("DOCUMENTO_IDENTIDAD_GTEMP").setFiltro(true);
@@ -295,7 +295,7 @@ public class pre_grupo_cargo extends Pantalla {
 						"LEFT JOIN  GEN_EMPLEADOS_DEPARTAMENTO_PAR EDP ON EDP.IDE_GTEMP=EMP.IDE_GTEMP " +
 						"left join GTH_GRUPO_EMPLEADO GEMP ON GEMP.IDE_GTGRE=EDP.IDE_GTGRE " +
 						"WHERE  EMP.ACTIVO_GTEMP=TRUE AND EDP.IDE_GEGRO="+tab_tabla1.getValorSeleccionado()+" " +
-						"AND EDP.ACTIVO_GEEDP=TRUE" +
+						"AND EDP.ACTIVO_GEEDP=TRUE " +
 						"order by nombres asc");
 				//set_empleado.getTab_seleccion().imprimirSql();
 				set_empleado.getTab_seleccion().getColumna("DOCUMENTO_IDENTIDAD_GTEMP").setFiltro(true);
@@ -376,7 +376,7 @@ public class pre_grupo_cargo extends Pantalla {
 					"LEFT JOIN  GEN_EMPLEADOS_DEPARTAMENTO_PAR EDP ON EDP.IDE_GTEMP=EMP.IDE_GTEMP " +
 					"left join GTH_GRUPO_EMPLEADO GEMP ON GEMP.IDE_GTGRE=EDP.IDE_GTGRE " +
 					"WHERE  EMP.ACTIVO_GTEMP=TRUE AND EDP.IDE_GEGRO="+tab_tabla1.getValorSeleccionado()+" " +
-					"AND EDP.ACTIVO_GEEDP=TRUE" +
+					"AND EDP.ACTIVO_GEEDP=TRUE " +
 					" order by nombres asc");
 			set_empleado.getTab_seleccion().imprimirSql();
 			set_empleado.getTab_seleccion().getColumna("DOCUMENTO_IDENTIDAD_GTEMP").setFiltro(true);
@@ -405,7 +405,7 @@ public class pre_grupo_cargo extends Pantalla {
 				System.out.println("EMPLEADOS"+set_empleado.getSeleccionados());
 				utilitario.getConexion().agregarSql("update  GEN_EMPLEADOS_DEPARTAMENTO_PAR set LINEA_SUPERVICION_GEEDP=true  " +
 						"WHERE IDE_GEGRO="+tab_tabla1.getValorSeleccionado()+"  " + 
-						" and ACTIVO_GEEDP=true" +
+						" and ACTIVO_GEEDP=true " +
 						" and IDE_GEEDP in("+set_empleado.getSeleccionados()+")");
 				guardarPantalla();	
 				rad_grupo.setValue(null);
@@ -416,7 +416,7 @@ public class pre_grupo_cargo extends Pantalla {
 			}else if (rad_grupo.getValue().equals("0")) {
 				utilitario.getConexion().agregarSql("update  GEN_EMPLEADOS_DEPARTAMENTO_PAR set LINEA_SUPERVICION_GEEDP=true  " +
 						"WHERE IDE_GEGRO="+tab_tabla1.getValorSeleccionado()+"  " +
-						" and ACTIVO_GEEDP=true" +
+						" and ACTIVO_GEEDP=true " +
 						" and IDE_GEEDP in("+set_empleado.getSeleccionados()+")");
 				guardarPantalla();	
 				rad_grupo.setValue(null);
@@ -436,7 +436,7 @@ public class pre_grupo_cargo extends Pantalla {
 					System.out.println("empleados"+set_empleado.getSeleccionados());
 					utilitario.getConexion().agregarSql("update  GEN_EMPLEADOS_DEPARTAMENTO_PAR set ide_gtgre="+cmb_tipo_emp.getValue()+" " +
 							" WHERE IDE_GEGRO="+tab_tabla1.getValorSeleccionado()+" " +
-							" and ACTIVO_GEEDP=true" +
+							" and ACTIVO_GEEDP=true " +
 							" and IDE_GEEDP in("+set_empleado.getSeleccionados()+")");
 					guardarPantalla();	
 					rad_grupo.setValue(null);
