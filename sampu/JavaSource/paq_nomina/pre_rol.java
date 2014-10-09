@@ -598,7 +598,7 @@ public class pre_rol extends Pantalla{
 				"INNER JOIN GEN_PERIDO_ROL PRO ON PRO.IDE_GEPRO=ROL.IDE_GEPRO " +
 				"left join NRH_DETALLE_TIPO_NOMINA DTN ON DTN.IDE_NRDTN=ROL.IDE_NRDTN " +
 				"WHERE   PRO.IDE_GEPRO in(-1) " +
-				"and ROL.ide_nrdtn in (-1) AND EDP.ACTIVO_GEEDP=1 " +
+				"and ROL.ide_nrdtn in (-1) AND EDP.ACTIVO_GEEDP=TRUE " +
 				"GROUP BY EMP.IDE_GTEMP,EMP.DOCUMENTO_IDENTIDAD_GTEMP, " +
 				"EMP.apellido_paterno_gtemp , EMP.apellido_materno_gtemp , EMP.primer_nombre_gtemp , EMP.segundo_nombre_gtemp  " +
 				"order by EMPLEADO ASC","IDE_GTEMP");
@@ -2432,7 +2432,7 @@ String ide_gepro=ser_nomina.getPeriodosRol(str_fecha_ini, str_fecha_fin);
 						"INNER JOIN GEN_PERIDO_ROL PRO ON PRO.IDE_GEPRO=ROL.IDE_GEPRO " +
 						"left join NRH_DETALLE_TIPO_NOMINA DTN ON DTN.IDE_NRDTN=ROL.IDE_NRDTN " +
 						"WHERE   PRO.IDE_GEPRO in("+ide_gepro+") " +
-						"and ROL.ide_nrdtn in ("+set_det_tip_nomina.getSeleccionados()+") AND EDP.ACTIVO_GEEDP=1 " +
+						"and ROL.ide_nrdtn in ("+set_det_tip_nomina.getSeleccionados()+") AND EDP.ACTIVO_GEEDP=TRUE " +
 						"GROUP BY EMP.IDE_GTEMP,EMP.DOCUMENTO_IDENTIDAD_GTEMP, " +
 						"EMP.apellido_paterno_gtemp , EMP.apellido_materno_gtemp , EMP.primer_nombre_gtemp , EMP.segundo_nombre_gtemp  " +
 						"order by EMPLEADO ASC");
