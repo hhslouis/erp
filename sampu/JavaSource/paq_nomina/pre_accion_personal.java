@@ -911,7 +911,7 @@ public void cambiarPartida(){
 				"and IDE_GEARE="+tab_empleado_departamento.getValor("IDE_GEARE")+" ");
 		utilitario.addUpdate("tab_tabulador:tab_empleado_departamento");
 	}
-
+ 
 	public void cargarPartidaGrupoCargo(AjaxBehaviorEvent evt){
 		tab_empleado_departamento.modificar(evt);
 		tab_empleado_departamento.getColumna("IDE_GEPGC").setCombo("SELECT IDE_GEPGC,PAP.CODIGO_PARTIDA_GEPAP,PAP.DETALLE_GEPAP " +
