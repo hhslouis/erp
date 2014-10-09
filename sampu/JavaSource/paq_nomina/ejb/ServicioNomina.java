@@ -262,9 +262,9 @@ public class ServicioNomina {
 	public String getSqlComboPeriodoRol(){
 		String sql_combo_gepro="SELECT PER.IDE_GEPRO, " +
 				"mes.detalle_gemes ||' '|| ani.detalle_geani ||' '||TIR.DETALLE_NRTIT ||' '|| " +
-				"case when to_char(PER.FECHA_INICIAL_GEPRO) is null then ' ' else to_char(PER.FECHA_INICIAL_GEPRO) END ||'  '|| " +
-				"case when to_char(PER.FECHA_FINAL_GEPRO) is null then ' ' else to_char(PER.FECHA_FINAL_GEPRO) end ||' '|| " +
-				"CASE WHEN PER.DETALLE_PERIODO_GEPRO IS NULL THEN ' ' ELSE PER.DETALLE_PERIODO_GEPRO END as detalle_periodo  " +
+				"case when (PER.FECHA_INICIAL_GEPRO) is null then NULL else (PER.FECHA_INICIAL_GEPRO) END ||'  '|| " +
+				"case when (PER.FECHA_FINAL_GEPRO) is null then NULL else (PER.FECHA_FINAL_GEPRO) end ||' '|| " +
+				"CASE WHEN PER.DETALLE_PERIODO_GEPRO IS NULL THEN NULL ELSE PER.DETALLE_PERIODO_GEPRO END as detalle_periodo  " +
 				"FROM GEN_PERIDO_ROL PER " +
 				"INNER JOIN NRH_TIPO_ROL TIR ON TIR.IDE_NRTIT=PER.IDE_NRTIT " +
 				"INNER JOIN GEN_MES MES ON MES.IDE_GEMES=PER.IDE_GEMES " +
