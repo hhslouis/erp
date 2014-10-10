@@ -24,7 +24,7 @@ public class pre_seguro_activo extends Pantalla{
 	public void insertar() {
 		// TODO Auto-generated method stub
 	tab_seguro.insertar();	
-	guardarPantalla();
+	
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class pre_seguro_activo extends Pantalla{
 	public void eliminar() {
 		// TODO Auto-generated method stub
 		tab_seguro.eliminar();
-		guardarPantalla();
+	
 	}
 
 	public Tabla getTab_seguro() {
