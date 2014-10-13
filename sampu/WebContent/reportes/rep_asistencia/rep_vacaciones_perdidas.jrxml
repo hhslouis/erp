@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_vacaciones_perdidas" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5a04bb73-c542-404d-a20d-bc4dfec72cad">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="156"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="27"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["D:\\workspace\\biess\\WebContent\\reportes\\rep_gestion\\"]]></defaultValueExpression>
 	</parameter>
@@ -26,10 +26,10 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT * FROM (
-SELECT IDE_ASVAC,(PERIODO -1) ||' - '|| periodo AS PERIODO,DIA_ACUMULADO,NRO_DIAS_ADICIONAL,DIA_DESCONTADO,DIA_SOLICITADO,
+SELECT IDE_ASVAC,(cast(PERIODO as integer) - 1) ||' - '|| periodo AS PERIODO,DIA_ACUMULADO,NRO_DIAS_ADICIONAL,DIA_DESCONTADO,DIA_SOLICITADO,
 DIA_ACUMULADO+NRO_DIAS_ADICIONAL as NRO_TOTALES_VACACIONES, (DIA_ACUMULADO+NRO_DIAS_ADICIONAL)-(DIA_DESCONTADO+DIA_SOLICITADO) AS DIAS_PENDIENTES
 FROM (
-SELECT IDE_ASVAC,PERIODO -1 AS ANTERIOR,periodo,SUM(DIA_ACUMULADO) AS DIA_ACUMULADO,SUM(NRO_DIAS_ADICIONAL) AS NRO_DIAS_ADICIONAL,
+SELECT IDE_ASVAC,cast(PERIODO as integer) - 1 AS ANTERIOR,periodo,SUM(DIA_ACUMULADO) AS DIA_ACUMULADO,SUM(NRO_DIAS_ADICIONAL) AS NRO_DIAS_ADICIONAL,
 SUM(DIA_DESCONTADO) AS DIA_DESCONTADO,SUM(DIA_SOLICITADO) AS DIA_SOLICITADO
 FROM (
 SELECT IDE_ASVAC,
@@ -38,7 +38,7 @@ TO_CHAR(FECHA_NOVEDAD_ASDEV,'yyyy')AS periodo,
 (case when DIA_ADICIONAL_ASDEV is null then 0 else DIA_ADICIONAL_ASDEV end) as NRO_DIAS_ADICIONAL,
 (case when DIA_DESCONTADO_ASDEV is null then 0 else DIA_DESCONTADO_ASDEV end)AS DIA_DESCONTADO,
 (case when DIA_SOLICITADO_ASDEV is null then 0 else DIA_SOLICITADO_ASDEV end)AS DIA_SOLICITADO
-FROM ASI_DETALLE_VACACION WHERE ACTIVO_ASDEV = 1
+FROM ASI_DETALLE_VACACION WHERE ACTIVO_ASDEV = true
 )a GROUP BY a.periodo,a.IDE_ASVAC
 )b ORDER BY PERIODO DESC
 )a
@@ -60,7 +60,7 @@ SELECT ide_geare,detalle_geare FROM gen_area
 left join(
 SELECT ide_gedep,detalle_gedep FROM gen_departamento
 )e on e.ide_gedep=b.ide_gedep
-where b.activo_geedp=1
+where b.activo_geedp=true
 ) b on a.ide_gtemp = b.ide_gtemp
 )b on b.ide_asvac=a.ide_asvac
 where b.ide_gtemp in ($P!{ide_gtemp})
@@ -69,52 +69,68 @@ and b.ide_gedep in ($P!{ide_gedep})
 and b.ide_sucu in($P!{ide_sucu_t})
 order by b.detalle_geare,b.detalle_gedep,b.nombres]]>
 	</queryString>
-	<field name="IDE_ASVAC" class="java.math.BigDecimal"/>
-	<field name="PERIODO" class="java.lang.String"/>
-	<field name="DIA_ACUMULADO" class="java.math.BigDecimal"/>
-	<field name="NRO_DIAS_ADICIONAL" class="java.math.BigDecimal"/>
-	<field name="DIA_DESCONTADO" class="java.math.BigDecimal"/>
-	<field name="DIA_SOLICITADO" class="java.math.BigDecimal"/>
-	<field name="NRO_TOTALES_VACACIONES" class="java.math.BigDecimal"/>
-	<field name="DIAS_PENDIENTES" class="java.math.BigDecimal"/>
-	<field name="IDE_GTEMP" class="java.math.BigDecimal"/>
-	<field name="NOMBRES" class="java.lang.String"/>
-	<field name="DOCUMENTO" class="java.lang.String"/>
-	<field name="IDE_SUCU" class="java.math.BigDecimal"/>
-	<field name="NOM_SUCU" class="java.lang.String"/>
-	<field name="IDE_GEARE" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GEARE" class="java.lang.String"/>
-	<field name="IDE_GEDEP" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GEDEP" class="java.lang.String"/>
+	<field name="ide_asvac" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gedia, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="periodo" class="java.lang.String"/>
+	<field name="dia_acumulado" class="java.math.BigDecimal"/>
+	<field name="nro_dias_adicional" class="java.math.BigDecimal"/>
+	<field name="dia_descontado" class="java.math.BigDecimal"/>
+	<field name="dia_solicitado" class="java.lang.Long"/>
+	<field name="nro_totales_vacaciones" class="java.math.BigDecimal"/>
+	<field name="dias_pendientes" class="java.math.BigDecimal"/>
+	<field name="ide_gtemp" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gth_empleado, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="nombres" class="java.lang.String"/>
+	<field name="documento" class="java.lang.String"/>
+	<field name="ide_sucu" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_sucu]]></fieldDescription>
+	</field>
+	<field name="nom_sucu" class="java.lang.String">
+		<fieldDescription><![CDATA[nom_sucu]]></fieldDescription>
+	</field>
+	<field name="ide_geare" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_area, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="detalle_geare" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del area ejemplo: Directorio, Auditoria Interna, etc.]]></fieldDescription>
+	</field>
+	<field name="ide_gedep" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_gedep]]></fieldDescription>
+	</field>
+	<field name="detalle_gedep" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del departamento, ejemplo: DIRECTORIO, TECNOLOGIA, INFRAESTRUCTURA, etc.]]></fieldDescription>
+	</field>
 	<variable name="DIA_ACUMULADO_1" class="java.math.BigDecimal" resetType="Group" resetGroup="IDE_GTEMP" calculation="Sum">
-		<variableExpression><![CDATA[$F{DIA_ACUMULADO}]]></variableExpression>
+		<variableExpression><![CDATA[$F{dia_acumulado}]]></variableExpression>
 	</variable>
 	<variable name="NRO_DIAS_ADICIONAL_1" class="java.math.BigDecimal" resetType="Group" resetGroup="IDE_GTEMP" calculation="Sum">
-		<variableExpression><![CDATA[$F{NRO_DIAS_ADICIONAL}]]></variableExpression>
+		<variableExpression><![CDATA[$F{nro_dias_adicional}]]></variableExpression>
 	</variable>
 	<variable name="DIA_DESCONTADO_1" class="java.math.BigDecimal" resetType="Group" resetGroup="IDE_GTEMP" calculation="Sum">
-		<variableExpression><![CDATA[$F{DIA_DESCONTADO}]]></variableExpression>
+		<variableExpression><![CDATA[$F{dia_descontado}]]></variableExpression>
 	</variable>
 	<variable name="DIA_SOLICITADO_1" class="java.math.BigDecimal" resetType="Group" resetGroup="IDE_GTEMP" calculation="Sum">
-		<variableExpression><![CDATA[$F{DIA_SOLICITADO}]]></variableExpression>
+		<variableExpression><![CDATA[$F{dia_solicitado}]]></variableExpression>
 	</variable>
 	<variable name="NRO_TOTALES_VACACIONES_1" class="java.math.BigDecimal" resetType="Group" resetGroup="IDE_GTEMP" calculation="Sum">
-		<variableExpression><![CDATA[$F{NRO_TOTALES_VACACIONES}]]></variableExpression>
+		<variableExpression><![CDATA[$F{nro_totales_vacaciones}]]></variableExpression>
 	</variable>
 	<variable name="DIAS_PENDIENTES_1" class="java.math.BigDecimal" resetType="Group" resetGroup="IDE_GTEMP" calculation="Sum">
-		<variableExpression><![CDATA[$F{DIAS_PENDIENTES}]]></variableExpression>
+		<variableExpression><![CDATA[$F{dias_pendientes}]]></variableExpression>
 	</variable>
 	<variable name="IDE_GTEMP_1" class="java.lang.Integer" resetType="Group" resetGroup="IDE_GEDEP" calculation="DistinctCount">
-		<variableExpression><![CDATA[$F{IDE_GTEMP}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_gtemp}]]></variableExpression>
 	</variable>
 	<variable name="IDE_GTEMP_2" class="java.lang.Integer" resetType="Group" resetGroup="IDE_GEARE" calculation="DistinctCount">
-		<variableExpression><![CDATA[$F{IDE_GTEMP}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_gtemp}]]></variableExpression>
 	</variable>
 	<variable name="IDE_GTEMP_3" class="java.lang.Integer" calculation="DistinctCount">
-		<variableExpression><![CDATA[$F{IDE_GTEMP}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_gtemp}]]></variableExpression>
 	</variable>
 	<group name="IDE_GEARE">
-		<groupExpression><![CDATA[$F{IDE_GEARE}]]></groupExpression>
+		<groupExpression><![CDATA[$F{ide_geare}]]></groupExpression>
 		<groupHeader>
 			<band height="15">
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
@@ -123,7 +139,7 @@ order by b.detalle_geare,b.detalle_gedep,b.nombres]]>
 					<textElement verticalAlignment="Middle">
 						<font size="9" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{DETALLE_GEARE}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{detalle_geare}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -135,16 +151,16 @@ order by b.detalle_geare,b.detalle_gedep,b.nombres]]>
 					<textElement verticalAlignment="Middle">
 						<font size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{DETALLE_GEARE}.equals(null)?
+					<textFieldExpression><![CDATA[$F{detalle_geare}.equals(null)?
 $V{IDE_GTEMP_2}.equals(null)?"TOTAL EMPLEADOS:":" TOTAL EMPLEADOS: "+$V{IDE_GTEMP_2}
-:$V{IDE_GTEMP_2}.equals(null)?"TOTAL EMPLEADOS "+$F{DETALLE_GEARE}+":"
-:"TOTAL EMPLEADOS "+$F{DETALLE_GEARE}+": "+$V{IDE_GTEMP_2}]]></textFieldExpression>
+:$V{IDE_GTEMP_2}.equals(null)?"TOTAL EMPLEADOS "+$F{detalle_geare}+":"
+:"TOTAL EMPLEADOS "+$F{detalle_geare}+": "+$V{IDE_GTEMP_2}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
 	</group>
 	<group name="IDE_GEDEP">
-		<groupExpression><![CDATA[$F{IDE_GEDEP}]]></groupExpression>
+		<groupExpression><![CDATA[$F{ide_gedep}]]></groupExpression>
 		<groupHeader>
 			<band height="15">
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
@@ -153,7 +169,7 @@ $V{IDE_GTEMP_2}.equals(null)?"TOTAL EMPLEADOS:":" TOTAL EMPLEADOS: "+$V{IDE_GTEM
 					<textElement verticalAlignment="Middle">
 						<font size="9" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{DETALLE_GEDEP}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{detalle_gedep}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -165,16 +181,16 @@ $V{IDE_GTEMP_2}.equals(null)?"TOTAL EMPLEADOS:":" TOTAL EMPLEADOS: "+$V{IDE_GTEM
 					<textElement verticalAlignment="Middle">
 						<font size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{DETALLE_GEDEP}.equals(null)?
+					<textFieldExpression><![CDATA[$F{detalle_gedep}.equals(null)?
 $V{IDE_GTEMP_1}.equals(null)?"TOTAL EMPLEADOS:":" TOTAL EMPLEADOS: "+$V{IDE_GTEMP_1}
-:$V{IDE_GTEMP_1}.equals(null)?"TOTAL EMPLEADOS"+$F{DETALLE_GEDEP}+":"
-:"TOTAL EMPLEADOS "+$F{DETALLE_GEDEP}+": "+$V{IDE_GTEMP_1}]]></textFieldExpression>
+:$V{IDE_GTEMP_1}.equals(null)?"TOTAL EMPLEADOS"+$F{detalle_gedep}+":"
+:"TOTAL EMPLEADOS "+$F{detalle_gedep}+": "+$V{IDE_GTEMP_1}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
 	</group>
 	<group name="IDE_GTEMP">
-		<groupExpression><![CDATA[$F{IDE_GTEMP}]]></groupExpression>
+		<groupExpression><![CDATA[$F{ide_gtemp}]]></groupExpression>
 		<groupHeader>
 			<band height="14">
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
@@ -187,7 +203,7 @@ $V{IDE_GTEMP_1}.equals(null)?"TOTAL EMPLEADOS:":" TOTAL EMPLEADOS: "+$V{IDE_GTEM
 						<rightPen lineWidth="0.5"/>
 					</box>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{NOMBRES}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{nombres}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement uuid="5699a625-1726-4421-a4e9-20e1ff051db8" stretchType="RelativeToBandHeight" x="360" y="0" width="60" height="14" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -199,7 +215,7 @@ $V{IDE_GTEMP_1}.equals(null)?"TOTAL EMPLEADOS:":" TOTAL EMPLEADOS: "+$V{IDE_GTEM
 						<rightPen lineWidth="0.5"/>
 					</box>
 					<textElement textAlignment="Center"/>
-					<textFieldExpression><![CDATA[$F{DOCUMENTO}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{documento}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement uuid="f551f29d-2526-4e4b-9576-1bb3572fa4e3" x="289" y="0" width="71" height="14"/>
@@ -225,7 +241,7 @@ $V{IDE_GTEMP_1}.equals(null)?"TOTAL EMPLEADOS:":" TOTAL EMPLEADOS: "+$V{IDE_GTEM
 						<rightPen lineWidth="0.5"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{NOM_SUCU}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{nom_sucu}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -355,7 +371,7 @@ $V{IDE_GTEMP_1}.equals(null)?"TOTAL EMPLEADOS:":" TOTAL EMPLEADOS: "+$V{IDE_GTEM
 					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema_biess/rep_cabecera.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
@@ -475,7 +491,7 @@ $V{IDE_GTEMP_1}.equals(null)?"TOTAL EMPLEADOS:":" TOTAL EMPLEADOS: "+$V{IDE_GTEM
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{PERIODO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{periodo}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="3fa9ffd9-b168-429d-b65d-e6b947018495" x="160" y="0" width="59" height="12"/>
@@ -489,7 +505,7 @@ $V{IDE_GTEMP_1}.equals(null)?"TOTAL EMPLEADOS:":" TOTAL EMPLEADOS: "+$V{IDE_GTEM
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DIA_ACUMULADO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{dia_acumulado}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="1fe416e9-0937-42e6-9a0a-86b796c84f5e" x="219" y="0" width="70" height="12"/>
@@ -503,7 +519,7 @@ $V{IDE_GTEMP_1}.equals(null)?"TOTAL EMPLEADOS:":" TOTAL EMPLEADOS: "+$V{IDE_GTEM
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NRO_DIAS_ADICIONAL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nro_dias_adicional}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="210cce7b-1027-4c22-ab6f-a5a885963f12" x="289" y="0" width="71" height="12"/>
@@ -517,7 +533,7 @@ $V{IDE_GTEMP_1}.equals(null)?"TOTAL EMPLEADOS:":" TOTAL EMPLEADOS: "+$V{IDE_GTEM
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DIA_DESCONTADO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{dia_descontado}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="69ec1020-cef8-4185-b697-6693ea9ea699" x="360" y="0" width="60" height="12"/>
@@ -531,7 +547,7 @@ $V{IDE_GTEMP_1}.equals(null)?"TOTAL EMPLEADOS:":" TOTAL EMPLEADOS: "+$V{IDE_GTEM
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DIA_SOLICITADO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{dia_solicitado}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="8a62ea6c-76e6-4a12-b73c-7cbc68548ff2" x="420" y="0" width="77" height="12"/>
@@ -545,7 +561,7 @@ $V{IDE_GTEMP_1}.equals(null)?"TOTAL EMPLEADOS:":" TOTAL EMPLEADOS: "+$V{IDE_GTEM
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NRO_TOTALES_VACACIONES}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nro_totales_vacaciones}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="3fb73ef3-4ea2-47f5-a5c1-19d7e553e1fc" x="497" y="0" width="58" height="12"/>
@@ -559,7 +575,7 @@ $V{IDE_GTEMP_1}.equals(null)?"TOTAL EMPLEADOS:":" TOTAL EMPLEADOS: "+$V{IDE_GTEM
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DIAS_PENDIENTES}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{dias_pendientes}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
