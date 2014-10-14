@@ -470,7 +470,7 @@ public class pre_partida_grupo_cargo extends Pantalla {
 	
 	public void validarVacante(){
 		con_guardar.cerrar();
-		utilitario.getConexion().agregarSqlPantalla("update GEN_PARTIDA_GRUPO_CARGO set vacante_gepgc=1 where ide_gepgc="+tab_tabla.getValorSeleccionado());
+		utilitario.getConexion().agregarSqlPantalla("update GEN_PARTIDA_GRUPO_CARGO set vacante_gepgc=true where ide_gepgc="+tab_tabla.getValorSeleccionado());
 		guardarPantalla();
 		tab_tabla.ejecutarSql();		
 	}
