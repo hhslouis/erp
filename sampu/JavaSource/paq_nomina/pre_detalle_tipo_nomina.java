@@ -245,7 +245,7 @@ public class pre_detalle_tipo_nomina extends Pantalla {
 
 
 	public void actualizarNomina(String ide_nrdtn_origen,String ide_nrdtn_destino){
-		TablaGenerica tab_det_rub_origen=utilitario.consultar("select * from NRH_DETALLE_RUBRO where IDE_NRDTN="+ide_nrdtn_origen+" and ACTIVO_NRDER=1");
+		TablaGenerica tab_det_rub_origen=utilitario.consultar("select * from NRH_DETALLE_RUBRO where IDE_NRDTN="+ide_nrdtn_origen+" and ACTIVO_NRDER=TRUE");
 		TablaGenerica tab_det_rub_destino=utilitario.consultar("select * from NRH_DETALLE_RUBRO where IDE_NRDTN="+ide_nrdtn_destino);
 		int band=0;
 		for (int i = 0; i < tab_det_rub_origen.getTotalFilas(); i++) {
@@ -314,7 +314,7 @@ public class pre_detalle_tipo_nomina extends Pantalla {
 				con_guardar.cerrar();
 
 
-				utilitario.getConexion().ejecutarSql("update NRH_DETALLE_RUBRO set ACTIVO_NRDER=1 where IDE_NRDER="+tab_tabla1.getValorSeleccionado());
+				utilitario.getConexion().ejecutarSql("update NRH_DETALLE_RUBRO set ACTIVO_NRDER=TRUE where IDE_NRDER="+tab_tabla1.getValorSeleccionado());
 				utilitario.getConexion().ejecutarSql("DELETE from SIS_BLOQUEO where upper(TABLA_BLOQ) like 'NRH_DETALLE_ROL'");
 
 
@@ -543,7 +543,7 @@ public class pre_detalle_tipo_nomina extends Pantalla {
 				"left join SIS_SUCURSAL SUC ON DTN.IDE_SUCU=SUC.IDE_SUCU  " +
 				"left join NRH_TIPO_RUBRO TRUB ON TRUB.IDE_NRTIR=RUB.IDE_NRTIR  " +
 				"left join NRH_FORMA_CALCULO FCA ON FCA.IDE_NRFOC=RUB.IDE_NRFOC " +
-				"where DER.ide_nrdtn IN ("+ide_nrdtn+") and ACTIVO_NRDER=1  " +
+				"where DER.ide_nrdtn IN ("+ide_nrdtn+") and ACTIVO_NRDER=TRUE  " +
 				"ORDER BY DER.IDE_NRDTN ASC ,DER.ORDEN_NRDER ASC");
 
 		System.out.println("rep tip nom "+tab_rub_tip_nomina.getSql());
