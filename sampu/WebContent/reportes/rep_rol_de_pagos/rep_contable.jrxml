@@ -3,7 +3,7 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="ide_cnmoc" class="java.lang.String">
+	<parameter name="ide_cnmoc" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<parameter name="ide_nrdtn" class="java.lang.String">
@@ -30,17 +30,25 @@ CUC.CODIGO_CUENTA_GECUC
 
 ORDER BY IDE_GELUA ASC,DETALLE_GECUC DESC,DETALLE_GEARE ASC]]>
 	</queryString>
-	<field name="IDE_GECUC" class="java.math.BigDecimal"/>
-	<field name="CODIGO_CUENTA_GECUC" class="java.lang.String"/>
-	<field name="DETALLE_GECUC" class="java.lang.String"/>
-	<field name="DETALLE_GEARE" class="java.lang.String"/>
-	<field name="DEBE" class="java.math.BigDecimal"/>
-	<field name="HABER" class="java.math.BigDecimal"/>
+	<field name="ide_gecuc" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_cuenta_contable valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="codigo_cuenta_gecuc" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el codigo de la cuenta contable]]></fieldDescription>
+	</field>
+	<field name="detalle_gecuc" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre de la cuenta contable.]]></fieldDescription>
+	</field>
+	<field name="detalle_geare" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del area ejemplo: Directorio, Auditoria Interna, etc.]]></fieldDescription>
+	</field>
+	<field name="debe" class="java.math.BigDecimal"/>
+	<field name="haber" class="java.math.BigDecimal"/>
 	<variable name="sumardebe" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{DEBE}]]></variableExpression>
+		<variableExpression><![CDATA[$F{debe}]]></variableExpression>
 	</variable>
 	<variable name="suma_haber" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{HABER}]]></variableExpression>
+		<variableExpression><![CDATA[$F{haber}]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -188,7 +196,7 @@ ORDER BY IDE_GELUA ASC,DETALLE_GECUC DESC,DETALLE_GEARE ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CODIGO_CUENTA_GECUC}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{codigo_cuenta_gecuc}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="f5e794f7-ef47-45e6-b4b8-f9a151268aae" stretchType="RelativeToBandHeight" x="75" y="0" width="135" height="12"/>
@@ -202,7 +210,7 @@ ORDER BY IDE_GELUA ASC,DETALLE_GECUC DESC,DETALLE_GEARE ASC]]>
 				<textElement verticalAlignment="Middle">
 					<font size="6" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GECUC}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_gecuc}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="9d20fef8-424b-4bc9-ae45-cd01e96638f0" stretchType="RelativeToBandHeight" x="210" y="0" width="149" height="12"/>
@@ -216,7 +224,7 @@ ORDER BY IDE_GELUA ASC,DETALLE_GECUC DESC,DETALLE_GEARE ASC]]>
 				<textElement textAlignment="Justified" verticalAlignment="Middle">
 					<font size="6" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GEARE}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_geare}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement uuid="f5395496-879b-4052-a7d3-ccafcdb9594b" stretchType="RelativeToBandHeight" x="359" y="0" width="98" height="12"/>
@@ -230,7 +238,7 @@ ORDER BY IDE_GELUA ASC,DETALLE_GECUC DESC,DETALLE_GEARE ASC]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DEBE}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{debe}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement uuid="8d496c8a-9ea2-4639-b5c4-da96dd7a2853" stretchType="RelativeToBandHeight" x="457" y="0" width="98" height="12"/>
@@ -244,7 +252,7 @@ ORDER BY IDE_GELUA ASC,DETALLE_GECUC DESC,DETALLE_GEARE ASC]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{HABER}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{haber}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
