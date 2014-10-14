@@ -261,15 +261,20 @@ public class ServicioNomina {
 
 	public String getSqlComboPeriodoRol(){
 		String sql_combo_gepro="SELECT PER.IDE_GEPRO, " +
-				"mes.detalle_gemes ||' '|| ani.detalle_geani ||' '||TIR.DETALLE_NRTIT ||' '|| " +
-				"case when (PER.FECHA_INICIAL_GEPRO) is null then NULL else (PER.FECHA_INICIAL_GEPRO) END ||'  '|| " +
-				"case when (PER.FECHA_FINAL_GEPRO) is null then NULL else (PER.FECHA_FINAL_GEPRO) end ||' '|| " +
-				"CASE WHEN PER.DETALLE_PERIODO_GEPRO IS NULL THEN NULL ELSE PER.DETALLE_PERIODO_GEPRO END as detalle_periodo  " +
-				"FROM GEN_PERIDO_ROL PER " +
-				"INNER JOIN NRH_TIPO_ROL TIR ON TIR.IDE_NRTIT=PER.IDE_NRTIT " +
-				"INNER JOIN GEN_MES MES ON MES.IDE_GEMES=PER.IDE_GEMES " +
-				"INNER JOIN GEN_ANIO ANI ON ANI.IDE_GEANI=PER.IDE_GEANI WHERE ACTIVO_GEPRO=true "+
-				"ORDER BY mes.IDE_GEMES ASC";
+		"mes.detalle_gemes ||' '|| " + 
+		"ani.detalle_geani ||' '|| " +
+		"(case when TIR.DETALLE_NRTIT is null then '' else TIR.DETALLE_NRTIT end)||' '|| " + 
+		"(case when PER.FECHA_INICIAL_GEPRO is null then '1900-01-01' else PER.FECHA_INICIAL_GEPRO END)||'  '|| " +
+		"(case when PER.FECHA_FINAL_GEPRO is null then '1900-01-01' else PER.FECHA_FINAL_GEPRO end )||' '|| " +
+		"(CASE WHEN PER.DETALLE_PERIODO_GEPRO IS NULL THEN '' ELSE PER.DETALLE_PERIODO_GEPRO END) as detalle_periodo " +  
+		"FROM GEN_PERIDO_ROL PER " + 
+		"INNER JOIN NRH_TIPO_ROL TIR ON TIR.IDE_NRTIT=PER.IDE_NRTIT " + 
+		"INNER JOIN GEN_MES MES ON MES.IDE_GEMES=PER.IDE_GEMES " + 
+		"INNER JOIN GEN_ANIO ANI ON ANI.IDE_GEANI=PER.IDE_GEANI " + 
+		"WHERE ACTIVO_GEPRO=true ORDER BY mes.IDE_GEMES ASC "; 
+
+
+		System.out.println("imprimiendo combo de periodos "+sql_combo_gepro);
 		return sql_combo_gepro;
 	}
 
