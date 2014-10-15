@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_plantilla_contable" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="528673fc-7772-4461-9dc8-8e97bd3697c4">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="425"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="ide_sucu" class="java.lang.Integer"/>
 	<parameter name="ide_empr" class="java.lang.Integer">
@@ -95,7 +95,7 @@ order by a.ide_gelua,codigo_cuenta_gecuc]]>
 					<subreportParameterExpression><![CDATA[$P{usuario}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema_biess/rep_cabecera.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera.jasper"]]></subreportExpression>
 			</subreport>
 			<staticText>
 				<reportElement uuid="f594a88a-2662-4cc1-9991-99ad3cd627e9" positionType="Float" x="0" y="34" width="67" height="12"/>
