@@ -232,9 +232,7 @@ public class pre_accion_personal extends Pantalla {
 		tab_partida_vigente.getColumna("IDE_GEGRO").setCombo(
 				"GEN_GRUPO_OCUPACIONAL", "IDE_GEGRO", "DETALLE_GEGRO", "");		
 		tab_partida_vigente
-		.getColumna("IDE_GECAF")
-		.setCombo(
-				"GEN_CARGO_FUNCIONAL",
+		.getColumna("IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL",
 				"IDE_GECAF",
 				"DETALLE_GECAF",
 				"PRINCIPAL_SECUNDARIO_GECAF=TRUE AND IDE_GECAF IN (SELECT IDE_GECAF FROM GEN_GRUPO_CARGO where IDE_GEGRO=-1)");
