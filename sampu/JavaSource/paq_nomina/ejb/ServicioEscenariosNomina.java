@@ -54,7 +54,7 @@ public class ServicioEscenariosNomina {
 				"INNER JOIN NRH_DETALLE_TIPO_NOMINA DTN ON DTN.IDE_GTTEM=TEM.IDE_GTTEM " +
 				"AND DTN.IDE_NRTIN="+utilitario.getVariable("p_nrh_tipo_nomina_normal")+" " +
 				"WHERE EDP.IDE_GTTEM IN ("+ide_gttem+") " +
-				"AND EDP.ACTIVO_GEEDP=1 " +
+				"AND EDP.ACTIVO_GEEDP=TRUE " +
 				"ORDER BY NOMBRES");
 		return tab_emp;
 	}
@@ -77,7 +77,7 @@ public class ServicioEscenariosNomina {
 //				"INNER JOIN NRH_DETALLE_TIPO_NOMINA DTN ON DTN.IDE_GTTEM=TEM.IDE_GTTEM " +
 //				"AND DTN.IDE_NRTIN="+utilitario.getVariable("p_nrh_tipo_nomina_normal")+" " +
 //				"WHERE EDP.IDE_GTTEM IN ("+ide_gttem+") " +
-//				"AND EDP.ACTIVO_GEEDP=1 " +
+//				"AND EDP.ACTIVO_GEEDP=TRUE " +
 //				"ORDER BY NOMBRES");
 //		return tab_emp;
 //	}
