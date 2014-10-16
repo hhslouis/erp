@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_deducibles_emp" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isSummaryWithPageHeaderAndFooter="true" uuid="0d28c9ef-fba8-400c-a000-a80ff7a9fd04">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.x" value="30"/>
+	<property name="ireport.y" value="16"/>
 	<style name="Crosstab Data Text" hAlign="Center"/>
-	<parameter name="IDE_GTEMP" class="java.lang.String">
+	<parameter name="IDE_GTEMP" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="IDE_SRIMR" class="java.lang.String">
+	<parameter name="IDE_SRIMR" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<parameter name="ide_sucu" class="java.lang.Integer"/>
@@ -59,32 +59,64 @@ ORDER BY
 EMP.ACTIVO_GTEMP ASC,
 NOMBRES ASC]]>
 	</queryString>
-	<field name="ACTIVO_GTEMP" class="java.math.BigDecimal"/>
-	<field name="IDE_GTEMP" class="java.math.BigDecimal"/>
-	<field name="NOMBRES" class="java.lang.String"/>
-	<field name="IDE_SRDED" class="java.math.BigDecimal"/>
-	<field name="IDE_SRIMR" class="java.math.BigDecimal"/>
-	<field name="DETALLE_SRDED" class="java.lang.String"/>
-	<field name="VALOR_DEDUCIBLE_SRDEE" class="java.math.BigDecimal"/>
-	<field name="FRACCION_BASICA_SRDED" class="java.math.BigDecimal"/>
-	<field name="OBSERVACIONES_SRDED" class="java.lang.String"/>
-	<field name="DETALLE_SRIMR" class="java.lang.String"/>
-	<field name="FECHA_INICIO_SRIMR" class="java.sql.Timestamp"/>
-	<field name="FECHA_FIN_SRIMR" class="java.sql.Timestamp"/>
-	<field name="IDE_SUCU" class="java.math.BigDecimal"/>
-	<field name="NOM_SUCU" class="java.lang.String"/>
-	<field name="IDE_GEARE" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GEARE" class="java.lang.String"/>
-	<field name="IDE_GEDEP" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GEDEP" class="java.lang.String"/>
-	<field name="DETALLE_GECAF" class="java.lang.String"/>
+	<field name="activo_gtemp" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[Este campo define si el registro se encuentra activo o no para su transaccionalidad, 1 SI / 0 No]]></fieldDescription>
+	</field>
+	<field name="ide_gtemp" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gth_empleado, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="nombres" class="java.lang.String"/>
+	<field name="ide_srded" class="java.lang.Integer"/>
+	<field name="ide_srimr" class="java.lang.Integer"/>
+	<field name="detalle_srded" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del deducible ejemplo; educacion, vivienda, salud, etc.]]></fieldDescription>
+	</field>
+	<field name="valor_deducible_srdee" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[valor_deducible_srdee]]></fieldDescription>
+	</field>
+	<field name="fraccion_basica_srded" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Este campo define la fraccion basica por el cual se va a multiplcar la fraccion basica gravada por cada año ejemplo 9720 * 1.3 veces. fraccion basica=1.3]]></fieldDescription>
+	</field>
+	<field name="observaciones_srded" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el detalle del nombre del deducible ejemplo vivienda: comprende Gastos en la construccion, remodelacion, etc.]]></fieldDescription>
+	</field>
+	<field name="detalle_srimr" class="java.lang.String">
+		<fieldDescription><![CDATA[detalle_srimr]]></fieldDescription>
+	</field>
+	<field name="fecha_inicio_srimr" class="java.sql.Date">
+		<fieldDescription><![CDATA[fecha_inicio_srimr]]></fieldDescription>
+	</field>
+	<field name="fecha_fin_srimr" class="java.sql.Date">
+		<fieldDescription><![CDATA[fecha_fin_srimr]]></fieldDescription>
+	</field>
+	<field name="ide_sucu" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_sucu]]></fieldDescription>
+	</field>
+	<field name="nom_sucu" class="java.lang.String">
+		<fieldDescription><![CDATA[nom_sucu]]></fieldDescription>
+	</field>
+	<field name="ide_geare" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_area, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="detalle_geare" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del area ejemplo: Directorio, Auditoria Interna, etc.]]></fieldDescription>
+	</field>
+	<field name="ide_gedep" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_gedep]]></fieldDescription>
+	</field>
+	<field name="detalle_gedep" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del departamento, ejemplo: DIRECTORIO, TECNOLOGIA, INFRAESTRUCTURA, etc.]]></fieldDescription>
+	</field>
+	<field name="detalle_gecaf" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del cargo y el puesto en el caso d emonte de piedad, ejemplo: PROFESIONAL 1, TECNICO A , TECNICO B, asi como los puestos: CAJERO, PQ Y PH, etc]]></fieldDescription>
+	</field>
 	<variable name="contador" class="java.lang.Integer" incrementType="Group" incrementGroup="GHJ" calculation="Count">
 		<variableExpression><![CDATA[$V{GHJ_COUNT}]]></variableExpression>
 		<initialValueExpression><![CDATA[1]]></initialValueExpression>
 	</variable>
 	<variable name="variable2" class="java.lang.String"/>
 	<group name="GHJ">
-		<groupExpression><![CDATA[$F{IDE_GTEMP}]]></groupExpression>
+		<groupExpression><![CDATA[$F{ide_gtemp}]]></groupExpression>
 		<groupHeader>
 			<band/>
 		</groupHeader>
@@ -115,7 +147,7 @@ NOMBRES ASC]]>
 					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema_biess/rep_cabecera_horizontal.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera_horizontal.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
@@ -136,7 +168,7 @@ NOMBRES ASC]]>
 				<textElement verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_SRIMR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_srimr}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="f6781f40-a397-4fab-ae9c-a645bf38cf3f" x="130" y="0" width="53" height="11"/>
@@ -150,7 +182,7 @@ NOMBRES ASC]]>
 				<textElement verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_INICIO_SRIMR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_inicio_srimr}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="4d1816b9-9db7-4057-88ce-aeb82b1273ca" x="258" y="0" width="42" height="11"/>
@@ -164,7 +196,7 @@ NOMBRES ASC]]>
 				<textElement verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_FIN_SRIMR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_fin_srimr}]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
@@ -181,7 +213,7 @@ NOMBRES ASC]]>
 				<textElement>
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{IDE_GTEMP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ide_gtemp}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="9575d27b-8d75-4f83-96ce-a6adf939bc69" x="719" y="0" width="80" height="10"/>
@@ -312,7 +344,7 @@ NOMBRES ASC]]>
 				</rowGroup>
 				<rowGroup name="NOMBRES" width="149" totalPosition="End">
 					<bucket class="java.lang.String">
-						<bucketExpression><![CDATA[$F{NOMBRES}]]></bucketExpression>
+						<bucketExpression><![CDATA[$F{nombres}]]></bucketExpression>
 					</bucket>
 					<crosstabRowHeader>
 						<cellContents backcolor="#F0F8FF" mode="Opaque">
@@ -339,7 +371,7 @@ NOMBRES ASC]]>
 				</rowGroup>
 				<rowGroup name="CARGO" width="146">
 					<bucket class="java.lang.String">
-						<bucketExpression><![CDATA[$F{DETALLE_GECAF}]]></bucketExpression>
+						<bucketExpression><![CDATA[$F{detalle_gecaf}]]></bucketExpression>
 					</bucket>
 					<crosstabRowHeader>
 						<cellContents>
@@ -365,7 +397,7 @@ NOMBRES ASC]]>
 				</rowGroup>
 				<rowGroup name="SUCURSAL" width="68">
 					<bucket class="java.lang.String">
-						<bucketExpression><![CDATA[$F{NOM_SUCU}]]></bucketExpression>
+						<bucketExpression><![CDATA[$F{nom_sucu}]]></bucketExpression>
 					</bucket>
 					<crosstabRowHeader>
 						<cellContents>
@@ -391,7 +423,7 @@ NOMBRES ASC]]>
 				</rowGroup>
 				<rowGroup name="DEPARTAMENTO" width="137">
 					<bucket class="java.lang.String">
-						<bucketExpression><![CDATA[$F{DETALLE_GEDEP}]]></bucketExpression>
+						<bucketExpression><![CDATA[$F{detalle_gedep}]]></bucketExpression>
 					</bucket>
 					<crosstabRowHeader>
 						<cellContents>
@@ -417,7 +449,7 @@ NOMBRES ASC]]>
 				</rowGroup>
 				<columnGroup name="DETALLE_SRDED" height="10" totalPosition="End">
 					<bucket class="java.lang.String">
-						<bucketExpression><![CDATA[$F{DETALLE_SRDED}]]></bucketExpression>
+						<bucketExpression><![CDATA[$F{detalle_srded}]]></bucketExpression>
 					</bucket>
 					<crosstabColumnHeader>
 						<cellContents backcolor="#F0F8FF" mode="Opaque">
@@ -449,10 +481,10 @@ NOMBRES ASC]]>
 					</crosstabTotalColumnHeader>
 				</columnGroup>
 				<measure name="VALOR_DEDUCIBLE_SRDEEMeasure" class="java.math.BigDecimal" calculation="Sum">
-					<measureExpression><![CDATA[$F{VALOR_DEDUCIBLE_SRDEE}]]></measureExpression>
+					<measureExpression><![CDATA[$F{valor_deducible_srdee}]]></measureExpression>
 				</measure>
 				<measure name="FRACCION_BASICA_SRDEDMeasure" class="java.math.BigDecimal" calculation="Sum">
-					<measureExpression><![CDATA[$F{FRACCION_BASICA_SRDED}]]></measureExpression>
+					<measureExpression><![CDATA[$F{fraccion_basica_srded}]]></measureExpression>
 				</measure>
 				<crosstabCell width="50" height="10">
 					<cellContents>
