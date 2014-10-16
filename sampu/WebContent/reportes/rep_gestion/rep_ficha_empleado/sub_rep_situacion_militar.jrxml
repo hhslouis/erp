@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sub_rep_situacion_militar" language="groovy" pageWidth="570" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="570" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="55f977be-397c-4902-9318-eb01669cbe35">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="187"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="IDE_GTEMP" class="java.lang.Long">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -19,15 +19,15 @@ GTG.DETALLE_GTTGF AS GRADO
 LEFT JOIN GTH_TIPO_SITUACION_MILITAR GSM ON GSM.IDE_GTTSM=GRM.IDE_GTTSM
 LEFT JOIN GTH_TIPO_GRADO_FFAA GTG ON GTG.IDE_GTTGF=GRM.IDE_GTTGF
 LEFT JOIN GTH_TIPO_RAMAS_FFAA GTF ON GTF.IDE_GTTRF=GRM.IDE_GTTRF
-WHERE GRM.IDE_GTEMP=$P{IDE_GTEMP} AND GRM.ACTIVO_GTREM=1]]>
+WHERE GRM.IDE_GTEMP=$P{IDE_GTEMP} AND GRM.ACTIVO_GTREM=true]]>
 	</queryString>
-	<field name="SITUACION_MILITAR" class="java.lang.String"/>
-	<field name="LIBRETA_MILITAR" class="java.lang.String"/>
-	<field name="ANIO_CONSCRIPCION" class="java.math.BigDecimal"/>
-	<field name="UNIDAD" class="java.lang.String"/>
-	<field name="RAMA_FFAA" class="java.lang.String"/>
-	<field name="TIEMPO" class="java.math.BigDecimal"/>
-	<field name="GRADO" class="java.lang.String"/>
+	<field name="situacion_militar" class="java.lang.String"/>
+	<field name="libreta_militar" class="java.lang.String"/>
+	<field name="anio_conscripcion" class="java.lang.Integer"/>
+	<field name="unidad" class="java.lang.String"/>
+	<field name="rama_ffaa" class="java.lang.String"/>
+	<field name="tiempo" class="java.lang.Integer"/>
+	<field name="grado" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -170,7 +170,7 @@ WHERE GRM.IDE_GTEMP=$P{IDE_GTEMP} AND GRM.ACTIVO_GTREM=1]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{SITUACION_MILITAR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{situacion_militar}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="7f36ddc6-d103-4466-b249-5015dcba28b2" positionType="Float" mode="Opaque" x="100" y="0" width="61" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -185,7 +185,7 @@ WHERE GRM.IDE_GTEMP=$P{IDE_GTEMP} AND GRM.ACTIVO_GTREM=1]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{LIBRETA_MILITAR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{libreta_militar}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="84e4499f-0f98-499b-843f-f1f64da1d494" positionType="Float" mode="Opaque" x="161" y="0" width="77" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -200,7 +200,7 @@ WHERE GRM.IDE_GTEMP=$P{IDE_GTEMP} AND GRM.ACTIVO_GTREM=1]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ANIO_CONSCRIPCION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{anio_conscripcion}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="2ebdecad-2ea5-479e-bf92-492c4e93f1f0" positionType="Float" mode="Opaque" x="238" y="0" width="82" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -215,7 +215,7 @@ WHERE GRM.IDE_GTEMP=$P{IDE_GTEMP} AND GRM.ACTIVO_GTREM=1]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{UNIDAD}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{unidad}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="11bed904-4019-4636-a10f-983be994ad78" positionType="Float" mode="Opaque" x="320" y="0" width="150" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -230,7 +230,7 @@ WHERE GRM.IDE_GTEMP=$P{IDE_GTEMP} AND GRM.ACTIVO_GTREM=1]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{RAMA_FFAA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{rama_ffaa}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="16149322-6e43-46ce-b44f-f8ee9c571c57" positionType="Float" mode="Opaque" x="470" y="0" width="40" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -245,7 +245,7 @@ WHERE GRM.IDE_GTEMP=$P{IDE_GTEMP} AND GRM.ACTIVO_GTREM=1]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{TIEMPO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tiempo}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="fe9cc553-ca4d-4f51-8085-344766f91568" positionType="Float" mode="Opaque" x="510" y="0" width="60" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -260,7 +260,7 @@ WHERE GRM.IDE_GTEMP=$P{IDE_GTEMP} AND GRM.ACTIVO_GTREM=1]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{GRADO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{grado}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
