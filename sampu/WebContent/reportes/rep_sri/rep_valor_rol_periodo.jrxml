@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_valor_rol_periodo" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ab682e40-d6ae-491a-a152-7523ea8c9ffb">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="446"/>
+	<property name="ireport.x" value="75"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["D:\\workspace\\biess\\WebContent\\reportes\\rep_gestion\\"]]></defaultValueExpression>
@@ -12,10 +12,10 @@
 	</parameter>
 	<parameter name="usuario" class="java.lang.Integer"/>
 	<parameter name="titulo" class="java.lang.String"/>
-	<parameter name="IDE_GEEDP" class="java.lang.String">
+	<parameter name="IDE_GEEDP" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="IDE_NRRUB" class="java.lang.String">
+	<parameter name="IDE_NRRUB" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<parameter name="IDE_GEPRO" class="java.lang.Long">
@@ -65,36 +65,62 @@ AND  DRO.IDE_GEEDP IN ($P!{IDE_GEEDP})
 
 order by EMP.ACTIVO_GTEMP ASC,DRO.IDE_GEEDP ASC,ide_gemes,ANI.IDE_GEANI,MES.IDE_GEMES]]>
 	</queryString>
-	<field name="IDE_GTEMP" class="java.math.BigDecimal"/>
-	<field name="ACTIVO_GTEMP" class="java.math.BigDecimal"/>
-	<field name="EMPLEADO" class="java.lang.String"/>
-	<field name="CEDULA" class="java.lang.String"/>
-	<field name="IDE_NRROL" class="java.math.BigDecimal"/>
-	<field name="FECHA_NRROL" class="java.sql.Timestamp"/>
-	<field name="VALOR_NRDRO" class="java.math.BigDecimal"/>
-	<field name="NOM_SUCU" class="java.lang.String"/>
-	<field name="DETALLE_GTTCO" class="java.lang.String"/>
-	<field name="DETALLE_GTTEM" class="java.lang.String"/>
-	<field name="DETALLE_GEDEP" class="java.lang.String"/>
-	<field name="IDE_GEMES" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GEMES" class="java.lang.String"/>
-	<field name="IDE_GEANI" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GEANI" class="java.lang.String"/>
+	<field name="ide_gtemp" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gth_empleado, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="activo_gtemp" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[Este campo define si el registro se encuentra activo o no para su transaccionalidad, 1 SI / 0 No]]></fieldDescription>
+	</field>
+	<field name="empleado" class="java.lang.String"/>
+	<field name="cedula" class="java.lang.String"/>
+	<field name="ide_nrrol" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla nrh_rol, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="fecha_nrrol" class="java.sql.Date">
+		<fieldDescription><![CDATA[Este campo define la fecha de creacion del rol de pagos.]]></fieldDescription>
+	</field>
+	<field name="valor_nrdro" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Este campo define el valor generado por rubro sea ingreso o egreso para el empleado.]]></fieldDescription>
+	</field>
+	<field name="nom_sucu" class="java.lang.String">
+		<fieldDescription><![CDATA[nom_sucu]]></fieldDescription>
+	</field>
+	<field name="detalle_gttco" class="java.lang.String">
+		<fieldDescription><![CDATA[detalle_gttco]]></fieldDescription>
+	</field>
+	<field name="detalle_gttem" class="java.lang.String">
+		<fieldDescription><![CDATA[detalle_gttem]]></fieldDescription>
+	</field>
+	<field name="detalle_gedep" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del departamento, ejemplo: DIRECTORIO, TECNOLOGIA, INFRAESTRUCTURA, etc.]]></fieldDescription>
+	</field>
+	<field name="ide_gemes" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_gemes]]></fieldDescription>
+	</field>
+	<field name="detalle_gemes" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el detalle del mes, ejemplo: enero, febrero, marzo, etc.]]></fieldDescription>
+	</field>
+	<field name="ide_geani" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_geani]]></fieldDescription>
+	</field>
+	<field name="detalle_geani" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del ano ejemplo: 2013, 2014, etc]]></fieldDescription>
+	</field>
 	<variable name="contador" class="java.lang.Integer" calculation="Count">
-		<variableExpression><![CDATA[$F{IDE_GTEMP}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_gtemp}]]></variableExpression>
 		<initialValueExpression><![CDATA[1]]></initialValueExpression>
 	</variable>
 	<variable name="VALOR_NRDRO_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ACTIVO" calculation="Sum">
-		<variableExpression><![CDATA[$F{VALOR_NRDRO}]]></variableExpression>
+		<variableExpression><![CDATA[$F{valor_nrdro}]]></variableExpression>
 	</variable>
 	<variable name="VALOR_NRDRO_2" class="java.math.BigDecimal" resetType="Group" resetGroup="empleado" calculation="Sum">
-		<variableExpression><![CDATA[$F{VALOR_NRDRO}]]></variableExpression>
+		<variableExpression><![CDATA[$F{valor_nrdro}]]></variableExpression>
 	</variable>
 	<variable name="VALOR_NRDRO_3" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{VALOR_NRDRO}]]></variableExpression>
+		<variableExpression><![CDATA[$F{valor_nrdro}]]></variableExpression>
 	</variable>
 	<group name="ACTIVO">
-		<groupExpression><![CDATA[$F{ACTIVO_GTEMP}]]></groupExpression>
+		<groupExpression><![CDATA[$F{activo_gtemp}]]></groupExpression>
 		<groupHeader>
 			<band height="20">
 				<textField>
@@ -109,7 +135,7 @@ order by EMP.ACTIVO_GTEMP ASC,DRO.IDE_GEEDP ASC,ide_gemes,ANI.IDE_GEANI,MES.IDE_
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="6" isBold="true" pdfFontName="Courier-Bold" isPdfEmbedded="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{ACTIVO_GTEMP}==1?"ACTIVO":"INACTIVO"]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{activo_gtemp}==true?"ACTIVO":"INACTIVO"]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement uuid="e4389c3e-9aa5-49c1-acb2-f7389fa879d3" x="30" y="10" width="155" height="10"/>
@@ -301,7 +327,7 @@ order by EMP.ACTIVO_GTEMP ASC,DRO.IDE_GEEDP ASC,ide_gemes,ANI.IDE_GEANI,MES.IDE_
 		</groupFooter>
 	</group>
 	<group name="empleado">
-		<groupExpression><![CDATA[$F{IDE_GTEMP}]]></groupExpression>
+		<groupExpression><![CDATA[$F{ide_gtemp}]]></groupExpression>
 		<groupHeader>
 			<band/>
 		</groupHeader>
@@ -332,7 +358,7 @@ order by EMP.ACTIVO_GTEMP ASC,DRO.IDE_GEEDP ASC,ide_gemes,ANI.IDE_GEANI,MES.IDE_
 					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema_biess/rep_cabecera_horizontal.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera_horizontal.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
@@ -356,7 +382,7 @@ order by EMP.ACTIVO_GTEMP ASC,DRO.IDE_GEEDP ASC,ide_gemes,ANI.IDE_GEANI,MES.IDE_
 				<textElement verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{EMPLEADO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{empleado}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="e045947d-ee9b-4dfd-a196-be8c36cef378" stretchType="RelativeToBandHeight" x="185" y="0" width="45" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -370,7 +396,7 @@ order by EMP.ACTIVO_GTEMP ASC,DRO.IDE_GEEDP ASC,ide_gemes,ANI.IDE_GEANI,MES.IDE_
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CEDULA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cedula}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="yyyy/MM/dd" isBlankWhenNull="true">
 				<reportElement uuid="66c39bd2-e75c-4981-8e60-2dee18c8d05a" stretchType="RelativeToBandHeight" x="531" y="0" width="45" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -384,7 +410,7 @@ order by EMP.ACTIVO_GTEMP ASC,DRO.IDE_GEEDP ASC,ide_gemes,ANI.IDE_GEANI,MES.IDE_
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_NRROL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_nrrol}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.000" isBlankWhenNull="true">
 				<reportElement uuid="eb38763b-ca38-43a2-a944-10bceb80f4d8" stretchType="RelativeToBandHeight" x="657" y="0" width="54" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -398,7 +424,7 @@ order by EMP.ACTIVO_GTEMP ASC,DRO.IDE_GEEDP ASC,ide_gemes,ANI.IDE_GEANI,MES.IDE_
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{VALOR_NRDRO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{valor_nrdro}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="e8640d29-749f-4dd2-9334-0c369fd6f902" stretchType="RelativeToBandHeight" x="711" y="0" width="91" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -412,7 +438,7 @@ order by EMP.ACTIVO_GTEMP ASC,DRO.IDE_GEEDP ASC,ide_gemes,ANI.IDE_GEANI,MES.IDE_
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NOM_SUCU}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nom_sucu}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="c76cdea3-04ef-437d-b9f9-0a9ff54ebd7b" stretchType="RelativeToBandHeight" x="230" y="0" width="151" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -426,7 +452,7 @@ order by EMP.ACTIVO_GTEMP ASC,DRO.IDE_GEEDP ASC,ide_gemes,ANI.IDE_GEANI,MES.IDE_
 				<textElement verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GEDEP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_gedep}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="e341db79-4ca7-48d8-b070-eb85ab36dc53" stretchType="RelativeToBandHeight" x="381" y="0" width="67" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -440,7 +466,7 @@ order by EMP.ACTIVO_GTEMP ASC,DRO.IDE_GEEDP ASC,ide_gemes,ANI.IDE_GEANI,MES.IDE_
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GTTEM}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_gttem}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="ce862a13-8b9f-4dbc-a10c-4fbaf1157022" stretchType="RelativeToBandHeight" x="448" y="0" width="83" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -454,7 +480,7 @@ order by EMP.ACTIVO_GTEMP ASC,DRO.IDE_GEEDP ASC,ide_gemes,ANI.IDE_GEANI,MES.IDE_
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GTTCO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_gttco}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="e0ba1daf-38e1-45cb-92fa-0f1c677581fd" stretchType="RelativeToBandHeight" x="0" y="0" width="30" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -482,7 +508,7 @@ order by EMP.ACTIVO_GTEMP ASC,DRO.IDE_GEEDP ASC,ide_gemes,ANI.IDE_GEANI,MES.IDE_
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GEANI}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_geani}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="55303a92-d490-4036-8a8e-d32c602403a1" stretchType="RelativeToBandHeight" x="605" y="0" width="52" height="10" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -496,7 +522,7 @@ order by EMP.ACTIVO_GTEMP ASC,DRO.IDE_GEEDP ASC,ide_gemes,ANI.IDE_GEANI,MES.IDE_
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GEMES}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_gemes}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
