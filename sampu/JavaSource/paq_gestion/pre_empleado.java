@@ -948,7 +948,7 @@ public class pre_empleado extends Pantalla {
 							"EMP.PRIMER_NOMBRE_GTEMP || ' ' ||  " +
 							"EMP.SEGUNDO_NOMBRE_GTEMP AS NOMBRES " +
 							"from GTH_EMPLEADO EMP " +
-							"left join GEN_EMPLEADOS_DEPARTAMENTO_PAR EDP ON EDP.IDE_GTEMP=EMP.IDE_GTEMP and activo_geedp=1 " +
+							"left join GEN_EMPLEADOS_DEPARTAMENTO_PAR EDP ON EDP.IDE_GTEMP=EMP.IDE_GTEMP and activo_geedp=TRUE " +
 							"LEFT JOIN GEN_DEPARTAMENTO DEP ON DEP.IDE_GEDEP=EDP.IDE_GEDEP " +
 							"WHERE EDP.IDE_GEDEP IN("+set_departamento.getSeleccionados()+") " +
 							"AND ACTIVO_GTEMP in("+lis_activo.getSeleccionados()+") " +
@@ -1132,7 +1132,7 @@ public class pre_empleado extends Pantalla {
 					set_empleado.getTab_seleccion().setSql("SELECT emp.ide_gtemp,emp.documento_identidad_gtemp, " +
 							"emp.apellido_paterno_gtemp ||' '|| emp.apellido_materno_gtemp ||' '|| emp.primer_nombre_gtemp ||' '|| emp.segundo_nombre_gtemp as nombres FROM gth_empleado emp " +
 							"inner join gen_empleados_departamento_par edp on emp.ide_gtemp=edp.ide_gtemp " +
-							"where edp.ide_gedep in ("+sel_tab_departamento.getSeleccionados()+") and edp.activo_geedp=1");
+							"where edp.ide_gedep in ("+sel_tab_departamento.getSeleccionados()+") and edp.activo_geedp=TRUE");
 					set_empleado.getTab_seleccion().ejecutarSql();
 					sel_tab_departamento.cerrar();
 					set_empleado.dibujar();				
@@ -1203,7 +1203,7 @@ public class pre_empleado extends Pantalla {
 						"LEFT JOIN GEN_DEPARTAMENTO DEP ON DEP.IDE_GEDEP=EDP.IDE_GEDEP " +
 						"WHERE EDP.IDE_GEDEP IN("+set_departamento.getSeleccionados()+") " +
 						"AND EDP.IDE_SUCU in("+parametro1+") " +
-						"AND EDP.ACTIVO_GEEDP=1 " +
+						"AND EDP.ACTIVO_GEEDP=TRUE " +
 						"ORDER BY NOMBRES ASC");
 				set_empleado_deducible.getTab_seleccion().getColumna("DOCUMENTO_IDENTIDAD_GTEMP").setFiltro(true);
 				set_empleado_deducible.getTab_seleccion().getColumna("NOMBRES").setFiltro(true);
