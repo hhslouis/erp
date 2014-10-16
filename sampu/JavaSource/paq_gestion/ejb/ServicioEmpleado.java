@@ -204,7 +204,7 @@ public class ServicioEmpleado {
   	 */
   	public TablaGenerica getCorreoEmpleados(String IDE_GTEMP){
   		return utilitario.consultar("SELECT EMP.IDE_GTEMP,DETALLE_GTCOR FROM GTH_EMPLEADO emp " +
-  				"left JOIN GTH_CORREO mail on EMP.IDE_GTEMP = MAIL.IDE_GTEMP and NOTIFICACION_GTCOR=1 " +
+  				"left JOIN GTH_CORREO mail on EMP.IDE_GTEMP = MAIL.IDE_GTEMP and NOTIFICACION_GTCOR=TRUE " +
   				"where EMP.IDE_GTEMP in("+IDE_GTEMP+")");
   	}
   	/**
