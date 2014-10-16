@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SUB_REP_CAPACITACION" language="groovy" pageWidth="570" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="570" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="7d6e0dd3-a5fa-40a2-bf46-4a6eff1fd14f">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="187"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="IDE_GTEMP" class="java.lang.Long">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -22,16 +22,16 @@ left join GEN_DIVISION_POLITICA gtdp2 on gtdp2.ide_gedip=gtdp1.gen_ide_gedip
 left join GEN_DIVISION_POLITICA gtdp3 on gtdp3.ide_gedip=gtdp2.gen_ide_gedip
 left join GEN_DIVISION_POLITICA gtdp4 on gtdp4.ide_gedip=gtdp3.gen_ide_gedip
 LEFT JOIN GEN_TIPO_PERIODO PER ON PER.IDE_GETPR=GCE.IDE_GETPR
-WHERE GCE.IDE_GTEMP=$P{IDE_GTEMP} AND GCE.ACTIVO_GTCEM=1
+WHERE GCE.IDE_GTEMP=$P{IDE_GTEMP} AND GCE.ACTIVO_GTCEM=true
 ORDER BY GCE.IDE_GEDIP]]>
 	</queryString>
-	<field name="CURSO" class="java.lang.String"/>
-	<field name="CENTRO_DE_CAPACITACION" class="java.lang.String"/>
-	<field name="INSTRUCTOR" class="java.lang.String"/>
-	<field name="FECHA" class="java.sql.Timestamp"/>
-	<field name="DURACION" class="java.lang.String"/>
-	<field name="CIUDAD" class="java.lang.String"/>
-	<field name="PAIS" class="java.lang.String"/>
+	<field name="curso" class="java.lang.String"/>
+	<field name="centro_de_capacitacion" class="java.lang.String"/>
+	<field name="instructor" class="java.lang.String"/>
+	<field name="fecha" class="java.sql.Date"/>
+	<field name="duracion" class="java.lang.String"/>
+	<field name="ciudad" class="java.lang.String"/>
+	<field name="pais" class="java.lang.String"/>
 	<columnHeader>
 		<band height="35" splitType="Stretch">
 			<staticText>
@@ -171,7 +171,7 @@ ORDER BY GCE.IDE_GEDIP]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CURSO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{curso}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="6a8e1e8f-a6b5-4955-87e8-e53762d4d2af" stretchType="RelativeToBandHeight" x="100" y="0" width="100" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -186,7 +186,7 @@ ORDER BY GCE.IDE_GEDIP]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CENTRO_DE_CAPACITACION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{centro_de_capacitacion}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="bec7bf34-2f7f-4231-8569-b5c7dd391c8d" stretchType="RelativeToBandHeight" x="200" y="0" width="90" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -201,7 +201,7 @@ ORDER BY GCE.IDE_GEDIP]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{INSTRUCTOR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{instructor}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="yyyy/MM/dd" isBlankWhenNull="true">
 				<reportElement uuid="e6348f44-424e-42ba-8e47-d1ac44d932a5" stretchType="RelativeToBandHeight" x="290" y="0" width="46" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -216,7 +216,7 @@ ORDER BY GCE.IDE_GEDIP]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="106bd74a-bedf-4098-8481-6e2cb722f1e2" stretchType="RelativeToBandHeight" x="336" y="0" width="55" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -231,7 +231,7 @@ ORDER BY GCE.IDE_GEDIP]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DURACION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{duracion}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="8af72786-45fa-464f-a964-c967b94024bc" stretchType="RelativeToBandHeight" x="391" y="0" width="86" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -246,7 +246,7 @@ ORDER BY GCE.IDE_GEDIP]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CIUDAD}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ciudad}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="4d2f0c59-cf62-4d6a-a73f-542833d464a9" stretchType="RelativeToBandHeight" x="477" y="0" width="93" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -261,7 +261,7 @@ ORDER BY GCE.IDE_GEDIP]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{PAIS}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pais}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
