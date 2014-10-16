@@ -8,13 +8,17 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT HB.IDE_GTHOB,TH.DETALLE_GTTIH FROM GTH_HOBIE HB
-LEFT JOIN GTH_TIPO_HOBIE TH ON TH.IDE_GTTIH=HB.IDE_GTTIH AND TH.ACTIVO_GTTIH=1
-WHERE HB.IDE_GTEMP=$P{IDE_GTEMP} AND HB.ACTIVO_GTHOB=1]]>
+LEFT JOIN GTH_TIPO_HOBIE TH ON TH.IDE_GTTIH=HB.IDE_GTTIH AND TH.ACTIVO_GTTIH=true
+WHERE HB.IDE_GTEMP=$P{IDE_GTEMP} AND HB.ACTIVO_GTHOB=true]]>
 	</queryString>
-	<field name="IDE_GTHOB" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GTTIH" class="java.lang.String"/>
+	<field name="ide_gthob" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_gthob]]></fieldDescription>
+	</field>
+	<field name="detalle_gttih" class="java.lang.String">
+		<fieldDescription><![CDATA[detalle_gttih]]></fieldDescription>
+	</field>
 	<variable name="variable1" class="java.lang.Integer" calculation="Count">
-		<variableExpression><![CDATA[$F{IDE_GTHOB}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_gthob}]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -51,7 +55,7 @@ WHERE HB.IDE_GTEMP=$P{IDE_GTEMP} AND HB.ACTIVO_GTHOB=1]]>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GTTIH}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_gttih}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
