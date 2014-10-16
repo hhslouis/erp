@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sub_rep_situacion_eco1" language="groovy" pageWidth="570" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="570" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="d3096b91-b4c2-4180-b8ea-cf783a613c65">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="147"/>
+	<property name="ireport.x" value="89"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="IDE_GTEMP" class="java.lang.Long">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -12,11 +12,11 @@ GEE.SUELDO_CONYUGE_GTSEE AS SUELDO_CONYUGE,
 GEE.OTRO_INGRESO_GTSEE AS OTROS_INGRESOS,
 GEE.TOTAL_INGRESO_CONYUGE_GTSEE AS TOTAL
 FROM GTH_SITUACION_ECONOMICA_EMPLEA GEE
-WHERE GEE.IDE_GTEMP=$P{IDE_GTEMP} AND GEE.ACTIVO_GTSEE=1]]>
+WHERE GEE.IDE_GTEMP=$P{IDE_GTEMP} AND GEE.ACTIVO_GTSEE=true]]>
 	</queryString>
-	<field name="SUELDO_CONYUGE" class="java.math.BigDecimal"/>
-	<field name="OTROS_INGRESOS" class="java.math.BigDecimal"/>
-	<field name="TOTAL" class="java.math.BigDecimal"/>
+	<field name="sueldo_conyuge" class="java.math.BigDecimal"/>
+	<field name="otros_ingresos" class="java.math.BigDecimal"/>
+	<field name="total" class="java.math.BigDecimal"/>
 	<title>
 		<band height="15" splitType="Stretch">
 			<staticText>
@@ -126,7 +126,7 @@ WHERE GEE.IDE_GTEMP=$P{IDE_GTEMP} AND GEE.ACTIVO_GTSEE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{SUELDO_CONYUGE}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{sueldo_conyuge}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="1d7a9389-a954-4b51-8379-5f7bf8fefa17" stretchType="RelativeToBandHeight" x="140" y="0" width="129" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -140,7 +140,7 @@ WHERE GEE.IDE_GTEMP=$P{IDE_GTEMP} AND GEE.ACTIVO_GTSEE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{OTROS_INGRESOS}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{otros_ingresos}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement uuid="d0a62d8a-75f9-4620-99d6-291938f75959" stretchType="RelativeToBandHeight" x="269" y="0" width="107" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -154,7 +154,7 @@ WHERE GEE.IDE_GTEMP=$P{IDE_GTEMP} AND GEE.ACTIVO_GTSEE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{TOTAL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="4107b3d3-dbda-4982-a318-e3262815baa0" stretchType="RelativeToBandHeight" x="505" y="0" width="65" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
