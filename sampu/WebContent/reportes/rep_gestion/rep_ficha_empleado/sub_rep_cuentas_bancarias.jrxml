@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sub_rep_cuentas_bancarias" language="groovy" pageWidth="570" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="570" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="e5103f14-8bcb-4f2f-b23d-e20ece64b287">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="477"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="IDE_GTEMP" class="java.lang.Long">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -15,12 +15,12 @@ GCE.SALDO_PROMEDIO_GTCBE AS SALDO_PROMEDIO
 FROM GTH_CUENTA_BANCARIA_EMPLEADO GCE
 LEFT JOIN GEN_INSTITUCION GIN ON GIN.IDE_GEINS=GCE.IDE_GEINS
 LEFT JOIN GTH_TIPO_CUENTA_BANCARIA TI ON TI.IDE_GTTCB=GCE.IDE_GTTCB
-WHERE GCE.IDE_GTEMP=$P{IDE_GTEMP} AND GCE.ACTIVO_GTCBE=1]]>
+WHERE GCE.IDE_GTEMP=$P{IDE_GTEMP} AND GCE.ACTIVO_GTCBE=true]]>
 	</queryString>
-	<field name="INSTITUCION" class="java.lang.String"/>
-	<field name="NUMERO_CUENTA" class="java.lang.String"/>
-	<field name="TIPO_CUENTA" class="java.lang.String"/>
-	<field name="SALDO_PROMEDIO" class="java.math.BigDecimal"/>
+	<field name="institucion" class="java.lang.String"/>
+	<field name="numero_cuenta" class="java.lang.String"/>
+	<field name="tipo_cuenta" class="java.lang.String"/>
+	<field name="saldo_promedio" class="java.math.BigDecimal"/>
 	<columnHeader>
 		<band height="35" splitType="Stretch">
 			<staticText>
@@ -110,7 +110,7 @@ WHERE GCE.IDE_GTEMP=$P{IDE_GTEMP} AND GCE.ACTIVO_GTCBE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{INSTITUCION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{institucion}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="8ec41658-203a-4bc7-8e05-7029ed79ddc8" stretchType="RelativeToBandHeight" x="150" y="0" width="200" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -124,7 +124,7 @@ WHERE GCE.IDE_GTEMP=$P{IDE_GTEMP} AND GCE.ACTIVO_GTCBE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NUMERO_CUENTA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{numero_cuenta}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="de2d3d75-6da4-49fa-bc7f-7446db05926b" stretchType="RelativeToBandHeight" x="350" y="0" width="120" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -138,7 +138,7 @@ WHERE GCE.IDE_GTEMP=$P{IDE_GTEMP} AND GCE.ACTIVO_GTCBE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{TIPO_CUENTA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tipo_cuenta}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="8a6940f8-856d-45ed-a298-63f193cc33dd" stretchType="RelativeToBandHeight" x="470" y="0" width="100" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -152,7 +152,7 @@ WHERE GCE.IDE_GTEMP=$P{IDE_GTEMP} AND GCE.ACTIVO_GTCBE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{SALDO_PROMEDIO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{saldo_promedio}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
