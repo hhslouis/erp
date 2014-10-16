@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sub_rep_experiencia_laboral" language="groovy" pageWidth="570" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="570" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="084776a8-5dc3-45fe-8d11-89dfd334bf64">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="187"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="IDE_GTEMP" class="java.lang.Long">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -19,19 +19,19 @@ GEL.FUNCIONES_DESEMPENIO_GTELE AS FUNCIONES_QUE_DESEMPEÑA
 
 from GTH_EXPERIENCIA_LABORAL_EMPLEA GEL
 LEFT JOIN GEN_INSTITUCION GIN ON GIN.IDE_GEINS=GEL.IDE_GEINS
-where GEL.IDE_GTEMP=$P{IDE_GTEMP} AND GEL.ACTIVO_GTELE=1
+where GEL.IDE_GTEMP=$P{IDE_GTEMP} AND GEL.ACTIVO_GTELE=true
 ORDER BY GEL.IDE_GTELE]]>
 	</queryString>
-	<field name="EMPRESA" class="java.lang.String"/>
-	<field name="CARGO" class="java.lang.String"/>
-	<field name="AREA" class="java.lang.String"/>
-	<field name="SUBORDINADOS" class="java.math.BigDecimal"/>
-	<field name="FECHA_INGRESO" class="java.sql.Timestamp"/>
-	<field name="FECHA_SALIDA" class="java.sql.Timestamp"/>
-	<field name="MOTIVO_SALIDA" class="java.lang.String"/>
-	<field name="JEFE_INMEDIATO" class="java.lang.String"/>
-	<field name="TELEFONO" class="java.lang.String"/>
-	<field name="FUNCIONES_QUE_DESEMPEÑA" class="java.lang.String"/>
+	<field name="empresa" class="java.lang.String"/>
+	<field name="cargo" class="java.lang.String"/>
+	<field name="area" class="java.lang.String"/>
+	<field name="subordinados" class="java.lang.Integer"/>
+	<field name="fecha_ingreso" class="java.sql.Time"/>
+	<field name="fecha_salida" class="java.sql.Time"/>
+	<field name="motivo_salida" class="java.lang.String"/>
+	<field name="jefe_inmediato" class="java.lang.String"/>
+	<field name="telefono" class="java.lang.String"/>
+	<field name="funciones_que_desempeÑa" class="java.lang.String"/>
 	<title>
 		<band height="15" splitType="Stretch">
 			<staticText>
@@ -65,7 +65,7 @@ ORDER BY GEL.IDE_GTELE]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CARGO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cargo}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="9ffcb273-b3b0-42be-8990-305bc224225f" x="280" y="0" width="90" height="20"/>
@@ -94,7 +94,7 @@ ORDER BY GEL.IDE_GTELE]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{AREA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{area}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="d2c227ee-82c7-453b-aded-47e4494f832b" x="370" y="0" width="70" height="20"/>
@@ -123,7 +123,7 @@ ORDER BY GEL.IDE_GTELE]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{SUBORDINADOS}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{subordinados}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="556c831d-eef7-428f-a5cd-37f20a32aa21" x="440" y="0" width="60" height="20"/>
@@ -152,7 +152,7 @@ ORDER BY GEL.IDE_GTELE]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_INGRESO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_ingreso}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="af1bf44c-de83-4d65-92a5-756f52e4e8d7" x="500" y="0" width="70" height="20"/>
@@ -181,7 +181,7 @@ ORDER BY GEL.IDE_GTELE]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_SALIDA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_salida}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="6305dda6-8599-4e0d-8187-174a915f1d53" positionType="Float" x="0" y="35" width="120" height="20"/>
@@ -210,7 +210,7 @@ ORDER BY GEL.IDE_GTELE]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{MOTIVO_SALIDA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{motivo_salida}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="341019a0-f5db-44b4-91ed-f0566639c075" positionType="Float" x="120" y="35" width="160" height="20"/>
@@ -239,7 +239,7 @@ ORDER BY GEL.IDE_GTELE]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{JEFE_INMEDIATO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{jefe_inmediato}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="c7b2af9b-fc74-4ed1-b3c5-c8905a6dfa9c" positionType="Float" x="280" y="35" width="60" height="20"/>
@@ -268,7 +268,7 @@ ORDER BY GEL.IDE_GTELE]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{TELEFONO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{telefono}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="b7bae8b7-4950-4315-af23-dada9da6617c" positionType="Float" x="340" y="35" width="230" height="20"/>
@@ -297,7 +297,7 @@ ORDER BY GEL.IDE_GTELE]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FUNCIONES_QUE_DESEMPEÑA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{funciones_que_desempeÑa}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="30a02529-d696-4aab-928e-798d26dfade9" x="0" y="0" width="120" height="20"/>
@@ -326,7 +326,7 @@ ORDER BY GEL.IDE_GTELE]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{EMPRESA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{empresa}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="ab4b2600-25a6-4b74-bd58-ef1f4bce0d63" x="120" y="0" width="160" height="20"/>
