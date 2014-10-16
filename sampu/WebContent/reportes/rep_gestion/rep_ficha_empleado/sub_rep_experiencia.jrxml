@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sub_rep_experiencia" language="groovy" pageWidth="570" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="570" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="8aaf1fab-3f29-481f-ac88-b1699b420232">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="187"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="IDE_GTEMP" class="java.lang.Long">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -25,16 +25,16 @@ left join GEN_DIVISION_POLITICA gtdp1 on gtdp1.ide_gedip=gdp.gen_ide_gedip
 left join GEN_DIVISION_POLITICA gtdp2 on gtdp2.ide_gedip=gtdp1.gen_ide_gedip
 left join GEN_DIVISION_POLITICA gtdp3 on gtdp3.ide_gedip=gtdp2.gen_ide_gedip
 left join GEN_DIVISION_POLITICA gtdp4 on gtdp4.ide_gedip=gtdp3.gen_ide_gedip
-WHERE GDE.IDE_GTEMP=$P{IDE_GTEMP} AND GDE.ACTIVO_GTXDE=1
+WHERE GDE.IDE_GTEMP=$P{IDE_GTEMP} AND GDE.ACTIVO_GTXDE=true
 ORDER BY GDE.IDE_GEDIP]]>
 	</queryString>
-	<field name="INSTITUCION" class="java.lang.String"/>
-	<field name="CIUDAD" class="java.lang.String"/>
-	<field name="PAIS" class="java.lang.String"/>
-	<field name="CATEDRA" class="java.lang.String"/>
-	<field name="HORAS_DICTADAS" class="java.math.BigDecimal"/>
-	<field name="FECHA_INICIO" class="java.sql.Timestamp"/>
-	<field name="FECHA_SALIDA" class="java.sql.Timestamp"/>
+	<field name="institucion" class="java.lang.String"/>
+	<field name="ciudad" class="java.lang.String"/>
+	<field name="pais" class="java.lang.String"/>
+	<field name="catedra" class="java.lang.String"/>
+	<field name="horas_dictadas" class="java.lang.Integer"/>
+	<field name="fecha_inicio" class="java.sql.Date"/>
+	<field name="fecha_salida" class="java.sql.Date"/>
 	<columnHeader>
 		<band height="35" splitType="Stretch">
 			<staticText>
@@ -174,7 +174,7 @@ ORDER BY GDE.IDE_GEDIP]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{INSTITUCION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{institucion}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="570a03d6-24dc-4851-be93-a3a450d279ce" stretchType="RelativeToBandHeight" x="120" y="0" width="100" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -189,7 +189,7 @@ ORDER BY GDE.IDE_GEDIP]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CIUDAD}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ciudad}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="b4289e1b-d2dd-41db-aad8-3ce49e03ffc5" stretchType="RelativeToBandHeight" x="220" y="0" width="100" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -204,7 +204,7 @@ ORDER BY GDE.IDE_GEDIP]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{PAIS}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pais}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="d3e449d3-09a7-4ccf-bf02-0709e460edad" stretchType="RelativeToBandHeight" x="320" y="0" width="86" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -219,7 +219,7 @@ ORDER BY GDE.IDE_GEDIP]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CATEDRA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{catedra}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="32bda2a7-0fc7-441a-8d76-ffce4d605a6d" stretchType="RelativeToBandHeight" x="406" y="0" width="54" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -234,7 +234,7 @@ ORDER BY GDE.IDE_GEDIP]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{HORAS_DICTADAS}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{horas_dictadas}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="yyyy/MM/dd" isBlankWhenNull="true">
 				<reportElement uuid="d4241e91-8d6c-4d12-8d6a-c3ba47258fec" stretchType="RelativeToBandHeight" x="460" y="0" width="54" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -249,7 +249,7 @@ ORDER BY GDE.IDE_GEDIP]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_INICIO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_inicio}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="yyyy/MM/dd" isBlankWhenNull="true">
 				<reportElement uuid="b226a2a2-7b26-47ce-bb93-9d87e1032fc2" stretchType="RelativeToBandHeight" x="514" y="0" width="56" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -264,7 +264,7 @@ ORDER BY GDE.IDE_GEDIP]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_SALIDA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_salida}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
