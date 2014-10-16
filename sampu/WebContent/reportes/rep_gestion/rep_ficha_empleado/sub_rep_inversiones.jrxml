@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sub_rep_inversiones" language="groovy" pageWidth="570" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="570" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="0bcda22e-278a-46ac-87c5-4049062c0f5a">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="477"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="IDE_GTEMP" class="java.lang.Long">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -16,14 +16,14 @@ GIE.TAZA_GTINE AS TASA
 FROM GTH_INVERSION_EMPLEADO GIE
 LEFT JOIN GTH_TIPO_INVERSION GTI ON GTI.IDE_GTTII = GIE.IDE_GTTII
 LEFT JOIN GEN_INSTITUCION GIN ON GIN.IDE_GEINS=GIE.IDE_GEINS
-WHERE GIE.IDE_GTEMP=$P{IDE_GTEMP} AND GIE.ACTIVO_GTINE=1
+WHERE GIE.IDE_GTEMP=$P{IDE_GTEMP} AND GIE.ACTIVO_GTINE=true
 ORDER BY GIE.IDE_GTTII]]>
 	</queryString>
-	<field name="TIPO_DE_INVERSION" class="java.lang.String"/>
-	<field name="INSTITUCION" class="java.lang.String"/>
-	<field name="PLAZO" class="java.math.BigDecimal"/>
-	<field name="MONTO" class="java.math.BigDecimal"/>
-	<field name="TASA" class="java.math.BigDecimal"/>
+	<field name="tipo_de_inversion" class="java.lang.String"/>
+	<field name="institucion" class="java.lang.String"/>
+	<field name="plazo" class="java.lang.Integer"/>
+	<field name="monto" class="java.math.BigDecimal"/>
+	<field name="tasa" class="java.math.BigDecimal"/>
 	<title>
 		<band height="15" splitType="Stretch">
 			<staticText>
@@ -131,7 +131,7 @@ ORDER BY GIE.IDE_GTTII]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{TIPO_DE_INVERSION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tipo_de_inversion}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="5513325f-054b-4b3c-a9ef-c1dccb435922" stretchType="RelativeToBandHeight" x="120" y="0" width="120" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -145,7 +145,7 @@ ORDER BY GIE.IDE_GTTII]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{INSTITUCION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{institucion}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="51b5d86f-6054-45ba-b6ac-10585f3e333b" stretchType="RelativeToBandHeight" x="240" y="0" width="120" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -159,7 +159,7 @@ ORDER BY GIE.IDE_GTTII]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{PLAZO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{plazo}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement uuid="b9dae1b1-5a44-481d-86d1-883ccd00cd77" stretchType="RelativeToBandHeight" x="360" y="0" width="120" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -173,7 +173,7 @@ ORDER BY GIE.IDE_GTTII]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{MONTO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{monto}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement uuid="867a9739-3f6e-4a66-9be1-e8239fb34732" stretchType="RelativeToBandHeight" x="480" y="0" width="90" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -187,7 +187,7 @@ ORDER BY GIE.IDE_GTTII]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{TASA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tasa}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
