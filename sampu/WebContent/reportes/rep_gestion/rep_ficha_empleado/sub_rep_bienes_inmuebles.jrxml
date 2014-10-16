@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sub_rep_bienes_inmuebles" language="groovy" pageWidth="570" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="570" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="6da29783-56d2-49d9-a8e0-d957b91f8820">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="187"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name=" IDE_GTEMP" class="java.lang.Long">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT GTE.DETALLE_GTTEE AS DESCRIPCION,GTE.DIRECCION_GTTEE AS DIRECCION,GTE.AVALUO_GTTEE AS AVALUO FROM GTH_TERRENO_EMPLEADO GTE
-WHERE GTE.IDE_GTEMP=$P{ IDE_GTEMP} AND GTE.ACTIVO_GTTEE=1]]>
+WHERE GTE.IDE_GTEMP=$P{ IDE_GTEMP} AND GTE.ACTIVO_GTTEE=true]]>
 	</queryString>
-	<field name="DESCRIPCION" class="java.lang.String"/>
-	<field name="DIRECCION" class="java.lang.String"/>
-	<field name="AVALUO" class="java.math.BigDecimal"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="direccion" class="java.lang.String"/>
+	<field name="avaluo" class="java.math.BigDecimal"/>
 	<title>
 		<band height="15" splitType="Stretch">
 			<staticText>
@@ -92,7 +92,7 @@ WHERE GTE.IDE_GTEMP=$P{ IDE_GTEMP} AND GTE.ACTIVO_GTTEE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DESCRIPCION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="68c9df99-f9c9-40c2-8aa4-e0137c2704e5" stretchType="RelativeToBandHeight" x="145" y="0" width="300" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -106,7 +106,7 @@ WHERE GTE.IDE_GTEMP=$P{ IDE_GTEMP} AND GTE.ACTIVO_GTTEE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DIRECCION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="986ba77b-d7ea-4d40-972e-8902fa85fc4a" stretchType="RelativeToBandHeight" x="445" y="0" width="125" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -120,7 +120,7 @@ WHERE GTE.IDE_GTEMP=$P{ IDE_GTEMP} AND GTE.ACTIVO_GTTEE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{AVALUO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{avaluo}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
