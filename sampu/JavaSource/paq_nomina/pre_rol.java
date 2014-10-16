@@ -915,11 +915,11 @@ public class pre_rol extends Pantalla{
 						"where IDE_ASDHE in (select IDE_ASDHE from ASI_VALIDA_NOMINA where IDE_NRROL="+tab_rol.getValorSeleccionado()+")");
 
 				
-				utilitario.getConexion().agregarSqlPantalla("update NRH_AMORTIZACION set ACTIVO_NRAMO=0, " +
+				utilitario.getConexion().agregarSqlPantalla("update NRH_AMORTIZACION set ACTIVO_NRAMO=FALSE, " +
 						"fecha_cancelado_nramo=null " +
 						"where ide_nrrol in ("+tab_rol.getValorSeleccionado()+") ");
 
-				utilitario.getConexion().agregarSqlPantalla("UPDATE NRH_ANTICIPO SET ACTIVO_NRANT=1 WHERE IDE_NRANT IN ( " +
+				utilitario.getConexion().agregarSqlPantalla("UPDATE NRH_ANTICIPO SET ACTIVO_NRANT=TRUE WHERE IDE_NRANT IN ( " +
 						"select IDE_NRANT from NRH_ANTICIPO_INTERES where IDE_NRANI in ( " +
 						"select IDE_NRANI from NRH_AMORTIZACION where IDE_NRROL="+tab_rol.getValorSeleccionado()+"))");
 				
@@ -1487,7 +1487,7 @@ public class pre_rol extends Pantalla{
 							utilitario.agregarMensaje("Los valores se importaron correctamente", "");
 						}
 						//						String str_sql=ser_nomina.getSqlEmpleadosTipoNomina(tab_rol.getValor(i,"ide_nrdtn"));
-						//						utilitario.getConexion().ejecutarSql("update  NRH_AMORTIZACION set ACTIVO_NRAMO=0 " +
+						//						utilitario.getConexion().ejecutarSql("update  NRH_AMORTIZACION set ACTIVO_NRAMO=FALSE " +
 						//								"where FECHA_VENCIMIENTO_NRAMO " +
 						//								"BETWEEN to_date ('"+fecha_ini_gepro+"','yy-mm-dd') and to_date ('"+fecha_fin_gepro+"','yy-mm-dd') " +
 						//								"and IDE_NRANI in (select ide_nrani from NRH_ANTICIPO_INTERES " +
@@ -1557,7 +1557,7 @@ public class pre_rol extends Pantalla{
 					}
 
 					//					String str_sql=ser_nomina.getSqlEmpleadosTipoNomina(tab_rol.getValor("ide_nrdtn"));
-					//					utilitario.getConexion().ejecutarSql("update  NRH_AMORTIZACION set ACTIVO_NRAMO=0 " +
+					//					utilitario.getConexion().ejecutarSql("update  NRH_AMORTIZACION set ACTIVO_NRAMO=FALSE" +
 					//							"where FECHA_VENCIMIENTO_NRAMO " +
 					//							"BETWEEN to_date ('"+fecha_ini_gepro+"','yy-mm-dd') and to_date ('"+fecha_fin_gepro+"','yy-mm-dd') " +
 					//							"and IDE_NRANI in (select ide_nrani from NRH_ANTICIPO_INTERES " +
@@ -1614,7 +1614,7 @@ public class pre_rol extends Pantalla{
 			aut_rubros.setAutoCompletar("select RUB.IDE_NRRUB,RUB.DETALLE_NRRUB,TRU.DETALLE_NRTIR,FCA.DETALLE_NRFOC from NRH_RUBRO RUB  " +
 					"LEFT JOIN NRH_FORMA_CALCULO FCA ON FCA.IDE_NRFOC=RUB.IDE_NRFOC " +
 					"LEFT JOIN NRH_TIPO_RUBRO TRU ON TRU.IDE_NRTIR=RUB.IDE_NRTIR " +
-					"left join NRH_DETALLE_RUBRO der on der.ide_nrrub=rub.ide_nrrub and der.activo_nrder=1 " +
+					"left join NRH_DETALLE_RUBRO der on der.ide_nrrub=rub.ide_nrrub and der.activo_nrder=TRUE " +
 					"left join nrh_rol rol on rol.ide_nrdtn=der.ide_nrdtn " +
 					"WHERE rol.ide_gepro in ("+com_periodo.getValue()+") " +
 					"and der.ide_nrdtn in ("+tab_rol.getValor("IDE_NRDTN")+") and FCA.IDE_NRFOC IN ("+utilitario.getVariable("p_nrh_forma_calculo_teclado")+") " +
@@ -1623,7 +1623,7 @@ public class pre_rol extends Pantalla{
 			aut_rubros.setAutoCompletar("select RUB.IDE_NRRUB,RUB.DETALLE_NRRUB,TRU.DETALLE_NRTIR,FCA.DETALLE_NRFOC from NRH_RUBRO RUB  " +
 					"LEFT JOIN NRH_FORMA_CALCULO FCA ON FCA.IDE_NRFOC=RUB.IDE_NRFOC " +
 					"LEFT JOIN NRH_TIPO_RUBRO TRU ON TRU.IDE_NRTIR=RUB.IDE_NRTIR " +
-					"left join NRH_DETALLE_RUBRO der on der.ide_nrrub=rub.ide_nrrub and der.activo_nrder=1 " +
+					"left join NRH_DETALLE_RUBRO der on der.ide_nrrub=rub.ide_nrrub and der.activo_nrder=TRUE " +
 					"left join nrh_rol rol on rol.ide_nrdtn=der.ide_nrdtn " +
 					"WHERE rol.ide_gepro in ("+com_periodo.getValue()+") and FCA.IDE_NRFOC IN ("+utilitario.getVariable("p_nrh_forma_calculo_teclado")+") "+
 					"GROUP BY RUB.IDE_NRRUB,RUB.DETALLE_NRRUB,TRU.DETALLE_NRTIR,FCA.DETALLE_NRFOC") ;
@@ -1650,7 +1650,7 @@ public class pre_rol extends Pantalla{
 				aut_rubros.setAutoCompletar("select RUB.IDE_NRRUB,RUB.DETALLE_NRRUB,TRU.DETALLE_NRTIR,FCA.DETALLE_NRFOC from NRH_RUBRO RUB  " +
 						"LEFT JOIN NRH_FORMA_CALCULO FCA ON FCA.IDE_NRFOC=RUB.IDE_NRFOC " +
 						"LEFT JOIN NRH_TIPO_RUBRO TRU ON TRU.IDE_NRTIR=RUB.IDE_NRTIR " +
-						"left join NRH_DETALLE_RUBRO der on der.ide_nrrub=rub.ide_nrrub and der.activo_nrder=1 " +
+						"left join NRH_DETALLE_RUBRO der on der.ide_nrrub=rub.ide_nrrub and der.activo_nrder=TRUE " +
 						"left join nrh_rol rol on rol.ide_nrdtn=der.ide_nrdtn " +
 						"WHERE rol.ide_gepro in ("+com_periodo.getValue()+") and FCA.IDE_NRFOC IN ("+utilitario.getVariable("p_nrh_forma_calculo_teclado")+") "+
 						"GROUP BY RUB.IDE_NRRUB,RUB.DETALLE_NRRUB,TRU.DETALLE_NRTIR,FCA.DETALLE_NRFOC") ;
@@ -1968,7 +1968,7 @@ public class pre_rol extends Pantalla{
 
 
 		
-		utilitario.getConexion().agregarSql("update NRH_AMORTIZACION set FECHA_CANCELADO_NRAMO=null,PRE_CANCELADO_NRAMO=0,ACTIVO_NRAMO=0 where IDE_NRROL="+tab_rol.getValor("IDE_NRROL"));
+		utilitario.getConexion().agregarSql("update NRH_AMORTIZACION set FECHA_CANCELADO_NRAMO=null,PRE_CANCELADO_NRAMO=0,ACTIVO_NRAMO=FALSE where IDE_NRROL="+tab_rol.getValor("IDE_NRROL"));
 		utilitario.getConexion().agregarSql("update NRH_AMORTIZACION set ide_nrrol=null where IDE_NRROL="+tab_rol.getValor("IDE_NRROL"));
 		utilitario.getConexion().agregarSql("delete from NRH_DETALLE_ROL where ide_nrrol ="+tab_rol.getValor("IDE_NRROL"));
 		utilitario.getConexion().agregarSql("delete from NRH_ROL where ide_nrrol ="+tab_rol.getValor("IDE_NRROL"));
