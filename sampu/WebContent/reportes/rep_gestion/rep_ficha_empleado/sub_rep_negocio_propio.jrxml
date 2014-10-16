@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sub_rep_negocio_propio" language="groovy" pageWidth="570" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="570" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="0b0433d4-dc6e-4ba8-a390-b6d1b3c47dcf">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="368"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.x" value="204"/>
+	<property name="ireport.y" value="6"/>
 	<parameter name="IDE_GTEMP" class="java.lang.Long">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -37,22 +37,26 @@ left join GEN_DIVISION_POLITICA gtdp3 on gtdp3.ide_gedip=gtdp2.gen_ide_gedip
 left join GEN_DIVISION_POLITICA gtdp4 on gtdp4.ide_gedip=gtdp3.gen_ide_gedip
 LEFT JOIN  GTH_TIPO_ACTIVIDAD_ECONOMICA GTA ON GTA.IDE_GTTAE=GNE.IDE_GTTAE
 LEFT JOIN  GTH_ACTIVIDAD_RUC GRU ON GRU.IDE_GTACR=GNE.IDE_GTACR
-where GNE.IDE_GTEMP=$P{IDE_GTEMP} and GNE.ACTIVO_GTNEE=1]]>
+where GNE.IDE_GTEMP=$P{IDE_GTEMP} and GNE.ACTIVO_GTNEE=true]]>
 	</queryString>
-	<field name="IDE_GTEMP" class="java.lang.Long"/>
-	<field name="IDE_GTNEE" class="java.lang.Long"/>
-	<field name="NEGOCIO_PROPIO" class="java.math.BigDecimal"/>
-	<field name="DIRECCION" class="java.lang.String"/>
-	<field name="CIUDAD" class="java.lang.String"/>
-	<field name="NOMBRE_COMERCIAL" class="java.lang.String"/>
-	<field name="ACTIVIDAD" class="java.lang.String"/>
-	<field name="NUMERO_RUC" class="java.lang.String"/>
-	<field name="VIGENTE_HASTA" class="java.sql.Timestamp"/>
-	<field name="ACTIVIDAD_RUC" class="java.lang.String"/>
-	<field name="VENTAS" class="java.math.BigDecimal"/>
-	<field name="GASTO" class="java.math.BigDecimal"/>
-	<field name="UTILIDAD" class="java.math.BigDecimal"/>
-	<field name="SOCIO" class="java.math.BigDecimal"/>
+	<field name="ide_gtemp" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gth_empleado, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="ide_gtnee" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_gtnee]]></fieldDescription>
+	</field>
+	<field name="negocio_propio" class="java.lang.Integer"/>
+	<field name="direccion" class="java.lang.String"/>
+	<field name="ciudad" class="java.lang.String"/>
+	<field name="nombre_comercial" class="java.lang.String"/>
+	<field name="actividad" class="java.lang.String"/>
+	<field name="numero_ruc" class="java.lang.String"/>
+	<field name="vigente_hasta" class="java.sql.Date"/>
+	<field name="actividad_ruc" class="java.lang.String"/>
+	<field name="ventas" class="java.math.BigDecimal"/>
+	<field name="gasto" class="java.math.BigDecimal"/>
+	<field name="utilidad" class="java.math.BigDecimal"/>
+	<field name="socio" class="java.lang.Integer"/>
 	<detail>
 		<band height="200" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
@@ -67,7 +71,7 @@ where GNE.IDE_GTEMP=$P{IDE_GTEMP} and GNE.ACTIVO_GTNEE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NEGOCIO_PROPIO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{negocio_propio}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="8a7f7e5a-2eca-498c-95d1-e458c79457a8" x="0" y="0" width="140" height="20"/>
@@ -95,7 +99,7 @@ where GNE.IDE_GTEMP=$P{IDE_GTEMP} and GNE.ACTIVO_GTNEE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DIRECCION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="f8ceaee0-2087-4a5c-b4ee-a93c7f3f1601" x="140" y="0" width="180" height="20"/>
@@ -123,7 +127,7 @@ where GNE.IDE_GTEMP=$P{IDE_GTEMP} and GNE.ACTIVO_GTNEE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CIUDAD}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ciudad}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="6f1870b5-54f5-461c-83d2-6264f5113a3b" x="320" y="0" width="180" height="20"/>
@@ -151,7 +155,7 @@ where GNE.IDE_GTEMP=$P{IDE_GTEMP} and GNE.ACTIVO_GTNEE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NOMBRE_COMERCIAL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nombre_comercial}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="b96a2edc-a1ff-4bcf-9967-f567c99e2cdc" positionType="Float" x="0" y="35" width="285" height="20"/>
@@ -179,7 +183,7 @@ where GNE.IDE_GTEMP=$P{IDE_GTEMP} and GNE.ACTIVO_GTNEE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ACTIVIDAD}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{actividad}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="94ab4f53-7719-4f19-8fcd-d17c84eacd27" positionType="Float" x="285" y="35" width="285" height="20"/>
@@ -207,7 +211,7 @@ where GNE.IDE_GTEMP=$P{IDE_GTEMP} and GNE.ACTIVO_GTNEE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NUMERO_RUC}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{numero_ruc}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="e28334a8-1c49-4dcc-b368-78ad00b43e69" positionType="Float" x="0" y="70" width="160" height="20"/>
@@ -235,7 +239,7 @@ where GNE.IDE_GTEMP=$P{IDE_GTEMP} and GNE.ACTIVO_GTNEE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{VIGENTE_HASTA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{vigente_hasta}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="772c1786-ee87-4cdf-9ff2-ed69efc77b0c" positionType="Float" x="160" y="70" width="160" height="20"/>
@@ -263,7 +267,7 @@ where GNE.IDE_GTEMP=$P{IDE_GTEMP} and GNE.ACTIVO_GTNEE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ACTIVIDAD_RUC}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{actividad_ruc}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="a94dde60-dc1b-4a18-b7e1-1c7136fa7af9" positionType="Float" x="320" y="70" width="250" height="20"/>
@@ -291,7 +295,7 @@ where GNE.IDE_GTEMP=$P{IDE_GTEMP} and GNE.ACTIVO_GTNEE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{VENTAS}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ventas}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="d18426e9-c85a-462e-a7f9-f0a1ded24c0b" positionType="Float" x="0" y="105" width="140" height="20"/>
@@ -319,7 +323,7 @@ where GNE.IDE_GTEMP=$P{IDE_GTEMP} and GNE.ACTIVO_GTNEE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{GASTO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{gasto}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="3a2f8054-91a0-4b1e-9760-b80592c7b9e3" positionType="Float" x="140" y="105" width="145" height="20"/>
@@ -347,7 +351,7 @@ where GNE.IDE_GTEMP=$P{IDE_GTEMP} and GNE.ACTIVO_GTNEE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{UTILIDAD}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{utilidad}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="7ad6b9b5-4dec-4991-a5f9-db28c4ce314d" positionType="Float" x="285" y="105" width="140" height="20"/>
@@ -407,7 +411,7 @@ where GNE.IDE_GTEMP=$P{IDE_GTEMP} and GNE.ACTIVO_GTNEE=1]]>
 			</staticText>
 			<image vAlign="Middle">
 				<reportElement uuid="9678cc3b-d448-449e-83ad-ad9368374b98" positionType="Float" stretchType="RelativeToBandHeight" x="545" y="105" width="25" height="35" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true">
-					<printWhenExpression><![CDATA[new Boolean($F{SOCIO}==0)]]></printWhenExpression>
+					<printWhenExpression><![CDATA[new Boolean($F{socio}==0)]]></printWhenExpression>
 				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
@@ -420,7 +424,7 @@ where GNE.IDE_GTEMP=$P{IDE_GTEMP} and GNE.ACTIVO_GTNEE=1]]>
 			</image>
 			<image vAlign="Middle">
 				<reportElement uuid="84b3da65-389b-45c6-bca8-07dc52111b04" positionType="Float" stretchType="RelativeToBandHeight" x="499" y="105" width="25" height="35" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true">
-					<printWhenExpression><![CDATA[new Boolean($F{SOCIO}==1)]]></printWhenExpression>
+					<printWhenExpression><![CDATA[new Boolean($F{socio}==1)]]></printWhenExpression>
 				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
@@ -448,10 +452,10 @@ where GNE.IDE_GTEMP=$P{IDE_GTEMP} and GNE.ACTIVO_GTNEE=1]]>
 			<subreport>
 				<reportElement uuid="67b3e941-9d78-4966-a82f-0d58bc58664e" positionType="Float" stretchType="RelativeToBandHeight" x="500" y="20" width="70" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<subreportParameter name="IDE_GTEMP">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTEMP}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtemp}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="IDE_GTNEE">
-					<subreportParameterExpression><![CDATA[$F{IDE_GTNEE}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_gtnee}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_gestion/rep_ficha_empleado/sub_rep_telefono_negocio.jasper"]]></subreportExpression>
