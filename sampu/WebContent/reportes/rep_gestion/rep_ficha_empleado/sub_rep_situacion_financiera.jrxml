@@ -18,16 +18,16 @@ GSF.GASTO_VESTIMENTA_GTSFE AS GASTO_VESTIMENTA,
 GSF.OTRO_GASTO_GTSFE AS OTROS_GASTOS
 
 FROM GTH_SITUACION_FINANCIERA_EMPLE gsf
-WHERE GSF.IDE_GTEMP=$P{IDE_GTEMP} AND GSF.ACTIVO_GTSFE=1]]>
+WHERE GSF.IDE_GTEMP=$P{IDE_GTEMP} AND GSF.ACTIVO_GTSFE=true]]>
 	</queryString>
-	<field name="GASTO_DE_VIVIENDA" class="java.math.BigDecimal"/>
-	<field name="MONTO_ARRIENDO" class="java.math.BigDecimal"/>
-	<field name="DESCRIPCION_DEL_INMUEBLE" class="java.lang.String"/>
-	<field name="GASTOS_DE_SALUD" class="java.math.BigDecimal"/>
-	<field name="GASTO_DE_EDUCACION" class="java.math.BigDecimal"/>
-	<field name="GASTO_ALIMENTACION" class="java.math.BigDecimal"/>
-	<field name="GASTO_VESTIMENTA" class="java.math.BigDecimal"/>
-	<field name="OTROS_GASTOS" class="java.math.BigDecimal"/>
+	<field name="gasto_de_vivienda" class="java.math.BigDecimal"/>
+	<field name="monto_arriendo" class="java.math.BigDecimal"/>
+	<field name="descripcion_del_inmueble" class="java.lang.String"/>
+	<field name="gastos_de_salud" class="java.math.BigDecimal"/>
+	<field name="gasto_de_educacion" class="java.math.BigDecimal"/>
+	<field name="gasto_alimentacion" class="java.math.BigDecimal"/>
+	<field name="gasto_vestimenta" class="java.math.BigDecimal"/>
+	<field name="otros_gastos" class="java.math.BigDecimal"/>
 	<title>
 		<band height="15" splitType="Stretch">
 			<staticText>
@@ -177,7 +177,7 @@ WHERE GSF.IDE_GTEMP=$P{IDE_GTEMP} AND GSF.ACTIVO_GTSFE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{GASTO_DE_VIVIENDA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{gasto_de_vivienda}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="4c747d4d-8f0c-432c-b07e-b15b2ebabd4d" stretchType="RelativeToBandHeight" x="75" y="0" width="70" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -191,7 +191,7 @@ WHERE GSF.IDE_GTEMP=$P{IDE_GTEMP} AND GSF.ACTIVO_GTSFE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{MONTO_ARRIENDO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{monto_arriendo}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="edb29ad2-e530-44e4-913d-7afdb5561fe5" stretchType="RelativeToBandHeight" x="145" y="0" width="100" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -205,7 +205,7 @@ WHERE GSF.IDE_GTEMP=$P{IDE_GTEMP} AND GSF.ACTIVO_GTSFE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DESCRIPCION_DEL_INMUEBLE}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{descripcion_del_inmueble}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="8c5ca66d-2684-4299-8c7c-716e1907bfe0" stretchType="RelativeToBandHeight" x="245" y="0" width="50" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -219,7 +219,7 @@ WHERE GSF.IDE_GTEMP=$P{IDE_GTEMP} AND GSF.ACTIVO_GTSFE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{GASTOS_DE_SALUD}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{gastos_de_salud}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="b1563feb-59bb-4ccc-80cf-411751ea616a" stretchType="RelativeToBandHeight" x="295" y="0" width="60" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -233,7 +233,7 @@ WHERE GSF.IDE_GTEMP=$P{IDE_GTEMP} AND GSF.ACTIVO_GTSFE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{GASTO_DE_EDUCACION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{gasto_de_educacion}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="2d7cbe06-b92b-4fd1-9f24-9f168204fc25" stretchType="RelativeToBandHeight" x="355" y="0" width="75" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -247,7 +247,7 @@ WHERE GSF.IDE_GTEMP=$P{IDE_GTEMP} AND GSF.ACTIVO_GTSFE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{GASTO_ALIMENTACION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{gasto_alimentacion}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="4049c0ce-7744-4354-9fc9-1db4d06b7164" stretchType="RelativeToBandHeight" x="430" y="0" width="70" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -261,7 +261,7 @@ WHERE GSF.IDE_GTEMP=$P{IDE_GTEMP} AND GSF.ACTIVO_GTSFE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{GASTO_VESTIMENTA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{gasto_vestimenta}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="e4641025-6524-40bb-b3e4-74144d9e6348" stretchType="RelativeToBandHeight" x="500" y="0" width="70" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -275,7 +275,7 @@ WHERE GSF.IDE_GTEMP=$P{IDE_GTEMP} AND GSF.ACTIVO_GTSFE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{OTROS_GASTOS}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{otros_gastos}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
