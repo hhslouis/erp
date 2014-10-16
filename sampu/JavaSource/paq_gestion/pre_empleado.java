@@ -3829,7 +3829,7 @@ public class pre_empleado extends Pantalla {
 					tab_telefonos.insertar();
 					tab_telefonos.setValor("IDE_GTEMP", aut_empleado.getValor());
 					tab_telefonos.setValor("IDE_GTCON", null);
-				}else{
+					}else{
 					utilitario.agregarMensajeInfo("No se puede insertar", "No existe datos del Colaborador");
 				}
 			}else if(tab_direccion.isFocus()){
@@ -3857,7 +3857,7 @@ public class pre_empleado extends Pantalla {
 							|| tab_empleado.getValor("DISCAPACITADO_GTEMP").equalsIgnoreCase("false")
 							|| tab_empleado.getValor("DISCAPACITADO_GTEMP").equalsIgnoreCase("0")){
 						utilitario.agregarMensajeInfo("No se puede insertar una discapacidad ", "el campo discapacitado se encuentra desactivado");
-						return;
+												return;
 					}
 
 					tab_discapacidad.insertar();
