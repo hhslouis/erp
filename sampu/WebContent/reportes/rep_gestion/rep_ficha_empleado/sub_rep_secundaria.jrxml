@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sub_rep_secundaria" language="groovy" pageWidth="570" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="570" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="8cc3c8d5-46b6-4955-be57-5071363573c7">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="165"/>
+	<property name="ireport.x" value="477"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="IDE_GTEMP" class="java.lang.Long">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -27,15 +27,17 @@ left join GEN_DIVISION_POLITICA gtdp3 on gtdp3.ide_gedip=gtdp2.gen_ide_gedip
 left join GEN_DIVISION_POLITICA gtdp4 on gtdp4.ide_gedip=gtdp3.gen_ide_gedip
 
 where EDU.IDE_GTEMP =$P{IDE_GTEMP} and TED.IDE_GTTED in(1)
-and EDU.ACTIVO_GTEDE=1
+and EDU.ACTIVO_GTEDE=true
 ORDER BY TED.IDE_GTTED ASC]]>
 	</queryString>
-	<field name="DETALLE_GTTED" class="java.lang.String"/>
-	<field name="INSTITUCION_EDUCATIVA" class="java.lang.String"/>
-	<field name="ESPECIALIZACION" class="java.lang.String"/>
-	<field name="AÑO" class="java.math.BigDecimal"/>
-	<field name="PAIS" class="java.lang.String"/>
-	<field name="CIUDAD" class="java.lang.String"/>
+	<field name="detalle_gtted" class="java.lang.String">
+		<fieldDescription><![CDATA[detalle_gtted]]></fieldDescription>
+	</field>
+	<field name="institucion_educativa" class="java.lang.String"/>
+	<field name="especializacion" class="java.lang.String"/>
+	<field name="aÑo" class="java.lang.Integer"/>
+	<field name="pais" class="java.lang.String"/>
+	<field name="ciudad" class="java.lang.String"/>
 	<columnHeader>
 		<band height="35" splitType="Stretch">
 			<staticText>
@@ -139,7 +141,7 @@ ORDER BY TED.IDE_GTTED ASC]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{INSTITUCION_EDUCATIVA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{institucion_educativa}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="775768c9-8901-41dd-b510-bd29481b9c2a" positionType="Float" stretchType="RelativeToBandHeight" x="200" y="0" width="120" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -154,7 +156,7 @@ ORDER BY TED.IDE_GTTED ASC]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ESPECIALIZACION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{especializacion}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="7f136e74-c5d1-4306-a40e-7417d279f712" positionType="Float" stretchType="RelativeToBandHeight" x="320" y="0" width="50" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -169,7 +171,7 @@ ORDER BY TED.IDE_GTTED ASC]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{AÑO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{aÑo}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="9e9f4eea-a74a-4160-8e40-fc7fb4144fb5" positionType="Float" stretchType="RelativeToBandHeight" x="370" y="0" width="100" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -184,7 +186,7 @@ ORDER BY TED.IDE_GTTED ASC]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CIUDAD}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ciudad}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="5fb3f6a8-25a4-410d-812f-47caa47e1df6" positionType="Float" stretchType="RelativeToBandHeight" x="470" y="0" width="100" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -199,7 +201,7 @@ ORDER BY TED.IDE_GTTED ASC]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{PAIS}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pais}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
