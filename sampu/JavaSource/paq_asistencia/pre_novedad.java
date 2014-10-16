@@ -44,7 +44,7 @@ public class pre_novedad extends Pantalla {
 	private SeleccionTabla set_empleado_novedad=new SeleccionTabla();
 
 	private SeleccionCalendario sec_importar=new SeleccionCalendario();
-	
+
 	
 	@EJB
 	private ServicioControl ser_control = (ServicioControl) utilitario.instanciarEJB(ServicioControl.class);
