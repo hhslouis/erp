@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_liquidacion_haberes" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true" uuid="8f866e31-aae5-4021-844c-30cf67ba0cb1">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="226"/>
+	<property name="ireport.x" value="221"/>
+	<property name="ireport.y" value="245"/>
 	<parameter name="ide_nrrol" class="java.lang.Long">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="ide_geedp" class="java.lang.String">
+	<parameter name="ide_geedp" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
@@ -75,7 +75,7 @@ gen_detalle_empleado_departame d
 where a.ide_gemed=b.ide_gemed
 and b.ide_geaed = c.ide_geaed
 and b.ide_geame= d.ide_geame
-and finiquito_contrato_geaed=1
+and finiquito_contrato_geaed=true
 ) d on par.ide_geded=d.ide_geded
 WHERE deta.ide_nrrol = ($P{ide_nrrol})
 and
@@ -86,32 +86,50 @@ and TIPORUBRO.IDE_NRTIR in (
 and  DETA.VALOR_NRDRO !=0
 order by deta.ide_geedp,grupo_ingres_egre desc,TIPORUBRO.IDE_NRTIR desc]]>
 	</queryString>
-	<field name="IDE_GTEMP" class="java.math.BigDecimal"/>
-	<field name="IDE_GEEDP" class="java.math.BigDecimal"/>
-	<field name="AREA" class="java.lang.String"/>
-	<field name="DEPARTAMENTO" class="java.lang.String"/>
-	<field name="GRUPO_OCUPACIONAL" class="java.lang.String"/>
-	<field name="FUNCIONAL" class="java.lang.String"/>
-	<field name="EMPLEADO" class="java.lang.String"/>
-	<field name="CEDULA" class="java.lang.String"/>
-	<field name="NOM_SUCU" class="java.lang.String"/>
-	<field name="FECHA_LIQUIDACION_GEEDP" class="java.sql.Timestamp"/>
-	<field name="FECHA_INGRESO_GTEMP" class="java.sql.Timestamp"/>
-	<field name="RMU_GEEDP" class="java.math.BigDecimal"/>
-	<field name="TOTAL_RECIBIR" class="java.math.BigDecimal"/>
-	<field name="TOTAL_INGRESOS" class="java.math.BigDecimal"/>
-	<field name="TOTAL_EGRESOS" class="java.math.BigDecimal"/>
-	<field name="RUBROS" class="java.lang.String"/>
-	<field name="IDE_NRTIR" class="java.math.BigDecimal"/>
-	<field name="GRUPO_INGRES_EGRE" class="java.math.BigDecimal"/>
-	<field name="SIGNO_NRTIR" class="java.math.BigDecimal"/>
-	<field name="MONTO_IZQUIERDA" class="java.math.BigDecimal"/>
-	<field name="MONTO_DERECHA" class="java.math.BigDecimal"/>
-	<field name="DETALLE_MOTIVO" class="java.lang.String"/>
-	<field name="DETALLE_ACCION" class="java.lang.String"/>
-	<field name="DETALLE_GTTCO" class="java.lang.String"/>
+	<field name="ide_gtemp" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gth_empleado, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="ide_geedp" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_empleados_departamento_par, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="area" class="java.lang.String"/>
+	<field name="departamento" class="java.lang.String"/>
+	<field name="grupo_ocupacional" class="java.lang.String"/>
+	<field name="funcional" class="java.lang.String"/>
+	<field name="empleado" class="java.lang.String"/>
+	<field name="cedula" class="java.lang.String"/>
+	<field name="nom_sucu" class="java.lang.String">
+		<fieldDescription><![CDATA[nom_sucu]]></fieldDescription>
+	</field>
+	<field name="fecha_liquidacion_geedp" class="java.sql.Date">
+		<fieldDescription><![CDATA[Este campo define la fecha del fin del contrato del empleado, cuando ya se da por terminado el contrato de la persona con la institucion contratante.]]></fieldDescription>
+	</field>
+	<field name="fecha_ingreso_gtemp" class="java.sql.Date">
+		<fieldDescription><![CDATA[fecha_ingreso_gtemp]]></fieldDescription>
+	</field>
+	<field name="rmu_geedp" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Este campo define la remuneracion unificada del empleado, que mantiene con su respectivo contrato.]]></fieldDescription>
+	</field>
+	<field name="total_recibir" class="java.math.BigDecimal"/>
+	<field name="total_ingresos" class="java.math.BigDecimal"/>
+	<field name="total_egresos" class="java.math.BigDecimal"/>
+	<field name="rubros" class="java.lang.String"/>
+	<field name="ide_nrtir" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave foranea que proviene de la tabla nrh_tipo_rubro. Para imprimir las liquidaciones se debe considerar que los rubros que se imprimen son los INGRESOS, EGRESOS, EGRESO INFORMATIVO, INGRESO INFORMATIVO, los informativos nunca s eimprimen, ejemplo: dias vacacion ingreso informativo.]]></fieldDescription>
+	</field>
+	<field name="grupo_ingres_egre" class="java.lang.Integer"/>
+	<field name="signo_nrtir" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define el signo por el cual va a multiplar el rubro si es egreso (-1), ingreso (1)]]></fieldDescription>
+	</field>
+	<field name="monto_izquierda" class="java.math.BigDecimal"/>
+	<field name="monto_derecha" class="java.math.BigDecimal"/>
+	<field name="detalle_motivo" class="java.lang.String"/>
+	<field name="detalle_accion" class="java.lang.String"/>
+	<field name="detalle_gttco" class="java.lang.String">
+		<fieldDescription><![CDATA[detalle_gttco]]></fieldDescription>
+	</field>
 	<group name="IDE_GEEDP" isStartNewPage="true">
-		<groupExpression><![CDATA[$F{IDE_GEEDP}]]></groupExpression>
+		<groupExpression><![CDATA[$F{ide_geedp}]]></groupExpression>
 		<groupHeader>
 			<band/>
 		</groupHeader>
@@ -177,13 +195,13 @@ order by deta.ide_geedp,grupo_ingres_egre desc,TIPORUBRO.IDE_NRTIR desc]]>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{TOTAL_RECIBIR}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{total_recibir}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
 	</group>
 	<group name="GRUPO_INGRE_EGRE">
-		<groupExpression><![CDATA[$F{GRUPO_INGRES_EGRE}]]></groupExpression>
+		<groupExpression><![CDATA[$F{grupo_ingres_egre}]]></groupExpression>
 		<groupHeader>
 			<band height="30">
 				<staticText>
@@ -205,7 +223,7 @@ order by deta.ide_geedp,grupo_ingres_egre desc,TIPORUBRO.IDE_NRTIR desc]]>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{GRUPO_INGRES_EGRE}==1?"INGRESOS":"EGRESOS"]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{grupo_ingres_egre}==1?"INGRESOS":"EGRESOS"]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -216,14 +234,14 @@ order by deta.ide_geedp,grupo_ingres_egre desc,TIPORUBRO.IDE_NRTIR desc]]>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{GRUPO_INGRES_EGRE}==1?$F{TOTAL_INGRESOS}:$F{TOTAL_EGRESOS}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{grupo_ingres_egre}==1?$F{total_ingresos}:$F{total_egresos}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement uuid="c6b6eba0-3c80-44c4-92cb-8f9caa4c950f" x="210" y="0" width="266" height="12"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{GRUPO_INGRES_EGRE}==1?"TOTAL DE INGRESOS:":"TOTAL DE EGRESOS:"]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{grupo_ingres_egre}==1?"TOTAL DE INGRESOS:":"TOTAL DE EGRESOS:"]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -254,7 +272,7 @@ order by deta.ide_geedp,grupo_ingres_egre desc,TIPORUBRO.IDE_NRTIR desc]]>
 					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema_biess/rep_cabecera.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera.jasper"]]></subreportExpression>
 			</subreport>
 			<staticText>
 				<reportElement uuid="564bbf19-9ca8-48c9-aac6-c6270eb466a4" positionType="Float" x="1" y="52" width="555" height="15"/>
@@ -286,7 +304,7 @@ order by deta.ide_geedp,grupo_ingres_egre desc,TIPORUBRO.IDE_NRTIR desc]]>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{EMPLEADO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{empleado}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="62ee2786-c6a7-4b06-a74f-d793c756fb57" x="0" y="42" width="94" height="15"/>
@@ -300,7 +318,7 @@ order by deta.ide_geedp,grupo_ingres_egre desc,TIPORUBRO.IDE_NRTIR desc]]>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FUNCIONAL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{funcional}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="dc6ca748-4b17-4c94-85f4-28b0f5b46e5d" x="0" y="56" width="94" height="15"/>
@@ -314,7 +332,7 @@ order by deta.ide_geedp,grupo_ingres_egre desc,TIPORUBRO.IDE_NRTIR desc]]>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{GRUPO_OCUPACIONAL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{grupo_ocupacional}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="ce0648aa-3f46-4467-8e97-73edf2317eb4" x="314" y="28" width="71" height="15"/>
@@ -328,7 +346,7 @@ order by deta.ide_geedp,grupo_ingres_egre desc,TIPORUBRO.IDE_NRTIR desc]]>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GTTCO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_gttco}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="6e40add8-5d90-4f2d-9d40-e768661fe48c" x="314" y="42" width="71" height="15"/>
@@ -342,7 +360,7 @@ order by deta.ide_geedp,grupo_ingres_egre desc,TIPORUBRO.IDE_NRTIR desc]]>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_MOTIVO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_motivo}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="b0f491c0-4523-4e3c-a362-497c334de867" x="1" y="88" width="77" height="16"/>
@@ -363,7 +381,7 @@ order by deta.ide_geedp,grupo_ingres_egre desc,TIPORUBRO.IDE_NRTIR desc]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_INGRESO_GTEMP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_ingreso_gtemp}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="4ea1c8d9-1669-451a-90a1-5fb59bdb1aae" x="1" y="104" width="77" height="15"/>
@@ -384,7 +402,7 @@ order by deta.ide_geedp,grupo_ingres_egre desc,TIPORUBRO.IDE_NRTIR desc]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_LIQUIDACION_GEEDP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_liquidacion_geedp}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="ecc59bd1-7e66-4d45-96e1-71daefd4349a" x="1" y="118" width="77" height="15"/>
@@ -405,14 +423,14 @@ order by deta.ide_geedp,grupo_ingres_egre desc,TIPORUBRO.IDE_NRTIR desc]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{RMU_GEEDP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{rmu_geedp}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="ea8bcf07-116a-4e84-acb3-325f62f50a26" x="384" y="0" width="171" height="15"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CEDULA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cedula}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="d3916f7d-ba19-4a5f-8731-8a8b28dc9e52" x="314" y="14" width="71" height="15"/>
@@ -426,14 +444,14 @@ order by deta.ide_geedp,grupo_ingres_egre desc,TIPORUBRO.IDE_NRTIR desc]]>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{AREA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{area}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="bb538677-98e3-4005-a049-8b500cea9bdd" x="94" y="28" width="221" height="15"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DEPARTAMENTO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{departamento}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="0e655f09-e8e2-41b1-8ea8-b83757409ba2" x="0" y="14" width="94" height="15"/>
@@ -461,7 +479,7 @@ order by deta.ide_geedp,grupo_ingres_egre desc,TIPORUBRO.IDE_NRTIR desc]]>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NOM_SUCU}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nom_sucu}]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
@@ -479,7 +497,7 @@ order by deta.ide_geedp,grupo_ingres_egre desc,TIPORUBRO.IDE_NRTIR desc]]>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{RUBROS}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{rubros}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement uuid="92116568-6f65-4fb3-9e00-923484cf6eaa" x="476" y="0" width="79" height="12"/>
@@ -493,7 +511,7 @@ order by deta.ide_geedp,grupo_ingres_egre desc,TIPORUBRO.IDE_NRTIR desc]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{MONTO_DERECHA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{monto_derecha}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement uuid="34711909-0268-4765-9fcb-ac5f6ae56f6e" x="396" y="0" width="80" height="12"/>
@@ -507,7 +525,7 @@ order by deta.ide_geedp,grupo_ingres_egre desc,TIPORUBRO.IDE_NRTIR desc]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{MONTO_IZQUIERDA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{monto_izquierda}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
