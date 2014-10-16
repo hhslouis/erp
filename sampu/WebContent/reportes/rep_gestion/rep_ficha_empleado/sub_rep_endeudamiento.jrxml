@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sub_rep_endeudamiento" language="groovy" pageWidth="570" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="570" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="46e26b22-9452-4475-9e40-3554ce33ea3f">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="477"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="IDE_GTEMP" class="java.lang.Long">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -17,13 +17,13 @@ GEE.CUOTA_MENSUAL_GTEEM AS COUTA_MENSUAL
 FROM GTH_ENDEUDAMIENTO_EMPLEADO GEE
 LEFT JOIN GTH_TIPO_ENDEUDAMIENTO GTE ON GTE.IDE_GTTEN=GEE.IDE_GTTEN
 LEFT JOIN GEN_INSTITUCION GIN ON GIN.IDE_GEINS=GEE.IDE_GEINS
-WHERE GEE.IDE_GTEMP=$P{IDE_GTEMP} AND GEE.ACTIVO_GTEEM=1]]>
+WHERE GEE.IDE_GTEMP=$P{IDE_GTEMP} AND GEE.ACTIVO_GTEEM=true]]>
 	</queryString>
-	<field name="TIPO_ENDEUDAMIENTO" class="java.lang.String"/>
-	<field name="INSTITUCION" class="java.lang.String"/>
-	<field name="PLAZO" class="java.math.BigDecimal"/>
-	<field name="MONTO" class="java.math.BigDecimal"/>
-	<field name="COUTA_MENSUAL" class="java.math.BigDecimal"/>
+	<field name="tipo_endeudamiento" class="java.lang.String"/>
+	<field name="institucion" class="java.lang.String"/>
+	<field name="plazo" class="java.lang.Integer"/>
+	<field name="monto" class="java.math.BigDecimal"/>
+	<field name="couta_mensual" class="java.math.BigDecimal"/>
 	<title>
 		<band height="15" splitType="Stretch">
 			<staticText>
@@ -131,7 +131,7 @@ WHERE GEE.IDE_GTEMP=$P{IDE_GTEMP} AND GEE.ACTIVO_GTEEM=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{TIPO_ENDEUDAMIENTO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tipo_endeudamiento}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="8af143b2-bc22-4890-accb-296f6791de72" stretchType="RelativeToBandHeight" x="150" y="0" width="165" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -145,7 +145,7 @@ WHERE GEE.IDE_GTEMP=$P{IDE_GTEMP} AND GEE.ACTIVO_GTEEM=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{INSTITUCION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{institucion}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="19237573-3cb1-4e95-9200-99f7f8afb557" stretchType="RelativeToBandHeight" x="315" y="0" width="100" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -159,7 +159,7 @@ WHERE GEE.IDE_GTEMP=$P{IDE_GTEMP} AND GEE.ACTIVO_GTEEM=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{PLAZO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{plazo}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement uuid="6bfbfb3b-16b0-43c7-8442-078ca6e78aa2" stretchType="RelativeToBandHeight" x="415" y="0" width="50" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -173,7 +173,7 @@ WHERE GEE.IDE_GTEMP=$P{IDE_GTEMP} AND GEE.ACTIVO_GTEEM=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{MONTO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{monto}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement uuid="45ba2d1b-3422-41be-b9f7-d3c9d5384e6d" stretchType="RelativeToBandHeight" x="465" y="0" width="105" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -187,7 +187,7 @@ WHERE GEE.IDE_GTEMP=$P{IDE_GTEMP} AND GEE.ACTIVO_GTEEM=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{COUTA_MENSUAL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{couta_mensual}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
