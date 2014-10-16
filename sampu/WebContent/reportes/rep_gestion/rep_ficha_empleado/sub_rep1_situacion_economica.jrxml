@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sub_rep1_situacion_economica" language="groovy" pageWidth="570" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="570" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="49d9a62c-9688-439e-a0d5-2c5fabc30754">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="187"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="IDE_GTEMP" class="java.lang.Long">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -21,14 +21,14 @@ from  GTH_PARTICIPA_NEGOCIO_EMPLEA pne
 left join GTH_NEGOCIO_EMPLEADO nem on NEM.IDE_GTNEE=PNE.IDE_GTNEE
 left join GTH_EMPLEADO emp on emp.ide_gtemp=nem.ide_gtemp
 left join GTH_NACIONALIDAD nac on nac.ide_gtnac=pne.ide_gtnac
-where NEM.IDE_GTEMP=$P{IDE_GTEMP} and PNE.ACTIVO_GTPNE=1
+where NEM.IDE_GTEMP=$P{IDE_GTEMP} and PNE.ACTIVO_GTPNE=true
 ORDER BY PNE.IDE_GTPNE]]>
 	</queryString>
-	<field name="NOMBRES_Y_APELLIDOS" class="java.lang.String"/>
-	<field name="PORCENTAJE" class="java.math.BigDecimal"/>
-	<field name="IDENTIFICACION" class="java.lang.String"/>
-	<field name="NACIONALIDAD" class="java.lang.String"/>
-	<field name="INGERENCIA" class="java.math.BigDecimal"/>
+	<field name="nombres_y_apellidos" class="java.lang.String"/>
+	<field name="porcentaje" class="java.math.BigDecimal"/>
+	<field name="identificacion" class="java.lang.String"/>
+	<field name="nacionalidad" class="java.lang.String"/>
+	<field name="ingerencia" class="java.lang.Integer"/>
 	<columnHeader>
 		<band height="20" splitType="Stretch">
 			<staticText>
@@ -117,7 +117,7 @@ ORDER BY PNE.IDE_GTPNE]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NOMBRES_Y_APELLIDOS}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nombres_y_apellidos}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="563d5faa-76ae-4406-9080-b5e7188cd17b" x="200" y="0" width="50" height="15"/>
@@ -131,7 +131,7 @@ ORDER BY PNE.IDE_GTPNE]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{PORCENTAJE}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{porcentaje}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="29b36bb7-5311-4d7b-9b05-b19d4603cdbd" x="250" y="0" width="100" height="15"/>
@@ -145,7 +145,7 @@ ORDER BY PNE.IDE_GTPNE]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{IDENTIFICACION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{identificacion}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="520c17e0-7402-43d0-805f-c274e7615bd3" x="350" y="0" width="100" height="15"/>
@@ -159,7 +159,7 @@ ORDER BY PNE.IDE_GTPNE]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NACIONALIDAD}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nacionalidad}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="4d9ccb8d-11e5-4832-b9a5-7566f320fb21" x="450" y="0" width="30" height="15"/>
@@ -215,13 +215,13 @@ ORDER BY PNE.IDE_GTPNE]]>
 			</staticText>
 			<image hAlign="Center" vAlign="Middle">
 				<reportElement uuid="d55678d6-c38f-4989-bd33-8c8767922a3d" x="480" y="1" width="30" height="14">
-					<printWhenExpression><![CDATA[$F{INGERENCIA}==1]]></printWhenExpression>
+					<printWhenExpression><![CDATA[$F{ingerencia}==1]]></printWhenExpression>
 				</reportElement>
 				<imageExpression><![CDATA["D:\\workspace\\biess\\WebContent\\reportes\\rep_gestion\\rep_ficha_empleado\\visto.gif"]]></imageExpression>
 			</image>
 			<image hAlign="Center" vAlign="Middle">
 				<reportElement uuid="5aead74b-f8b1-43bd-b56b-8e10af6776cf" x="540" y="1" width="30" height="14">
-					<printWhenExpression><![CDATA[$F{INGERENCIA}==0]]></printWhenExpression>
+					<printWhenExpression><![CDATA[$F{ingerencia}==0]]></printWhenExpression>
 				</reportElement>
 				<imageExpression><![CDATA["D:\\workspace\\biess\\WebContent\\reportes\\rep_gestion\\rep_ficha_empleado\\visto.gif"]]></imageExpression>
 			</image>
