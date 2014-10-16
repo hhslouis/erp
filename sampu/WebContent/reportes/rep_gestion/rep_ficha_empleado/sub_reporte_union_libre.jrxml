@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sub_reporte_union_libre" language="groovy" pageWidth="570" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="570" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="626cdbd1-364d-4a38-b613-e6dc5db7761e">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="477"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="IDE_GTEMP" class="java.lang.Long">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -9,10 +9,14 @@
 	<queryString>
 		<![CDATA[SELECT a.AUTORIDAD_NOTARIA_GTUNL,a.LUGAR_FECHA_GTUNL FROM GTH_UNION_LIBRE a
 left join gth_conyuge b on b.ide_gtcon=a.ide_gtcon
-WHERE b.ide_gtemp=$P{IDE_GTEMP}  AND ACTIVO_GTUNL=1]]>
+WHERE b.ide_gtemp=$P{IDE_GTEMP}  AND ACTIVO_GTUNL=true]]>
 	</queryString>
-	<field name="AUTORIDAD_NOTARIA_GTUNL" class="java.lang.String"/>
-	<field name="LUGAR_FECHA_GTUNL" class="java.lang.String"/>
+	<field name="autoridad_notaria_gtunl" class="java.lang.String">
+		<fieldDescription><![CDATA[autoridad_notaria_gtunl]]></fieldDescription>
+	</field>
+	<field name="lugar_fecha_gtunl" class="java.lang.String">
+		<fieldDescription><![CDATA[lugar_fecha_gtunl]]></fieldDescription>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -76,7 +80,7 @@ WHERE b.ide_gtemp=$P{IDE_GTEMP}  AND ACTIVO_GTUNL=1]]>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{AUTORIDAD_NOTARIA_GTUNL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{autoridad_notaria_gtunl}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="cb9477e7-e05a-4c05-85cf-275c383a1029" positionType="Float" stretchType="RelativeToBandHeight" x="320" y="0" width="250" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -90,7 +94,7 @@ WHERE b.ide_gtemp=$P{IDE_GTEMP}  AND ACTIVO_GTUNL=1]]>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{LUGAR_FECHA_GTUNL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{lugar_fecha_gtunl}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
