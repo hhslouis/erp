@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sub_rep_membresias_empleado" language="groovy" pageWidth="570" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="570" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="66f5bd66-26fa-414b-b021-0d23d91ff1c5">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="477"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="IDE_GTEMP" class="java.lang.Long">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -12,10 +12,10 @@ GIN.DETALLE_GEINS AS ASOCIACION_COLEGIO_CLUB ,GME.FECHA_MEMBRESIA_GTMEE AS FECHA
 FROM GTH_MEMBRESIA_EMPLEADO GME
 LEFT JOIN GEN_INSTITUCION GIN ON GIN.IDE_GEINS=GME.IDE_GEINS
 
-WHERE GME.IDE_GTEMP=$P{IDE_GTEMP} AND GME.ACTIVO_GTMEE=1]]>
+WHERE GME.IDE_GTEMP=$P{IDE_GTEMP} AND GME.ACTIVO_GTMEE=true]]>
 	</queryString>
-	<field name="ASOCIACION_COLEGIO_CLUB" class="java.lang.String"/>
-	<field name="FECHA_INSCRIPCION" class="java.sql.Timestamp"/>
+	<field name="asociacion_colegio_club" class="java.lang.String"/>
+	<field name="fecha_inscripcion" class="java.sql.Date"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -79,7 +79,7 @@ WHERE GME.IDE_GTEMP=$P{IDE_GTEMP} AND GME.ACTIVO_GTMEE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ASOCIACION_COLEGIO_CLUB}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{asociacion_colegio_club}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="yyyy/MM/dd" isBlankWhenNull="true">
 				<reportElement uuid="984b70d1-52f1-4769-aadf-9455cb9c2657" stretchType="RelativeToBandHeight" x="320" y="0" width="250" height="15"/>
@@ -93,7 +93,7 @@ WHERE GME.IDE_GTEMP=$P{IDE_GTEMP} AND GME.ACTIVO_GTMEE=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_INSCRIPCION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_inscripcion}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
