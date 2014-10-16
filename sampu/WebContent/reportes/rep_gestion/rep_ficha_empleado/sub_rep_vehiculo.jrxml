@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sub_rep_vehiculo" language="groovy" pageWidth="570" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="570" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f1e22d38-f0a9-4ea0-a251-7bfe9ebdaf70">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="97"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="IDE_GTEMP" class="java.lang.Long">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -21,16 +21,16 @@ FROM GTH_VEHICULO_EMPLEADO GVE
 left join GTH_MODELO_VEHICULO gmv on GMV.IDE_GTMOV=GVE.IDE_GTMOV
 left join GTH_MARCA_VEHICULO gmr on gmr.ide_gtmav=gve.ide_gtmav
 left join GEN_INSTITUCION gin on gin.ide_geins=gve.ide_geins
- WHERE GVE.IDE_GTEMP=$P{IDE_GTEMP} AND GVE.ACTIVO_GTVEE=1]]>
+ WHERE GVE.IDE_GTEMP=$P{IDE_GTEMP} AND GVE.ACTIVO_GTVEE=true]]>
 	</queryString>
-	<field name="PROPIO_PRENDA" class="java.math.BigDecimal"/>
-	<field name="PRENDADO_A_FAVOR" class="java.lang.String"/>
-	<field name="MODELO" class="java.lang.String"/>
-	<field name="MARCA" class="java.lang.String"/>
-	<field name="PLACA" class="java.lang.String"/>
-	<field name="EMPRESA_ASEGURADORA" class="java.lang.String"/>
-	<field name="MONTO_SEGURO" class="java.math.BigDecimal"/>
-	<field name="AVALUO" class="java.math.BigDecimal"/>
+	<field name="propio_prenda" class="java.lang.Integer"/>
+	<field name="prendado_a_favor" class="java.lang.String"/>
+	<field name="modelo" class="java.lang.String"/>
+	<field name="marca" class="java.lang.String"/>
+	<field name="placa" class="java.lang.String"/>
+	<field name="empresa_aseguradora" class="java.lang.String"/>
+	<field name="monto_seguro" class="java.math.BigDecimal"/>
+	<field name="avaluo" class="java.math.BigDecimal"/>
 	<title>
 		<band height="15" splitType="Stretch">
 			<staticText>
@@ -180,7 +180,7 @@ left join GEN_INSTITUCION gin on gin.ide_geins=gve.ide_geins
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{PROPIO_PRENDA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{propio_prenda}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="e2ec5e1e-d9c3-4e23-a837-4f4edeebd518" stretchType="RelativeToBandHeight" x="70" y="0" width="80" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -194,7 +194,7 @@ left join GEN_INSTITUCION gin on gin.ide_geins=gve.ide_geins
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{PRENDADO_A_FAVOR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{prendado_a_favor}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="7db5cd91-11e5-4714-8b20-b539d938a191" stretchType="RelativeToBandHeight" x="215" y="0" width="70" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -208,7 +208,7 @@ left join GEN_INSTITUCION gin on gin.ide_geins=gve.ide_geins
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{MARCA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{marca}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="443504d4-b484-4efe-8a4d-bd9750211d03" stretchType="RelativeToBandHeight" x="285" y="0" width="60" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -222,7 +222,7 @@ left join GEN_INSTITUCION gin on gin.ide_geins=gve.ide_geins
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{PLACA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{placa}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="e690ddde-8006-4a1a-94c2-a14b5e3a9c48" stretchType="RelativeToBandHeight" x="150" y="0" width="65" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -236,7 +236,7 @@ left join GEN_INSTITUCION gin on gin.ide_geins=gve.ide_geins
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{MODELO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{modelo}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="0080770b-b741-4a40-8036-5b2bb51c2979" stretchType="RelativeToBandHeight" x="345" y="0" width="100" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -250,7 +250,7 @@ left join GEN_INSTITUCION gin on gin.ide_geins=gve.ide_geins
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{EMPRESA_ASEGURADORA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{empresa_aseguradora}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="fdc523e3-271e-4c95-b0a3-096c61ec27fb" stretchType="RelativeToBandHeight" x="445" y="0" width="65" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -264,7 +264,7 @@ left join GEN_INSTITUCION gin on gin.ide_geins=gve.ide_geins
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{MONTO_SEGURO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{monto_seguro}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="e38b59a7-4918-4288-8795-eae230de8c46" stretchType="RelativeToBandHeight" x="510" y="0" width="60" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -278,7 +278,7 @@ left join GEN_INSTITUCION gin on gin.ide_geins=gve.ide_geins
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{AVALUO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{avaluo}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
