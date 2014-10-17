@@ -24,7 +24,7 @@
 	<parameter name="ide_gedep" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="ide_sucu_t" class="java.lang.String">
+	<parameter name="ide_sucu_t" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
@@ -34,7 +34,7 @@ FROM(
 SELECT a.ide_gtemp,a.apellido_paterno_gtemp ||' '|| a.apellido_materno_gtemp ||' '||
 a.primer_nombre_gtemp ||' '|| a.segundo_nombre_gtemp as empleado,TO_CHAR(a.fecha_nacimiento_gtemp,'mm') as mes,
 TO_CHAR(a.fecha_nacimiento_gtemp,'dd') as dia,a.activo_gtemp,
-TO_CHAR(sysdate,'yyyy') as anio,fecha_nacimiento_gtemp
+extract (year from now()) as anio,fecha_nacimiento_gtemp
 FROM gth_empleado a)a
 left join (
 SELECT ide_gtemp,ide_geare,ide_gedep,ide_geedp,ide_sucu,activo_geedp FROM gen_empleados_departamento_par
@@ -46,49 +46,56 @@ left join(
 SELECT ide_gedep,detalle_gedep as departamento FROM gen_departamento
 )d on d.ide_gedep=b.ide_gedep
 where
-to_char (fecha_nacimiento_gtemp,'mm-dd') between to_char(to_date ($P{fecha_inicial},'yyyy-mm-dd'),'mm-dd') and to_char(to_date ($P{fecha_final},'yyyy-mm-dd'),'mm-dd')
-and a.activo_gtemp=1
+extract (month from fecha_nacimiento_gtemp) between extract (month from cast ($P{fecha_inicial} as date))  and   extract (month from cast($P{fecha_final} as date))
+and extract (day from fecha_nacimiento_gtemp) between extract (day from cast ($P{fecha_inicial} as date))  and   extract (day from cast($P{fecha_final} as date))
+and a.activo_gtemp=true
 and c.ide_geare in ($P!{ide_geare})
 and d.ide_gedep in ($P!{ide_gedep})
 and b.ide_sucu in ($P!{ide_sucu_t})
-and b.activo_geedp=1
+and b.activo_geedp=true
 order by c.area,d.departamento,a.mes,a.dia,a.empleado]]>
 	</queryString>
-	<field name="IDE_GTEMP" class="java.math.BigDecimal"/>
-	<field name="IDE_GEARE" class="java.math.BigDecimal"/>
-	<field name="AREA" class="java.lang.String"/>
-	<field name="IDE_GEDEP" class="java.math.BigDecimal"/>
-	<field name="DEPARTAMENTO" class="java.lang.String"/>
-	<field name="MES" class="java.lang.String"/>
-	<field name="EMPLEADO" class="java.lang.String"/>
-	<field name="DIA" class="java.lang.String"/>
-	<field name="FECHA_CUMPLE" class="java.sql.Timestamp"/>
+	<field name="ide_gtemp" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gth_empleado, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="ide_geare" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_area, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="area" class="java.lang.String"/>
+	<field name="ide_gedep" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_gedep]]></fieldDescription>
+	</field>
+	<field name="departamento" class="java.lang.String"/>
+	<field name="mes" class="java.lang.String"/>
+	<field name="empleado" class="java.lang.String"/>
+	<field name="dia" class="java.lang.String"/>
+	<field name="fecha_cumple" class="java.sql.Date"/>
 	<variable name="IDE_GTEMP_1" class="java.lang.Integer" resetType="Group" resetGroup="MES" calculation="Count">
-		<variableExpression><![CDATA[$F{IDE_GTEMP}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_gtemp}]]></variableExpression>
 	</variable>
 	<variable name="IDE_GTEMP_2" class="java.lang.Integer" resetType="Group" resetGroup="DEPARTAMENTO" calculation="Count">
-		<variableExpression><![CDATA[$F{IDE_GTEMP}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_gtemp}]]></variableExpression>
 	</variable>
 	<variable name="IDE_GTEMP_3" class="java.math.BigDecimal" resetType="Group" resetGroup="DEPARTAMENTO" calculation="Sum">
-		<variableExpression><![CDATA[$F{IDE_GTEMP}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_gtemp}]]></variableExpression>
 	</variable>
 	<variable name="IDE_GTEMP_4" class="java.math.BigDecimal" resetType="Group" resetGroup="DEPARTAMENTO" calculation="Sum">
-		<variableExpression><![CDATA[$F{IDE_GTEMP}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_gtemp}]]></variableExpression>
 	</variable>
 	<variable name="IDE_GTEMP_5" class="java.lang.Integer" resetType="Group" resetGroup="AREA" calculation="Count">
-		<variableExpression><![CDATA[$F{IDE_GTEMP}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_gtemp}]]></variableExpression>
 	</variable>
 	<variable name="IDE_GTEMP_6" class="java.lang.Integer" calculation="Count">
-		<variableExpression><![CDATA[$F{IDE_GTEMP}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_gtemp}]]></variableExpression>
 	</variable>
 	<variable name="IDE_GTEMP_7" class="java.lang.Integer" resetType="Group" resetGroup="DEPARTAMENTO" calculation="Count">
-		<variableExpression><![CDATA[$F{IDE_GTEMP}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_gtemp}]]></variableExpression>
 	</variable>
 	<variable name="contador" class="java.lang.Integer" calculation="Count">
-		<variableExpression><![CDATA[$F{IDE_GTEMP}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_gtemp}]]></variableExpression>
 	</variable>
 	<group name="AREA">
-		<groupExpression><![CDATA[$F{IDE_GEARE}]]></groupExpression>
+		<groupExpression><![CDATA[$F{ide_geare}]]></groupExpression>
 		<groupHeader>
 			<band height="12">
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
@@ -96,7 +103,7 @@ order by c.area,d.departamento,a.mes,a.dia,a.empleado]]>
 					<textElement verticalAlignment="Middle">
 						<font size="9" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{AREA}.equals(null)?"AREA SIN NOMBRE":$F{AREA}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{area}.equals(null)?"AREA SIN NOMBRE":$F{area}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -107,17 +114,17 @@ order by c.area,d.departamento,a.mes,a.dia,a.empleado]]>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{AREA}.equals(null)?
+					<textFieldExpression><![CDATA[$F{area}.equals(null)?
 
 $V{IDE_GTEMP_5}.equals(null)?"TOTAL:":" TOTAL: "+$V{IDE_GTEMP_5}
-:$V{IDE_GTEMP_5}.equals(null)?"TOTAL "+$F{AREA}+":"
-:"TOTAL "+$F{AREA}+": "+$V{IDE_GTEMP_5}]]></textFieldExpression>
+:$V{IDE_GTEMP_5}.equals(null)?"TOTAL "+$F{area}+":"
+:"TOTAL "+$F{area}+": "+$V{IDE_GTEMP_5}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
 	</group>
 	<group name="DEPARTAMENTO">
-		<groupExpression><![CDATA[$F{IDE_GEDEP}]]></groupExpression>
+		<groupExpression><![CDATA[$F{ide_gedep}]]></groupExpression>
 		<groupHeader>
 			<band height="12">
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
@@ -126,7 +133,8 @@ $V{IDE_GTEMP_5}.equals(null)?"TOTAL:":" TOTAL: "+$V{IDE_GTEMP_5}
 					<textElement verticalAlignment="Middle">
 						<font size="9" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{DEPARTAMENTO}.equals(null)?" DEPARTAMENTO SIN NOMBRE":$F{DEPARTAMENTO}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{departamento}.equals(null)?" DEPARTAMENTO SIN NOMBRE":$F{departamento}
+]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -138,16 +146,16 @@ $V{IDE_GTEMP_5}.equals(null)?"TOTAL:":" TOTAL: "+$V{IDE_GTEMP_5}
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{DEPARTAMENTO}.equals(null)?
+					<textFieldExpression><![CDATA[$F{departamento}.equals(null)?
 $V{IDE_GTEMP_2}.equals(null)?"TOTAL:":" TOTAL: "+$V{IDE_GTEMP_2}
-:$V{IDE_GTEMP_2}.equals(null)?"TOTAL "+$F{DEPARTAMENTO}+":"
-:"TOTAL "+$F{DEPARTAMENTO}+": "+$V{IDE_GTEMP_2}]]></textFieldExpression>
+:$V{IDE_GTEMP_2}.equals(null)?"TOTAL "+$F{departamento}+":"
+:"TOTAL "+$F{departamento}+": "+$V{IDE_GTEMP_2}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
 	</group>
 	<group name="MES">
-		<groupExpression><![CDATA[$F{MES}]]></groupExpression>
+		<groupExpression><![CDATA[$F{mes}]]></groupExpression>
 		<groupHeader>
 			<band height="12">
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
@@ -155,12 +163,12 @@ $V{IDE_GTEMP_2}.equals(null)?"TOTAL:":" TOTAL: "+$V{IDE_GTEMP_2}
 					<textElement verticalAlignment="Middle">
 						<font size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{MES}.equals("01")?"ENERO":$F{MES}.equals("02")?"FEBRERO":
-$F{MES}.equals("03")?"MARZO":$F{MES}.equals("04")?"ABRIL":
-$F{MES}.equals("05")?"MAYO":$F{MES}.equals("06")?"JUNIO":
-$F{MES}.equals("07")?"JULIO":$F{MES}.equals("08")?"AGOSTO":
-$F{MES}.equals("09")?"SEPTIEMBRE":$F{MES}.equals("10")?"OCTUBRE":
-$F{MES}.equals("11")?"NOVIEMBRE":$F{MES}.equals("12")?"DICIEMBRE":""]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{mes}.equals("01")?"ENERO":$F{mes}.equals("02")?"FEBRERO":
+$F{mes}.equals("03")?"MARZO":$F{mes}.equals("04")?"ABRIL":
+$F{mes}.equals("05")?"MAYO":$F{mes}.equals("06")?"JUNIO":
+$F{mes}.equals("07")?"JULIO":$F{mes}.equals("08")?"AGOSTO":
+$F{mes}.equals("09")?"SEPTIEMBRE":$F{mes}.equals("10")?"OCTUBRE":
+$F{mes}.equals("11")?"NOVIEMBRE":$F{mes}.equals("12")?"DICIEMBRE":""]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -180,12 +188,12 @@ $F{MES}.equals("11")?"NOVIEMBRE":$F{MES}.equals("12")?"DICIEMBRE":""]]></textFie
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{MES}.equals("01")?"TOTAL ENERO:":$F{MES}.equals("02")?"TOTAL FEBRERO:":
-$F{MES}.equals("03")?"TOTAL MARZO:":$F{MES}.equals("04")?"TOTAL ABRIL:":
-$F{MES}.equals("05")?"TOTAL MAYO:":$F{MES}.equals("06")?"TOTAL JUNIO:":
-$F{MES}.equals("07")?"TOTAL JULIO:":$F{MES}.equals("08")?"TOTAL AGOSTO:":
-$F{MES}.equals("09")?"TOTAL SEPTIEMBRE:":$F{MES}.equals("10")?"TOTAL OCTUBRE:":
-$F{MES}.equals("11")?"TOTAL NOVIEMBRE:":$F{MES}.equals("12")?"TOTAL DICIEMBRE:":""]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{mes}.equals("01")?"TOTAL ENERO:":$F{mes}.equals("02")?"TOTAL FEBRERO:":
+$F{mes}.equals("03")?"TOTAL MARZO:":$F{mes}.equals("04")?"TOTAL ABRIL:":
+$F{mes}.equals("05")?"TOTAL MAYO:":$F{mes}.equals("06")?"TOTAL JUNIO:":
+$F{mes}.equals("07")?"TOTAL JULIO:":$F{mes}.equals("08")?"TOTAL AGOSTO:":
+$F{mes}.equals("09")?"TOTAL SEPTIEMBRE:":$F{mes}.equals("10")?"TOTAL OCTUBRE:":
+$F{mes}.equals("11")?"TOTAL NOVIEMBRE:":$F{mes}.equals("12")?"TOTAL DICIEMBRE:":""]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -213,7 +221,7 @@ $F{MES}.equals("11")?"TOTAL NOVIEMBRE:":$F{MES}.equals("12")?"TOTAL DICIEMBRE:":
 					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema_biess/rep_cabecera.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
@@ -291,7 +299,7 @@ $F{MES}.equals("11")?"TOTAL NOVIEMBRE:":$F{MES}.equals("12")?"TOTAL DICIEMBRE:":
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{IDE_GTEMP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ide_gtemp}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="d4ecdf33-cd16-4c70-8384-30f4a833a0d4" positionType="Float" x="100" y="0" width="316" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -305,7 +313,7 @@ $F{MES}.equals("11")?"TOTAL NOVIEMBRE:":$F{MES}.equals("12")?"TOTAL DICIEMBRE:":
 				<textElement verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{EMPLEADO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{empleado}]]></textFieldExpression>
 			</textField>
 			<textField pattern="yyyy/MM/dd">
 				<reportElement uuid="1572b0d5-233c-4ea5-b3ca-fb425ffe569e" x="416" y="0" width="139" height="12"/>
@@ -319,7 +327,7 @@ $F{MES}.equals("11")?"TOTAL NOVIEMBRE:":$F{MES}.equals("12")?"TOTAL DICIEMBRE:":
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_CUMPLE}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_cumple}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="cf53c622-ab24-4749-a494-a597bd063fb3" x="0" y="0" width="46" height="12"/>
