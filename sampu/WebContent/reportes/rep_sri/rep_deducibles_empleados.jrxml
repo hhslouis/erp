@@ -122,8 +122,7 @@ NOMBRES ASC, EMP.ACTIVO_GTEMP ASC]]>
 		<variableExpression><![CDATA[$F{valor_deducible_srdee}]]></variableExpression>
 	</variable>
 	<variable name="FRACCION_BASICA_SRDED_1" class="java.math.BigDecimal" resetType="Group" resetGroup="IDE_GTEMP" calculation="Sum">
-		<variableExpression><![CDATA[$F{fraccion_basica_srded}
-]]></variableExpression>
+		<variableExpression><![CDATA[$F{fraccion_basica_srded}]]></variableExpression>
 	</variable>
 	<group name="IDE_GTEMP">
 		<groupExpression><![CDATA[$F{ide_gtemp}]]></groupExpression>
