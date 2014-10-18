@@ -13,10 +13,10 @@
 	</parameter>
 	<parameter name="usuario" class="java.lang.Integer"/>
 	<parameter name="titulo" class="java.lang.String"/>
-	<parameter name="SUCURSAL" class="java.lang.String">
+	<parameter name="SUCURSAL" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="IDE_GEPRO" class="java.lang.String">
+	<parameter name="IDE_GEPRO" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
@@ -45,7 +45,7 @@ INNER JOIN GEN_EMPLEADOS_DEPARTAMENTO_PAR EDP ON EDP.IDE_GEEDP=DRO.IDE_GEEDP
 inner join SIS_SUCURSAL SUCU ON SUCU.IDE_SUCU=EDP.IDE_SUCU
 INNER join  GEN_GRUPO_OCUPACIONAL Gro ON GRO.IDE_GEGRO=EDP.IDE_GEGRO
 WHERE RUB.IDE_NRRUB = 131
-AND EDP.ACTIVO_GEEDP=1
+AND EDP.ACTIVO_GEEDP=true
 union ALL
 SELECT ANI.IDE_GEANI,
 PRO.IDE_GEPRO,
@@ -71,7 +71,7 @@ INNER JOIN GEN_MES MES ON MES.IDE_GEMES=PRO.IDE_GEMES
 INNER JOIN GEN_ANIO ANI ON ANI.IDE_GEANI=PRO.IDE_GEANI
 inner join SIS_SUCURSAL SUCU ON SUCU.IDE_SUCU=EDP.IDE_SUCU
 WHERE RUB.IDE_NRRUB=9
-AND EDP.ACTIVO_GEEDP=1
+AND EDP.ACTIVO_GEEDP=true
 union ALL
 SELECT ANI.IDE_GEANI,
 PRO.IDE_GEPRO,
@@ -97,7 +97,7 @@ INNER JOIN GEN_MES MES ON MES.IDE_GEMES=PRO.IDE_GEMES
 INNER JOIN GEN_ANIO ANI ON ANI.IDE_GEANI=PRO.IDE_GEANI
 inner join SIS_SUCURSAL SUCU ON SUCU.IDE_SUCU=EDP.IDE_SUCU
 WHERE RUB.IDE_NRRUB=12
-AND EDP.ACTIVO_GEEDP=1
+AND EDP.ACTIVO_GEEDP=true
 ) a
 WHERE a.IDE_GEPRO in ($P!{IDE_GEPRO})
 and a.IDE_SUCU=$P{SUCURSAL}
@@ -117,21 +117,47 @@ a.DETALLE_GEANI,
 a.IDE_SUCU
 ORDER BY a.ide_gemes asc,a.IDE_NRRUB asc]]>
 	</queryString>
-	<field name="IDE_GEANI" class="java.math.BigDecimal"/>
-	<field name="IDE_GEPRO" class="java.math.BigDecimal"/>
-	<field name="IDE_GEGRO" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GEGRO" class="java.lang.String"/>
-	<field name="IDE_NRRUB" class="java.math.BigDecimal"/>
-	<field name="DETALLE_NRRUB" class="java.lang.String"/>
-	<field name="VALOR_NRDRO" class="java.math.BigDecimal"/>
-	<field name="IDE_NRROL" class="java.math.BigDecimal"/>
-	<field name="FECHA_NRROL" class="java.sql.Timestamp"/>
-	<field name="IDE_GEMES" class="java.math.BigDecimal"/>
-	<field name="DETALLE_GEMES" class="java.lang.String"/>
-	<field name="DETALLE_GEANI" class="java.lang.String"/>
-	<field name="IDE_SUCU" class="java.math.BigDecimal"/>
+	<field name="ide_geani" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_geani]]></fieldDescription>
+	</field>
+	<field name="ide_gepro" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_gepro]]></fieldDescription>
+	</field>
+	<field name="ide_gegro" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_gegro]]></fieldDescription>
+	</field>
+	<field name="detalle_gegro" class="java.lang.String">
+		<fieldDescription><![CDATA[detalle_gegro]]></fieldDescription>
+	</field>
+	<field name="ide_nrrub" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla nrh_rubro, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="detalle_nrrub" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del rubro para la generacion del respectivo rol, ejemplo DECIMO TERCER SUELDO, DECIMO CUARTO SUELDO, RETENCION A LA FUENTE, etc.]]></fieldDescription>
+	</field>
+	<field name="valor_nrdro" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Este campo define el valor generado por rubro sea ingreso o egreso para el empleado.]]></fieldDescription>
+	</field>
+	<field name="ide_nrrol" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla nrh_rol, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="fecha_nrrol" class="java.sql.Date">
+		<fieldDescription><![CDATA[Este campo define la fecha de creacion del rol de pagos.]]></fieldDescription>
+	</field>
+	<field name="ide_gemes" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_gemes]]></fieldDescription>
+	</field>
+	<field name="detalle_gemes" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el detalle del mes, ejemplo: enero, febrero, marzo, etc.]]></fieldDescription>
+	</field>
+	<field name="detalle_geani" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del ano ejemplo: 2013, 2014, etc]]></fieldDescription>
+	</field>
+	<field name="ide_sucu" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_sucu]]></fieldDescription>
+	</field>
 	<group name="PERIODO">
-		<groupExpression><![CDATA[$F{IDE_GEPRO}]]></groupExpression>
+		<groupExpression><![CDATA[$F{ide_gepro}]]></groupExpression>
 		<groupHeader>
 			<band/>
 		</groupHeader>
@@ -162,14 +188,14 @@ ORDER BY a.ide_gemes asc,a.IDE_NRRUB asc]]>
 					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema_biess/rep_cabecera_horizontal.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera_horizontal.jasper"]]></subreportExpression>
 			</subreport>
 			<textField>
 				<reportElement uuid="ebfd170d-5d55-456c-b57b-23f75b01d207" positionType="Float" x="78" y="51" width="100" height="12"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GEANI}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_geani}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="9ba05e52-4dca-47d8-829b-679549220271" positionType="Float" x="0" y="51" width="78" height="12"/>
@@ -246,7 +272,7 @@ ORDER BY a.ide_gemes asc,a.IDE_NRRUB asc]]>
 				</crosstabHeaderCell>
 				<rowGroup name="IDE_GEGRO" width="25" totalPosition="End">
 					<bucket class="java.math.BigDecimal">
-						<bucketExpression><![CDATA[$F{IDE_GEGRO}]]></bucketExpression>
+						<bucketExpression><![CDATA[$F{ide_gegro}]]></bucketExpression>
 					</bucket>
 					<crosstabRowHeader>
 						<cellContents backcolor="#F0F8FF" mode="Opaque">
@@ -279,7 +305,7 @@ ORDER BY a.ide_gemes asc,a.IDE_NRRUB asc]]>
 				</rowGroup>
 				<rowGroup name="DETALLE_GEGRO" width="104" totalPosition="End">
 					<bucket class="java.lang.String">
-						<bucketExpression><![CDATA[$F{DETALLE_GEGRO}]]></bucketExpression>
+						<bucketExpression><![CDATA[$F{detalle_gegro}]]></bucketExpression>
 					</bucket>
 					<crosstabRowHeader>
 						<cellContents backcolor="#F0F8FF" mode="Opaque">
@@ -305,7 +331,7 @@ ORDER BY a.ide_gemes asc,a.IDE_NRRUB asc]]>
 				</rowGroup>
 				<columnGroup name="IDE_GEMES" height="0" totalPosition="End">
 					<bucket class="java.math.BigDecimal">
-						<bucketExpression><![CDATA[$F{IDE_GEMES}]]></bucketExpression>
+						<bucketExpression><![CDATA[$F{ide_gemes}]]></bucketExpression>
 					</bucket>
 					<crosstabColumnHeader>
 						<cellContents backcolor="#F0F8FF" mode="Opaque">
@@ -331,7 +357,7 @@ ORDER BY a.ide_gemes asc,a.IDE_NRRUB asc]]>
 				</columnGroup>
 				<columnGroup name="DETALLE_GEMES" height="10" totalPosition="End">
 					<bucket class="java.lang.String">
-						<bucketExpression><![CDATA[$F{DETALLE_GEMES}]]></bucketExpression>
+						<bucketExpression><![CDATA[$F{detalle_gemes}]]></bucketExpression>
 					</bucket>
 					<crosstabColumnHeader>
 						<cellContents backcolor="#F0F8FF" mode="Opaque">
@@ -357,7 +383,7 @@ ORDER BY a.ide_gemes asc,a.IDE_NRRUB asc]]>
 				</columnGroup>
 				<columnGroup name="DETALLE_NRRUB" height="10">
 					<bucket class="java.lang.String">
-						<bucketExpression><![CDATA[$F{DETALLE_NRRUB}]]></bucketExpression>
+						<bucketExpression><![CDATA[$F{detalle_nrrub}]]></bucketExpression>
 					</bucket>
 					<crosstabColumnHeader>
 						<cellContents>
@@ -382,7 +408,7 @@ ORDER BY a.ide_gemes asc,a.IDE_NRRUB asc]]>
 					</crosstabTotalColumnHeader>
 				</columnGroup>
 				<measure name="VALOR_NRDROMeasure" class="java.math.BigDecimal" calculation="Sum">
-					<measureExpression><![CDATA[$F{VALOR_NRDRO}]]></measureExpression>
+					<measureExpression><![CDATA[$F{valor_nrdro}]]></measureExpression>
 				</measure>
 				<crosstabCell width="50" height="10">
 					<cellContents>
