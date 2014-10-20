@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_expediente_empleados" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="570" leftMargin="20" rightMargin="5" topMargin="20" bottomMargin="20" uuid="83f67246-97a1-469b-a561-a1d146c18bf8">
-	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.zoom" value="0.75"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="193"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["D:\\workspace\\biess\\WebContent\\reportes\\rep_gestion\\"]]></defaultValueExpression>
 	</parameter>
@@ -783,14 +783,6 @@ order by NOMBRES ASC]]>
 			</subreport>
 		</band>
 		<band height="113">
-			<staticText>
-				<reportElement uuid="4c947e40-4dfa-4426-93f3-155fbeb8ca57" positionType="Float" x="0" y="0" width="570" height="32"/>
-				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3"/>
-				<textElement textAlignment="Justified" verticalAlignment="Middle">
-					<font size="5"/>
-				</textElement>
-				<text><![CDATA["Declaro que el origen de los bienes y otros ingresos detallados en este formulario, son lícitos y consecuentemente no provienen de ninguna actividad relacionada con la producción, consumo, comercialización de sustancias y estupefacientes y sicotrópicas o cualquier otra actividad tipificada en la ley de Sustancias Estupefacientes y Sicotrópicas o en la Ley para Reprimir el lavado de Activos. La información consignada en el presente documento es veraz y fidedigna, conozco que la falsedad de la misma podría acarrear sanciones legales, en los términos constantes en la legislación que fuere aplicable, por que autorizo a mi empleador (BIESS) a realizar las verificaciones que considere pertinente en la relación de la misma, en el momento que lo requiera, sin que este echo signifique violación alguna de mis derechos."]]></text>
-			</staticText>
 			<line>
 				<reportElement uuid="bdba9d52-28fc-4a44-adf4-614e43570753" x="0" y="78" width="250" height="1"/>
 				<graphicElement>
