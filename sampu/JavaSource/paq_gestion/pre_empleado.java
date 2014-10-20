@@ -783,6 +783,7 @@ public class pre_empleado extends Pantalla {
 					set_sri.getTab_seleccion().getColumna("DETALLE_SRIMR").setFiltro(true);
 					set_sri.getTab_seleccion().ejecutarSql();
 					set_sri.getBot_aceptar().setMetodo("aceptarReporte");
+					System.out.println("PE SQL set_sri... "+set_sri.getTab_seleccion().getSql());
 					dia_filtro_activo.cerrar();
 					set_sri.dibujar();
 				}
@@ -859,7 +860,7 @@ public class pre_empleado extends Pantalla {
 
 			}else if (set_empleado_deducible.isVisible()) {
 				if (set_empleado_deducible.getSeleccionados()!=null && !set_empleado_deducible.getSeleccionados().isEmpty()) {
-					System.out.println("EMPLEADOS"+set_empleado_deducible.getSeleccionados());
+					System.out.println("EMPLEADOS..."+set_empleado_deducible.getSeleccionados());
 					p_parametros.put("IDE_GTEMP", set_empleado_deducible.getSeleccionados());
 					p_parametros.put("titulo","GASTO DEDUCIBLE POR EMPLEADO");
 					sef_reporte.setSeleccionFormatoReporte(p_parametros, rep_reporte.getPath());
@@ -903,7 +904,7 @@ public class pre_empleado extends Pantalla {
 				if (set_sri.getValorSeleccionado()!=null &&  !set_sri.getValorSeleccionado().isEmpty() ) {
 
 
-					p_parametros.put("IDE_SRIMR",set_sri.getValorSeleccionado());
+					p_parametros.put("IDE_SRIMR",Integer.parseInt(set_sri.getValorSeleccionado()));
 					set_sucursal.getTab_seleccion().setSql("SELECT IDE_SUCU, " +
 							"NOM_SUCU " +
 							"FROM SIS_SUCURSAL " +
@@ -953,6 +954,9 @@ public class pre_empleado extends Pantalla {
 							"WHERE EDP.IDE_GEDEP IN("+set_departamento.getSeleccionados()+") " +
 							"AND ACTIVO_GTEMP in("+lis_activo.getSeleccionados()+") " +
 							"ORDER BY NOMBRES ASC");
+					
+					System.out.println("pe sql ... "+set_empleado_deducible.getTab_seleccion().getSql());
+					
 					set_empleado_deducible.getTab_seleccion().getColumna("DOCUMENTO_IDENTIDAD_GTEMP").setFiltro(true);
 					set_empleado_deducible.getTab_seleccion().getColumna("NOMBRES").setFiltro(true);
 					set_empleado_deducible.getTab_seleccion().ejecutarSql();
@@ -967,10 +971,14 @@ public class pre_empleado extends Pantalla {
 
 			}else if (set_empleado_deducible.isVisible()) {
 				if (set_empleado_deducible.getSeleccionados()!=null && !set_empleado_deducible.getSeleccionados().isEmpty()) {
-					System.out.println("EMPLEADOS"+set_empleado_deducible.getSeleccionados());
-					p_parametros.put("IDE_GTEMP", set_empleado_deducible.getSeleccionados());
+					System.out.println("1EMPLEADOS... "+set_empleado_deducible.getSeleccionados());
+					p_parametros.put("IDE_GTEMP", Integer.parseInt(set_empleado_deducible.getSeleccionados()));
+					System.out.println("pe p_parametros IDE_GTEMP ... "+p_parametros);
 
 					p_parametros.put("titulo","DETALLE GASTO DEDUCIBLE ");
+					
+					System.out.println("pe p_parametros titulo ... "+p_parametros);
+					
 					sef_reporte.setSeleccionFormatoReporte(p_parametros, rep_reporte.getPath());
 					set_empleado_deducible.cerrar();
 					sef_reporte.dibujar();
@@ -1220,7 +1228,7 @@ public class pre_empleado extends Pantalla {
 
 			}else if (set_empleado_deducible.isVisible()) {
 				if (set_empleado_deducible.getSeleccionados()!=null && !set_empleado_deducible.getSeleccionados().isEmpty()) {
-					System.out.println("EMPLEADOS"+set_empleado_deducible.getSeleccionados());
+					System.out.println("2EMPLEADOS..."+set_empleado_deducible.getSeleccionados());
 					System.out.println("IDE_SUC"+set_sucursal.getSeleccionados());
 					p_parametros.put("IDE_GTEMP", set_empleado_deducible.getSeleccionados());
 					p_parametros.put("titulo","DETALLE ACUMULACION FONDO");
