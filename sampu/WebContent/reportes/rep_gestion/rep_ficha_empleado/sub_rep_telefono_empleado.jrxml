@@ -3,7 +3,7 @@
 	<property name="ireport.zoom" value="7.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="IDE_GTEMP" class="java.lang.Long">
+	<parameter name="IDE_GTEMP" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
@@ -11,7 +11,9 @@
 LEFT JOIN GTH_TELEFONO TEL ON TEL.IDE_GTEMP=EMP.IDE_GTEMP
 WHERE EMP.IDE_GTEMP=$P{IDE_GTEMP}]]>
 	</queryString>
-	<field name="NUMERO_TELEFONO_GTTEL" class="java.lang.String"/>
+	<field name="numero_telefono_gttel" class="java.lang.String">
+		<fieldDescription><![CDATA[numero_telefono_gttel]]></fieldDescription>
+	</field>
 	<detail>
 		<band height="10" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
@@ -26,7 +28,7 @@ WHERE EMP.IDE_GTEMP=$P{IDE_GTEMP}]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NUMERO_TELEFONO_GTTEL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{numero_telefono_gttel}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
