@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sub_rep_uso_exclusivo_gth" language="groovy" pageWidth="570" pageHeight="842" columnWidth="570" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="de76a82e-0f5e-4d17-9bd3-6aa15a1e1b80">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="366"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="IDE_GTEMP" class="java.lang.Long">
+	<parameter name="IDE_GTEMP" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
@@ -21,16 +21,16 @@ LEFT JOIN GTH_TIPO_CONTRATO TCO ON TCO.IDE_GTTCO=PAR.IDE_GTTCO
 LEFT JOIN GEN_AREA AREA ON AREA.IDE_GEARE=PAR.IDE_GEARE
 LEFT JOIN GEN_CARGO_FUNCIONAL CF ON CF.IDE_GECAF=PAR.IDE_GECAF
 LEFT JOIN GEN_DEPARTAMENTO DEP ON DEP.IDE_GEDEP=PAR.IDE_GEDEP
-WHERE EMP.IDE_GTEMP=$P{IDE_GTEMP} AND EMP.ACTIVO_GTEMP=1]]>
+WHERE EMP.IDE_GTEMP=$P{IDE_GTEMP} AND EMP.ACTIVO_GTEMP=true]]>
 	</queryString>
-	<field name="TIPO_CONTRATO" class="java.lang.String"/>
-	<field name="CARGO" class="java.lang.String"/>
-	<field name="AREA" class="java.lang.String"/>
-	<field name="DIVISION" class="java.lang.String"/>
-	<field name="LINEA_SUPERVISION" class="java.math.BigDecimal"/>
-	<field name="FECHA_INGRESO" class="java.sql.Timestamp"/>
-	<field name="RMU" class="java.math.BigDecimal"/>
-	<field name="OBSERVACIONES" class="java.lang.String"/>
+	<field name="tipo_contrato" class="java.lang.String"/>
+	<field name="cargo" class="java.lang.String"/>
+	<field name="area" class="java.lang.String"/>
+	<field name="division" class="java.lang.String"/>
+	<field name="linea_supervision" class="java.lang.Boolean"/>
+	<field name="fecha_ingreso" class="java.sql.Date"/>
+	<field name="rmu" class="java.math.BigDecimal"/>
+	<field name="observaciones" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -66,7 +66,7 @@ WHERE EMP.IDE_GTEMP=$P{IDE_GTEMP} AND EMP.ACTIVO_GTEMP=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{TIPO_CONTRATO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tipo_contrato}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="5ba87a94-d13a-498e-a3d3-276d9ccd17fc" x="0" y="0" width="85" height="20"/>
@@ -108,7 +108,7 @@ WHERE EMP.IDE_GTEMP=$P{IDE_GTEMP} AND EMP.ACTIVO_GTEMP=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CARGO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cargo}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="32aa5e29-1482-49e3-a4de-adce51758862" x="265" y="0" width="161" height="20"/>
@@ -136,7 +136,7 @@ WHERE EMP.IDE_GTEMP=$P{IDE_GTEMP} AND EMP.ACTIVO_GTEMP=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{AREA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{area}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="ce6cdf3b-85dc-4948-bf01-ed30aebcfa9f" x="426" y="0" width="144" height="20"/>
@@ -178,7 +178,7 @@ WHERE EMP.IDE_GTEMP=$P{IDE_GTEMP} AND EMP.ACTIVO_GTEMP=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{LINEA_SUPERVISION}.equals("1")?"SI":"NO"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{linea_supervision}.equals("1")?"SI":"NO"]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="6450c481-3584-47f7-ab08-bff6a7689b18" positionType="Float" x="223" y="35" width="100" height="20"/>
@@ -220,7 +220,7 @@ WHERE EMP.IDE_GTEMP=$P{IDE_GTEMP} AND EMP.ACTIVO_GTEMP=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{RMU}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{rmu}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="7693d77c-7032-406f-8eb3-474297534474" positionType="Float" x="426" y="35" width="144" height="20"/>
@@ -248,7 +248,7 @@ WHERE EMP.IDE_GTEMP=$P{IDE_GTEMP} AND EMP.ACTIVO_GTEMP=1]]>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{OBSERVACIONES}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{observaciones}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="40d7d329-c698-4ef5-8584-b7410c5f910e" stretchType="RelativeToBandHeight" x="426" y="20" width="144" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -262,7 +262,7 @@ WHERE EMP.IDE_GTEMP=$P{IDE_GTEMP} AND EMP.ACTIVO_GTEMP=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DIVISION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{division}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="yyyy/MM/dd" isBlankWhenNull="true">
 				<reportElement uuid="f2fc8630-1f61-4382-b1e1-3fa4b658d33c" positionType="Float" stretchType="RelativeToBandHeight" x="223" y="55" width="100" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -276,7 +276,7 @@ WHERE EMP.IDE_GTEMP=$P{IDE_GTEMP} AND EMP.ACTIVO_GTEMP=1]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_INGRESO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_ingreso}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
