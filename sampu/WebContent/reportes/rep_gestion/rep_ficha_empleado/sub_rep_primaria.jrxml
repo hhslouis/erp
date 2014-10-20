@@ -3,7 +3,7 @@
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="77"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="IDE_GTEMP" class="java.lang.Long">
+	<parameter name="IDE_GTEMP" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
