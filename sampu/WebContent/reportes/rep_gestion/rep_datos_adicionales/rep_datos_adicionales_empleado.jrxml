@@ -12,13 +12,13 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA["D:\\workspace\\biess\\WebContent\\reportes\\rep_gestion\\"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="ide_geare" class="java.lang.String">
+	<parameter name="ide_geare" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="ide_gedep" class="java.lang.String">
+	<parameter name="ide_gedep" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="ide_sucu_t" class="java.lang.String">
+	<parameter name="ide_sucu_t" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
