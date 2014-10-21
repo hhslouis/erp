@@ -11,7 +11,9 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<parameter name="usuario" class="java.lang.Integer"/>
-	<parameter name="titulo" class="java.lang.String"/>
+	<parameter name="titulo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
 	<parameter name="IDE_GEEDP" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
