@@ -1407,7 +1407,7 @@ public class pre_rol extends Pantalla{
 				sel_tab_tipo_nomina.dibujar();
 				sel_tab_tipo_nomina.getBot_aceptar().setMetodo("seleccionarEnviar");
 				p_parametros = new HashMap();				
-				p_parametros.put("IDE_GEPRO", Long.parseLong(com_periodo.getValue().toString()));	
+				p_parametros.put("IDE_GEPRO", Integer.parseInt(com_periodo.getValue().toString()));	
 			}
 			else{
 				utilitario.agregarMensajeInfo("No tiene nóminas cerradas en el período seleccionado", "Solo se pueden enviar nóminas con estado cerradas");
@@ -2025,7 +2025,7 @@ public void aceptarReporte() {
 			}else if (sel_tab_periodo.isVisible()){		
 				try {
 					if (sel_tab_periodo.getValorSeleccionado()!=null && !sel_tab_periodo.getValorSeleccionado().isEmpty()){						
-						p_parametros.put("IDE_GEPRO",Long.parseLong(sel_tab_periodo.getValorSeleccionado()));				
+						p_parametros.put("IDE_GEPRO",Integer.parseInt(sel_tab_periodo.getValorSeleccionado()));				
 						sel_tab_periodo.cerrar();
 						sel_tab_tipo_nomina.getTab_seleccion().setSql("select " +
 								"ROL.IDE_NRROL,TIN.DETALLE_NRTIN, " +
@@ -2050,7 +2050,7 @@ public void aceptarReporte() {
 			}else if(sel_tab_tipo_nomina.isVisible()){			
 				try {
 					if(sel_tab_tipo_nomina.getValorSeleccionado()!=null && !sel_tab_tipo_nomina.getValorSeleccionado().isEmpty()){						
-						p_parametros.put("IDE_NRDTN",Long.parseLong(ser_nomina.getRol(sel_tab_tipo_nomina.getValorSeleccionado()).getValor("IDE_NRDTN")));
+						p_parametros.put("IDE_NRDTN",Integer.parseInt(ser_nomina.getRol(sel_tab_tipo_nomina.getValorSeleccionado()).getValor("IDE_NRDTN")));
 						sel_tab_empleados.setSql(ser_nomina.getSqlEmpleadosRol(sel_tab_tipo_nomina.getValorSeleccionado()));
 						sel_tab_empleados.getBot_aceptar().setMetodo("aceptarReporte");
 						sel_tab_tipo_nomina.cerrar();
@@ -2071,6 +2071,7 @@ public void aceptarReporte() {
 						p_parametros.put("par_total_ingresos",Integer.parseInt(utilitario.getVariable("p_nrh_rubro_total_ingresos")));
 						p_parametros.put("par_total_egresos",Integer.parseInt(utilitario.getVariable("p_nrh_rubro_total_egresos")));
 						sef_reporte.setSeleccionFormatoReporte(p_parametros, rep_reporte.getPath());
+						System.out.print("reporte parametro..."+p_parametros);
 						sel_tab_empleados.cerrar();
 						sef_reporte.dibujar();
 					}else{
@@ -2089,8 +2090,10 @@ public void aceptarReporte() {
 			}else if (sel_tab_periodo.isVisible()){		
 				try {
 					if (sel_tab_periodo.getValorSeleccionado()!=null && !sel_tab_periodo.getValorSeleccionado().isEmpty()){						
-						p_parametros.put("IDE_GEPRO",Long.parseLong(sel_tab_periodo.getValorSeleccionado()));				
-						System.out.println("periodo"+sel_tab_periodo.getValorSeleccionado());
+						p_parametros.put("IDE_GEPRO",Integer.parseInt(sel_tab_periodo.getValorSeleccionado()));	
+						System.out.println("parametro IDE_GEPRO...  "+Integer.parseInt(sel_tab_periodo.getValorSeleccionado()));
+						
+						System.out.println("periodo..."+sel_tab_periodo.getValorSeleccionado());
 						sel_tab_periodo.cerrar();
 						sel_tab_tipo_nomina.getTab_seleccion().setSql("select " +
 								"ROL.IDE_NRROL,TIN.DETALLE_NRTIN, " +
@@ -2120,8 +2123,8 @@ public void aceptarReporte() {
 					if(sel_tab_tipo_nomina.getValorSeleccionado()!=null && !sel_tab_tipo_nomina.getValorSeleccionado().isEmpty()){
 
 						//						p_parametros.put("IDE_NRDTN",Long.parseLong(sel_tab_tipo_nomina.getValorSeleccionado()));						
-						p_parametros.put("IDE_NRDTN",Long.parseLong(ser_nomina.getRol(sel_tab_tipo_nomina.getValorSeleccionado()).getValor("IDE_NRDTN")));						
-						System.out.println();
+						p_parametros.put("IDE_NRDTN",Integer.parseInt(ser_nomina.getRol(sel_tab_tipo_nomina.getValorSeleccionado()).getValor("IDE_NRDTN")));						
+						System.out.println("parametro IDE_NRDTN...  "+ p_parametros);
 						//						sel_tab_empleados.setSql(ser_nomina.getSqlEmpleadosTipoNomina(sel_tab_tipo_nomina.getValorSeleccionado()));
 						sel_tab_empleados.setSql(ser_nomina.getSqlEmpleadosRol(sel_tab_tipo_nomina.getValorSeleccionado()));
 
@@ -2135,16 +2138,22 @@ public void aceptarReporte() {
 				}
 
 			}else if(sel_tab_empleados.isVisible()){
-				try {System.out.println("empleados"+sel_tab_empleados.getSeleccionados());
-				System.out.println("periodo"+sel_tab_periodo.getSeleccionados());
-				System.out.println("tipo"+sel_tab_tipo_nomina.getSeleccionados());
+				try {System.out.println("1empleados"+sel_tab_empleados.getSeleccionados());
+				System.out.println("1periodo.."+sel_tab_periodo.getSeleccionados());
+				System.out.println("1tipo..."+sel_tab_tipo_nomina.getSeleccionados());
 
-				System.out.println("tav"+utilitario.getVariable("p_nrh_rubro_valor_recibir"));
+				System.out.println("1tav.."+utilitario.getVariable("p_nrh_rubro_valor_recibir"));
 				if (sel_tab_empleados.getSeleccionados()!=null && !sel_tab_empleados.getSeleccionados().isEmpty()) {
-					p_parametros.put("IDE_GEEDP",sel_tab_empleados.getSeleccionados());
+					p_parametros.put("IDE_GEEDP",Integer.parseInt(sel_tab_empleados.getSeleccionados()));
 
+					System.out.println("IDE_GEEDP...   "+sel_tab_empleados.getSeleccionados());
+					
+					
 					p_parametros.put("titulo", " DETALLE ROL EMPLEADO PERIODO");
-					p_parametros.put("IDE_NRRUB",utilitario.getVariable("p_nrh_rubro_valor_recibir"));
+					p_parametros.put("IDE_NRRUB",Integer.parseInt(utilitario.getVariable("p_nrh_rubro_valor_recibir")));
+					
+					System.out.println("IDE_NRRUB...   "+utilitario.getVariable("p_nrh_rubro_valor_recibir"));
+					
 					sef_reporte.setSeleccionFormatoReporte(p_parametros, rep_reporte.getPath());
 					sel_tab_empleados.cerrar();
 					sef_reporte.dibujar();
@@ -2234,9 +2243,12 @@ public void aceptarReporte() {
 			}else if (sel_tab_periodo.isVisible()){		
 				try {
 					if (sel_tab_periodo.getValorSeleccionado()!=null && !sel_tab_periodo.getValorSeleccionado().isEmpty()){						
-						p_parametros.put("IDE_GEPRO",Long.parseLong(sel_tab_periodo.getValorSeleccionado()));				
-						System.out.println("periodo"+sel_tab_periodo.getValorSeleccionado());
+						p_parametros.put("IDE_GEPRO",Integer.parseInt(sel_tab_periodo.getValorSeleccionado()));				
+						System.out.println("periodo..."+sel_tab_periodo.getValorSeleccionado());
 						sel_tab_periodo.cerrar();
+						
+                        System.out.print("imprime sel_tab_periodo... "+sel_tab_periodo.getValorSeleccionado());
+						
 						sel_tab_tipo_nomina.getTab_seleccion().setSql("select " +
 								"ROL.IDE_NRROL,TIN.DETALLE_NRTIN, " +
 								"TEM.DETALLE_GTTEM," +
@@ -2248,10 +2260,14 @@ public void aceptarReporte() {
 								"LEFT JOIN GTH_TIPO_CONTRATO TIC ON TIC.IDE_GTTCO=DTN.IDE_GTTCO " +
 								"LEFT JOIN GTH_TIPO_EMPLEADO TEM ON TEM.IDE_GTTEM=DTN.IDE_GTTEM " +
 								"LEFT JOIN SIS_SUCURSAL SUC ON SUC.IDE_SUCU=DTN.IDE_SUCU " +
-								"where ROL.IDE_GEPRO="+sel_tab_periodo.getValorSeleccionado());
-						sel_tab_tipo_nomina.getTab_seleccion().ejecutarSql();						
+								"where ROL.IDE_GEPRO="+sel_tab_periodo.getValorSeleccionado()+ " and 1=1 ");
+                        System.out.print("\n imprime2 sel_tab_periodo despues del sql ... "+sel_tab_periodo.getValorSeleccionado());
+              		
+						sel_tab_tipo_nomina.getTab_seleccion().ejecutarSql();	
+						
+                        System.out.print("\n imprime sql..."+sel_tab_tipo_nomina.getTab_seleccion().getSql()+"\n");
+						
 						sel_tab_tipo_nomina.dibujar();					
-
 						//regresa el nrtdn
 					}else{						
 						utilitario.agregarMensajeInfo("No se puede continuar", "No ha seleccionado ningun Periodo del Rol");
@@ -2265,7 +2281,7 @@ public void aceptarReporte() {
 					if(sel_tab_tipo_nomina.getValorSeleccionado()!=null && !sel_tab_tipo_nomina.getValorSeleccionado().isEmpty()){
 
 						//						p_parametros.put("IDE_NRDTN",Long.parseLong(sel_tab_tipo_nomina.getValorSeleccionado()));						
-						p_parametros.put("IDE_NRDTN",Long.parseLong(ser_nomina.getRol(sel_tab_tipo_nomina.getValorSeleccionado()).getValor("IDE_NRDTN")));						
+						p_parametros.put("IDE_NRDTN",Integer.parseInt(ser_nomina.getRol(sel_tab_tipo_nomina.getValorSeleccionado()).getValor("IDE_NRDTN")));						
 						System.out.println(ser_nomina.getRol(sel_tab_tipo_nomina.getValorSeleccionado()).getValor("IDE_NRDTN"));
 						//						sel_tab_empleados.setSql(ser_nomina.getSqlEmpleadosTipoNomina(sel_tab_tipo_nomina.getValorSeleccionado()));
 						//sel_tab_empleados.setSql(ser_nomina.getSqlEmpleadosRol(sel_tab_tipo_nomina.getValorSeleccionado()));
@@ -2283,17 +2299,18 @@ public void aceptarReporte() {
 				}
 
 			}else if(sel_tab_empleados.isVisible()){
-				try {System.out.println("empleados"+sel_tab_empleados.getSeleccionados());
+				try {System.out.println("empleados..."+sel_tab_empleados.getSeleccionados());
 				//	System.out.println("periodo"+sel_tab_periodo.getSeleccionados());
-				System.out.println("tipo"+sel_tab_tipo_nomina.getSeleccionados());
+				System.out.println("tipo..."+sel_tab_tipo_nomina.getSeleccionados());
 
-				System.out.println("tav"+utilitario.getVariable("p_nrh_rubro_valor_recibir"));
+				System.out.println("tav..."+utilitario.getVariable("p_nrh_rubro_valor_recibir"));
 				if (sel_tab_empleados.getSeleccionados()!=null && !sel_tab_empleados.getSeleccionados().isEmpty()) {
-					p_parametros.put("IDE_GEEDP",sel_tab_empleados.getSeleccionados());
-					p_parametros.put("IDE_NRRUB",utilitario.getVariable("p_nrh_rubro_valor_recibir"));
+					p_parametros.put("IDE_GEEDP",Integer.parseInt(sel_tab_empleados.getSeleccionados()));
+					p_parametros.put("IDE_NRRUB",Integer.parseInt(utilitario.getVariable("p_nrh_rubro_valor_recibir")));
 					p_parametros.put("titulo", " DETALLE ROL TIPO CUENTA");
-
+  System.out.println("paso parametros "+p_parametros);
 					sef_reporte.setSeleccionFormatoReporte(p_parametros, rep_reporte.getPath());
+					
 					sel_tab_empleados.cerrar();
 					sef_reporte.dibujar();
 				}else{
@@ -2322,9 +2339,9 @@ public void aceptarReporte() {
 							String ide_gepro=ser_nomina.getPeriodosRol(str_fecha_ini, str_fecha_fin);
 							if (ide_gepro==null){
 								ide_gepro="-1";
-							}
+							} 
 							System.out.println("ide_gepro "+ide_gepro);
-							p_parametros.put("IDE_GEPRO", ide_gepro);
+							p_parametros.put("IDE_GEPRO",ide_gepro);
 							sel_cal_mes.cerrar();
 							sel_sucursal.getTab_seleccion().setSql("SELECT IDE_SUCU, " +
 									"NOM_SUCU " +
@@ -2344,8 +2361,8 @@ public void aceptarReporte() {
 			}
 			else if(sel_sucursal.isVisible()){
 				if(sel_sucursal.getValorSeleccionado()!=null && !sel_sucursal.getValorSeleccionado().isEmpty())
-				{System.out.println("sucursal"+sel_sucursal.getValorSeleccionado());
-				p_parametros.put("SUCURSAL",sel_sucursal.getValorSeleccionado());
+				{System.out.println("sucursal... "+sel_sucursal.getValorSeleccionado());
+				p_parametros.put("SUCURSAL",Integer.parseInt(sel_sucursal.getValorSeleccionado()));
 				p_parametros.put("titulo", "Detalle Costo Grupo Ocupacional y Tipo Empleado");
 				//	p_parametros.put("IDE_NRRUB",utilitario.getVariable("p_nrh_rubro_valor_recibir"));
 				sef_reporte.setSeleccionFormatoReporte(p_parametros, rep_reporte.getPath());
@@ -2540,7 +2557,7 @@ String ide_gepro=ser_nomina.getPeriodosRol(str_fecha_ini, str_fecha_fin);
 			}else if(sel_tab_tipo_nomina.isVisible()){			
 				try {
 					if(sel_tab_tipo_nomina.getValorSeleccionado()!=null && !sel_tab_tipo_nomina.getValorSeleccionado().isEmpty()){						
-						p_parametros.put("ide_nrrol",Long.parseLong(sel_tab_tipo_nomina.getValorSeleccionado()));
+						p_parametros.put("ide_nrrol",Integer.parseInt(sel_tab_tipo_nomina.getValorSeleccionado()));
 						sel_tab_empleados.setSql(ser_nomina.getSqlEmpleadosRol(sel_tab_tipo_nomina.getValorSeleccionado()));
 						sel_tab_empleados.getBot_aceptar().setMetodo("aceptarReporte");
 						sel_tab_tipo_nomina.cerrar();
@@ -2741,7 +2758,7 @@ String ide_gepro=ser_nomina.getPeriodosRol(str_fecha_ini, str_fecha_fin);
 		if(sel_tab_tipo_nomina.isVisible())	{				
 			try {
 				if(sel_tab_tipo_nomina.getValorSeleccionado()!=null && !sel_tab_tipo_nomina.getValorSeleccionado().isEmpty()){						
-					p_parametros.put("IDE_NRDTN",Long.parseLong(ser_nomina.getRol(sel_tab_tipo_nomina.getValorSeleccionado()).getValor("IDE_NRDTN")));
+					p_parametros.put("IDE_NRDTN",Integer.parseInt(ser_nomina.getRol(sel_tab_tipo_nomina.getValorSeleccionado()).getValor("IDE_NRDTN")));
 					sel_tab_empleados.setSql(ser_nomina.getSqlEmpleadosRol(sel_tab_tipo_nomina.getValorSeleccionado()));
 					sel_tab_empleados.getBot_aceptar().setMetodo("seleccionarEnviar");
 					sel_tab_tipo_nomina.cerrar();
