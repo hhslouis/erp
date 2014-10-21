@@ -492,14 +492,14 @@ public class pre_horas_extras_nomina extends Pantalla {
 						"TO_CHAR(a.fecha_asdhe,'YYYY-MM-DD') as fecha_asdhe,a.nro_horas_aprobadas_asdhe,c.detalle_asmot,a.hora_inicial_asdhe,a.hora_final_asdhe,a.actividades_asdhe " +
 						"FROM asi_detalle_horas_extras a, asi_permisos_vacacion_hext b, asi_motivo c,gth_empleado d " +
 						"where a.ide_aspvh=b.ide_aspvh and c.ide_asmot=a.ide_asmot " +
-						"and d.ide_gtemp=b.ide_gtemp and activo_asdhe=true and aprobado_asdhe=1 and nomina_asdhe !=1 and d.IDE_GTEMP="+aut_empleados.getValor()+" AND TO_CHAR(a.fecha_asdhe,'YYYY-MM-DD') BETWEEN '"+cal_fecha_inicial.getFecha()+"' AND '"+cal_fecha_final.getFecha()+"'   order by   a.fecha_asdhe,empleado");
+						"and d.ide_gtemp=b.ide_gtemp and activo_asdhe=true and aprobado_asdhe=TRUE and nomina_asdhe !=TRUE and d.IDE_GTEMP="+aut_empleados.getValor()+" AND TO_CHAR(a.fecha_asdhe,'YYYY-MM-DD') BETWEEN '"+cal_fecha_inicial.getFecha()+"' AND '"+cal_fecha_final.getFecha()+"'   order by   a.fecha_asdhe,empleado");
 			}
 			else{				
 				tab_tabla.setSql("SELECT ide_asdhe,d.apellido_paterno_gtemp || ' ' || d.apellido_materno_gtemp || ' ' || d.primer_nombre_gtemp || ' ' || d.segundo_nombre_gtemp as empleado, " +
 						"TO_CHAR(a.fecha_asdhe,'YYYY-MM-DD') as fecha_asdhe,a.nro_horas_aprobadas_asdhe,c.detalle_asmot,a.hora_inicial_asdhe,a.hora_final_asdhe,a.actividades_asdhe " +
 						"FROM asi_detalle_horas_extras a, asi_permisos_vacacion_hext b, asi_motivo c,gth_empleado d " +
 						"where a.ide_aspvh=b.ide_aspvh and c.ide_asmot=a.ide_asmot " +
-						"and d.ide_gtemp=b.ide_gtemp and activo_asdhe=true and aprobado_asdhe=1 and TO_CHAR(a.fecha_asdhe,'YYYY-MM-DD') BETWEEN '"+cal_fecha_inicial.getFecha()+"' AND '"+cal_fecha_final.getFecha()+"'  and nomina_asdhe !=1 order by   a.fecha_asdhe,empleado");
+						"and d.ide_gtemp=b.ide_gtemp and activo_asdhe=true and aprobado_asdhe=TRUE and TO_CHAR(a.fecha_asdhe,'YYYY-MM-DD') BETWEEN '"+cal_fecha_inicial.getFecha()+"' AND '"+cal_fecha_final.getFecha()+"'  and nomina_asdhe !=true order by   a.fecha_asdhe,empleado");
 				}
 			tab_tabla.ejecutarSql();			
 		}
