@@ -1850,8 +1850,11 @@ try {
 				else if(dia_tipo_vinculacion.isVisible()){
 					if(rad_tipo_vinculacion.getValue()!=null && !rad_tipo_vinculacion.getValue().toString().isEmpty()){
 						p_parametros.put("p_tipo_vinculacion",rad_tipo_vinculacion.getValue());
+						System.out.println("parametro p_tipo_vinculacion...  "+rad_tipo_vinculacion.getValue());
 						String motivo="";
 						motivo=tab_deta_empleado_depar.getValorSeleccionado();
+						System.out.println("variable motivo...  "+motivo);
+						
 						if(motivo.isEmpty()){
 							motivo="-1";
 						}
@@ -1871,6 +1874,7 @@ try {
 						dia_tipo_vinculacion.cerrar();
 						tab_deta_empleado_depar.getStringColumna("IDE_GEAME");
 						System.out.println("VALOR DED LA COMUNA IDE_GEAME: "+tab_deta_empleado_depar.getStringColumna("IDE_GEAME"));
+						System.out.println("sql sel_tab_accion_motivo...   "+sel_tab_accion_motivo.getTab_seleccion().getSql());
 						sel_tab_accion_motivo.dibujar();
 					}else{
 						utilitario.agregarMensajeInfo("No se puede generar el reporte de accion de personal", "Seleccione una opción");
@@ -1878,9 +1882,11 @@ try {
 				}
 				else if(sel_tab_accion_motivo.isVisible()){					
 					if(sel_tab_accion_motivo.getValorSeleccionado()!=null && !sel_tab_accion_motivo.getValorSeleccionado().toString().isEmpty()){					
-						p_parametros.put("p_detalle_accion",sel_tab_accion_motivo.getValorSeleccionado());						
+						p_parametros.put("p_detalle_accion",sel_tab_accion_motivo.getValorSeleccionado());	
+						System.out.println("PARAMETRO p_detalle_accion...  "+sel_tab_accion_motivo.getValorSeleccionado());
+						
 						String a=sel_tab_accion_motivo.getTab_seleccion().getFilaSeleccionada().getCampos()[sel_tab_accion_motivo.getTab_seleccion().getNumeroColumna("detalle_reporte_gemed")]+"";
-						System.out.println("valord  de...sel_tab_accion_motivo... a:"+a);
+						System.out.println("valord  de...sel_tab_accion_motivo... a:  "+a);
 						are_tex_motivo.setValue(a);						
 						System.out.println("valor de tex area de edicion:  "+are_tex_motivo.getValue());
 						sel_tab_accion_motivo.cerrar();
@@ -1890,13 +1896,25 @@ try {
 					}
 				}	
 				else if(dia_editar_motivo.isVisible()){
-					p_parametros.put("p_detalle_accion",are_tex_motivo.getValue());					
-					p_parametros.put("ide_geded",Long.parseLong(tab_deta_empleado_depar.getValor("ide_geded")));					
+					p_parametros.put("p_detalle_accion",are_tex_motivo.getValue());		
+					System.out.println("PArametro p_detalle_accion...  "+are_tex_motivo.getValue());
+					
+					p_parametros.put("ide_geded",Long.parseLong(tab_deta_empleado_depar.getValor("ide_geded")));
+					//System.out.println("PArametro ide_geded...  "+Long.parseLong(tab_deta_empleado_depar.getValor("ide_geded")));
+					
 					sef_reporte.setSeleccionFormatoReporte(p_parametros, rep_reporte.getPath());
 					p_parametros.put("p_gerencia_general",utilitario.getVariable("p_gerencia_general_ap"));
+					//System.out.println("PArametro p_gerencia_general...  "+utilitario.getVariable("p_gerencia_general_ap"));
+					
 					p_parametros.put("p_gerencia_administrativa",utilitario.getVariable("p_gerencia_administrativa_ap"));
+					//System.out.println("PArametro p_gerencia_administrativa...  "+utilitario.getVariable("p_gerencia_administrativa_ap"));
+					
 					p_parametros.put("p_cargo_gerencia_general",utilitario.getVariable("p_cargo_gerencia_general_ap"));
+					//System.out.println("PArametro p_cargo_gerencia_general...  "+utilitario.getVariable("p_cargo_gerencia_general_ap"));
+					
 					p_parametros.put("p_cargo_gerencia_administrativa",utilitario.getVariable("p_cargo_gerencia_administrativa_ap"));
+					//System.out.println("PArametro p_cargo_gerencia_administrativa...  "+utilitario.getVariable("p_cargo_gerencia_administrativa_ap"));
+					
 					p_parametros.put("REPORT_LOCALE", locale);
 					dia_editar_motivo.cerrar();
 					sef_reporte.dibujar();
