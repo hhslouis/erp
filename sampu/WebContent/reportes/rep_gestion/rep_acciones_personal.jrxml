@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_acciones_personal" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2330dbf2-51bf-49a0-98ca-23981c23fd5e">
-	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="158"/>
-	<property name="ireport.y" value="415"/>
+	<property name="ireport.zoom" value="1.0245201830476058"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="501"/>
 	<parameter name="ide_geded" class="java.lang.Long">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -148,7 +148,7 @@ SELECT ide_sucu,nom_sucu as sucursal_actual FROM sis_sucursal
 	<field name="PARTIDA_ACTUAL" class="java.lang.String"/>
 	<field name="SUCURSAL_ACTUAL" class="java.lang.String"/>
 	<field name="FINIQUITO_CONTRATO_GEAED" class="java.math.BigDecimal"/>
-	<field name="ANTERIOR_GEAME" class="java.math.BigDecimal"/>
+	<field name="ANTERIOR_GEAME" class="java.lang.Boolean"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -418,9 +418,7 @@ SELECT ide_sucu,nom_sucu as sucursal_actual FROM sis_sucursal
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ANTERIOR_GEAME}==0?null:$F{AREA_PROPUESTA}
-
-]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ANTERIOR_GEAME}==0?null:$F{AREA_PROPUESTA}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="b2d6361d-8cc8-4640-9bf9-387b0b57000d" stretchType="RelativeToBandHeight" x="380" y="200" width="174" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -430,10 +428,7 @@ SELECT ide_sucu,nom_sucu as sucursal_actual FROM sis_sucursal
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ANTERIOR_GEAME}==0?null:$F{DEPARTAMENTO_PROPUESTA}
-
-
-]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ANTERIOR_GEAME}==0?null:$F{DEPARTAMENTO_PROPUESTA}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="2c226eab-5190-4ba8-b3d2-310fdeec41e6" stretchType="RelativeToBandHeight" x="380" y="211" width="174" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -467,10 +462,7 @@ SELECT ide_sucu,nom_sucu as sucursal_actual FROM sis_sucursal
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ANTERIOR_GEAME}==0?null:$F{CARGO_PROPUESTA}
-
-
-]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ANTERIOR_GEAME}==0?null:$F{CARGO_PROPUESTA}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="a76ae86b-7149-49b6-b9ac-bc2a324e446b" stretchType="RelativeToBandHeight" x="380" y="233" width="174" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -480,12 +472,7 @@ SELECT ide_sucu,nom_sucu as sucursal_actual FROM sis_sucursal
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ANTERIOR_GEAME}==0?null:$F{NOM_SUCU_PROPUESTA}
-
-
-
-
-]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ANTERIOR_GEAME}==0?null:$F{NOM_SUCU_PROPUESTA}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement uuid="241fa21f-031f-4ec9-a179-ffedaa236ffc" stretchType="RelativeToBandHeight" x="380" y="244" width="174" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -495,13 +482,7 @@ SELECT ide_sucu,nom_sucu as sucursal_actual FROM sis_sucursal
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ANTERIOR_GEAME}==0?null:$F{RMU_GEEDP_PROPUESTA}
-
-
-
-
-
-]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ANTERIOR_GEAME}==0?null:$F{RMU_GEEDP_PROPUESTA}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="58821ff7-6725-4345-8742-5575025b5029" stretchType="RelativeToBandHeight" x="380" y="255" width="174" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -511,9 +492,7 @@ SELECT ide_sucu,nom_sucu as sucursal_actual FROM sis_sucursal
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ANTERIOR_GEAME}==0?null:$F{PARTIDA_PROPUESTA}
-
-]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ANTERIOR_GEAME}==0?null:$F{PARTIDA_PROPUESTA}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="a5d5e368-65d3-4e42-af5c-282fac1f9489" x="0" y="378" width="555" height="14"/>
@@ -1041,9 +1020,7 @@ SELECT ide_sucu,nom_sucu as sucursal_actual FROM sis_sucursal
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ANTERIOR_GEAME}==0?$F{DEPARTAMENTO_PROPUESTA}:$F{DEPARTAMENTO_ACTUAL}
-
-]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ANTERIOR_GEAME}==0?$F{DEPARTAMENTO_PROPUESTA}:$F{DEPARTAMENTO_ACTUAL}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="90defa2a-f181-42c4-9d49-fac896a20a87" stretchType="RelativeToBandHeight" x="102" y="211" width="176" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -1053,10 +1030,7 @@ SELECT ide_sucu,nom_sucu as sucursal_actual FROM sis_sucursal
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ANTERIOR_GEAME}==0?$F{GOCUPACIONAL_PROPUESTA}:$F{GOCUPACIONAL_ACTUAL}
-
-
-]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ANTERIOR_GEAME}==0?$F{GOCUPACIONAL_PROPUESTA}:$F{GOCUPACIONAL_ACTUAL}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="ab6a3743-d8f2-4103-a100-3364fa42f152" stretchType="RelativeToBandHeight" x="102" y="222" width="176" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -1066,9 +1040,7 @@ SELECT ide_sucu,nom_sucu as sucursal_actual FROM sis_sucursal
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ANTERIOR_GEAME}==0?$F{CARGO_PROPUESTA}:$F{CARGO_ACTUAL}
-
-]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ANTERIOR_GEAME}==0?$F{CARGO_PROPUESTA}:$F{CARGO_ACTUAL}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="782fd234-09ae-4c75-8de9-575c95efe380" stretchType="RelativeToBandHeight" x="102" y="233" width="176" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -1078,9 +1050,7 @@ SELECT ide_sucu,nom_sucu as sucursal_actual FROM sis_sucursal
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ANTERIOR_GEAME}==0?$F{NOM_SUCU_PROPUESTA}:$F{SUCURSAL_ACTUAL}
-
-]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ANTERIOR_GEAME}==0?$F{NOM_SUCU_PROPUESTA}:$F{SUCURSAL_ACTUAL}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement uuid="3af652ec-1e0b-486f-9a50-e65e4792f094" stretchType="RelativeToBandHeight" x="102" y="244" width="176" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -1090,9 +1060,7 @@ SELECT ide_sucu,nom_sucu as sucursal_actual FROM sis_sucursal
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ANTERIOR_GEAME}==0?$F{RMU_GEEDP_PROPUESTA}:$F{RMU_ACTUAL}
-
-]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ANTERIOR_GEAME}==0?$F{RMU_GEEDP_PROPUESTA}:$F{RMU_ACTUAL}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="f7544237-b15e-449c-907c-2b06d6cfe990" stretchType="RelativeToBandHeight" x="102" y="255" width="176" height="12" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
@@ -1102,10 +1070,7 @@ SELECT ide_sucu,nom_sucu as sucursal_actual FROM sis_sucursal
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ANTERIOR_GEAME}==0?$F{PARTIDA_PROPUESTA}:$F{PARTIDA_ACTUAL}
-
-
-]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ANTERIOR_GEAME}==0?$F{PARTIDA_PROPUESTA}:$F{PARTIDA_ACTUAL}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="b6fb8baa-e6ce-4d59-beba-19306fdd3cef" x="0" y="352" width="554" height="13"/>
