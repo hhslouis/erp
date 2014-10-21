@@ -16,7 +16,7 @@
 	<parameter name="SUCURSAL" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="IDE_GEPRO" class="java.lang.Integer">
+	<parameter name="IDE_GEPRO" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
