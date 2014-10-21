@@ -219,7 +219,7 @@ public class pre_horas_extras extends Pantalla {
 		tab_det_hor_ext.getColumna("HORA_INICIAL_ASDHE").setMascara("99:99:99");		
 		tab_det_hor_ext.getColumna("HORA_FINAL_ASDHE").setMetodoChange("calaculahoras");
 		tab_det_hor_ext.getColumna("HORA_FINAL_ASDHE").setMascara("99:99:99");		
-		tab_det_hor_ext.getColumna("NRO_HORAS_ASDHE").setEtiqueta();
+		//tab_det_hor_ext.getColumna("NRO_HORAS_ASDHE").setEtiqueta();
 		tab_det_hor_ext.getColumna("NRO_HORAS_ASDHE").alinearCentro();
 		tab_det_hor_ext.setColumnaSuma("NRO_HORAS_ASDHE");
 		tab_det_hor_ext.getColumna("NRO_HORAS_ASDHE").setFormatoNumero(2);
@@ -388,7 +388,7 @@ public class pre_horas_extras extends Pantalla {
 		tab_aprobacion_talento_humano.getColumna("fecha_asdhe").setLectura(true);
 		tab_aprobacion_talento_humano.getColumna("hora_inicial_asdhe").setLectura(true);
 		tab_aprobacion_talento_humano.getColumna("hora_final_asdhe").setLectura(true);
-		tab_aprobacion_talento_humano.getColumna("nro_horas_asdhe").setLectura(true);
+		tab_aprobacion_talento_humano.getColumna("nro_horas_asdhe").setLectura(false); 
 		tab_aprobacion_talento_humano.getColumna("nro_horas_aprobadas").setLectura(true);
 		tab_aprobacion_talento_humano.getColumna("actividades_asdhe").setLectura(true);
 		tab_aprobacion_talento_humano.getColumna("registro_novedad_asdhe").setLectura(true);
@@ -448,7 +448,7 @@ public class pre_horas_extras extends Pantalla {
 	public void seleccionaHoraExtra(SelectEvent evt){
 		tab_horas_extra.seleccionarFila(evt);
 		//	sumarHorasExtras();		
-		TablaGenerica tab_horas_aprobadas=utilitario.consultar("SELECT ide_asdhe,fecha_asdhe,hora_inicial_asdhe,hora_final_asdhe,nro_horas_asdhe,(case when nro_horas_aprobadas_asdhe is null then nro_horas_asdhe else nro_horas_aprobadas_asdhe end) as nro_horas_aprobadas,actividades_asdhe,registro_novedad_asdhe,activo_asdhe FROM ASI_DETALLE_HORAS_EXTRAS where activo_asdhe=falso and ide_aspvh="+tab_permisos.getValorSeleccionado()+" and ide_asdhe="+tab_horas_extra.getValorSeleccionado());
+		TablaGenerica tab_horas_aprobadas=utilitario.consultar("SELECT ide_asdhe,fecha_asdhe,hora_inicial_asdhe,hora_final_asdhe,nro_horas_asdhe,(case when nro_horas_aprobadas_asdhe is null then nro_horas_asdhe else nro_horas_aprobadas_asdhe end) as nro_horas_aprobadas,actividades_asdhe,registro_novedad_asdhe,activo_asdhe FROM ASI_DETALLE_HORAS_EXTRAS where activo_asdhe=false and ide_aspvh="+tab_permisos.getValorSeleccionado()+" and ide_asdhe="+tab_horas_extra.getValorSeleccionado());
 		String str_fecha_solicitada="";
 		String str_nro_horas_solicitadas="";
 		if (tab_horas_aprobadas.getTotalFilas()>0) {			
@@ -480,11 +480,11 @@ public class pre_horas_extras extends Pantalla {
 	
 	
 	public void aceptarCancelarHoraExtra(){
-		utilitario.getConexion().agregarSqlPantalla("update ASI_DETALLE_HORAS_EXTRAS set nro_horas_aprobadas_asdhe=nro_horas_asdhe,aprobado_asdhe=0 where ide_asdhe="+tab_horas_extra_carrito.getValorSeleccionado());
+		utilitario.getConexion().agregarSqlPantalla("update ASI_DETALLE_HORAS_EXTRAS set nro_horas_aprobadas_asdhe=nro_horas_asdhe,aprobado_asdhe=false where ide_asdhe="+tab_horas_extra_carrito.getValorSeleccionado());
 		tab_horas_extra_carrito.guardar();
 		guardarPantalla();
 		con_guardar.cerrar();
-		tab_suma_hora_aprobada.setSql("select ide_aspvh,(case when sum (nro_horas_aprobadas_asdhe) is null then 0 else sum (nro_horas_aprobadas_asdhe) end)  as hora_aprobado from asi_detalle_horas_extras where ide_aspvh="+tab_permisos.getValorSeleccionado()+" and aprobado_asdhe=1 group by ide_aspvh");
+		tab_suma_hora_aprobada.setSql("select ide_aspvh,(case when sum (nro_horas_aprobadas_asdhe) is null then 0 else sum (nro_horas_aprobadas_asdhe) end)  as hora_aprobado from asi_detalle_horas_extras where ide_aspvh="+tab_permisos.getValorSeleccionado()+" and aprobado_asdhe=true group by ide_aspvh");
 		tab_suma_hora_aprobada.ejecutarSql();
 		String valor_sumado=tab_suma_hora_aprobada.getValor("hora_aprobado");
 		if(tab_suma_hora_aprobada.getTotalFilas()>0){
@@ -527,7 +527,7 @@ public class pre_horas_extras extends Pantalla {
 	public void aceptarAprobarSolicitud(){		
 		
 		
-		utilitario.getConexion().agregarSqlPantalla("update ASI_PERMISOS_VACACION_HEXT set aprobado_aspvh=1 where TIPO_ASPVH=3 and ide_aspvh="+tab_permisos.getValorSeleccionado());
+		utilitario.getConexion().agregarSqlPantalla("update ASI_PERMISOS_VACACION_HEXT set aprobado_aspvh=true where TIPO_ASPVH=3 and ide_aspvh="+tab_permisos.getValorSeleccionado());
 		guardarPantalla();
 		con_guardar.cerrar();	
 		String str_ide_anterior=tab_permisos.getValorSeleccionado();
@@ -554,9 +554,9 @@ public class pre_horas_extras extends Pantalla {
 				if (tab_permisos.getValor("aprobado_aspvh").equalsIgnoreCase("true")) {
 					TablaGenerica tab_horas_extras=utilitario.consultar("SELECT ide_asdhe,fecha_asdhe,hora_inicial_asdhe,hora_final_asdhe,nro_horas_asdhe,actividades_asdhe,registro_novedad_asdhe,activo_asdhe FROM ASI_DETALLE_HORAS_EXTRAS where activo_asdhe=false and ide_aspvh="+tab_permisos.getValorSeleccionado());
 					if(tab_horas_extras.getTotalFilas()>0){
-						tab_horas_extra.setSql("SELECT ide_asdhe,fecha_asdhe,hora_inicial_asdhe,hora_final_asdhe,nro_horas_asdhe,(case when nro_horas_aprobadas_asdhe is null then nro_horas_asdhe else nro_horas_aprobadas_asdhe end)as nro_horas_aprobadas,actividades_asdhe,registro_novedad_asdhe,activo_asdhe FROM ASI_DETALLE_HORAS_EXTRAS where (case when aprobado_asdhe is null then 0 else aprobado_asdhe end) !=1 and ide_aspvh="+tab_permisos.getValorSeleccionado());
+						tab_horas_extra.setSql("SELECT ide_asdhe,fecha_asdhe,hora_inicial_asdhe,hora_final_asdhe,nro_horas_asdhe,(case when nro_horas_aprobadas_asdhe is null then nro_horas_asdhe else nro_horas_aprobadas_asdhe end)as nro_horas_aprobadas,actividades_asdhe,registro_novedad_asdhe,activo_asdhe FROM ASI_DETALLE_HORAS_EXTRAS where (case when aprobado_asdhe is null then false else aprobado_asdhe end) !=true and ide_aspvh="+tab_permisos.getValorSeleccionado());
 						tab_horas_extra.ejecutarSql();
-						tab_suma_hora_aprobada.setSql("select ide_aspvh,(case when sum (nro_horas_aprobadas_asdhe) is null then 0 else sum (nro_horas_aprobadas_asdhe) end)  as hora_aprobado from asi_detalle_horas_extras where ide_aspvh="+tab_permisos.getValorSeleccionado()+" and aprobado_asdhe=1 group by ide_aspvh");
+						tab_suma_hora_aprobada.setSql("select ide_aspvh,(case when sum (nro_horas_aprobadas_asdhe) is null then 0 else sum (nro_horas_aprobadas_asdhe) end)  as hora_aprobado from asi_detalle_horas_extras where ide_aspvh="+tab_permisos.getValorSeleccionado()+" and aprobado_asdhe=true group by ide_aspvh");
 						tab_suma_hora_aprobada.ejecutarSql();
 						String valor_sumado=tab_suma_hora_aprobada.getValor("hora_aprobado");
 						if(tab_suma_hora_aprobada.getTotalFilas()>0){
@@ -564,7 +564,7 @@ public class pre_horas_extras extends Pantalla {
 						}else{
 							eti_tot_hor_ext.setValue("Total Horas Extras Aprobadas: 0.00");
 						}
-						tab_horas_extra_carrito.setSql("SELECT ide_asdhe as ide_asdhe_2,fecha_asdhe,hora_inicial_asdhe,hora_final_asdhe,nro_horas_asdhe,(case when nro_horas_aprobadas_asdhe is null then nro_horas_asdhe else nro_horas_aprobadas_asdhe end)as nro_horas_aprobadas,actividades_asdhe,registro_novedad_asdhe,activo_asdhe FROM ASI_DETALLE_HORAS_EXTRAS where aprobado_asdhe=1 and ide_aspvh="+tab_permisos.getValorSeleccionado());
+						tab_horas_extra_carrito.setSql("SELECT ide_asdhe as ide_asdhe_2,fecha_asdhe,hora_inicial_asdhe,hora_final_asdhe,nro_horas_asdhe,(case when nro_horas_aprobadas_asdhe is null then nro_horas_asdhe else nro_horas_aprobadas_asdhe end)as nro_horas_aprobadas,actividades_asdhe,registro_novedad_asdhe,activo_asdhe FROM ASI_DETALLE_HORAS_EXTRAS where aprobado_asdhe=true and ide_aspvh="+tab_permisos.getValorSeleccionado());
 						tab_horas_extra_carrito.ejecutarSql();						
 						dia_horas_extras.dibujar();						
 					}else{
@@ -596,7 +596,7 @@ public class pre_horas_extras extends Pantalla {
 		
 	}
 	public void cancelarHorasExtras(){
-		utilitario.getConexion().agregarSqlPantalla("update ASI_DETALLE_HORAS_EXTRAS set aprobado_asdhe=0 where ide_aspvh in ("+tab_permisos.getValorSeleccionado()+") and aprobado_asdhe=1");
+		utilitario.getConexion().agregarSqlPantalla("update ASI_DETALLE_HORAS_EXTRAS set aprobado_asdhe=false where ide_aspvh in ("+tab_permisos.getValorSeleccionado()+") and aprobado_asdhe=true");
 		tab_horas_extra_carrito.guardar();
 		guardarPantalla();			
 		tab_det_hor_ext.ejecutarValorForanea(tab_permisos.getValorSeleccionado());
@@ -608,7 +608,7 @@ public class pre_horas_extras extends Pantalla {
 		con_guardar.cerrar();
 		
 
-		utilitario.getConexion().agregarSqlPantalla("update ASI_DETALLE_HORAS_EXTRAS set activo_asdhe=1,nomina_asdhe=0 where ide_aspvh="+tab_permisos.getValorSeleccionado()+" and APROBADO_ASDHE=1");
+		utilitario.getConexion().agregarSqlPantalla("update ASI_DETALLE_HORAS_EXTRAS set activo_asdhe=true,nomina_asdhe=false where ide_aspvh="+tab_permisos.getValorSeleccionado()+" and APROBADO_ASDHE=true");
 		guardarPantalla();
 		con_guardar.cerrar();	
 		tab_det_hor_ext.ejecutarValorForanea(tab_permisos.getValorSeleccionado());
@@ -621,7 +621,7 @@ public class pre_horas_extras extends Pantalla {
 					utilitario.agregarMensajeInfo("No se puede Aprobar la Solicitud ", "Solicitud se encuentra Anulada");
 					return;
 				}				
-				TablaGenerica tab_anular_horas_extra=utilitario.consultar("select * from asi_detalle_horas_extras where nomina_asdhe=1 and ide_aspvh="+tab_permisos.getValorSeleccionado());
+				TablaGenerica tab_anular_horas_extra=utilitario.consultar("select * from asi_detalle_horas_extras where nomina_asdhe=true and ide_aspvh="+tab_permisos.getValorSeleccionado());
 				if(tab_anular_horas_extra.getTotalFilas()>0){
 					utilitario.agregarMensajeInfo("No se puede Anular la Solicitud", "Ya se Encuentra registrada en nomina");
 				}else{
@@ -645,7 +645,7 @@ public class pre_horas_extras extends Pantalla {
 					tab_permisos.setValor("fecha_anula_aspvh", cal_fecha_anula.getFecha());
 					tab_permisos.modificar(tab_permisos.getFilaActual());
 					tab_permisos.guardar();
-					utilitario.getConexion().agregarSqlPantalla("update ASI_PERMISOS_VACACION_HEXT set anulado_aspvh=1 where ide_aspvh="+tab_permisos.getValorSeleccionado());					
+					utilitario.getConexion().agregarSqlPantalla("update ASI_PERMISOS_VACACION_HEXT set anulado_aspvh=true where ide_aspvh="+tab_permisos.getValorSeleccionado());					
 					guardarPantalla();
 					dia_anulado.cerrar();
 					tab_permisos.ejecutarSql();
@@ -670,12 +670,12 @@ public class pre_horas_extras extends Pantalla {
 				utilitario.agregarMensajeInfo("NO SE PUEDE APROBAR LA HORA", "EL NUMERO DE HORA POR APROBAR SUPERA LA HORA SOLICITADA");
 				return;
 			}
-			utilitario.getConexion().agregarSqlPantalla("update ASI_DETALLE_HORAS_EXTRAS set nro_horas_aprobadas_asdhe="+tex_modifica_horas_extra.getValue()+",aprobado_asdhe=1 where ide_asdhe="+tab_horas_extra.getValorSeleccionado());
+			utilitario.getConexion().agregarSqlPantalla("update ASI_DETALLE_HORAS_EXTRAS set nro_horas_aprobadas_asdhe="+tex_modifica_horas_extra.getValue()+",aprobado_asdhe=true where ide_asdhe="+tab_horas_extra.getValorSeleccionado());
 			//utilitario.getConexion().agregarSqlPantalla("update ASI_DETALLE_HORAS_EXTRAS set  where  ide_asdhe="+tab_horas_extra.getValorSeleccionado());
 			tab_det_hor_ext.guardar();
 			guardarPantalla();
 			dia_modifica_horas_extra.cerrar();
-			tab_suma_hora_aprobada.setSql("select ide_aspvh,(case when sum (nro_horas_aprobadas_asdhe) is null then 0 else sum (nro_horas_aprobadas_asdhe) end)  as hora_aprobado from asi_detalle_horas_extras where ide_aspvh="+tab_permisos.getValorSeleccionado()+" and aprobado_asdhe=1 group by ide_aspvh");
+			tab_suma_hora_aprobada.setSql("select ide_aspvh,(case when sum (nro_horas_aprobadas_asdhe) is null then 0 else sum (nro_horas_aprobadas_asdhe) end)  as hora_aprobado from asi_detalle_horas_extras where ide_aspvh="+tab_permisos.getValorSeleccionado()+" and aprobado_asdhe=true group by ide_aspvh");
 			tab_suma_hora_aprobada.ejecutarSql();
 			eti_tot_hor_ext.setValue("Total Horas Extras Aprobadas: "+tab_suma_hora_aprobada.getValor("hora_aprobado"));
 			utilitario.addUpdate("eti_tot_hor_ext");
@@ -708,9 +708,9 @@ public class pre_horas_extras extends Pantalla {
 				tab_aprobacion_talento_humano.setSql("SELECT ide_asdhe as ide_asdhe_3,ide_asmot,fecha_asdhe,hora_inicial_asdhe,hora_final_asdhe,nro_horas_asdhe, " +
 						"(case when nro_horas_aprobadas_asdhe is null then nro_horas_asdhe else nro_horas_aprobadas_asdhe end)as nro_horas_aprobadas, " +
 						"actividades_asdhe,registro_novedad_asdhe,activo_asdhe,aprobado_asdhe " +
-						"FROM ASI_DETALLE_HORAS_EXTRAS where ide_aspvh="+tab_permisos.getValorSeleccionado()+" and activo_asdhe= 1 and aprobado_asdhe=1");
+						"FROM ASI_DETALLE_HORAS_EXTRAS where ide_aspvh="+tab_permisos.getValorSeleccionado()+" and activo_asdhe= true and aprobado_asdhe=true");
 				tab_aprobacion_talento_humano.ejecutarSql();
-				tab_suma_hora_aprobada.setSql("select ide_aspvh,(case when sum (nro_horas_aprobadas_asdhe) is null then 0 else sum (nro_horas_aprobadas_asdhe) end)  as hora_aprobado from asi_detalle_horas_extras where ide_aspvh="+tab_permisos.getValorSeleccionado()+" and aprobado_asdhe=1 group by ide_aspvh");
+				tab_suma_hora_aprobada.setSql("select ide_aspvh,(case when sum (nro_horas_aprobadas_asdhe) is null then 0 else sum (nro_horas_aprobadas_asdhe) end)  as hora_aprobado from asi_detalle_horas_extras where ide_aspvh="+tab_permisos.getValorSeleccionado()+" and aprobado_asdhe=true group by ide_aspvh");
 				tab_suma_hora_aprobada.ejecutarSql();
 				String valor_sumado=tab_suma_hora_aprobada.getValor("hora_aprobado");
 				if(tab_suma_hora_aprobada.getTotalFilas()>0){
