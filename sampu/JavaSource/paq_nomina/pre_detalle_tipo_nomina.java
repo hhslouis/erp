@@ -246,7 +246,10 @@ public class pre_detalle_tipo_nomina extends Pantalla {
 
 	public void actualizarNomina(String ide_nrdtn_origen,String ide_nrdtn_destino){
 		TablaGenerica tab_det_rub_origen=utilitario.consultar("select * from NRH_DETALLE_RUBRO where IDE_NRDTN="+ide_nrdtn_origen+" and ACTIVO_NRDER=TRUE");
+		System.out.println("sql tab_det_rub_origen...  "+utilitario.consultar("select * from NRH_DETALLE_RUBRO where IDE_NRDTN="+ide_nrdtn_origen+" and ACTIVO_NRDER=TRUE"));
+		
 		TablaGenerica tab_det_rub_destino=utilitario.consultar("select * from NRH_DETALLE_RUBRO where IDE_NRDTN="+ide_nrdtn_destino);
+		System.out.println("sql tab_det_rub_destino...  "+utilitario.consultar("select * from NRH_DETALLE_RUBRO where IDE_NRDTN="+ide_nrdtn_destino));
 		int band=0;
 		for (int i = 0; i < tab_det_rub_origen.getTotalFilas(); i++) {
 			String ide_nrrub_origen=tab_det_rub_origen.getValor(i, "IDE_NRRUB");
@@ -424,8 +427,13 @@ public class pre_detalle_tipo_nomina extends Pantalla {
 
 	@Override
 	public void aceptarReporte() {
+		System.out.println("Ingreso al Reporte antes del if  ");
 		if (rep_reporte.getReporteSelecionado().equalsIgnoreCase("Rubros Tipo Nomina")) {
+			System.out.println("Ingreso al Reporte dentro del 1 if...  ");
+			
 			if (rep_reporte.isVisible()) {
+				System.out.println("Ingreso al Reporte dentro del 2 if...  ");
+				
 				p_parametros= new HashMap();
 				rep_reporte.cerrar();
 				set_det_tip_nom.setTitle("SELECCION DETALLE TIPO NOMINA");
@@ -433,32 +441,60 @@ public class pre_detalle_tipo_nomina extends Pantalla {
 				set_det_tip_nom.dibujar();
 
 			}else if(set_det_tip_nom.isVisible()) {
+				System.out.println("Ingreso al Reporte dentro del else del 2 if...  ");
+				
 //				if (set_det_tip_nom.getSeleccionados()!=null && !set_det_tip_nom.getSeleccionados().isEmpty()){
-					if (set_det_tip_nom.getValorSeleccionado()!=null && !set_det_tip_nom.getValorSeleccionado().isEmpty()){
+					if (set_det_tip_nom.getValorSeleccionado() !=null && !set_det_tip_nom.getValorSeleccionado().isEmpty()){
+						System.out.println("Ingreso al Reporte dentro del 3 if...  ");
+						System.out.println("dentro del 3 if set_det_tip_nom... "+set_det_tip_nom.getValorSeleccionado() );
+						
 
-					p_parametros.put("TIPO_NOMINA",ser_nomina.getTipoNomina(ser_nomina.getDetalleTipoNomina(set_det_tip_nom.getValorSeleccionado()).getValor("ide_nrtin")).getValor("DETALLE_NRTIN"));
+					p_parametros.put("TIPO_NOMINA",ser_nomina.getTipoNomina(ser_nomina.getDetalleTipoNomina(set_det_tip_nom.getValorSeleccionado()).getValor("ide_nrtin")).getValor("detalle_nrtin"));
+					System.out.println("RepPara TIPO_NOMINA...  "+ser_nomina.getTipoNomina(ser_nomina.getDetalleTipoNomina(set_det_tip_nom.getValorSeleccionado()).getValor("ide_nrtin")).getValor("DETALLE_NRTIN"));
 					p_parametros.put("TIPO_EMPLEADO",ser_nomina.getTipoEmpleado(ser_nomina.getDetalleTipoNomina(set_det_tip_nom.getValorSeleccionado()).getValor("IDE_GTTEM")).getValor("DETALLE_GTTEM"));
+					System.out.println("RepPara TIPO_EMPLEADO...  "+ser_nomina.getTipoEmpleado(ser_nomina.getDetalleTipoNomina(set_det_tip_nom.getValorSeleccionado()).getValor("IDE_GTTEM")).getValor("DETALLE_GTTEM"));
 					String sucursal="";
 					try {
+						System.out.println("Ingreso al try  ...  ");
+						
 						sucursal=ser_gestion.getSucursal(ser_nomina.getDetalleTipoNomina(set_det_tip_nom.getValorSeleccionado()).getValor("IDE_SUCU")).getValor("nom_sucu");
 					} catch (Exception e) {
 						// TODO: handle exception
+						System.out.println("Ingreso al Reporte catch...  ");
+						
 					}
 					p_parametros.put("SUCURSAL",sucursal);
+					System.out.println("RepPara sucursal...  "+sucursal);
 					TablaGenerica tab_emp=utilitario.consultar("select * from SIS_EMPRESA");
+					System.out.println("RepParaSql tab_emp...  "+tab_emp.getSql());
+					
 					TablaGenerica tab_usua=utilitario.consultar("select * from SIS_USUARIO where IDE_USUA="+utilitario.getVariable("ide_usua"));
+					System.out.println("RepParaSql tab_usua...  "+tab_usua.getSql());
+					
 					p_parametros.put("titulo", "RUBROS TIPO DE NOMINA");
+					System.out.println("RepPara titulo...  "+"RUBROS TIPO DE NOMINA");
+					
 					p_parametros.put("nick", tab_usua.getValor("nick_usua"));
+					System.out.println("RepPara nick...  "+tab_usua.getValor("nick_usua"));
+					
 					p_parametros.put("direccion", tab_emp.getValor("DIRECCION_EMPR"));
+					System.out.println("RepPara direccion...  "+tab_emp.getValor("DIRECCION_EMPR"));
+					
 					p_parametros.put("telefono", tab_emp.getValor("TELEFONO_EMPR"));
+					System.out.println("RepPara telefono...  "+tab_emp.getValor("TELEFONO_EMPR"));
+					
 					p_parametros.put("dir_logo", tab_emp.getValor("LOGO_EMPR"));
+					System.out.println("RepPara dir_logo...  "+tab_emp.getValor("LOGO_EMPR"));
 
+					
 					ReporteDataSource rep = new ReporteDataSource(getTablaRubroTipoNomina( set_det_tip_nom.getValorSeleccionado()));
 					sef_reporte.setSeleccionFormatoReporte(p_parametros, rep_reporte.getPath(), rep);
 
 					set_det_tip_nom.cerrar();
 					sef_reporte.dibujar();
 				}else{
+					System.out.println("Ingreso al Reporte dentro del else 3 if ...  ");
+					
 					utilitario.agregarMensajeInfo("No ha seleccionado Tipo de nomina", "");
 				}
 			}
@@ -546,7 +582,7 @@ public class pre_detalle_tipo_nomina extends Pantalla {
 				"where DER.ide_nrdtn IN ("+ide_nrdtn+") and ACTIVO_NRDER=TRUE  " +
 				"ORDER BY DER.IDE_NRDTN ASC ,DER.ORDEN_NRDER ASC");
 
-		System.out.println("rep tip nom "+tab_rub_tip_nomina.getSql());
+		System.out.println("rep tip nom...  "+tab_rub_tip_nomina.getSql());
 		for (int i = 0; i < tab_rub_tip_nomina.getTotalFilas(); i++) {
 			if(tab_rub_tip_nomina.getValor(i, "FORMULA")!=null && !tab_rub_tip_nomina.getValor(i, "FORMULA").isEmpty()){
 				if(tab_rub_tip_nomina.getValor(i, "FORMULA").startsWith("=")){
