@@ -5150,8 +5150,11 @@ System.out.println("sql getSqlEmpleadosRol..."+sql);
 	 * @return si no existe datos retorna null 
 	 */
 	public TablaGenerica getDetalleRubro(String ide_nrder){
+		System.out.println("SN C_PARAMETRO getDetalleRubro ide_nrder... "+ide_nrder);
 		TablaGenerica tab_dru=utilitario.consultar("select * from NRH_DETALLE_RUBRO where IDE_NRDER="+ide_nrder+" ");
-		System.out.println("sql tab_dru... "+tab_dru.getSql());
+		System.out.println(" ");
+		
+		System.out.println("SN sql getDetalleRubro tab_dru ... "+tab_dru.getSql());
 		
 		if (tab_dru.getTotalFilas()>0){			
 			return tab_dru;			
@@ -5279,10 +5282,10 @@ System.out.println("sql getSqlEmpleadosRol..."+sql);
 	 * @return TablaGenerica del detalle del rubro
 	 */
 	public TablaGenerica getDetalleRubro(String IDE_NRDTN,String IDE_NRRUB){
-
+		System.out.println("SN getDetalleRubro C_PARAMETRO  IDE_NRRUB...  "+IDE_NRRUB);
 		TablaGenerica tab_detalle_rubro=utilitario.consultar("select * from NRH_DETALLE_RUBRO " +
 				"WHERE IDE_NRDTN="+IDE_NRDTN+" AND IDE_NRRUB="+IDE_NRRUB);
-
+		System.out.println("SN SQL getDetalleRubro tab_detalle_rubro...  "+tab_detalle_rubro.getSql());
 		return tab_detalle_rubro;
 
 	}
@@ -5293,19 +5296,38 @@ System.out.println("sql getSqlEmpleadosRol..."+sql);
 	 * @return TablaGenerica del detalle del rubro
 	 */
 	public TablaGenerica getDetalleRubro(String IDE_NRDTN,String IDE_NRRUB,String IDE_GEREG){
+		System.out.println("SN C_PARAMETROS getDetalleRubro IDE_NRDTN..."+IDE_NRDTN);
+		System.out.println("SN C_PARAMETROS getDetalleRubro IDE_NRRUB..."+IDE_NRRUB);
+		System.out.println("SN C_PARAMETROS getDetalleRubro IDE_GEREG..."+IDE_GEREG);
+		
+		
 		if (IDE_NRDTN==null || IDE_NRDTN.isEmpty()){
+			System.out.println("SN C_PARAMETROS getDetalleRubro IDE_NRDTN == A NULL..."+IDE_NRDTN);
+			
 			IDE_NRDTN="-1";
+			System.out.println("SN C_PARAMETROS getDetalleRubro IDE_NRDTN -1..."+IDE_NRDTN);
+			
 		}
 		if (IDE_NRRUB==null || IDE_NRRUB.isEmpty()){
+			System.out.println("SN C_PARAMETROS getDetalleRubro IDE_NRRUB == A NULL..."+IDE_NRRUB);
+			
 			IDE_NRRUB="-1";
+			System.out.println("SN C_PARAMETROS getDetalleRubro IDE_NRRUB -1..."+IDE_NRRUB);
+			
 		}
 		if (IDE_GEREG==null || IDE_GEREG.isEmpty()){
+			System.out.println("SN C_PARAMETROS getDetalleRubro IDE_GEREG == A NULL..."+IDE_GEREG);
+			
 			IDE_GEREG="-1";
+			System.out.println("SN C_PARAMETROS getDetalleRubro IDE_GEREG -1..."+IDE_GEREG);
+			
 		}
 
 
 		TablaGenerica tab_detalle_rubro=utilitario.consultar("select * from NRH_DETALLE_RUBRO " +
 				"WHERE IDE_NRDTN="+IDE_NRDTN+" AND IDE_NRRUB="+IDE_NRRUB+" AND IDE_GEREG="+IDE_GEREG );
+		System.out.println("SN SQL getDetalleRubro tab_detalle_rubro DESPUES DE LOS NULL ..."+tab_detalle_rubro.getSql());
+		
 
 		return tab_detalle_rubro;
 
@@ -5319,9 +5341,18 @@ System.out.println("sql getSqlEmpleadosRol..."+sql);
 	 * @return  ide del detalle de la nomina actual si existe
 	 */
 	public String getNuevoIdeTipoNomina(String IDE_NRDER, String  IDE_NRDTN ){
+		
+		System.out.println("SN C_PARAMETROS getNuevoIdeTipoNomina IDE_NRDER..."+IDE_NRDER);
+		System.out.println("SN C_PARAMETROS getNuevoIdeTipoNomina IDE_NRDTN..."+IDE_NRDTN);
+				
+		
 		TablaGenerica tab_dtn=getDetalleRubro(IDE_NRDER);
+		System.out.println("SN sql getNuevoIdeTipoNomina tab_dtn..."+tab_dtn.getSql());
+		
 		if(tab_dtn!=null){
 			String str_ide_nrrub=tab_dtn.getValor("IDE_NRRUB");
+			System.out.println("SN C_PARAMETROS getNuevoIdeTipoNomina str_ide_nrrub..."+str_ide_nrrub);
+			
 			if(str_ide_nrrub!=null){
 				return getDetalleRubro(IDE_NRDTN, str_ide_nrrub).getValor("IDE_NRDER");
 			}			

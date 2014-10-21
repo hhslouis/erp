@@ -181,7 +181,7 @@ public class ServicioEscenariosNomina {
 				"( "+
 				""+sql_emp+"" +
 				")a)) " +
-				"AND DER.ACTIVO_NRDER=1 " +
+				"AND DER.ACTIVO_NRDER=TRUE " +
 				"AND DTN.IDE_NRTIN="+utilitario.getVariable("p_nrh_tipo_nomina_escenario")+" "+
 				"ORDER BY DER.ORDEN_NRDER DESC ");
 		return tab_rubros;
@@ -198,7 +198,7 @@ public class ServicioEscenariosNomina {
 				"INNER JOIN NRH_RUBRO RUB ON RUB.IDE_NRRUB=DER.IDE_NRRUB " +
 				"INNER JOIN NRH_DETALLE_TIPO_NOMINA DTN ON DER.IDE_NRDTN=DTN.IDE_NRDTN "+
 				"WHERE DTN.IDE_NRDTN in ("+IDE_NRDTN+") " +
-				"AND DER.ACTIVO_NRDER=1 " +
+				"AND DER.ACTIVO_NRDER=TRUE " +
 				"AND DTN.IDE_NRTIN="+utilitario.getVariable("p_nrh_tipo_nomina_escenario")+" "+
 				"ORDER BY DER.ORDEN_NRDER DESC ");
 		return tab_rubros;
