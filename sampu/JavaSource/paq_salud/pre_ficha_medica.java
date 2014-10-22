@@ -42,7 +42,7 @@ import framework.componentes.Tabla;
 import framework.componentes.Tabulador;
 import framework.componentes.Texto;
 
-
+ 
 public class pre_ficha_medica extends Pantalla {
 
 	private Tabla tab_ficha_medica=new Tabla();
