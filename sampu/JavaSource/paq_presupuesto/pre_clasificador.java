@@ -23,6 +23,7 @@ public class pre_clasificador extends Pantalla {
 		tab_presupuesto.setTabla("pre_clasificador","ide_prcla", 1);
 		tab_presupuesto.getColumna("grupo_prcla").setCombo(utilitario.getListaGrupoCuentaPresupuesto());
 		tab_presupuesto.getColumna("clase_economica_prcla").setCombo(utilitario.getListaClasificacionEconomica());
+		tab_presupuesto.getColumna("grupo_sigef_prcla").setCombo(utilitario.getListaGrupoSigef());
 		
 		tab_presupuesto.setCampoPadre("pre_ide_prcla"); //necesarios para el arbol
 		tab_presupuesto.setCampoNombre("codigo_clasificador_prcla"); //necesarios para el arbol
