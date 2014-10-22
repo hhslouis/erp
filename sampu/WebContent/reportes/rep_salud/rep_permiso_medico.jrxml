@@ -44,47 +44,103 @@ and a.ide_satic = f.ide_satic
 and a.ide_usua= g.ide_usua
 and ide_safim=$P{ide_safim}]]>
 	</queryString>
-	<field name="IDE_SAFIM" class="java.lang.Integer"/>
-	<field name="IDE_SUCU" class="java.math.BigDecimal"/>
-	<field name="IDE_GTEMP" class="java.math.BigDecimal"/>
-	<field name="IDE_GEEDP" class="java.math.BigDecimal"/>
-	<field name="IDE_USUA" class="java.math.BigDecimal"/>
-	<field name="IDE_SAESP" class="java.math.BigDecimal"/>
-	<field name="IDE_SATIC" class="java.math.BigDecimal"/>
-	<field name="ANIO_EDAD_SAFIM" class="java.math.BigDecimal"/>
-	<field name="MES_EDAD_SAFIM" class="java.math.BigDecimal"/>
-	<field name="PESO_SAFIM" class="java.math.BigDecimal"/>
-	<field name="TALLA_SAFIM" class="java.math.BigDecimal"/>
-	<field name="IMC_SAFIM" class="java.math.BigDecimal"/>
-	<field name="TEMPERATURA_SAFIM" class="java.math.BigDecimal"/>
-	<field name="PULSO_SAFIM" class="java.math.BigDecimal"/>
-	<field name="SUPERFICIE_CORPORAL_SAFIM" class="java.math.BigDecimal"/>
-	<field name="FRE_RESPIRATORIA_SAFIM" class="java.math.BigDecimal"/>
-	<field name="FRE_CARDIACA_SAFIM" class="java.math.BigDecimal"/>
-	<field name="FECHA_CONSULTA_SAFIM" class="java.sql.Timestamp"/>
-	<field name="PRESUNTIVO_SAFIM" class="java.math.BigDecimal"/>
-	<field name="DEFINITIVO_SAFIM" class="java.math.BigDecimal"/>
-	<field name="PRIMERA_SAFIM" class="java.math.BigDecimal"/>
-	<field name="SUBSECUENTE_SAFIM" class="java.math.BigDecimal"/>
-	<field name="INTERCONSULTA_SAFIM" class="java.math.BigDecimal"/>
-	<field name="OBSERVACIONES_SAFIM" class="java.lang.String"/>
-	<field name="DOCUMENTO_IDENTIDAD_GTEMP" class="java.lang.String"/>
-	<field name="IDE_GEARE" class="java.math.BigDecimal"/>
-	<field name="NOM_SUCU" class="java.lang.String"/>
-	<field name="EMPLEADO" class="java.lang.String"/>
-	<field name="DETALLE_GECAF" class="java.lang.String"/>
-	<field name="DETALLE_GEGRO" class="java.lang.String"/>
-	<field name="SUCURSAL_EMPLEADO" class="java.lang.String"/>
-	<field name="DETALLE_GEDEP" class="java.lang.String"/>
-	<field name="DETALLE_GEARE" class="java.lang.String"/>
-	<field name="DETALLE_SAESP" class="java.lang.String"/>
-	<field name="DETALLE_SATIC" class="java.lang.String"/>
-	<field name="MEDICO" class="java.lang.String"/>
-	<field name="FECHA_DESDE_CERT_SAFIM" class="java.sql.Timestamp"/>
-	<field name="FECHA_HASTA_CERT_SAFIM" class="java.sql.Timestamp"/>
-	<field name="NRO_DIA_CERT_SAFIM" class="java.math.BigDecimal"/>
+	<field name="ide_safim" class="java.lang.Integer"/>
+	<field name="ide_sucu" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_sucu]]></fieldDescription>
+	</field>
+	<field name="ide_gtemp" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gth_empleado, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="ide_geedp" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_empleados_departamento_par, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="ide_usua" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_usua]]></fieldDescription>
+	</field>
+	<field name="ide_saesp" class="java.lang.Integer"/>
+	<field name="ide_satic" class="java.lang.Integer"/>
+	<field name="anio_edad_safim" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define cuantos anios tiene el empleado al moento de la consulta.]]></fieldDescription>
+	</field>
+	<field name="mes_edad_safim" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define el numero de meses que tiene el empleado al momento de la consulta.]]></fieldDescription>
+	</field>
+	<field name="peso_safim" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Este campo define el peso que tiene el empleado al momento de la consulta (kg)]]></fieldDescription>
+	</field>
+	<field name="talla_safim" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Este campo define la talla del empleado al momento de la consulta (mts)]]></fieldDescription>
+	</field>
+	<field name="imc_safim" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Este campo define el indice de masa corporal del empleado al momento de la consulta.]]></fieldDescription>
+	</field>
+	<field name="temperatura_safim" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la temperatura del empleado al momento de la consulta.]]></fieldDescription>
+	</field>
+	<field name="pulso_safim" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define el pulso del empleado al momento de la consulta]]></fieldDescription>
+	</field>
+	<field name="superficie_corporal_safim" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Este campo define la superficie corporal del empleado.]]></fieldDescription>
+	</field>
+	<field name="fre_respiratoria_safim" class="java.lang.Integer">
+		<fieldDescription><![CDATA[este campo define la frecuencia respiratoria, del empleado.]]></fieldDescription>
+	</field>
+	<field name="fre_cardiaca_safim" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la frecuencia cardiaca del empleado.]]></fieldDescription>
+	</field>
+	<field name="fecha_consulta_safim" class="java.sql.Date">
+		<fieldDescription><![CDATA[Este campo define la fecha de consulta del empleado.]]></fieldDescription>
+	</field>
+	<field name="presuntivo_safim" class="java.lang.Boolean"/>
+	<field name="definitivo_safim" class="java.lang.Boolean"/>
+	<field name="primera_safim" class="java.lang.Boolean"/>
+	<field name="subsecuente_safim" class="java.lang.Boolean"/>
+	<field name="interconsulta_safim" class="java.lang.Boolean"/>
+	<field name="observaciones_safim" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define las observaciones adicionales que puede tener la consulat medica.]]></fieldDescription>
+	</field>
+	<field name="documento_identidad_gtemp" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el numero de documento de identidad que posee el empleado.]]></fieldDescription>
+	</field>
+	<field name="ide_geare" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_area, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="nom_sucu" class="java.lang.String">
+		<fieldDescription><![CDATA[nom_sucu]]></fieldDescription>
+	</field>
+	<field name="empleado" class="java.lang.String"/>
+	<field name="detalle_gecaf" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del cargo y el puesto en el caso d emonte de piedad, ejemplo: PROFESIONAL 1, TECNICO A , TECNICO B, asi como los puestos: CAJERO, PQ Y PH, etc]]></fieldDescription>
+	</field>
+	<field name="detalle_gegro" class="java.lang.String">
+		<fieldDescription><![CDATA[detalle_gegro]]></fieldDescription>
+	</field>
+	<field name="sucursal_empleado" class="java.lang.String"/>
+	<field name="detalle_gedep" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del departamento, ejemplo: DIRECTORIO, TECNOLOGIA, INFRAESTRUCTURA, etc.]]></fieldDescription>
+	</field>
+	<field name="detalle_geare" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del area ejemplo: Directorio, Auditoria Interna, etc.]]></fieldDescription>
+	</field>
+	<field name="detalle_saesp" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre de la especialida, Ejemplo: Medicina General.]]></fieldDescription>
+	</field>
+	<field name="detalle_satic" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del tipo de consulta. Ejemplo:  Consulta.]]></fieldDescription>
+	</field>
+	<field name="medico" class="java.lang.String"/>
+	<field name="fecha_desde_cert_safim" class="java.sql.Date">
+		<fieldDescription><![CDATA[Este campo define la fecha desde cuando aplica la certificacion medica, en caso de solicitar el empleado.]]></fieldDescription>
+	</field>
+	<field name="fecha_hasta_cert_safim" class="java.sql.Date">
+		<fieldDescription><![CDATA[Este campo define la fecha hasta cuando es valido la certificacion medica en caso de solicitar el empleado.]]></fieldDescription>
+	</field>
+	<field name="nro_dia_cert_safim" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define el numero de dias que es valido la certificacion, en caso de ser solicitada por el empleado.]]></fieldDescription>
+	</field>
 	<variable name="contador" class="java.lang.Integer" calculation="Count">
-		<variableExpression><![CDATA[$F{IDE_GEARE}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_geare}]]></variableExpression>
 		<initialValueExpression><![CDATA[1]]></initialValueExpression>
 	</variable>
 	<background>
@@ -110,7 +166,7 @@ and ide_safim=$P{ide_safim}]]>
 					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema_biess/rep_cabecera_horizontal.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera_horizontal.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
@@ -247,7 +303,7 @@ and ide_safim=$P{ide_safim}]]>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{EMPLEADO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{empleado}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
 				<reportElement uuid="0bff9b56-c1d1-4f80-b73a-843edb2d8593" key="textField-2" positionType="Float" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="365" y="5" width="89" height="15" isPrintWhenDetailOverflows="true"/>
@@ -260,7 +316,7 @@ and ide_safim=$P{ide_safim}]]>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_CONSULTA_SAFIM}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_consulta_safim}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="b9d0bfd6-d8e5-4e75-9b71-23af56ccf259" key="textField-4" positionType="Float" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="709" y="5" width="89" height="15" isPrintWhenDetailOverflows="true"/>
@@ -273,7 +329,7 @@ and ide_safim=$P{ide_safim}]]>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NOM_SUCU}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nom_sucu}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="842abb49-bbfa-441d-ba6b-358b9691a80c" key="textField-5" positionType="Float" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="36" y="23" width="112" height="15" isPrintWhenDetailOverflows="true"/>
@@ -286,7 +342,7 @@ and ide_safim=$P{ide_safim}]]>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DOCUMENTO_IDENTIDAD_GTEMP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{documento_identidad_gtemp}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="67d1083b-507c-4088-b722-133c57a0e5d5" key="textField-6" positionType="Float" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="244" y="23" width="87" height="15" isPrintWhenDetailOverflows="true"/>
@@ -299,7 +355,7 @@ and ide_safim=$P{ide_safim}]]>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{SUCURSAL_EMPLEADO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{sucursal_empleado}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="824605b2-8bed-48c5-992a-eed7b3ee3c28" key="textField-7" positionType="Float" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="367" y="23" width="152" height="15" isPrintWhenDetailOverflows="true"/>
@@ -312,7 +368,7 @@ and ide_safim=$P{ide_safim}]]>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GEARE}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_geare}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="ad5a6978-c953-4ff3-a29f-135d710476be" key="textField-8" positionType="Float" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="599" y="23" width="199" height="15" isPrintWhenDetailOverflows="true"/>
@@ -325,7 +381,7 @@ and ide_safim=$P{ide_safim}]]>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GEDEP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_gedep}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="ff6c29cd-fc5e-4c96-80a9-26ff7a0a3771" key="textField-9" positionType="Float" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="52" y="40" width="182" height="15" isPrintWhenDetailOverflows="true"/>
@@ -338,7 +394,7 @@ and ide_safim=$P{ide_safim}]]>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GEGRO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_gegro}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="43c3561d-2c0e-458b-b1b8-0c5ee138cc5d" key="textField-10" positionType="Float" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="276" y="41" width="242" height="15" isPrintWhenDetailOverflows="true"/>
@@ -351,7 +407,7 @@ and ide_safim=$P{ide_safim}]]>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETALLE_GECAF}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_gecaf}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement uuid="a8e6652c-52c4-4bf4-b973-ac5ec219fa0c" key="line-1" x="0" y="58" width="802" height="1"/>
@@ -380,7 +436,7 @@ and ide_safim=$P{ide_safim}]]>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{MEDICO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{medico}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement uuid="7140dd32-b571-42ac-93b5-24201f9e494e" key="line-2" x="0" y="102" width="802" height="1"/>
@@ -461,7 +517,7 @@ and ide_safim=$P{ide_safim}]]>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_DESDE_CERT_SAFIM}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_desde_cert_safim}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
 				<reportElement uuid="b15fb2e5-1bd7-4c93-be40-bd72ae95a72a" key="textField-13" positionType="Float" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="274" y="77" width="89" height="15" isPrintWhenDetailOverflows="true"/>
@@ -474,7 +530,7 @@ and ide_safim=$P{ide_safim}]]>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_HASTA_CERT_SAFIM}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_hasta_cert_safim}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="d81724a7-decd-4149-885b-87fd78678c14" key="textField-14" positionType="Float" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="481" y="76" width="319" height="23" isPrintWhenDetailOverflows="true"/>
@@ -487,7 +543,7 @@ and ide_safim=$P{ide_safim}]]>
 				<textElement textAlignment="Left" verticalAlignment="Top">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{OBSERVACIONES_SAFIM}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{observaciones_safim}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="9ca421bd-797c-4573-a681-efc421e43ecc" key="textField-15" positionType="Float" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="401" y="77" width="29" height="15" isPrintWhenDetailOverflows="true"/>
@@ -500,7 +556,7 @@ and ide_safim=$P{ide_safim}]]>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NRO_DIA_CERT_SAFIM}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nro_dia_cert_safim}]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
@@ -521,7 +577,7 @@ and ide_safim=$P{ide_safim}]]>
 					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="ide_safim">
-					<subreportParameterExpression><![CDATA[$F{IDE_SAFIM}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_safim}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_salud/sub_rep_examenes.jasper"]]></subreportExpression>
@@ -532,7 +588,7 @@ and ide_safim=$P{ide_safim}]]>
 					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="ide_safim">
-					<subreportParameterExpression><![CDATA[$F{IDE_SAFIM}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_safim}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_salud/sub_rep_anamnesis.jasper"]]></subreportExpression>
@@ -543,7 +599,7 @@ and ide_safim=$P{ide_safim}]]>
 					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="ide_safim">
-					<subreportParameterExpression><![CDATA[$F{IDE_SAFIM}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_safim}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_salud/sub_rep_diagnostico.jasper"]]></subreportExpression>
@@ -551,7 +607,7 @@ and ide_safim=$P{ide_safim}]]>
 			<subreport isUsingCache="true">
 				<reportElement uuid="f6ef713d-f4f2-486a-8876-092aee870a4e" key="subreport" x="0" y="3" width="224" height="38"/>
 				<subreportParameter name="ide_safim">
-					<subreportParameterExpression><![CDATA[$F{IDE_SAFIM}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{ide_safim}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_salud/sub_rep_motivo_consulta.jasper"]]></subreportExpression>
