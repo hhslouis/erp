@@ -12,7 +12,7 @@ import framework.componentes.Tabla;
 /**
  *jkhjb
  * @author Diego
- */
+ */  
 public class pre_posiciograma extends Pantalla {
 
     
