@@ -16,20 +16,21 @@ public class pre_catalogo_cuenta extends Pantalla{
 					        
 		tab_tipo_catalogo_cuenta.setId("tab_tipo_catalogo_cuenta");
 		tab_tipo_catalogo_cuenta.setTipoFormulario(true);   
-		tab_tipo_catalogo_cuenta.getGrid().setColumns(4);
+		tab_tipo_catalogo_cuenta.getGrid().setColumns(4); 
 		tab_tipo_catalogo_cuenta.setTabla("cont_catalogo_cuenta", "ide_cocac", 1);
 		// contruccion del arbol
 		tab_tipo_catalogo_cuenta.setCampoPadre("con_ide_cocac"); //necesarios para el arbol ide recursivo
-		tab_tipo_catalogo_cuenta.setCampoNombre("cue_codigo_cocac||' '||cue_descripcion_cocac"); //necesarios para el arbol campo a mostrarse
 		tab_tipo_catalogo_cuenta.agregarArbol(arb_catalogo_cuenta);//necesarios para el arbol
-		
+		tab_tipo_catalogo_cuenta.setCampoNombre("(select cue_codigo_cocac||' '|| cue_descripcion_cocac as cue_descripcion_cocac from cont_catalogo_cuenta b where b.ide_cocac=cont_catalogo_cuenta.ide_cocac)"); //necesarios para el arbol campo a mostrarse
 		tab_tipo_catalogo_cuenta.dibujar();
+		
 		
 		PanelTabla pat_tipo_catalogo_cuenta = new PanelTabla();
 		pat_tipo_catalogo_cuenta.setPanelTabla(tab_tipo_catalogo_cuenta);
 
 		arb_catalogo_cuenta.setId("arb_catalogo_cuenta");
 		arb_catalogo_cuenta.dibujar();
+		
 		Division div_division=new Division();
 		div_division.dividir2(arb_catalogo_cuenta, pat_tipo_catalogo_cuenta, "25%", "v");
 
@@ -58,7 +59,8 @@ public class pre_catalogo_cuenta extends Pantalla{
 		// TODO Auto-generated method stub
 		tab_tipo_catalogo_cuenta.guardar();
 		guardarPantalla();
-		utilitario.addUpdate("arb_catalogo_cuenta");
+		
+		
 		
 	}
 
