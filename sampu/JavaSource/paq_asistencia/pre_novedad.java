@@ -320,7 +320,7 @@ public class pre_novedad extends Pantalla {
 +" and d.ide_nrder = g.ide_nrder"
 +" and ide_nresr =2  and nro_horas_aprobado_asnod >0"
 +" and fecha_inicio_asnov between to_date('"+sec_importar.getFecha1String()+"','yyyy-mm-dd') and to_date('"+sec_importar.getFecha2String()+"','yyyy-mm-dd')"
-+" and aprobado_asnod=1 and nomina_asnod=0"
++" and aprobado_asnod=true and nomina_asnod=false"
 +" ) a group by ide_nrdro,ide_geedp"
 +" )"
 +" where ide_nrdro in ("
@@ -339,10 +339,10 @@ public class pre_novedad extends Pantalla {
 +" and d.ide_nrder = g.ide_nrder"
 +" and ide_nresr =2  and nro_horas_aprobado_asnod >0"
 +" and fecha_inicio_asnov between to_date('"+sec_importar.getFecha1String()+"','yyyy-mm-dd') and to_date('"+sec_importar.getFecha2String()+"','yyyy-mm-dd')"
-+" and aprobado_asnod=1 and nomina_asnod=0"
++" and aprobado_asnod=true and nomina_asnod=false"
 +" ) a group by ide_nrdro,ide_geedp ); ");
 		utilitario.getConexion().agregarSqlPantalla(" update asi_novedad_detalle" +
-				" set nomina_asnod =1" +
+				" set nomina_asnod =true" +
 				" where ide_asnod  in (" +
 				" select ide_asnod " +
 				" from (" +
@@ -359,7 +359,7 @@ public class pre_novedad extends Pantalla {
 				" and d.ide_nrder = g.ide_nrder" +
 				" and ide_nresr =2  and nro_horas_aprobado_asnod >0" +
 				" and fecha_inicio_asnov between to_date('"+sec_importar.getFecha1String()+"','yyyy-mm-dd') and to_date('"+sec_importar.getFecha2String()+"','yyyy-mm-dd')" +
-				" and aprobado_asnod=1 and nomina_asnod=0" +
+				" and aprobado_asnod=true and nomina_asnod=false" +
 				" ) a group by ide_asnod ); " );
 						guardarPantalla();
 			tab_tabla1.ejecutarSql();
