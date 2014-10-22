@@ -5,6 +5,7 @@ import framework.componentes.PanelTabla;
 import framework.componentes.Tabla;
 
 public class pre_tipo_consumo extends Pantalla{
+	
 	private Tabla  tab_tipo_consumo=new Tabla();
 	
 	public pre_tipo_consumo(){
