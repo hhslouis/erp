@@ -1068,4 +1068,19 @@ public class Utilitario extends Framework {
 		lista.add(fila9);
 		return lista;
 	}
+	public List getListaGrupoSigef() {
+		//pARA USAR EN TODAS LAS TABLAS QUE SEAN RECURSIVAS
+		List lista = new ArrayList();
+		Object fila1[] = {
+				"1", "SI"
+		};
+		Object fila2[] = {
+				"2", "NO"
+		};
+		lista.add(fila1);
+		lista.add(fila2);
+		return lista;
+	}
+	
 }
+
