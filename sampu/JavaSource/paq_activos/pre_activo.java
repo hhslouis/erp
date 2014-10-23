@@ -15,15 +15,16 @@ public class pre_activo extends Pantalla{
 		tab_activo.setId("tab_activo");  
 		tab_activo.setTabla("afi_activo", "ide_afaco", 1);
 		tab_activo.setTipoFormulario(true);
-		tab_actividad.getColumna("ide_crf").setCombo("crt_funcionario", "ide_crf", "nombre_crf", "");
-		tab_actividad.getColumna("ide_crf").setLongitud(150);
-		tab_actividad.getColumna("ide_crf").setAutoCompletar();
-		tab_actividad.getColumna("ide_opci").setCombo("sis_opcion", "ide_opci", "nom_opci", "");
-		tab_actividad.getColumna("ide_opci").setLongitud(150);
-		tab_actividad.getColumna("ide_opci").setAutoCompletar();
-		tab_actividad.getColumna("ide_repo").setCombo("sis_reporte", "ide_repo", "nom_repo", "");
-		tab_actividad.getColumna("ide_repo").setLongitud(150);
-		tab_actividad.getColumna("ide_repo").setAutoCompletar();
+		tab_activo.getColumna("ide_crf").setCombo("crt_funcionario", "ide_crf", "nombre_crf", "");
+		tab_activo.getColumna("ide_crf").setLongitud(150);
+		tab_activo.getColumna("ide_crf").setAutoCompletar();
+		tab_activo.getColumna("ide_opci").setCombo("sis_opcion", "ide_opci", "nom_opci", "");
+		tab_activo.getColumna("ide_opci").setLongitud(150);
+		tab_activo.getColumna("ide_opci").setAutoCompletar();
+		tab_activo.getColumna("ide_repo").setCombo("sis_reporte", "ide_repo", "nom_repo", "");
+		tab_activo.getColumna("ide_repo").setLongitud(150);
+		tab_activo.getColumna("ide_repo").setAutoCompletar();
+
 		tab_activo.dibujar();
 		PanelTabla pat_activo=new PanelTabla();
 		pat_activo.setPanelTabla(tab_activo);
