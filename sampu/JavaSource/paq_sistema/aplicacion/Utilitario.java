@@ -1082,5 +1082,49 @@ public class Utilitario extends Framework {
 		return lista;
 	}
 	
-}
+	public List getListaGruposNivelCuenta(){
+		
+		List lista=new ArrayList();
+		Object fila1[] = {
+				"T","TITULO"
+		};
+		
+		Object fila2[] = {
+				"G","GRUPO"
+					
+		};
+		Object fila3[]={
+				"S","SUBGRUPO"
+				
+		};
+		
+		Object fila4[]={
+				"1","CUENTA NIVEL1"
+				
+				
+		};
+		
+		Object fila5[]={
+				"2","CUENTA NIVEL 2"
+				
+		};
+		Object fila6[]={
+				"3","CUENTA NIVEL 3"
+		};
+		Object fila7[]={
+				"4","CUENTA NIVEL 4"
+				
+		};
+		lista.add(fila1);
+		lista.add(fila2);
+		lista.add(fila3);
+		lista.add(fila4);
+		lista.add(fila5);
+		lista.add(fila6);
+		lista.add(fila7);
+		return lista;
+		}
+	}
+	
+
 
