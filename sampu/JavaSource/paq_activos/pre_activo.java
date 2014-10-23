@@ -15,16 +15,16 @@ public class pre_activo extends Pantalla{
 		tab_activo.setId("tab_activo");  
 		tab_activo.setTabla("afi_activo", "ide_afaco", 1);
 		tab_activo.setTipoFormulario(true);
-		tab_activo.getColumna("ide_crf").setCombo("crt_funcionario", "ide_crf", "nombre_crf", "");
-		tab_activo.getColumna("ide_crf").setLongitud(150);
-		tab_activo.getColumna("ide_crf").setAutoCompletar();
-		tab_activo.getColumna("ide_opci").setCombo("sis_opcion", "ide_opci", "nom_opci", "");
-		tab_activo.getColumna("ide_opci").setLongitud(150);
-		tab_activo.getColumna("ide_opci").setAutoCompletar();
-		tab_activo.getColumna("ide_repo").setCombo("sis_reporte", "ide_repo", "nom_repo", "");
-		tab_activo.getColumna("ide_repo").setLongitud(150);
-		tab_activo.getColumna("ide_repo").setAutoCompletar();
-
+		tab_activo.getColumna("ide_afest").setCombo("afi_estado", "ide_afest", "detalle_afest", "");
+		//tab_activo.getColumna("ide_crf").setLongitud(150);
+		//tab_activo.getColumna("ide_crf").setAutoCompletar();
+		tab_activo.getColumna("ide_aftip").setCombo("afi_tipo_propiedad", "ide_aftip", "detalle_aftip", "");
+		tab_activo.getColumna("ide_afacd").setCombo("afi_actividad", "ide_afacd", "detalle_afacd", "");
+		tab_activo.getColumna("ide_afubi").setCombo("afi_ubicacion", "ide_afubi", "detalle_afubi", "");
+		tab_activo.getColumna("ide_afnoa").setCombo("afi_nombre_activo", "ide_afnoa", "detalle_afnoa", "");
+		tab_activo.getColumna("ide_aftia").setCombo("afi_tipo_activo", "ide_aftia", "detalle_aftia", "");
+		tab_activo.getColumna("ide_afseg").setCombo("afi_seguro", "ide_afseg", "detalle_afseg", "");
+		
 		tab_activo.dibujar();
 		PanelTabla pat_activo=new PanelTabla();
 		pat_activo.setPanelTabla(tab_activo);
