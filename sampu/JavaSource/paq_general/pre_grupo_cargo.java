@@ -137,10 +137,13 @@ public class pre_grupo_cargo extends Pantalla {
 
 		tab_grupo_minimo_seleccion.setId("tab_grupo_minimo_seleccion");
 		tab_grupo_minimo_seleccion.setIdCompleto("tab_tabulador:tab_grupo_minimo_seleccion");
+		
 		tab_grupo_minimo_seleccion.setTabla("SPR_GRUPO_MINIMO_SELECCION", "IDE_SPGMS", 3);
 		tab_grupo_minimo_seleccion.getColumna("IDE_GEGRO").setVisible(false);
 		tab_grupo_minimo_seleccion.getColumna("ACTIVO_SPGMS").setCheck();
 		tab_grupo_minimo_seleccion.getColumna("ACTIVO_SPGMS").setValorDefecto("true");
+		System.out.println("tab_grupo_minimo_seleccion....  "+tab_grupo_minimo_seleccion.getSql());
+		
 		tab_grupo_minimo_seleccion.dibujar();
 
 		PanelTabla pat_panel3=new PanelTabla();
@@ -154,6 +157,8 @@ public class pre_grupo_cargo extends Pantalla {
 		tab_grupo_factor.getColumna("IDE_SPFAC").setCombo("select ide_spfac,detalle_spfac from spr_factor where spr_ide_spfac is null order by ide_spfac");
 		tab_grupo_factor.getColumna("ACTIVO_SPGRF").setCheck();
 		tab_grupo_factor.getColumna("ACTIVO_SPGRF").setValorDefecto("true");
+		System.out.println("tab_grupo_factor....  "+tab_grupo_factor.getSql());
+		
 		tab_grupo_factor.dibujar();
 
 		PanelTabla pat_panel4=new PanelTabla();
@@ -168,6 +173,8 @@ public class pre_grupo_cargo extends Pantalla {
 
 		tab_factor_ponederacion.getColumna("ACTIVO_SPFAP").setCheck();
 		tab_factor_ponederacion.getColumna("ACTIVO_SPFAP").setValorDefecto("true");
+		
+		
 		tab_factor_ponederacion.dibujar();
 
 		PanelTabla pat_panel5=new PanelTabla();
@@ -184,6 +191,10 @@ public class pre_grupo_cargo extends Pantalla {
 
 		tab_evl_grupo_factor.getColumna("ACTIVO_EVGRF").setCheck();
 		tab_evl_grupo_factor.getColumna("ACTIVO_EVGRF").setValorDefecto("true");
+		
+		
+		System.out.println("tab_factor_ponederacion....  "+tab_factor_ponederacion.getSql());
+		
 		tab_evl_grupo_factor.dibujar();
 
 		PanelTabla pat_panel6=new PanelTabla();
@@ -197,6 +208,7 @@ public class pre_grupo_cargo extends Pantalla {
 		tab_tabulador.agregarTab("FACTORES PONDERACION", pat_panel5);
 		tab_tabulador.agregarTab("EVAL: FACTORES", pat_panel6);	
 
+		System.out.println("tab_evl_grupo_factor....  "+tab_evl_grupo_factor.getSql());
 
 		Division div_division = new Division();
 
