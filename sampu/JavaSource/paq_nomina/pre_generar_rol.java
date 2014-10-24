@@ -130,7 +130,7 @@ public class pre_generar_rol extends Pantalla{
 				"LEFT JOIN GTH_TIPO_EMPLEADO TEM ON TEM.IDE_GTTEM=DTN.IDE_GTTEM " +
 				"LEFT JOIN SIS_SUCURSAL SUC ON SUC.IDE_SUCU=DTN.IDE_SUCU " +
 				"LEFT JOIN GEN_PERIDO_ROL PRO ON PRO.IDE_NRTIT=DTN.IDE_NRTIT "+
-				"WHERE ACTIVO_NRDTN=TRUE "+
+				"WHERE ACTIVO_NRDTN=true "+
 				"and TIN.IDE_NRTIN = "+utilitario.getVariable("p_nrh_tipo_nomina_normal")+" " +
 				"AND PRO.IDE_GEPRO IN (-1) ");
 		tab_detalle_tipo_nomina.setCampoPrimaria("ide_nrdtn");
@@ -293,7 +293,7 @@ public class pre_generar_rol extends Pantalla{
 				"LEFT JOIN GTH_TIPO_EMPLEADO TEM ON TEM.IDE_GTTEM=DTN.IDE_GTTEM " +
 				"LEFT JOIN SIS_SUCURSAL SUC ON SUC.IDE_SUCU=DTN.IDE_SUCU " +
 				"LEFT JOIN GEN_PERIDO_ROL PRO ON PRO.IDE_NRTIT=DTN.IDE_NRTIT "+
-				"WHERE ACTIVO_NRDTN=TRUE "+
+				"WHERE ACTIVO_NRDTN=true "+
 				"and TIN.IDE_NRTIN in ( "+utilitario.getVariable("p_nrh_tipo_nomina_para_generar_rol")+") " +
 				"AND PRO.IDE_GEPRO IN ("+com_periodo.getValue()+") ");
 		tab_detalle_tipo_nomina.ejecutarSql();
@@ -588,18 +588,18 @@ public class pre_generar_rol extends Pantalla{
 				String fecha_ini_gepro=tab_per_rol.getValor("FECHA_INICIAL_GEPRO");
 				String fecha_fin_gepro=tab_per_rol.getValor("FECHA_FINAL_GEPRO");
 
-				String str_update_anticipos="update  NRH_AMORTIZACION set ACTIVO_NRAMO=FALSE " +
+				String str_update_anticipos="update  NRH_AMORTIZACION set ACTIVO_NRAMO=0 " +
 						"where FECHA_VENCIMIENTO_NRAMO " +
 						"BETWEEN to_date ('"+fecha_ini_gepro+"','yy-mm-dd') and to_date ('"+fecha_fin_gepro+"','yy-mm-dd') " +
 						"and IDE_NRANI IN (SELECT IDE_NRANI FROM NRH_ANTICIPO_INTERES WHERE " +
 						"IDE_NRANT IN (SELECT IDE_NRANT FROM NRH_ANTICIPO WHERE " +
-						"CALIFICADO_NRANT=TRUE AND APROBADO_NRANT=TRUE AND ACTIVO_NRANT=TRUE AND " +
+						"CALIFICADO_NRANT=1 AND APROBADO_NRANT=1 AND ACTIVO_NRANT=1 AND " +
 						"IDE_GEEDP IN (select EDP.IDE_GEEDP from GEN_EMPLEADOS_DEPARTAMENTO_PAR edp " +
 						"inner join NRH_DETALLE_TIPO_NOMINA dtn on EDP.IDE_GTTEM=DTN.IDE_GTTEM " +
 						"and EDP.IDE_SUCU=DTN.IDE_SUCU " +
 						"inner join GTH_EMPLEADO emp on EMP.ide_gtemp=EDP.IDE_GTEMP " +
 						"WHERE DTN.IDE_NRDTN="+fila.getRowKey()+" " +
-						"AND EDP.ACTIVO_GEEDP=TRUE " +
+						"AND EDP.ACTIVO_GEEDP=1 " +
 						")))";
 				utilitario.getConexion().agregarSql(str_update_anticipos);
 				System.out.println("update nticipos "+str_update_anticipos);
@@ -825,7 +825,7 @@ public class pre_generar_rol extends Pantalla{
 		tab_rol.setValor("IDE_NRDTN", IDE_NRDTN);
 		tab_rol.setValor("IDE_GEPRO", IDE_GEPRO);
 		tab_rol.setValor("FECHA_NRROL", utilitario.getFechaActual());
-		tab_rol.setValor("ACTIVO_NRROL", "TRUE");
+		tab_rol.setValor("ACTIVO_NRROL", "1");
 		tab_rol.setValor("IDE_USUA", utilitario.getVariable("IDE_USUA"));
 		if (tab_rol.guardar()){
 			return tab_rol.getValor(0,"IDE_NRROL");
