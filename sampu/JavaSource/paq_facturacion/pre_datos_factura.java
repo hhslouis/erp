@@ -12,6 +12,7 @@ private Tabla tab_datos_factura=new Tabla();
 	public pre_datos_factura(){
 		tab_datos_factura.setId("tab_datos_factura");
 		tab_datos_factura.setTabla("fac_datos_factura","ide_fadaf", 1);
+		tab_datos_factura.setTipoFormulario(true);
 		tab_datos_factura.dibujar();
 		PanelTabla pat_datos_factura=new PanelTabla();
 		pat_datos_factura.setPanelTabla(tab_datos_factura);
