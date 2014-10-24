@@ -74,11 +74,14 @@ public class pre_catalogo_cuenta extends Pantalla{
 	@Override
 	public void guardar() {
 		// TODO Auto-generated method stub
-		tab_tipo_catalogo_cuenta.guardar();
-		guardarPantalla();
+		if(tab_tipo_catalogo_cuenta.guardar()){
+            guardarPantalla();
+            //actualiza el arbol
+            arb_catalogo_cuenta.ejecutarSql();
+            utilitario.addUpdate("arb_arbol");
+        }
 		
-		
-		
+				
 	}
 
 	@Override
