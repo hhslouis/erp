@@ -427,13 +427,11 @@ public class pre_detalle_tipo_nomina extends Pantalla {
 
 	@Override
 	public void aceptarReporte() {
-		System.out.println("Ingreso al Reporte antes del if  ");
+		
 		if (rep_reporte.getReporteSelecionado().equalsIgnoreCase("Rubros Tipo Nomina")) {
-			System.out.println("Ingreso al Reporte dentro del 1 if...  ");
-			
+					
 			if (rep_reporte.isVisible()) {
-				System.out.println("Ingreso al Reporte dentro del 2 if...  ");
-				
+			
 				p_parametros= new HashMap();
 				rep_reporte.cerrar();
 				set_det_tip_nom.setTitle("SELECCION DETALLE TIPO NOMINA");
@@ -441,14 +439,10 @@ public class pre_detalle_tipo_nomina extends Pantalla {
 				set_det_tip_nom.dibujar();
 
 			}else if(set_det_tip_nom.isVisible()) {
-				System.out.println("Ingreso al Reporte dentro del else del 2 if...  ");
-				
+							
 //				if (set_det_tip_nom.getSeleccionados()!=null && !set_det_tip_nom.getSeleccionados().isEmpty()){
 					if (set_det_tip_nom.getValorSeleccionado() !=null && !set_det_tip_nom.getValorSeleccionado().isEmpty()){
-						System.out.println("Ingreso al Reporte dentro del 3 if...  ");
-						System.out.println("dentro del 3 if set_det_tip_nom... "+set_det_tip_nom.getValorSeleccionado() );
-						
-
+					System.out.println("entro a consultar la snominas comoparametros \n");
 					p_parametros.put("TIPO_NOMINA",ser_nomina.getTipoNomina(ser_nomina.getDetalleTipoNomina(set_det_tip_nom.getValorSeleccionado()).getValor("ide_nrtin")).getValor("detalle_nrtin"));
 					System.out.println("RepPara TIPO_NOMINA...  "+ser_nomina.getTipoNomina(ser_nomina.getDetalleTipoNomina(set_det_tip_nom.getValorSeleccionado()).getValor("ide_nrtin")).getValor("DETALLE_NRTIN"));
 					p_parametros.put("TIPO_EMPLEADO",ser_nomina.getTipoEmpleado(ser_nomina.getDetalleTipoNomina(set_det_tip_nom.getValorSeleccionado()).getValor("IDE_GTTEM")).getValor("DETALLE_GTTEM"));
@@ -700,6 +694,7 @@ public class pre_detalle_tipo_nomina extends Pantalla {
 	}
 
 	public boolean verificarFormulas(){
+		
 		for (int i = 0; i < tab_tabla1.getTotalFilas(); i++) {
 			if (tab_tabla1.isFilaInsertada(i) || tab_tabla1.isFilaModificada(i)){
 				String ide_nrfoc="";
@@ -951,18 +946,26 @@ public class pre_detalle_tipo_nomina extends Pantalla {
 	public void guardar() {
 		//Valido todas la formulas insertadas
 		boolean boo_valida=true;		
+		
 
 		for(int i=0;i<tab_tabla1.getInsertadas().size();i++){
+			
+			
 			String str_key=tab_tabla1.getInsertadas().get(i);
 			boo_valida=isformulaVálida(String.valueOf(tab_tabla1.getFila(str_key).getCampos()[tab_tabla1.getNumeroColumna("FORMULA_NRDER")]));
+			System.out.println("boo_valida dentro del 1 for...  "+boo_valida);
 			if(boo_valida==false){
+				
 				break;
 			}
 		}
 		for(int i=0;i<tab_tabla1.getModificadas().size();i++){
 			String str_key=tab_tabla1.getModificadas().get(i);
 			boo_valida=isformulaVálida(String.valueOf(tab_tabla1.getFila(str_key).getCampos()[tab_tabla1.getNumeroColumna("FORMULA_NRDER")]));
+		
 			if(boo_valida==false){
+				
+				
 				break;
 			}
 		}
@@ -970,8 +973,10 @@ public class pre_detalle_tipo_nomina extends Pantalla {
 		if(boo_valida){
 			// TODO Auto-generated method stub
 			if(tab_tabla.guardar()){
+				//System.out.println("");
+				System.out.println("ingresas a VERIFCAR antes  "+verificarFormulas());
 				if (verificarFormulas()){
-
+					System.out.println("ingresas a VERIFCAR  "+verificarFormulas());
 					if(tab_tabla1.guardar()){
 						guardarPantalla();
 					}
@@ -985,14 +990,21 @@ public class pre_detalle_tipo_nomina extends Pantalla {
 	}
 
 	public void validarFormulas(){
+		
 		if(cambiaFormaulaCopiados()){
 
 		}		
+		
+		
+		
 	}
 
 
 	private boolean cambiaFormaulaCopiados(){
 		//Remplaza los registros de tipo formula con los ide del nuevo tipo
+		
+			
+		
 		boolean boo_valido=true;
 		for(int i=0;i<tab_tabla1.getTotalFilas();i++){
 			//Remplazo los id de la nueva formula
@@ -1022,6 +1034,7 @@ public class pre_detalle_tipo_nomina extends Pantalla {
 					//cambio los ide
 					for (int j = 0; j < lis_ides.size(); j++) {
 						String str_nuevo=ser_nomina.getNuevoIdeTipoNomina(lis_ides.get(j), tab_tabla.getValor("IDE_NRDTN"));
+						System.out.println("valor dentro del FOR...  "+str_nuevo);
 						if(str_nuevo!=null){
 							str_formula=str_formula.replace("["+lis_ides.get(j)+"]", "["+str_nuevo+"]");						
 							tab_tabla1.setValor(i,"FORMULA_NRDER",str_formula);
@@ -1039,6 +1052,7 @@ public class pre_detalle_tipo_nomina extends Pantalla {
 		tab_tabla1.guardar();
 		guardarPantalla();
 		return boo_valido;
+
 	}
 
 	@Override
@@ -1054,7 +1068,10 @@ public class pre_detalle_tipo_nomina extends Pantalla {
 	 * @return
 	 */
 	private boolean isformulaVálida(String formula){
+		System.out.println("entra en isformulaVálida...  "+ formula);
 		if(formula==null){
+			System.out.println("entra en formula en null...  "+ formula);
+			
 			return false;
 		}		
 		//	Valida los [] () {} que se abran y se cierren
