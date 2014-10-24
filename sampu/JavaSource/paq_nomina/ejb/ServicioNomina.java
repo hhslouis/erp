@@ -1337,7 +1337,7 @@ public class ServicioNomina {
        System.out.println(" recivo parametro de entrada getTipoNomina...  " + IDE_NRTIN);
 		if (IDE_NRTIN != null && !IDE_NRTIN.isEmpty()){
 			TablaGenerica tab_tn=utilitario.consultar("select * from NRH_TIPO_NOMINA where IDE_NRTIN="+IDE_NRTIN);
-			 System.out.println(" ejecuto sql... " + tab_tn.getSql());
+			 System.out.println(" ejecuto sql.DDDDD.. " + tab_tn.getSql());
 			return tab_tn;
 		}
 		return null;
@@ -4830,9 +4830,11 @@ System.out.println("sql getSqlEmpleadosRol..."+sql);
 		System.out.println("SN getDetalleTipoNomina VARIABLE... ide_nrdtn...   "+ide_nrdtn);
 		
 		TablaGenerica tab_dtn=utilitario.consultar("SELECT * FROM NRH_DETALLE_TIPO_NOMINA WHERE IDE_NRDTN in ("+ide_nrdtn+") ");
-		System.out.println("Sql SN... tab_dtn...   "+tab_dtn.getSql());
+		System.out.println("Sql SN... tab_dtn..CCC.   "+tab_dtn.getSql());
 		if (tab_dtn.getTotalFilas()>0){			
-			return tab_dtn;			
+			System.out.println("retornoxxxx "+tab_dtn.getColumna("IDE_NRDTN"));
+			return tab_dtn;	
+			
 		}
 		return null;
 	}
