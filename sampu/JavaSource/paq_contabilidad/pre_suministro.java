@@ -12,7 +12,7 @@ public class pre_suministro extends Pantalla{
 	
 	public pre_suministro() {
 		tab_suministro.setId("tab_suministro");  
-		//tab_suministro.setTabla("cont_suministro", "", 1);	
+		tab_suministro.setTabla("cont_suministro", "ide_cosum", 1);	
 		tab_suministro.dibujar();
 		PanelTabla pat_suministro=new PanelTabla();
 		pat_suministro.setPanelTabla(tab_suministro);
