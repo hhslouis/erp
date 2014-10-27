@@ -35,7 +35,7 @@ public class pre_convenios extends Pantalla {
         tab_tabla1.getGrid().setColumns(4); //hacer  columnas 
         tab_tabla1.setCampoPadre("con_ide_cocon");
         tab_tabla1.setCampoNombre("detalle_contrato_cocon");
-        tab_tabla1.getColumna("ide_cotic").setCombo("cont_tipo_consumo","ide_cotic","detalle_cotic","");
+        tab_tabla1.getColumna("ide_cotiv").setCombo("cont_tipo_convenio","ide_cotic","detalle_cotic","");
 		tab_tabla1.getColumna("ide_geins").setCombo("gen_institucion","ide_geins","detalle_geins","");
 		tab_tabla1.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
        // tab_tabla1.agregarRelacion(tab_tabla2);
