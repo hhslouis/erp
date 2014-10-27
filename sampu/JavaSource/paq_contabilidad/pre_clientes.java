@@ -12,7 +12,7 @@ public class pre_clientes extends Pantalla {
 	private Tabla tab_direccion=new Tabla();
 	private Tabla tab_telefono=new Tabla();
 	private Tabla tab_email=new Tabla();
-	private Tabla tab_documentos=new Tabla();
+	private Tabla tab_documento=new Tabla();
 	private Tabla tab_clientes=new Tabla();
 	
 	
@@ -36,7 +36,8 @@ public class pre_clientes extends Pantalla {
 		tab_clientes.agregarRelacion(tab_direccion);//agraga relacion para los tabuladores
 		tab_clientes.agregarRelacion(tab_telefono);
         tab_clientes.agregarRelacion(tab_email);
-        System.out.println("sql pc"+tab_clientes.getSql());
+        tab_clientes.agregarRelacion(tab_documento);
+       // System.out.println("sql pc"+tab_clientes.getSql());
         tab_clientes.dibujar();
 		PanelTabla pat_clientes=new PanelTabla ();
 		pat_clientes.setPanelTabla(tab_clientes);
@@ -63,12 +64,12 @@ public class pre_clientes extends Pantalla {
         PanelTabla pat_panel4 = new PanelTabla();
         pat_panel4.setPanelTabla(tab_email);
         
-        tab_documentos.setId("tab_documentos");
-        tab_documentos.setIdCompleto("tab_tabulador:tab_documentos");
-        tab_documentos.setTabla("rec_cliente_archivo","ide_recla",5);
-        tab_documentos.dibujar();
+        tab_documento.setId("tab_documento");
+        tab_documento.setIdCompleto("tab_tabulador:tab_documento");
+        tab_documento.setTabla("rec_cliente_archivo","ide_recla",5);
+        tab_documento.dibujar();
         PanelTabla pat_panel5 = new PanelTabla();
-        pat_panel5.setPanelTabla(tab_documentos);
+        pat_panel5.setPanelTabla(tab_documento);
         
         tab_tabulador.agregarTab("DIRECCION", pat_panel2);//intancia los tabuladores
         tab_tabulador.agregarTab("TELEFONO", pat_panel3);
@@ -100,7 +101,7 @@ public class pre_clientes extends Pantalla {
             if (tab_direccion.guardar()) {
                 if (tab_telefono.guardar()) {
                    if( tab_email.guardar()){
-                	   tab_documentos.guardar();
+                	   tab_documento.guardar();
                    }
                 }
             }
@@ -108,6 +109,10 @@ public class pre_clientes extends Pantalla {
         guardarPantalla();
 		
 	}
+
+	
+
+
 
 	@Override
 	public void eliminar() {
@@ -163,5 +168,13 @@ public class pre_clientes extends Pantalla {
 		this.tab_email = tab_email;
 	}
 
-	
+	public Tabla getTab_documento() {
+		return tab_documento;
+	}
+
+
+
+	public void setTab_documento(Tabla tab_documento) {
+		this.tab_documento = tab_documento;
+	}
 }
