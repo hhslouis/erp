@@ -357,7 +357,7 @@ public class pre_permisos_por_dias extends Pantalla {
 					tab_permisos.setValor("fecha_anula_aspvh", cal_fecha_anula.getFecha());
 					tab_permisos.modificar(tab_permisos.getFilaActual());
 					tab_permisos.guardar();
-					utilitario.getConexion().agregarSqlPantalla("update ASI_PERMISOS_VACACION_HEXT set anulado_aspvh=1 where ide_aspvh="+tab_permisos.getValorSeleccionado());					
+					utilitario.getConexion().agregarSqlPantalla("update ASI_PERMISOS_VACACION_HEXT set anulado_aspvh=true where ide_aspvh="+tab_permisos.getValorSeleccionado());					
 					guardarPantalla();
 					dia_anulado.cerrar();
 					String ide_anterior=tab_permisos.getValorSeleccionado();		
@@ -405,7 +405,7 @@ public class pre_permisos_por_dias extends Pantalla {
 	}
 
 	public void aceptarAprobarSolicitudTalento(){
-		utilitario.getConexion().agregarSqlPantalla("update ASI_PERMISOS_VACACION_HEXT set aprobado_tthh_aspvh=1 where TIPO_ASPVH=4 and ide_aspvh="+tab_permisos.getValorSeleccionado());
+		utilitario.getConexion().agregarSqlPantalla("update ASI_PERMISOS_VACACION_HEXT set aprobado_tthh_aspvh=true where TIPO_ASPVH=4 and ide_aspvh="+tab_permisos.getValorSeleccionado());
 		guardarPantalla();
 		con_guardar.cerrar();	
 		String ide_anterior=tab_permisos.getValorSeleccionado();		
