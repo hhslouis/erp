@@ -324,7 +324,7 @@ public class pre_permisos_por_dias extends Pantalla {
 	}
 
 	public void aceptarAprobarSolicitud(){		
-		utilitario.getConexion().agregarSqlPantalla("update ASI_PERMISOS_VACACION_HEXT set aprobado_aspvh=1 where TIPO_ASPVH=4 and ide_aspvh="+tab_permisos.getValorSeleccionado());
+		utilitario.getConexion().agregarSqlPantalla("update ASI_PERMISOS_VACACION_HEXT set aprobado_aspvh=true where TIPO_ASPVH=4 and ide_aspvh="+tab_permisos.getValorSeleccionado());
 		guardarPantalla();
 		con_guardar.cerrar();		
 		String ide_anterior=tab_permisos.getValorSeleccionado();		
