@@ -287,7 +287,7 @@ public class pre_asi_vacacion extends Pantalla {
 							") a where IDE_ASVAC="+tab_tabla1.getValorSeleccionado());
 					con_ver_vacaciones.getTab_consulta_dialogo().ejecutarSql();
 					tab_tabla3.setSql("SELECT " +
-							"(PERIODO -1) ||' - '|| periodo AS PERIODO,DIA_ACUMULADO,NRO_DIAS_ADICIONAL,DIA_DESCONTADO,DIA_SOLICITADO, " +
+							"(PERIODO is null) ||' - '|| periodo AS PERIODO,DIA_ACUMULADO,NRO_DIAS_ADICIONAL,DIA_DESCONTADO,DIA_SOLICITADO, " +
 							"DIA_ACUMULADO+NRO_DIAS_ADICIONAL as NRO_TOTALES_VACACIONES, (DIA_ACUMULADO+NRO_DIAS_ADICIONAL)-(DIA_DESCONTADO+DIA_SOLICITADO) AS DIAS_PENDIENTES " +
 							" FROM ( " +
 							"SELECT IDE_ASVAC,cast (PERIODO as integer) -1 AS ANTERIOR,periodo,SUM(DIA_ACUMULADO) AS DIA_ACUMULADO,SUM(NRO_DIAS_ADICIONAL) AS NRO_DIAS_ADICIONAL, " +
