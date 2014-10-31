@@ -146,11 +146,11 @@ public class pre_valida_asistencia extends Pantalla {
 				"detalle_gtcor,ide_gegro,ide_gecaf " +
 				"from gth_empleado a,gen_empleados_departamento_par b,gth_correo c " +
 				"where a.ide_gtemp = b.ide_gtemp and a.ide_gtemp = c.ide_gtemp " +
-				"and notificacion_gtcor=1 and activo_gtcor=1 ) d, ( " +
+				"and notificacion_gtcor=true and activo_gtcor=true ) d, ( " +
 				"select ide_geedp,apellido_paterno_gtemp||' '||apellido_materno_gtemp||' '||primer_nombre_gtemp||' '||segundo_nombre_gtemp as empleado_atrasado " +
 				"from gth_empleado a,gen_empleados_departamento_par b,gth_correo c " +
 				"where a.ide_gtemp = b.ide_gtemp and a.ide_gtemp = c.ide_gtemp " +
-				"and notificacion_gtcor=1 and activo_gtcor=1 ) e " +
+				"and notificacion_gtcor=true and activo_gtcor=true ) e " +
 				"WHERE TO_CHAR(FECHA_MARCACION_ASVAA,'YYYY-MM-DD') BETWEEN '"+cal_fecha_inicial.getFecha()+"' AND '"+cal_fecha_final.getFecha()+"' " +
 				"and a.ide_geedp = b.ide_geedp and b.ide_gegro= c.gen_ide_gegro and b.ide_gecaf = c.gen_ide_gecaf " +
 				"and c.ide_gegro=d.ide_gegro and c.ide_gecaf= d.ide_gecaf and a.ide_geedp = e.ide_geedp ORDER BY IDE_ASVAA");
