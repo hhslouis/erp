@@ -52,7 +52,7 @@ public class pre_spi extends Pantalla {
 	public pre_spi() {
 
 		Boton bot_importar= new Boton();
-		bot_importar.setValue("1) Importar Nï¿½minas Cerradas");
+		bot_importar.setValue("1) Importar Nominas Cerradas");
 		bot_importar.setMetodo("importar");
 		bar_botones.agregarBoton(bot_importar);
 
@@ -107,7 +107,7 @@ public class pre_spi extends Pantalla {
 		set_nominas_cerradas.setTitle("Importar Nominas Procesadas");
 		set_nominas_cerradas.getGri_cuerpo().setMensajeInfo("Seleccione el Periodo para generar el archivo S.P.I.");
 		set_nominas_cerradas.setSeleccionTabla("select  PERI.IDE_GEPRO, DETALLE_GEANI,DETALLE_GEMES from NRH_ROL rol inner join GEN_PERIDO_ROL peri on ROL.IDE_GEPRO = PERI.IDE_GEPRO inner join GEN_MES mes on PERI.IDE_GEMES=MES.IDE_GEMES  inner join GEN_ANIO anio on PERI.IDE_GEANI=anio.IDE_GEANI   where IDE_NRESR=1 group by PERI.IDE_GEPRO, DETALLE_GEANI,DETALLE_GEMES,MES.IDE_GEMES order by DETALLE_GEANI DESC ,MES.IDE_GEMES desc", "IDE_GEPRO");		
-		set_nominas_cerradas.getTab_seleccion().getColumna("DETALLE_GEANI").setNombreVisual("Aï¿½O");
+		set_nominas_cerradas.getTab_seleccion().getColumna("DETALLE_GEANI").setNombreVisual("AÑO");
 		set_nominas_cerradas.getTab_seleccion().getColumna("DETALLE_GEANI").setLongitud(12);
 		set_nominas_cerradas.getTab_seleccion().getColumna("DETALLE_GEANI").setFiltro(true);
 		set_nominas_cerradas.getTab_seleccion().getColumna("DETALLE_GEMES").setNombreVisual("MES");
@@ -196,7 +196,7 @@ public class pre_spi extends Pantalla {
 	 */
 	public void generarArchivo(){		
 		if(tab_tabla1.getValor("IDE_SPTRA")==null || tab_tabla2.isEmpty()){
-			utilitario.agregarMensajeInfo("No se puede generar el Archivo", "No existen registros para la geneeraciï¿½n del archivo");
+			utilitario.agregarMensajeInfo("No se puede generar el Archivo", "No existen registros para la generación del archivo");
 			return;
 		}
 		if(tab_tabla2.isFilaInsertada()){
