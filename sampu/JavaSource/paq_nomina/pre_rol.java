@@ -577,7 +577,7 @@ public class pre_rol extends Pantalla{
 		set_rubros.setId("set_rubros");
 		set_rubros.setSeleccionTabla("select RUB.IDE_NRRUB,DETALLE_NRRUB from NRH_RUBRO RUB " +
 				"INNER JOIN NRH_DETALLE_RUBRO DER ON DER.IDE_NRRUB=RUB.IDE_NRRUB " +
-				"WHERE DER.IDE_NRDTN IN (-1) AND IMPRIME_NRDER=1 " +
+				"WHERE DER.IDE_NRDTN IN (-1) AND IMPRIME_NRDER=TRUE " +
 				"GROUP BY RUB.IDE_NRRUB,DETALLE_NRRUB,ORDEN_IMPRIME_NRDER "+
 				"ORDER BY ORDEN_IMPRIME_NRDER ASC","IDE_NRRUB");
 		set_rubros.getTab_seleccion().getColumna("DETALLE_NRRUB").setFiltro(true);
@@ -2492,7 +2492,7 @@ String ide_gepro=ser_nomina.getPeriodosRol(str_fecha_ini, str_fecha_fin);
 				set_tipo_rubro.cerrar();
 				set_rubros.getTab_seleccion().setSql("select RUB.IDE_NRRUB,DETALLE_NRRUB from NRH_RUBRO RUB " +
 						"INNER JOIN NRH_DETALLE_RUBRO DER ON DER.IDE_NRRUB=RUB.IDE_NRRUB " +
-						"WHERE DER.IDE_NRDTN IN ("+set_det_tip_nomina.getSeleccionados()+") AND IMPRIME_NRDER=1 " +
+						"WHERE DER.IDE_NRDTN IN ("+set_det_tip_nomina.getSeleccionados()+") AND IMPRIME_NRDER=TRUE " +
 						"GROUP BY RUB.IDE_NRRUB,DETALLE_NRRUB,ORDEN_IMPRIME_NRDER "+
 						"ORDER BY ORDEN_IMPRIME_NRDER ASC");
 				set_rubros.getTab_seleccion().ejecutarSql();
