@@ -31,12 +31,12 @@ public class pre_clientes extends Pantalla {
 		tab_clientes.getColumna("ide_gtgen").setCombo("gth_genero", "ide_gtgen", "detalle_gtgen", "");
 		tab_clientes.getColumna("ide_indip").setCombo("inst_distribucion_politica", "ide_indip", "detalle_indip", "");
 		tab_clientes.getColumna("ide_gttdi").setCombo("gth_tipo_documento_identidad", "ide_gttdi", " detalle_gttdi", "");
-		tab_clientes.getColumna("gth_ide_gttdi").setCombo("gth_tipo_documento_identidad", "ide_gttdi", "codigo_sri_gttdi", "");
+		tab_clientes.getColumna("gth_ide_gttdi").setCombo("gth_tipo_documento_identidad", "ide_gttdi", "detalle_gttdi", "");
 		tab_clientes.getColumna(" ide_gtesc ").setCombo("gth_estado_civil", " ide_gtesc ", "detalle_gtesc", "");
 		tab_clientes.agregarRelacion(tab_direccion);//agraga relacion para los tabuladores
 		tab_clientes.agregarRelacion(tab_telefono);
         tab_clientes.agregarRelacion(tab_email);
-        tab_clientes.agregarRelacion(tab_documento);
+        //tab_clientes.agregarRelacion(tab_documento);
        // System.out.println("sql pc"+tab_clientes.getSql());
         tab_clientes.dibujar();
 		PanelTabla pat_clientes=new PanelTabla ();
@@ -66,7 +66,11 @@ public class pre_clientes extends Pantalla {
         
         tab_documento.setId("tab_documento");
         tab_documento.setIdCompleto("tab_tabulador:tab_documento");
+        tab_documento.setTipoFormulario(true);
         tab_documento.setTabla("rec_cliente_archivo","ide_recla",5);
+        tab_documento.getColumna("foto_recla").setUpload("fotos");
+        tab_documento.getColumna("foto_recla").setImagen("128", "128");
+        
         tab_documento.dibujar();
         PanelTabla pat_panel5 = new PanelTabla();
         pat_panel5.setPanelTabla(tab_documento);
