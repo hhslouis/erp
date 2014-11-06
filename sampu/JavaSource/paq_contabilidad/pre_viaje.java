@@ -56,7 +56,7 @@ public class pre_viaje extends Pantalla {
 	    pat_tiket_viaje.setPanelTabla(tab_tiket_viaje);
 	     
 //divicion 2 
-	    
+	     
 	    tab_cont_viajeros.setId("tab_cont_viajeros");
 		tab_cont_viajeros.setTabla("cont_viajeros", "ide_covia",2);
 		tab_cont_viajeros.getColumna("IDE_COVIA").setCombo("CONT_VIAJEROS","IDE_COVIA", "BOLETO_COVIA", "");
