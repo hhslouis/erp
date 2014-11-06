@@ -26,14 +26,15 @@ public class pre_suministro extends Pantalla{
 		tab_suministro.setId("tab_suministro");
 		//tab_suministro.setNumeroTabla(1);
 		tab_suministro.setTabla("cont_suministro", "ide_cosum",1);
-		//tab_suministro.getColumna("ide_cosum").setCombo("cont_servicio_basico","ide_coseb", "detalle_coseb", "");
-		//tab_suministro.getColumna("ide_cosum").setRequerida(true);
-		//tab_suministro.agregarRelacion(tab_servicios_basicos);
-		//tab_suministro.setCondicion("ide_cosum=1");
+		tab_suministro.getColumna("ide_coseb").setVisible(false);
+		tab_suministro.setCondicion("ide_coseb=-1");
+		tab_suministro.agregarRelacion(tab_servicio_suministrio);
 		tab_suministro.dibujar();
 		PanelTabla pat_suministro=new PanelTabla();
 		pat_suministro.setPanelTabla(tab_suministro);
-		tab_suministro.agregarRelacion(tab_servicio_suministrio);
+		
+		
+		
 		
 		//tabla 2
 		tab_servicio_suministrio.setId("tab_servicio_suministrio");
@@ -53,10 +54,15 @@ public class pre_suministro extends Pantalla{
 	@Override
 	public void insertar() {
 		// TODO Auto-generated method stub
+		if (com_servicios_basicos.getValue()==null){
+			utilitario.agregarMensajeInfo("No se puede insertar", "Debe Seleccionar un Servicio Básico");
+			return;
+		}
 		if(tab_suministro.isFocus()){
 			tab_suministro.insertar();
+			tab_suministro.setValor("ide_coseb", com_servicios_basicos.getValue()+"");
 			}
-		else if(tab_servicio_suministrio.isFocus()){
+		    else if(tab_servicio_suministrio.isFocus()){
 			tab_servicio_suministrio.insertar();
 			
 		}
@@ -89,6 +95,20 @@ public class pre_suministro extends Pantalla{
 		}
 	}
 
+	public void seleccionaServicioBasico(){
+		if(com_servicios_basicos.getValue()!=null){
+			tab_suministro.setCondicion("ide_coseb="+com_servicios_basicos.getValue());
+			tab_suministro.ejecutarSql();
+			tab_servicio_suministrio.ejecutarValorForanea(tab_suministro.getValorSeleccionado());
+		}
+		else {
+			tab_suministro.setCondicion("ide_coseb=-1");
+			tab_suministro.ejecutarSql();
+			tab_servicio_suministrio.ejecutarValorForanea(tab_suministro.getValorSeleccionado());
+	
+		}
+	}
+	
 	public Tabla getTab_suministro() {
 		return tab_suministro;
 	}
