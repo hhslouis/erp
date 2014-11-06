@@ -47,7 +47,7 @@ import framework.componentes.Texto;
 import java.util.Locale;
 /**
  * 
- * @author HP-USER
+ * @author psw
  */
 public class pre_accion_personal extends Pantalla {
 
