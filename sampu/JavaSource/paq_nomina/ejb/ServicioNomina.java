@@ -434,7 +434,7 @@ public class ServicioNomina {
 		String str_rub="";
 
 		String sql="select IDE_NRDER,IDE_NRRUB,ORDEN_IMPRIME_NRDER from NRH_DETALLE_RUBRO " +
-				"where imprime_nrder=1 ";
+				"where imprime_nrder=true ";
 		if (IDE_NRDTN!=null && !IDE_NRDTN.isEmpty()){
 			sql+=" and IDE_NRDTN in ("+IDE_NRDTN+") ";
 
@@ -4874,7 +4874,7 @@ System.out.println("sql getSqlEmpleadosRol..."+sql);
 			TablaGenerica tab_rubros = utilitario.consultar("select a.ide_nrrub,a.detalle_nrrub from (select RUB.IDE_NRRUB,DETALLE_NRRUB,ORDEN_IMPRIME_NRDER from NRH_DETALLE_RUBRO der " +
 					"INNER join NRH_RUBRO rub on RUB.ide_nrrub=DER.IDE_NRRUB " +
 					"where DER.IDE_NRRUB in ("+ide_nrrub+") " +
-					"and IMPRIME_NRDER=1 " +
+					"and IMPRIME_NRDER=true " +
 					"and ide_nrdtn in ("+ide_nrdtn+") "+
 					"GROUP BY RUB.IDE_NRRUB,DETALLE_NRRUB,ORDEN_IMPRIME_NRDER " +
 					"ORDER BY ORDEN_IMPRIME_NRDER " +
