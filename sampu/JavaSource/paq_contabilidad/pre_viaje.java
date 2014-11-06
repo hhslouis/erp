@@ -62,6 +62,9 @@ public class pre_viaje extends Pantalla {
 		tab_cont_viajeros.getColumna("IDE_COVIA").setCombo("CONT_VIAJEROS","IDE_COVIA", "BOLETO_COVIA", "");
 		tab_cont_viajeros.getColumna("IDE_COCLV").setCombo("CONT_CLASE_VIAJE","IDE_COCLV", "DETALLE_COCLV", "");
 		tab_cont_viajeros.getColumna("IDE_COTIV").setCombo("CONT_TIKET_VIAJE","IDE_COTIV", "DETALLE_VIAJE_COTIV", "");
+		tab_cont_viajeros.getColumna("IDE_GTEMP").setCombo("SELECT IDE_GTEMP," +
+		   "(PRIMER_NOMBRE_GTEMP||' '||SEGUNDO_NOMBRE_GTEMP||' '||APELLIDO_PATERNO_GTEMP||' '||APELLIDO_MATERNO_GTEMP)AS EMPLEADO " +
+				" FROM gth_empleado ORDER BY EMPLEADO");
 		
 		
 		tab_cont_viajeros.setCampoForanea("ide_cotiv");
