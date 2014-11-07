@@ -50,13 +50,13 @@ public class pre_convenios extends Pantalla {
 
         tab_tabla2.setId("tab_tabla2");
         tab_tabla2.setIdCompleto("tab_tabulador:tab_tabla2");
+        tab_tabla2.setTipoFormulario(true);  //formulario
+        tab_tabla2.getGrid().setColumns(4);
         tab_tabla2.setTabla("cont_responsable_convenio", "ide_corec", 2);
         tab_tabla2.getColumna("ide_cocon").setCombo("cont_convenio", "ide_cocon", "detalle_contrato_cocon", "");
-        tab_tabla2.getColumna("ide_getip").setCombo("gen_tipo_persona", "ide_getip", "detalle_gtip", "");
+        tab_tabla2.getColumna("ide_getip").setCombo("gen_tipo_persona", "ide_getip", "detalle_getip", "");
      	tab_tabla2.getColumna("ide_gecaf").setCombo("gen_cargo_funcional", "ide_gecaf", "detalle_gecaf", "");
      	//tab_tabla2.getColumna("ide_geedp").setCombo("gen_empleados_departamento_par", "ide_geedp", "", "");
-        tab_tabla2.setTipoFormulario(true);  //formulario
-        tab_tabla1.getGrid().setColumns(4);
         tab_tabla2.dibujar();
         PanelTabla pat_panel2 = new PanelTabla();
         pat_panel2.setPanelTabla(tab_tabla2);
@@ -66,8 +66,8 @@ public class pre_convenios extends Pantalla {
         tab_tabla3.setTipoFormulario(true);;  //formulario 
         tab_tabla3.getGrid().setColumns(4);
         tab_tabla3.setTabla("cont_archivo_convenio", "ide_coarc", 3);
-        tab_tabla3.getColumna("foto_coarc").setUpload("fotos");
-    	tab_tabla3.getColumna("foto_coarc").setImagen("128", "128");
+        tab_tabla3.getColumna("foto_coarc").setUpload("tabla3");
+        //tab_tabla3.getColumna("foto_coarc").setValorDefecto("Cargar Archivo");
         tab_tabla3.dibujar();
         PanelTabla pat_panel3 = new PanelTabla();
         pat_panel3.setPanelTabla(tab_tabla3);
