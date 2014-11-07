@@ -3,15 +3,30 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<queryString language="SQL">
-		<![CDATA[select tiket.ide_cotiv, transporte.detalle_cotit,asunto.detalle_coasv,estado.detalle_coest,distribucion_politica.detalle_indip,tiket.detalle_viaje_cotiv,tiket.fecha_partida_cotiv,
+	<parameter name="ide_cotit" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ide_coasv" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ide_coest" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ide_indip" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[
+select tiket.ide_cotiv, transporte.detalle_cotit,asunto.detalle_coasv,estado.detalle_coest,distribucion_politica.detalle_indip,
+tiket.detalle_viaje_cotiv,tiket.fecha_partida_cotiv,
 tiket.fecha_retorno_cotiv,tiket.num_memo_cotiv,tiket.num_memo_pagado_cotiv,tiket.fecha_vence_pago_cotiv,tiket.fecha_pagado_cotiv,
 tiket.razon_anulado_cotiv,tiket.fecha_anulado_cotiv,
 
 CASE WHEN activo_cotiv = true THEN 'activo' ELSE 'inactivo' END AS activo
-from cont_tiket_viaje as tiket, cont_tipo_transporte as transporte, cont_asunto_viaje as asunto, inst_distribucion_politica as distribucion_politica,cont_estado as estado
+from cont_tiket_viaje as tiket, cont_tipo_transporte as transporte, cont_asunto_viaje as asunto, inst_distribucion_politica as distribucion_politica,
+cont_estado as estado
 where tiket.ide_cotit = transporte.ide_cotit and tiket.ide_coasv = asunto.ide_coasv and tiket.ide_indip = distribucion_politica.ide_indip
-and  tiket.ide_cotit =  2 and tiket.ide_coasv = 2 and tiket.ide_coest = 2 and tiket.ide_indip = 2]]>
+and  tiket.ide_cotit =  ($P{ide_cotit}) and tiket.ide_coasv = ($P{ide_coasv}) and tiket.ide_coest = ($P{ide_coest}) and tiket.ide_indip = ($P{ide_indip})]]>
 	</queryString>
 	<field name="ide_cotiv" class="java.lang.Long">
 		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla cont_tipo_convenio.]]></fieldDescription>
