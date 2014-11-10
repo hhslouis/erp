@@ -67,7 +67,7 @@ public pre_pac(){
 		tab_partida.getColumna("ide_prcla").setCombo("select ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla from pre_clasificador order by codigo_clasificador_prcla");
 		tab_partida.getColumna("ide_prcla").setAutoCompletar();
 		tab_partida.getColumna("ide_prcla").setLectura(true);
-		tab_partida.getColumna("valor_prpap").setMetodoChange("cargarValor");
+		tab_partida.getColumna("valor_prpap").setMetodoChange("cambiaValor");
 		tab_partida.setColumnaSuma("valor_prpap");
 
 		tab_partida.dibujar();
@@ -75,10 +75,10 @@ public pre_pac(){
 		pat_partida.setPanelTabla(tab_partida);
 		Imagen fondo= new Imagen(); 
         
-        //fondo.setStyle("text-aling:center;position:absolute;top:100px;left:490px;");
-        //fondo.setValue("imagenes/logo.png");
-        //pat_partida.setWidth("100%");
-        //pat_partida.getChildren().add(fondo);
+        fondo.setStyle("text-aling:center;position:absolute;top:100px;left:590px;");
+        fondo.setValue("imagenes/logo.png");
+        pat_partida.setWidth("100%");
+        pat_partida.getChildren().add(fondo);
 		
 		 //tabla 3
 		    tab_archivo.setId("tab_archivo");
@@ -88,7 +88,6 @@ public pre_pac(){
 	        tab_archivo.getGrid().setColumns(4);
 	        tab_archivo.setTabla("pre_archivo_pac","ide_prarp",3);
 	        tab_archivo.getColumna("foto_prarp").setUpload("fotos");
-	        //tab_archivo.getColumna("foto_prarp").setImagen("128", "128");
 	        tab_archivo.dibujar();
 	        PanelTabla pat_archivo= new PanelTabla();
 	        pat_archivo.setPanelTabla(tab_archivo);
@@ -124,9 +123,10 @@ public pre_pac(){
 		
 		
 }
-public void cambiarValor(AjaxBehaviorEvent evt){
-	 tab_partida.modificar(evt);
-	
+
+public void cambiaValor(AjaxBehaviorEvent evt){
+	tab_partida.modificar(evt);
+	utilitario.addUpdate("tab_partida");
 }
 
 public void importarClasificador(){
@@ -153,7 +153,7 @@ public void aceptarClasificador(){
 	if(str_seleccionados!=null){
 		//Inserto los empleados seleccionados en la tabla de participantes 
 		TablaGenerica tab_clasificador=ser_presupuesto.getTablaCatalogoPresupuestario(str_seleccionados);
-	//	System.out.println(" tabla generica"+tab_clasificador.getSql());
+		System.out.println(" tabla generica"+tab_clasificador.getSql());
 		for(int i=0;i<tab_clasificador.getTotalFilas();i++){
 			tab_partida.insertar();
 			tab_partida.setValor("ide_prcla", tab_clasificador.getValor(i, "ide_prcla"));
