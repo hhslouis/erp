@@ -156,6 +156,27 @@ public class ServicioGestion {
 				"order by APELLIDO_PATERNO_GTEMP";
 		return str_sql;
 	}
+	
+	/**
+	 * metodo que retorna el sql para cargar los combos de Distribucion politica con los campos ide_indip- pais- provincia -ciudad , ide_indip de la ciudad
+	 */
+	public String getSqlDistribucionPoliticaCiudad(){
+		String str_sql="select a.ide_indip,c.detalle_indip ||' ' as pais,provincia||' ' as provincia," +
+				"a.detalle_indip as ciudad from ( select * from inst_distribucion_politica where ide_intid=3 ) a " +
+				" left join ( select a.ide_indip,a.detalle_indip as canton, b.ide_indip as codigo_provincia," +
+				" b.detalle_indip as provincia, b.ide_indip as codigo_pais from     " +
+				"(select * from inst_distribucion_politica where ide_intid=4) a left join " +
+				" (select * from inst_distribucion_politica where ide_intid=2)  b " +
+				" on a.ins_ide_indip = b.ide_indip ) b on a.ins_ide_indip = b.ide_indip " +
+				" left join inst_distribucion_politica c on b.codigo_pais=c.ide_indip where not c.detalle_indip is null " +
+				" order by provincia,a.detalle_indip ";
+		return str_sql;
+	}
+
+	
+	
+	
+	
 	public boolean cambiarEstadoPartidaOcupada(String IDE_GEPGC){
 		if (utilitario.getConexion().ejecutarSql("UPDATE GEN_PARTIDA_GRUPO_CARGO set VACANTE_GEPGC=0 where IDE_GEPGC ="+IDE_GEPGC).isEmpty()){
 			return true;
