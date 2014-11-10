@@ -68,6 +68,8 @@ public pre_pac(){
 		tab_partida.getColumna("ide_prcla").setAutoCompletar();
 		tab_partida.getColumna("ide_prcla").setLectura(true);
 		tab_partida.getColumna("valor_prpap").setMetodoChange("cambiaValor");
+		tab_partida.getColumna("ide_prcla").setUnico(true);
+		tab_partida.getColumna("ide_prpac").setUnico(true);
 		tab_partida.setColumnaSuma("valor_prpap");
 
 		tab_partida.dibujar();
@@ -121,12 +123,13 @@ public pre_pac(){
 		agregarComponente(set_clasificador);
 		
 		
-		
+		//ojo con el actualizar los totales // 
 }
 
 public void cambiaValor(AjaxBehaviorEvent evt){
 	tab_partida.modificar(evt);
-	utilitario.addUpdate("tab_partida");
+	tab_partida.setColumnaSuma("valor_prpap");
+	utilitario.addUpdate("tab_tabulador:tab_partida");
 }
 
 public void importarClasificador(){
