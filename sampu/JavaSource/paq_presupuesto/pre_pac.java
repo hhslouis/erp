@@ -1,12 +1,20 @@
 package paq_presupuesto;
 
+import javax.ejb.EJB;
+import javax.faces.event.AjaxBehaviorEvent;
+
+import framework.aplicacion.TablaGenerica;
+import framework.componentes.Boton;
 import framework.componentes.Combo;
 import framework.componentes.Division;
 import framework.componentes.Etiqueta;
 import framework.componentes.Imagen;
 import framework.componentes.PanelTabla;
+import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import framework.componentes.Tabulador;
+import paq_nomina.ejb.ServicioNomina;
+import paq_presupuesto.ejb.ServicioPresupuesto;
 import paq_sistema.aplicacion.Pantalla;
 
 public class pre_pac extends Pantalla{
@@ -17,6 +25,11 @@ public class pre_pac extends Pantalla{
 	private Tabla tab_anio=new Tabla();
 	
 	private Combo com_anio=new Combo();
+	
+	private SeleccionTabla set_clasificador=new SeleccionTabla();
+	@EJB
+	private ServicioPresupuesto ser_presupuesto=(ServicioPresupuesto) utilitario.instanciarEJB(ServicioPresupuesto.class);
+
 
 public pre_pac(){
 		
@@ -51,16 +64,21 @@ public pre_pac(){
 		tab_partida.setHeader("PARTIDA DE CONTRATACION (PAC)");
 		tab_partida.setIdCompleto("tab_tabulador:tab_partida");
 		tab_partida.setTabla("pre_partida_pac","ide_prpap",2);
-		tab_partida.setCampoForanea("ide_prpac");
+		tab_partida.getColumna("ide_prcla").setCombo("select ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla from pre_clasificador order by codigo_clasificador_prcla");
+		tab_partida.getColumna("ide_prcla").setAutoCompletar();
+		tab_partida.getColumna("ide_prcla").setLectura(true);
+		tab_partida.getColumna("valor_prpap").setMetodoChange("cargarValor");
+		tab_partida.setColumnaSuma("valor_prpap");
+
 		tab_partida.dibujar();
 		PanelTabla pat_partida=new PanelTabla();
 		pat_partida.setPanelTabla(tab_partida);
 		Imagen fondo= new Imagen(); 
         
-        fondo.setStyle("text-aling:center;position:absolute;top:100px;left:490px;");
-        fondo.setValue("imagenes/logo.png");
-        pat_partida.setWidth("100%");
-        pat_partida.getChildren().add(fondo);
+        //fondo.setStyle("text-aling:center;position:absolute;top:100px;left:490px;");
+        //fondo.setValue("imagenes/logo.png");
+        //pat_partida.setWidth("100%");
+        //pat_partida.getChildren().add(fondo);
 		
 		 //tabla 3
 		    tab_archivo.setId("tab_archivo");
@@ -89,10 +107,66 @@ public pre_pac(){
 		Division div_division=new Division();
 		div_division.dividir2(pat_pac,tab_tabulador, "50%", "h");
 		agregarComponente(div_division);
+		//Boton bot_agregar=new Boton();
+		Boton bot_importar=new Boton();
+		bot_importar.setIcon("ui-icon-person");
+		bot_importar.setValue("Agregar Clasificador");
+		bot_importar.setMetodo("importarClasificador");
+		bar_botones.agregarBoton(bot_importar);
+
+		set_clasificador.setId("set_clasificador");
+		set_clasificador.setSeleccionTabla(ser_presupuesto.getCatalogoPresupuestario("-1"),"ide_prcla");
+		set_clasificador.getTab_seleccion().getColumna("DESCRIPCION_CLASIFICADOR_PRCLA").setFiltro(true);		
+		set_clasificador.setTitle("SELECCION UNA PARTIDA");		
+		set_clasificador.getBot_aceptar().setMetodo("aceptarClasificador");
+		agregarComponente(set_clasificador);
 		
 		
 		
 }
+public void cambiarValor(AjaxBehaviorEvent evt){
+	 tab_partida.modificar(evt);
+	
+}
+
+public void importarClasificador(){
+	
+	if(com_anio.getValue()==null){
+		utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
+		return;
+	}
+	//Si la tabla esta vacia
+	if(tab_pac.isEmpty()){
+				utilitario.agregarMensajeInfo("No se puede agregar Clasificador, Por que no existen registros", "");
+				return;
+	}
+
+	//Filtrar los clasificadores del año seleccionado
+	set_clasificador.getTab_seleccion().setSql(ser_presupuesto.getCatalogoPresupuestario(com_anio.getValue()+""));
+	set_clasificador.getTab_seleccion().ejecutarSql();
+	set_clasificador.dibujar();
+
+}
+
+public void aceptarClasificador(){
+	String str_seleccionados=set_clasificador.getSeleccionados();
+	if(str_seleccionados!=null){
+		//Inserto los empleados seleccionados en la tabla de participantes 
+		TablaGenerica tab_clasificador=ser_presupuesto.getTablaCatalogoPresupuestario(str_seleccionados);
+	//	System.out.println(" tabla generica"+tab_clasificador.getSql());
+		for(int i=0;i<tab_clasificador.getTotalFilas();i++){
+			tab_partida.insertar();
+			tab_partida.setValor("ide_prcla", tab_clasificador.getValor(i, "ide_prcla"));
+			
+		}
+		set_clasificador.cerrar();
+		utilitario.addUpdate("tab_partida");			
+	}
+	else{
+		utilitario.agregarMensajeInfo("Debe seleccionar almenos un registro", "");
+	}
+}
+
 	@Override
 	public void insertar() {
 		// TODO Auto-generated method stub
@@ -118,11 +192,9 @@ public pre_pac(){
 	public void guardar() {
 		// TODO Auto-generated method stub
 		if( tab_pac.guardar()){
-			if( tab_anio.guardar()){
 			tab_partida.guardar();
 			
-         }
-		}
+       		}
      
 		guardarPantalla();
 		
@@ -134,8 +206,8 @@ public pre_pac(){
 		if(tab_pac.isFocus()){
 			tab_pac.eliminar();
 			}
-		else if(tab_anio.isFocus()){
-			tab_anio.eliminar();
+		else if(tab_partida.isFocus()){
+			tab_partida.eliminar();
 		}
 		
 	}
@@ -144,13 +216,15 @@ public pre_pac(){
 			if(com_anio.getValue()!=null){
 				tab_pac.setCondicion("ide_geani="+com_anio.getValue());
 				tab_pac.ejecutarSql();
-				tab_anio.ejecutarValorForanea(tab_pac.getValorSeleccionado());
+				tab_partida.ejecutarValorForanea(tab_pac.getValorSeleccionado());
+				tab_archivo.ejecutarValorForanea(tab_pac.getValorSeleccionado());
 			}
 			else {
 				tab_pac.setCondicion("ide_geani=-1");
 				tab_pac.ejecutarSql();
 				tab_anio.ejecutarValorForanea(tab_pac.getValorSeleccionado());
-		
+				tab_archivo.ejecutarValorForanea(tab_pac.getValorSeleccionado());
+
 			}
 	}
 
@@ -188,6 +262,12 @@ public pre_pac(){
 	}
 	public void setCom_anio(Combo com_anio) {
 		this.com_anio = com_anio;
+	}
+	public SeleccionTabla getSet_clasificador() {
+		return set_clasificador;
+	}
+	public void setSet_clasificador(SeleccionTabla set_clasificador) {
+		this.set_clasificador = set_clasificador;
 	}
 	
 
