@@ -1,6 +1,8 @@
 package paq_presupuesto;
 
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
+
 import framework.componentes.Boton;
 import framework.componentes.Combo;
 import framework.componentes.Division;
@@ -17,6 +19,7 @@ public class pre_contratacion extends Pantalla{
 
 	private Tabla tab_poa=new Tabla();
 	private Tabla tab_mes=new Tabla();
+	private Tabla tab_reforma=new Tabla();
 	private Tabla tab_archivo=new Tabla();
 	private Tabla tab_financiamiento=new Tabla();
 
@@ -37,13 +40,12 @@ public class pre_contratacion extends Pantalla{
 		tab_tabulador.setId("tab_tabulador");
 
 		tab_poa.setId("tab_poa");
-		tab_poa.setHeader("PLAN OPERTIVO ANUAL (POA)");
+		tab_poa.setHeader("PLAN OPERATIVO ANUAL (POA)");
 		tab_poa.setTabla("pre_poa","ide_prpoa",1);
 		tab_poa.getColumna("ide_geani").setVisible(false);
 		tab_poa.setCondicion("ide_geani=-1");  
 
 		tab_poa.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
-		
 		tab_poa.getColumna("ide_prcla").setCombo("SELECT ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla FROM pre_clasificador ORDER BY codigo_clasificador_prcla");
 		tab_poa.getColumna("ide_prcla").setLectura(true);
 		tab_poa.getColumna("ide_prsua").setCombo("pre_sub_actividad","ide_prsua","detalle_prsua","");
@@ -53,67 +55,93 @@ public class pre_contratacion extends Pantalla{
 		tab_poa.setTipoFormulario(true);
 		tab_poa.getGrid().setColumns(4);
 
-		// tab_poa.setCampoForanea("ide_cosum");
-
+	
 		tab_poa.agregarRelacion(tab_mes);//agraga relacion para los tabuladores
 		tab_poa.agregarRelacion(tab_financiamiento);
+		tab_poa.agregarRelacion(tab_reforma);
+		
+				
 		tab_poa.dibujar();
 		PanelTabla pat_poa=new PanelTabla();
 		pat_poa.setPanelTabla(tab_poa);
-
-
+		
+		//EJECUCION MENSUAL
 		tab_mes.setId("tab_mes");
 		tab_mes.setHeader("EJECUCION MENSUAL (POA)");
 		tab_mes.setIdCompleto("tab_tabulador:tab_mes");
 		tab_mes.setTabla("pre_poa_mes","ide_prpom",2);
 		tab_mes.setCampoForanea("ide_prpoa");
+		tab_mes.getColumna("ide_gemes").setCombo("select ide_gemes,detalle_gemes from gen_mes order by ide_gemes");
 		tab_mes.dibujar();
 		PanelTabla pat_panel2 = new PanelTabla();
 		pat_panel2.setPanelTabla(tab_mes);
+		
+		// REFORMA MENSUAL
+		tab_reforma.setId("tab_reforma");
+		tab_reforma.setHeader("REFORMA MENSUAL (POA)");
+		tab_reforma.setIdCompleto("tab_tabulador:tab_reforma");
+		tab_reforma.setTabla("pre_poa_reforma", "ide_prpor",3);
+		tab_reforma.setCampoForanea("ide_prpoa");
+		tab_reforma.getColumna("pre_ide_prpoa").setCombo("select ide_prpoa,num_resolucion_prpoa,codigo_clasificador_prcla,descripcion_clasificador_prcla " +	
+		"from pre_poa  a, (select ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla  from pre_clasificador ) b where a.ide_prcla=b.ide_prcla");
+		tab_reforma.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
+		tab_reforma.getColumna("ide_gemes").setCombo("select ide_gemes,detalle_gemes from gen_mes order by ide_gemes");
+		
+		tab_reforma.setTipoFormulario(true);
+		tab_reforma.getGrid().setColumns(4);
+		tab_reforma.dibujar();
+		PanelTabla pat_panel3=new PanelTabla();
+		pat_panel3.setPanelTabla(tab_reforma);
 
+		//FINANCIAMIENTO
 		tab_financiamiento.setId("tab_financiamiento");
 		tab_financiamiento.setHeader("FUENTES DE FINANCIAMIENTO (POA)");
 		tab_financiamiento.setIdCompleto("tab_tabulador:tab_financiamiento");
-		tab_financiamiento.setTabla("pre_poa_financiamiento","ide_prpof",3);
+		tab_financiamiento.setTabla("pre_poa_financiamiento","ide_prpof",4);
 		tab_financiamiento.setCampoForanea("ide_prpoa");
+		tab_financiamiento.getColumna("ide_prfuf").setCombo("pre_fuente_financiamiento","ide_prfuf","detalle_prfuf","");
+		tab_financiamiento.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
 		tab_financiamiento.dibujar();
-		PanelTabla pat_panel3 = new PanelTabla();
-		pat_panel3.setPanelTabla(tab_financiamiento);
+		PanelTabla pat_panel4= new PanelTabla();
+		pat_panel4.setPanelTabla(tab_financiamiento);
 
-
+		//ARCHIVO
 		tab_archivo.setId("tab_archivo");
 		tab_archivo.setHeader("ARCHIVOS ANEXOS (POA)");
 		tab_archivo.setIdCompleto("tab_tabulador:tab_archivo");
 		tab_archivo.setTipoFormulario(true);
-		tab_archivo.setTabla("pre_poa_archivo","ide_prpor",4);
+		tab_archivo.setTabla("pre_poa_archivo","ide_prpor",5);
 		tab_archivo.getColumna("foto_prpor").setUpload("presupuesto");
 		tab_archivo.setCampoForanea("ide_prpoa");
 		tab_archivo.dibujar();
-		PanelTabla pat_panel4 = new PanelTabla();
-		pat_panel4.setPanelTabla(tab_archivo);
+		PanelTabla pat_panel5= new PanelTabla();
+		pat_panel5.setPanelTabla(tab_archivo);
 		Imagen fondo= new Imagen();   
 
 		fondo.setStyle("text-aling:center;position:absolute;top:100px;left:490px;");
 		fondo.setValue("imagenes/logo.png");
-		pat_panel4.setWidth("100%");
-		pat_panel4.getChildren().add(fondo);
+		pat_panel5.setWidth("100%");
+		pat_panel5.getChildren().add(fondo);
 
-		tab_tabulador.agregarTab("EJECUCION MENSUAL", pat_panel2);//intancia los tabuladores
-		tab_tabulador.agregarTab("FINANCIAMIENTO", pat_panel3);
-		tab_tabulador.agregarTab("ARCHIVOS",pat_panel4);
+		tab_tabulador.agregarTab("EJECUCION MENSUAL", pat_panel2);//intancia los tabuladores 
+		tab_tabulador.agregarTab("REFORMA MENSUAL",pat_panel3);
+		tab_tabulador.agregarTab("FINANCIAMIENTO", pat_panel4);
+		tab_tabulador.agregarTab("ARCHIVOS",pat_panel5);
+		
 
-
+		//division2
+		
 		Division div_division=new Division();
 		div_division.dividir2(pat_poa,tab_tabulador,"50%","H");
 		agregarComponente(div_division);
 
 		Boton bot_agregar=new Boton();
-		bot_agregar.setValue("Agregar Claisficador");
+		bot_agregar.setValue("Agregar Clasificador");
 		bot_agregar.setMetodo("agregarClasificador");
 		bar_botones.agregarBoton(bot_agregar);
 
 		set_clasificador.setId("set_clasificador");
-		set_clasificador.setTitle("SELECCIONE UN CLASIFICADOR");
+		set_clasificador.setTitle("SELECCIONE UNA PARTIDA PRESUPUESTARIA");
 		set_clasificador.setRadio(); //solo selecciona una opcion
 		set_clasificador.setSeleccionTabla("SELECT ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla FROM pre_clasificador where ide_geani=-1" +
 				"ORDER BY codigo_clasificador_prcla", "ide_prcla"); 
@@ -174,6 +202,10 @@ public class pre_contratacion extends Pantalla{
 			tab_mes.insertar();
 
 		}
+		else if (tab_reforma.isFocus()) {
+			tab_reforma.insertar();
+			
+		}
 
 		else if (tab_financiamiento.isFocus()){
 			tab_financiamiento.insertar();
@@ -189,10 +221,13 @@ public class pre_contratacion extends Pantalla{
 	public void guardar() {
 		// TODO Auto-generated method stub
 		if (tab_poa.guardar()) {
-
+			
 			if (tab_mes.guardar()) {
 				if( tab_financiamiento.guardar()){
-					tab_archivo.guardar();
+					if(tab_reforma.guardar()){
+					tab_archivo.guardar();	
+					}
+					
 				}
 			}
 		}
@@ -211,6 +246,7 @@ public class pre_contratacion extends Pantalla{
 			tab_poa.setCondicion("ide_geani="+com_anio.getValue());
 			tab_poa.ejecutarSql();
 			tab_mes.ejecutarValorForanea(tab_poa.getValorSeleccionado());
+			tab_reforma.ejecutarValorForanea(tab_poa.getValorSeleccionado());
 			tab_archivo.ejecutarValorForanea(tab_poa.getValorSeleccionado());
 			tab_financiamiento.ejecutarValorForanea(tab_poa.getValorSeleccionado());
 		}
@@ -218,6 +254,7 @@ public class pre_contratacion extends Pantalla{
 			tab_poa.setCondicion("ge_geani=-1");
 			tab_poa.ejecutarSql();
 			tab_mes.ejecutarValorForanea(tab_poa.getValorSeleccionado());
+			tab_reforma.ejecutarValorForanea(tab_poa.getValorSeleccionado());
 			tab_archivo.ejecutarValorForanea(tab_poa.getValorSeleccionado());
 			tab_financiamiento.ejecutarValorForanea(tab_poa.getValorSeleccionado());
 
@@ -264,5 +301,14 @@ public class pre_contratacion extends Pantalla{
 	public void setTab_archivo(Tabla tab_archivo) {
 		this.tab_archivo = tab_archivo;
 	}
+
+	public Tabla getTab_reforma() {
+		return tab_reforma;
+	}
+
+	public void setTab_reforma(Tabla tab_reforma) {
+		this.tab_reforma = tab_reforma;
+	}
+	
 
 }
