@@ -3,12 +3,8 @@ package paq_contabilidad;
 
 
 
-
-
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.ejb.EJB;
 
 import framework.componentes.Combo;
 import framework.componentes.Division;
@@ -19,7 +15,6 @@ import framework.componentes.SeleccionArbol;
 import framework.componentes.SeleccionFormatoReporte;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
-import paq_gestion.ejb.ServicioGestion;
 import paq_sistema.aplicacion.Pantalla;
 
 
@@ -40,9 +35,6 @@ public class pre_viaje extends Pantalla {
 	private SeleccionTabla set_estado=new SeleccionTabla();
 	private SeleccionArbol sea_distribucion=new SeleccionArbol();
 
-	@EJB
-	private ServicioGestion ser_gestion = (ServicioGestion) utilitario.instanciarEJB(ServicioGestion.class);	
-	
 	public pre_viaje() {
 
 		com_tipo_transporte.setCombo("select ide_cotit,detalle_cotit from cont_tipo_transporte where activo_cotit = true" +
@@ -65,14 +57,12 @@ public class pre_viaje extends Pantalla {
 		tab_tiket_viaje.getColumna("ide_cotit").setVisible(false);
 		tab_tiket_viaje.setCondicion("ide_cotit=-1");
 
-
+//cambio cv desde tania
 		tab_tiket_viaje.getColumna("IDE_COTIV").setCombo("CONT_TIKET_VIAJE","IDE_COTIV", "DETALLE_VIAJE_COTIV", "");
 
 		tab_tiket_viaje.getColumna("IDE_COASV").setCombo("CONT_ASUNTO_VIAJE","IDE_COASV", "DETALLE_COASV", "");
 		tab_tiket_viaje.getColumna("IDE_COEST").setCombo("CONT_ESTADO","IDE_COEST", "DETALLE_COEST", "");
 		tab_tiket_viaje.getColumna("IDE_INDIP").setCombo("INST_DISTRIBUCION_POLITICA","IDE_INDIP", "DETALLE_INDIP", "");
-		tab_tiket_viaje.getColumna("IDE_INDIP").setCombo(ser_gestion.getSqlDistribucionPoliticaCiudad());
-		
 
 		tab_tiket_viaje.getColumna("INS_IDE_INDIP").setCombo("INST_DISTRIBUCION_POLITICA","INS_IDE_INDIP", "DETALLE_INDIP", "");
 
