@@ -8,6 +8,7 @@ import paq_sistema.aplicacion.Pantalla;
 import framework.componentes.Arbol;
 import framework.componentes.Division;
 import framework.componentes.PanelTabla;
+import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import framework.componentes.Tabulador;
 
@@ -23,7 +24,7 @@ public class pre_convenios extends Pantalla {
 
     private Arbol arb_arbol = new Arbol();
     
-    
+  
 
     public pre_convenios() {
     	Tabulador tab_tabulador = new Tabulador();
