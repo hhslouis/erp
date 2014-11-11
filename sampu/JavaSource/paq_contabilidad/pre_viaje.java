@@ -57,7 +57,7 @@ public class pre_viaje extends Pantalla {
 		tab_tiket_viaje.getColumna("ide_cotit").setVisible(false);
 		tab_tiket_viaje.setCondicion("ide_cotit=-1");
 
-//cambio cv desde tania
+
 		tab_tiket_viaje.getColumna("IDE_COTIV").setCombo("CONT_TIKET_VIAJE","IDE_COTIV", "DETALLE_VIAJE_COTIV", "");
 
 		tab_tiket_viaje.getColumna("IDE_COASV").setCombo("CONT_ASUNTO_VIAJE","IDE_COASV", "DETALLE_COASV", "");
