@@ -24,7 +24,7 @@ public class ServicioPresupuesto {
  }
  public TablaGenerica getTablaCatalogoPresupuestario(String ideClasificador){
 	 
-	 TablaGenerica tab_presupesto=utilitario.consultar("SELECT ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla FROM pre_clasificador where ide_prcla= 1" +ideClasificador+
+	 TablaGenerica tab_presupesto=utilitario.consultar("SELECT ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla FROM pre_clasificador where ide_prcla=" +ideClasificador+
 				" ORDER BY codigo_clasificador_prcla");
 	 return tab_presupesto;
 			 
