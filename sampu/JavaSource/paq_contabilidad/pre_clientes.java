@@ -1,9 +1,13 @@
 package paq_contabilidad;
 
+import javax.ejb.EJB;
+import javax.faces.event.AjaxBehaviorEvent;
+
 import framework.componentes.Division;
 import framework.componentes.PanelTabla;
 import framework.componentes.Tabla;
 import framework.componentes.Tabulador;
+import paq_gestion.ejb.ServicioGestion;
 import paq_sistema.aplicacion.Pantalla;
 
 public class pre_clientes extends Pantalla {
@@ -14,7 +18,9 @@ public class pre_clientes extends Pantalla {
 	private Tabla tab_email=new Tabla();
 	private Tabla tab_documento=new Tabla();
 	private Tabla tab_clientes=new Tabla();
-	
+	@EJB
+	private ServicioGestion ser_gestion = (ServicioGestion) utilitario.instanciarEJB(ServicioGestion.class);
+
 	
 	public pre_clientes (){
 		
@@ -29,10 +35,13 @@ public class pre_clientes extends Pantalla {
 		tab_clientes.getColumna("ide_retic").setCombo("rec_tipo_contribuyente", "ide_retic", "detalle_retic", "");
 		tab_clientes.getColumna("ide_retia").setCombo("rec_tipo_asistencia", "ide_retia", "detalle_retia", "");
 		tab_clientes.getColumna("ide_gtgen").setCombo("gth_genero", "ide_gtgen", "detalle_gtgen", "");
-		tab_clientes.getColumna("ide_indip").setCombo("inst_distribucion_politica", "ide_indip", "detalle_indip", "");
+		tab_clientes.getColumna("ide_gedip").setCombo(ser_gestion.getSqlDivisionPoliticaCiudad());
+		tab_clientes.getColumna("ide_gedip").setAutoCompletar();
 		tab_clientes.getColumna("ide_gttdi").setCombo("gth_tipo_documento_identidad", "ide_gttdi", " detalle_gttdi", "");
 		tab_clientes.getColumna("gth_ide_gttdi").setCombo("gth_tipo_documento_identidad", "ide_gttdi", "detalle_gttdi", "");
 		tab_clientes.getColumna(" ide_gtesc ").setCombo("gth_estado_civil", " ide_gtesc ", "detalle_gtesc", "");
+		tab_clientes.getColumna("ruc_comercial_recli").setMetodoChange("validaDocumento");
+		tab_clientes.getColumna("representante_legal_recli").setMetodoChange("validaDocumentoRepre");
 		tab_clientes.agregarRelacion(tab_direccion);//agraga relacion para los tabuladores
 		tab_clientes.agregarRelacion(tab_telefono);
         tab_clientes.agregarRelacion(tab_email);
@@ -113,7 +122,42 @@ public class pre_clientes extends Pantalla {
         guardarPantalla();
 		
 	}
-
+	public void validaDocumento(AjaxBehaviorEvent evt){
+		tab_clientes.modificar(evt);
+		if(!validarDocumentoIdentidad(tab_clientes.getValor("ide_gttdi"), tab_clientes.getValor("ruc_comercial_recli"))){
+			System.out.println("entre a validar cedula");
+			tab_clientes.setValor("ruc_comercial_recli","");
+			utilitario.addUpdate("tab_clientes");
+		}			
+			
+	}
+	
+	
+	/**
+	 * @param ide_gttdi
+	 * @param documento_identidad_gttdi
+	 * @return
+	 * 
+	 * metodo booleano para validar el tipo de documento de identidad cedula y ruc
+	 */
+	public boolean validarDocumentoIdentidad(String ide_gttdi,String documento_identidad){
+		if (ide_gttdi!=null && !ide_gttdi.isEmpty()){
+			if (documento_identidad!=null && !documento_identidad.isEmpty()){
+				if (ide_gttdi.equals(utilitario.getVariable("p_gth_tipo_documento_cedula"))){
+					if (!utilitario.validarCedula(documento_identidad)){
+						utilitario.agregarMensajeInfo("Atencion", "El numero de cedula ingresado no es valido");
+						return false;
+					}
+				}else if (ide_gttdi.equals(utilitario.getVariable("p_gth_tipo_documento_ruc"))){
+					if (!utilitario.validarRUC(documento_identidad)){
+						utilitario.agregarMensajeInfo("Atencion", "El numero de RUC ingresado no es valido");
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
 	
 
 
