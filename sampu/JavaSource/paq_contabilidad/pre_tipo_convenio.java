@@ -19,7 +19,7 @@ public class pre_tipo_convenio extends Pantalla{
 
 	public pre_tipo_convenio() {
 		tab_tipo_convenio.setId("tab_tipo_convenio");  
-		tab_tipo_convenio.setTabla("cont_tipo_convenio", "ide_cotic", 1);	
+		tab_tipo_convenio.setTabla("cont_tipo_convenio", "ide_cotie", 1);	
 		tab_tipo_convenio.dibujar();
 		PanelTabla pat_tipo_convenio=new PanelTabla();
 		pat_tipo_convenio.setPanelTabla(tab_tipo_convenio);
