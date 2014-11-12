@@ -19,8 +19,6 @@ public class pre_fuente_financiamiento extends Pantalla {
 		 agregarComponente(pat_fuente_financiamiento);
 		  
 		  
-		 
-		 
 		
 	}
 	
