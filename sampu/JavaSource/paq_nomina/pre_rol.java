@@ -911,7 +911,7 @@ public class pre_rol extends Pantalla{
 				con_guardar.cerrar();
 
 				// actualiza la bandera NOMINA_ASDHE_
-				utilitario.getConexion().agregarSqlPantalla("update ASI_DETALLE_HORAS_EXTRAS set NOMINA_ASDHE=0 " +
+				utilitario.getConexion().agregarSqlPantalla("update ASI_DETALLE_HORAS_EXTRAS set NOMINA_ASDHE=false " +
 						"where IDE_ASDHE in (select IDE_ASDHE from ASI_VALIDA_NOMINA where IDE_NRROL="+tab_rol.getValorSeleccionado()+")");
 
 				
