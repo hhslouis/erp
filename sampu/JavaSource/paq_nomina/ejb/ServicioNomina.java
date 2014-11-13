@@ -385,7 +385,7 @@ public class ServicioNomina {
 
 
 		// actualiza la bandera NOMINA_ASDHE_, para saber que ya fue pasada y cerrada las horas extras
-		utilitario.getConexion().agregarSqlPantalla("update ASI_DETALLE_HORAS_EXTRAS set NOMINA_ASDHE=1 " +
+		utilitario.getConexion().agregarSqlPantalla("update ASI_DETALLE_HORAS_EXTRAS set NOMINA_ASDHE=true " +
 				"where IDE_ASDHE in (select IDE_ASDHE from ASI_VALIDA_NOMINA where IDE_NRROL="+ide_nrrol+")");
 
 		//		// actualizo el estado de la nomina a cerrada
