@@ -12,10 +12,7 @@ import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import framework.componentes.Tabulador;
 
-/**
- *
- * @author Diego
- */
+
 public class pre_convenios extends Pantalla {
 
     private Tabla tab_tabla1 = new Tabla();
@@ -39,8 +36,8 @@ public class pre_convenios extends Pantalla {
         tab_tabla1.getColumna("ide_cotie").setCombo("cont_tipo_convenio","ide_cotie","detalle_cotie","");
 		tab_tabla1.getColumna("ide_geins").setCombo("gen_institucion","ide_geins","detalle_geins","");
 		tab_tabla1.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
-       // tab_tabla1.agregarRelacion(tab_tabla2);
-       // tab_tabla1.agregarRelacion(tab_tabla3);
+        tab_tabla1.agregarRelacion(tab_tabla2);
+        tab_tabla1.agregarRelacion(tab_tabla3);
         tab_tabla1.agregarArbol(arb_arbol);
         tab_tabla1.dibujar();
         PanelTabla pat_panel1 = new PanelTabla();
@@ -75,8 +72,8 @@ public class pre_convenios extends Pantalla {
 
         
 
-        tab_tabulador.agregarTab("RESPONSABLE CONVENIO",pat_panel2);
-        tab_tabulador.agregarTab("ARCHIVO CONVENIO", pat_panel3);
+        tab_tabulador.agregarTab("RESPONSABLE FIRMA CONVENIO",pat_panel2);
+        tab_tabulador.agregarTab("ARCHIVO ANEXO CONVENIO", pat_panel3);
        
 
         Division div3 = new Division(); //UNE OPCION Y DIV 2
