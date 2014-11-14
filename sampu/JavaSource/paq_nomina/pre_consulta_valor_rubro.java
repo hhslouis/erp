@@ -180,9 +180,7 @@ public class pre_consulta_valor_rubro extends Pantalla{
 			
 		}
 		
-if (tab_consulta.getTotalFilas()==0){
-	utilitario.agregarMensajeInfo("No existen transacciones registradas ", "");
-}
+       
 
 	}
 
