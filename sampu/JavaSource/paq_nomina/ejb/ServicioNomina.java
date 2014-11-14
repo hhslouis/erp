@@ -5344,17 +5344,12 @@ System.out.println("sql getSqlEmpleadosRol..."+sql);
 	 */
 	public String getNuevoIdeTipoNomina(String IDE_NRDER, String  IDE_NRDTN ){
 		
-		System.out.println("SN C_PARAMETROS getNuevoIdeTipoNomina IDE_NRDER..."+IDE_NRDER);
-		System.out.println("SN C_PARAMETROS getNuevoIdeTipoNomina IDE_NRDTN..."+IDE_NRDTN);
-				
 		
 		TablaGenerica tab_dtn=getDetalleRubro(IDE_NRDER);
-		System.out.println("SN sql getNuevoIdeTipoNomina tab_dtn..."+tab_dtn.getSql());
-		
+			
 		if(tab_dtn!=null){
 			String str_ide_nrrub=tab_dtn.getValor("IDE_NRRUB");
-			System.out.println("SN C_PARAMETROS getNuevoIdeTipoNomina str_ide_nrrub..."+str_ide_nrrub);
-			
+						
 			if(str_ide_nrrub!=null){
 				return getDetalleRubro(IDE_NRDTN, str_ide_nrrub).getValor("IDE_NRDER");
 			}			
