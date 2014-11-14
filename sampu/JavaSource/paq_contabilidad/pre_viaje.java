@@ -1,240 +1,198 @@
 package paq_contabilidad;
+import javax.ejb.EJB;
 
-
-
-
-import java.util.HashMap;
-import java.util.Map;
-
+import framework.aplicacion.TablaGenerica;
+import framework.componentes.Boton;
 import framework.componentes.Combo;
+import framework.componentes.Dialogo;
 import framework.componentes.Division;
 import framework.componentes.Etiqueta;
+import framework.componentes.Grid;
+import framework.componentes.Imagen;
 import framework.componentes.PanelTabla;
-import framework.componentes.Reporte;
-import framework.componentes.SeleccionArbol;
-import framework.componentes.SeleccionFormatoReporte;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
+import framework.componentes.Texto;
+import paq_gestion.ejb.ServicioGestion;
+import paq_nomina.ejb.ServicioNomina;
 import paq_sistema.aplicacion.Pantalla;
 
 
+public class pre_viaje extends Pantalla{
 
-public class pre_viaje extends Pantalla {
-
+	private Dialogo empleado_dialogo=new Dialogo();
+	
 	private Tabla tab_tiket_viaje = new Tabla();
-	private Tabla tab_cont_viajeros = new Tabla();
+	private Tabla tab_cont_viajeros = new Tabla();	
 	private Combo com_tipo_transporte=new Combo();
+	private SeleccionTabla set_empleado =new SeleccionTabla();
 
-	//Reportes
-	private Reporte rep_reporte=new Reporte();
-	private SeleccionFormatoReporte sef_formato=new SeleccionFormatoReporte();
-	private Map  map_parametros=new HashMap();
 
-	private SeleccionTabla set_tipo_transporte=new SeleccionTabla();
-	private SeleccionTabla set_asunto_viaje=new SeleccionTabla();
-	private SeleccionTabla set_estado=new SeleccionTabla();
-	private SeleccionArbol sea_distribucion=new SeleccionArbol();
-
+	
+	@EJB
+	private ServicioGestion ser_gestion = (ServicioGestion) utilitario.instanciarEJB(ServicioGestion.class);
+	@EJB
+	private ServicioNomina ser_nomina = (ServicioNomina) utilitario.instanciarEJB(ServicioNomina.class);
+	
 	public pre_viaje() {
-
+		
+		
+		
 		com_tipo_transporte.setCombo("select ide_cotit,detalle_cotit from cont_tipo_transporte where activo_cotit = true" +
 				" order by detalle_cotit");
-		com_tipo_transporte.setMetodo("seleccionaTipo_Transporte");
+		com_tipo_transporte.setMetodo("seleccionaTipoTransporte");
 		bar_botones.agregarComponente(new Etiqueta("Tipo de Transporte:"));
-		bar_botones.agregarComponente(com_tipo_transporte);		
-
-
-		bar_botones.agregarReporte();//agrega boton de reporte
-
-		rep_reporte.setId("rep_reporte");
-		agregarComponente(rep_reporte);
-
-		sef_formato.setId("sef_formato");
-		agregarComponente(sef_formato);
-
+		bar_botones.agregarComponente(com_tipo_transporte);			
+		//div1
 		tab_tiket_viaje.setId("tab_tiket_viaje");
+		tab_tiket_viaje.setHeader("TIKET DE VIAJE");
+
 		tab_tiket_viaje.setTabla("cont_tiket_viaje", "ide_cotiv",1);
 		tab_tiket_viaje.getColumna("ide_cotit").setVisible(false);
-		tab_tiket_viaje.setCondicion("ide_cotit=-1");
-
-
-		tab_tiket_viaje.getColumna("IDE_COTIV").setCombo("CONT_TIKET_VIAJE","IDE_COTIV", "DETALLE_VIAJE_COTIV", "");
-
-		tab_tiket_viaje.getColumna("IDE_COASV").setCombo("CONT_ASUNTO_VIAJE","IDE_COASV", "DETALLE_COASV", "");
-		tab_tiket_viaje.getColumna("IDE_COEST").setCombo("CONT_ESTADO","IDE_COEST", "DETALLE_COEST", "");
-		tab_tiket_viaje.getColumna("IDE_INDIP").setCombo("INST_DISTRIBUCION_POLITICA","IDE_INDIP", "DETALLE_INDIP", "");
-
-		tab_tiket_viaje.getColumna("INS_IDE_INDIP").setCombo("INST_DISTRIBUCION_POLITICA","INS_IDE_INDIP", "DETALLE_INDIP", "");
-
-		//tab_tiket_viaje.getColumna("ACTIVO_COTIV").setValorDefecto("false");	
-
+		tab_tiket_viaje.setCondicion("ide_cotit = -1");
+		tab_tiket_viaje.getColumna("ide_coasv").setCombo("cont_asunto_viaje","ide_coasv", "detalle_coasv", "");
+		tab_tiket_viaje.getColumna("IDE_COEST").setCombo("cont_estado","IDE_COEST", "DETALLE_COEST", "");
+		
+		tab_tiket_viaje.getColumna("IDE_GEDIP").setCombo(ser_gestion.getSqlDivisionPoliticaCiudad());
+		
+		tab_tiket_viaje.getColumna("GEN_IDE_GEDIP").setCombo(ser_gestion.getSqlDivisionPoliticaCiudad());
 		tab_tiket_viaje.setTipoFormulario(true);
-		tab_tiket_viaje.getGrid().setColumns(4);
-
-
-
+		tab_tiket_viaje.getGrid().setColumns(4);		
 		tab_tiket_viaje.dibujar();
-
+		
 		tab_tiket_viaje.agregarRelacion(tab_cont_viajeros);
-		PanelTabla pat_tiket_viaje =new PanelTabla();
-		pat_tiket_viaje.setPanelTabla(tab_tiket_viaje);
+		//Imagen fondo= new Imagen(); 
+	    PanelTabla pat_tiket_viaje =new PanelTabla();
+	    pat_tiket_viaje.setPanelTabla(tab_tiket_viaje);
+		
+	   // fondo.setStyle("text-aling:center;position:absolute;top:100px;left:490px;");
+		//fondo.setValue("imagenes/logo.png");
+		//pat_tiket_viaje.setWidth("100%");
+		//pat_tiket_viaje.getChildren().add(fondo);
+	    
+	    //div 2	    
+	    
+	    tab_cont_viajeros.setId("tab_cont_viajeros");
+	    tab_cont_viajeros.setHeader("VIAJERO");
+	    
+	    tab_cont_viajeros.setTabla("cont_viajeros", "ide_covia",2);
+	    tab_cont_viajeros.setCampoForanea("ide_cotiv");
+	    
+	    tab_cont_viajeros.getColumna("IDE_COCLV").setCombo("SELECT IDE_COCLV, DETALLE_COCLV " +
+	    		" FROM cont_clase_viaje WHERE ACTIVO_COCLV = TRUE ORDER BY DETALLE_COCLV");
 
-		//divicion 2 
+		tab_cont_viajeros.getColumna("IDE_GTEMP").setVisible(false);
+	    tab_cont_viajeros.setCampoForanea("ide_cotiv");
 
-		tab_cont_viajeros.setId("tab_cont_viajeros");
-		tab_cont_viajeros.setTabla("cont_viajeros", "ide_covia",2);
-		tab_cont_viajeros.getColumna("IDE_COVIA").setCombo("CONT_VIAJEROS","IDE_COVIA", "BOLETO_COVIA", "");
-		tab_cont_viajeros.getColumna("IDE_COCLV").setCombo("CONT_CLASE_VIAJE","IDE_COCLV", "DETALLE_COCLV", "");
-		tab_cont_viajeros.getColumna("IDE_COTIV").setCombo("CONT_TIKET_VIAJE","IDE_COTIV", "DETALLE_VIAJE_COTIV", "");
-		tab_cont_viajeros.getColumna("IDE_GTEMP").setCombo("SELECT IDE_GTEMP," +
-				"(PRIMER_NOMBRE_GTEMP||' '||SEGUNDO_NOMBRE_GTEMP||' '||APELLIDO_PATERNO_GTEMP||' '||APELLIDO_MATERNO_GTEMP)AS EMPLEADO " +
-				" FROM gth_empleado ORDER BY EMPLEADO");
+	    tab_cont_viajeros.getColumna("BOLETO_COVIA").setUpload("viajes");
 
-
-		tab_cont_viajeros.setCampoForanea("ide_cotiv");
-
-
-		tab_cont_viajeros.setTipoFormulario(true);
-		tab_cont_viajeros.getGrid().setColumns(4);
-
-		tab_cont_viajeros.dibujar();
+	    tab_cont_viajeros.getColumna("IDE_GEEDP").setCombo(ser_nomina.servicioEmpleadoContrato("true"));
+	    tab_cont_viajeros.getColumna("IDE_GEEDP").setAutoCompletar();
+	    tab_cont_viajeros.getColumna("IDE_GEEDP").setLectura(true);
+	    tab_cont_viajeros.getColumna("IDE_GEEDP").setUnico(true);
+	    tab_cont_viajeros.getColumna("ide_cotiv").setUnico(true);
+	    
+	    
+		tab_cont_viajeros.getColumna("ACTIVO_COVIA").setValorDefecto("TRUE");
+	    tab_cont_viajeros.dibujar();
 		PanelTabla pat_cont_viajeros = new PanelTabla ();
 		pat_cont_viajeros.setPanelTabla(tab_cont_viajeros);
+		
+		Division div_division=new Division();
+		div_division.dividir2(pat_tiket_viaje, pat_cont_viajeros, "50%", "H");
+		agregarComponente(div_division);
+		
+		Boton bot_importar=new Boton();
+		bot_importar.setIcon("ui-icon-person");
+		bot_importar.setValue("Agregar Empleado");
+		bot_importar.setMetodo("importarEmpleado");
+		bar_botones.agregarBoton(bot_importar);
+		
+		set_empleado.setId("set_empleado");
+		set_empleado.setSeleccionTabla(ser_nomina.servicioEmpleadoContrato("true"),"ide_geedp");
+		//set_empleado.setSeleccionTabla(ser_nomina.servicioEmpleadoContrato("true"),"ide_geedp");
+		
+		System.out.println("parametro..set_empleado .."+set_empleado);
+		
+		set_empleado.getTab_seleccion().getColumna(" documento_identidad_gtemp").setFiltro(true);
+		set_empleado.getTab_seleccion().getColumna(" nombres_apellidos").setFiltro(true);
 
-		Division div_cont_viajeros=new Division();
-		div_cont_viajeros.dividir2(pat_tiket_viaje, pat_cont_viajeros, "50%", "H");
-		agregarComponente(div_cont_viajeros);
+		//set_empleado.getTab_seleccion().getColumna("nombre_apellido").setFiltro(true);
+		set_empleado.setTitle("Seleccione un Empleado");
+		set_empleado.getBot_aceptar().setMetodo("aceptarEmpleado");
+		agregarComponente(set_empleado);		
 
-
-		//Configurar selecion para reporte
-		set_tipo_transporte.setId("set_tipo_transporte");
-		set_tipo_transporte.setRadio();
-		set_tipo_transporte.setSeleccionTabla("select ide_cotit,detalle_cotit from cont_tipo_transporte where activo_cotit=true order by detalle_cotit", "ide_cotit");
-		set_tipo_transporte.getBot_aceptar().setMetodo("abrirTiketsdeViaje");
-		agregarComponente(set_tipo_transporte);
-
-		set_asunto_viaje.setId("set_asunto_viaje");
-		set_asunto_viaje.setRadio();
-		set_asunto_viaje.setSeleccionTabla("select ide_coasv,detalle_coasv from cont_asunto_viaje where activo_coasv=true order by detalle_coasv", "ide_coasv");
-		set_asunto_viaje.getBot_aceptar().setMetodo("abrirTiketsdeViaje");
-		agregarComponente(set_asunto_viaje);
-
-		set_estado.setId("set_estado");
-		set_estado.setRadio();
-		set_estado.setSeleccionTabla("select ide_coest,detalle_coest from cont_estado where activo_coest=true order by detalle_coest", "ide_coest");
-		set_estado.getBot_aceptar().setMetodo("abrirTiketsdeViaje");
-		agregarComponente(set_estado);
-
-		sea_distribucion.setId("sea_distribucion");
-		sea_distribucion.setSeleccionArbol("inst_distribucion_politica", "ide_indip", "detalle_indip", "ins_ide_indip");
-		sea_distribucion.getBot_aceptar().setMetodo("abrirTiketsdeViaje");
-		agregarComponente(sea_distribucion);
-
-
+//fin dialogo empleado		
 	}
 
-
-	@Override
-	public void abrirListaReportes() {
-		rep_reporte.dibujar();
-	}
-
-	@Override
-	public void aceptarReporte() {
-		if(rep_reporte.getReporteSelecionado().equals("Tikets de Viaje")){
-			abrirTiketsdeViaje();
+	public void importarEmpleado(){
+		
+		if(com_tipo_transporte.getValue()==null){
+			utilitario.agregarMensajeInfo("Debe seleccionar un Tipo de Transporte", "");
+			return;
 		}
-
-	}
-
-	public void  abrirTiketsdeViaje(){
-		if(rep_reporte.isVisible()){			
-			rep_reporte.cerrar();
-			set_tipo_transporte.dibujar();
-			map_parametros.clear(); ///limpia parametros
-		}
-
-		else if(set_tipo_transporte.isVisible()){
-			if(set_tipo_transporte.getValorSeleccionado()!=null){
-				map_parametros.put("ide_cotit", Integer.parseInt( set_tipo_transporte.getValorSeleccionado()));
-				set_tipo_transporte.cerrar();
-				set_asunto_viaje.dibujar();
-			}
-			else{
-				utilitario.agregarMensajeInfo("Seleccione un tipo de transporte", "");
-			}
-
-		}
-		else if(set_asunto_viaje.isVisible()){
-			if(set_asunto_viaje.getValorSeleccionado()!=null){
-				map_parametros.put("ide_coasv", Integer.parseInt( set_asunto_viaje.getValorSeleccionado()));
-				set_asunto_viaje.cerrar();
-				set_estado.dibujar();
-			}
-			else{
-				utilitario.agregarMensajeInfo("Seleccione un asunto de viaje", "");
-			}
-		}
-		else if(set_estado.isVisible()){
-			if(set_estado.getValorSeleccionado()!=null){
-				map_parametros.put("ide_coest", Integer.parseInt( set_estado.getValorSeleccionado()));
-				set_estado.cerrar();
-				sea_distribucion.dibujar();
-			}
-			else{
-				utilitario.agregarMensajeInfo("Seleccione un estado", "");
-			}
-		}
-		else if(sea_distribucion.isVisible()){
-			if(sea_distribucion.getSeleccionados()!=null){
-				//map_parametros.put("ide_indip", Integer.parseInt( sea_distribucion.getSeleccionados()));
-				sea_distribucion.cerrar();
-				sef_formato.setSeleccionFormatoReporte(map_parametros, rep_reporte.getPath());
-				sef_formato.dibujar();		
-			}
-			else{
-				utilitario.agregarMensajeInfo("Seleccione un estado", "");
-			}
-
-		}
-
+		else if(tab_tiket_viaje.isEmpty()){
+			utilitario.agregarMensajeInfo("Debe insertar un registro de ticket de Viaje", "");
+			return;
+		} 
+		
+		set_empleado.getTab_seleccion().setSql(ser_nomina.servicioEmpleadoContrato("true"));
+		set_empleado.getTab_seleccion().ejecutarSql();
+		set_empleado.dibujar();
 
 	}
+	
 
-
-
-
+public void aceptarEmpleado(){
+	String str_seleccionados=set_empleado.getSeleccionados();
+	if(str_seleccionados!=null){
+		//Inserto los empleados seleccionados en la tabla de participantes 
+		TablaGenerica tab_empleado = ser_nomina.ideEmpleadoContrato(str_seleccionados);		
+		
+		//set_empleado.setSeleccionTabla(ser_nomina.servicioEmpleadoContrato("true"),"ide_geedp");
+		
+		System.out.println(" tabla generica"+tab_empleado.getSql());
+		for(int i=0;i<tab_empleado.getTotalFilas();i++){
+			tab_cont_viajeros.insertar();
+			tab_cont_viajeros.setValor("IDE_GEEDP", tab_empleado.getValor(i, "IDE_GEEDP"));			
+			tab_cont_viajeros.setValor("IDE_GTEMP", tab_empleado.getValor(i, "IDE_GTEMP"));			
+			
+		}
+		set_empleado.cerrar();
+		utilitario.addUpdate("tab_cont_viajeros");			
+	}
+	else{
+		utilitario.agregarMensajeInfo("Debe seleccionar almenos un registro", "");
+	}
+}
+	
+	
 	@Override
 	public void insertar() {
 		// TODO Auto-generated method stub
-		if (com_tipo_transporte.getValue()==null){
-			utilitario.agregarMensajeInfo("No se puede insertar", "Debe Seleccionar un Transporte");
+		if(com_tipo_transporte.getValue()==null){
+			utilitario.agregarMensaje("No se puede insertar", "Debe Seleccionar un transporte");
 			return;
-		}		
-
-
-		if(tab_tiket_viaje.isFocus()){
+		
+		}
+		if (tab_tiket_viaje.isFocus()) {
 			tab_tiket_viaje.insertar();
 			tab_tiket_viaje.setValor("ide_cotit", com_tipo_transporte.getValue()+"");
-
+			
 		}
-
-		else if(tab_cont_viajeros.isFocus()){
-			tab_cont_viajeros.insertar();
-
-		}
-
+		else if (tab_cont_viajeros.isFocus()) {
+			utilitario.agregarMensaje("No se puede insertar", "Debe Agregar un Empleado");
+		}	
 	}
+
 	@Override
 	public void guardar() {
 		// TODO Auto-generated method stub
 		if(tab_tiket_viaje.guardar()){
 			tab_cont_viajeros.guardar();		
-		}
-		guardarPantalla();		
 	}
-
-
+        guardarPantalla();		
+	}
 
 	@Override
 	public void eliminar() {
@@ -244,9 +202,10 @@ public class pre_viaje extends Pantalla {
 		}
 		else if(tab_cont_viajeros.isFocus()){
 			tab_cont_viajeros.eliminar();
-		}		
+	}			
 	}
-	public void seleccionaTipo_Transporte(){
+	
+	public void seleccionaTipoTransporte(){
 		if(com_tipo_transporte.getValue()!=null){
 			tab_tiket_viaje.setCondicion("ide_cotit="+com_tipo_transporte.getValue());
 			tab_tiket_viaje.ejecutarSql();
@@ -258,23 +217,22 @@ public class pre_viaje extends Pantalla {
 			tab_cont_viajeros.ejecutarValorForanea(tab_tiket_viaje.getValorSeleccionado());
 
 		}
-	}
-
-
-
-
-
-	public Reporte getRep_reporte() {
-		return rep_reporte;
-	}
-
-	public void setRep_reporte(Reporte rep_reporte) {
-		this.rep_reporte = rep_reporte;
-	}
-
-	public SeleccionFormatoReporte getSef_formato() {
-		return sef_formato;
-	}
+	}	
+	
+	
+//Dialogo Empleaado
+	public void aceptarDialogo(){
+		//Muestra un mensaje al dar click sobre el boton aceptar del Dialogo
+		utilitario.agregarMensaje("SU NOMBRE ES","");
+		empleado_dialogo.cerrar();//cierra el dialogo
+		}
+		public void abrirDialogo(){
+		//Dibuja el dialogo al dar click sobre el boton abrir
+			empleado_dialogo.dibujar();
+		}	
+// Fin Dialogo	Empleado
+	
+	
 
 	public Tabla getTab_tiket_viaje() {
 		return tab_tiket_viaje;
@@ -292,49 +250,32 @@ public class pre_viaje extends Pantalla {
 		this.tab_cont_viajeros = tab_cont_viajeros;
 	}
 
-	public void setSef_formato(SeleccionFormatoReporte sef_formato) {
-		this.sef_formato = sef_formato;
+	public Combo getCom_tipo_transporte() {
+		return com_tipo_transporte;
+	}
+
+	public void setCom_tipo_transporte(Combo com_tipo_transporte) {
+		this.com_tipo_transporte = com_tipo_transporte;
+	}
+
+	public Dialogo getEmpleado_dialogo() {
+		return empleado_dialogo;
+	}
+
+	public void setEmpleado_dialogo(Dialogo empleado_dialogo) {
+		this.empleado_dialogo = empleado_dialogo;
+	}
+
+	public SeleccionTabla getSet_empleado() {
+		return set_empleado;
+	}
+
+	public void setSet_empleado(SeleccionTabla set_empleado) {
+		this.set_empleado = set_empleado;
 	}
 
 
-	public SeleccionTabla getSet_tipo_transporte() {
-		return set_tipo_transporte;
-	}
 
-
-	public void setSet_tipo_transporte(SeleccionTabla set_tipo_transporte) {
-		this.set_tipo_transporte = set_tipo_transporte;
-	}
-
-
-	public SeleccionTabla getSet_asunto_viaje() {
-		return set_asunto_viaje;
-	}
-
-
-	public void setSet_asunto_viaje(SeleccionTabla set_asunto_viaje) {
-		this.set_asunto_viaje = set_asunto_viaje;
-	}
-
-
-	public SeleccionTabla getSet_estado() {
-		return set_estado;
-	}
-
-
-	public void setSet_estado(SeleccionTabla set_estado) {
-		this.set_estado = set_estado;
-	}
-
-
-	public SeleccionArbol getSea_distribucion() {
-		return sea_distribucion;
-	}
-
-
-	public void setSea_distribucion(SeleccionArbol sea_distribucion) {
-		this.sea_distribucion = sea_distribucion;
-	}
-
+	
 
 }
