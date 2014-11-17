@@ -4,8 +4,13 @@
  */
 package paq_contabilidad;
 
+import javax.ejb.EJB;
+
+import paq_general.ejb.ServicioGeneral;
+import paq_gestion.ejb.ServicioGestion;
 import paq_sistema.aplicacion.Pantalla;
 import framework.componentes.Arbol;
+import framework.componentes.Boton;
 import framework.componentes.Division;
 import framework.componentes.PanelTabla;
 import framework.componentes.SeleccionTabla;
@@ -21,6 +26,9 @@ public class pre_convenios extends Pantalla {
 
     private Arbol arb_arbol = new Arbol();
     
+  private SeleccionTabla set_tipo_persona=new SeleccionTabla();
+  @EJB
+	private ServicioGeneral ser_general = (ServicioGeneral ) utilitario.instanciarEJB(ServicioGeneral.class);
   
 
     public pre_convenios() {
@@ -82,6 +90,17 @@ public class pre_convenios extends Pantalla {
         div_division.setId("div_division");
         div_division.dividir2(arb_arbol, div3, "21%", "V");  //arbol y div3
         agregarComponente(div_division);
+        
+        Boton bot_agregar = new Boton();
+        bot_agregar.setValue("Agregar Responsable Convenio");
+        bot_agregar.setMetodo("agregarResponsableConvenio");
+        bar_botones.agregarBoton(bot_agregar);
+        
+        set_tipo_persona.setId("set_tipo_persona");
+        set_tipo_persona.setTitle("Tipo Persona");
+        //set_tipo_persona.setTab_seleccion(ser_general.getTablaTipoPersona("true"));
+        
+		//agregarComponente(set_tipo_persona);
     }
 
     @Override
