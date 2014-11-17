@@ -1,5 +1,8 @@
 package paq_contabilidad;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import framework.componentes.Arbol;
 import framework.componentes.AutoCompletar;
 import framework.componentes.Division;
@@ -24,16 +27,24 @@ public class pre_catalogo_cuenta extends Pantalla{
 		tab_tipo_catalogo_cuenta.setTabla("cont_catalogo_cuenta", "ide_cocac", 1);
 		
 		
-	    tab_tipo_catalogo_cuenta.getColumna("ide_prcla").setCombo("select ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla from pre_clasificador order by codigo_clasificador_prcla");
-	    tab_tipo_catalogo_cuenta.getColumna("ide_prcla").setAutoCompletar();// para auto conpletar
-	    tab_tipo_catalogo_cuenta.getColumna("pre_ide_prcla").setCombo("select ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla from pre_clasificador order by codigo_clasificador_prcla");
-	    tab_tipo_catalogo_cuenta.getColumna("pre_ide_prcla").setAutoCompletar();
-	    tab_tipo_catalogo_cuenta.getColumna("ide_cotic").setCombo("select ide_cotic,detalle_cotic from cont_tipo_consumo order by detalle_cotic");
-	    tab_tipo_catalogo_cuenta.getColumna("ide_cotic").setAutoCompletar();
-	    tab_tipo_catalogo_cuenta.getColumna("ide_geani").setCombo("gen_anio", "ide_geani", "detalle_geani", "");
-	    tab_tipo_catalogo_cuenta.getColumna("pre_ide_prcla2").setCombo("select pre_ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla from pre_clasificador order by codigo_clasificador_prcla");
-	    tab_tipo_catalogo_cuenta.getColumna("pre_ide_prcla2").setAutoCompletar();
-	    tab_tipo_catalogo_cuenta.getColumna("nivel_cocac").setCombo(utilitario.getListaGruposNivelCuenta());
+	   tab_tipo_catalogo_cuenta.getColumna("con_ide_cocac2").setCombo("select ide_cocac,cue_codigo_cocac,cue_descripcion_cocac from cont_catalogo_cuenta order by cue_codigo_cocac ");
+	   tab_tipo_catalogo_cuenta.getColumna("con_ide_cocac2").setAutoCompletar();
+	   tab_tipo_catalogo_cuenta.getColumna("ide_cogrc").setCombo("cont_grupo_cuenta","ide_cogrc","detalle_cogrc", "");
+	   tab_tipo_catalogo_cuenta.getColumna("nivel_cocac").setCombo(utilitario.getListaGruposNivelCuenta());
+	  // para contruir los radios
+	   List lista = new ArrayList();
+       Object fila1[] = {
+           "1", "APERTURA"
+       };
+       Object fila2[] = {
+           "0", "CIERRE"
+       };
+       
+       lista.add(fila1);
+       lista.add(fila2);
+       tab_tipo_catalogo_cuenta.getColumna("apertura_cierre_cocac").setRadio(lista, "1");
+       tab_tipo_catalogo_cuenta.getColumna("apertura_cierre_cocac").setRadioVertical(true);
+		
 	   
 		// contruccion del arbol
 		tab_tipo_catalogo_cuenta.setCampoPadre("con_ide_cocac"); //necesarios para el arbol ide recursivo
@@ -46,6 +57,7 @@ public class pre_catalogo_cuenta extends Pantalla{
 		pat_tipo_catalogo_cuenta.setPanelTabla(tab_tipo_catalogo_cuenta);
 
 		arb_catalogo_cuenta.setId("arb_catalogo_cuenta");
+		
 		arb_catalogo_cuenta.dibujar();
 		
 		Division div_division=new Division();
