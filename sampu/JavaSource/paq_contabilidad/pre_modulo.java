@@ -65,7 +65,7 @@ public class pre_modulo extends Pantalla{
 	public void insertar() {
 		// TODO Auto-generated method stub
 		if (tab_modulo.isFocus()){
-			tab_modulo_estado.insertar();
+			tab_modulo.insertar();
 		}
 				
 				
@@ -84,7 +84,12 @@ public class pre_modulo extends Pantalla{
 	@Override
 	public void guardar() {
 		// TODO Auto-generated method stub
-		tab_modulo.guardar();
+		if (tab_modulo.guardar()){
+			if (tab_modulo_estado.guardar()) {
+				tab_persona_modulo.guardar();
+				
+			}
+		}
 		guardarPantalla();		
 		
 	}
@@ -92,7 +97,8 @@ public class pre_modulo extends Pantalla{
 	@Override
 	public void eliminar() {
 		// TODO Auto-generated method stub
-		tab_modulo.eliminar();
+		utilitario.getTablaisFocus().eliminar();
+	
 	}
 
 	public Tabla gettab_modulo() {
