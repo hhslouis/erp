@@ -16,14 +16,14 @@ private Tabla tab_grupo_material=new Tabla();
 		PanelTabla pat_grupo_material=new PanelTabla();
 		pat_grupo_material.setPanelTabla(tab_grupo_material);
 		
-		agregarComponente(tab_grupo_material);
+		agregarComponente(pat_grupo_material);
 	}
 
 
 	@Override
 	public void insertar() {
 		// TODO Auto-generated method stub
-		tab_grupo_material.inicializar();
+		tab_grupo_material.insertar();
 		
 	}
 
