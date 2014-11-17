@@ -23,7 +23,7 @@ private Tabla tab_tipo_producto=new Tabla();
 	@Override
 	public void insertar() {
 		// TODO Auto-generated method stub
-		tab_tipo_producto.inicializar();
+		tab_tipo_producto.insertar();
 	}
 
 	@Override
