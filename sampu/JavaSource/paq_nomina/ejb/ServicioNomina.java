@@ -5295,13 +5295,13 @@ System.out.println("sql getSqlEmpleadosRol..."+sql);
 	//servicio empleadoContrato 
 	
 	public String servicioEmpleadoContrato(String estado){
-		String sql_empleadoContrato1="SELECT EPAR.IDE_GEEDP, EMP.DOCUMENTO_IDENTIDAD_GTEMP, " +
+		String sql_empleadoContrato="SELECT EPAR.IDE_GEEDP, EMP.DOCUMENTO_IDENTIDAD_GTEMP, " +
 				"EMP.APELLIDO_PATERNO_GTEMP || ' ' || EMP.APELLIDO_MATERNO_GTEMP || ' ' ||EMP.PRIMER_NOMBRE_GTEMP || ' ' || EMP.SEGUNDO_NOMBRE_GTEMP " +
 				" AS NOMBRES_APELLIDOS, SUCU.NOM_SUCU, AREA.DETALLE_GEARE, DEPA.DETALLE_GEDEP FROM GEN_EMPLEADOS_DEPARTAMENTO_PAR EPAR " +
 				" LEFT JOIN GTH_EMPLEADO EMP ON EMP.IDE_GTEMP=EPAR.IDE_GTEMP LEFT JOIN SIS_SUCURSAL SUCU ON SUCU.IDE_SUCU=EPAR.IDE_SUCU " +
 				" LEFT JOIN GEN_DEPARTAMENTO DEPA ON DEPA.IDE_GEDEP=EPAR.IDE_GEDEP LEFT JOIN GEN_AREA AREA ON AREA.IDE_GEARE=EPAR.IDE_GEARE " +
 				" WHERE EPAR.ACTIVO_GEEDP in ("+estado+")";
-		return sql_empleadoContrato1;
+		return sql_empleadoContrato;
 	}
 	//fin empleadoContrato	
 
