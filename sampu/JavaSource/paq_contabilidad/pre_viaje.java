@@ -164,7 +164,8 @@ public void modificarViajero(){
 	String str_empleadoActualizado=set_actualizaViajero.getValorSeleccionado();
    	TablaGenerica tab_empleadoModificado = ser_nomina.ideEmpleadoContrato(str_empleadoActualizado);		
     tab_cont_viajeros.setValor("IDE_GEEDP", tab_empleadoModificado.getValor("IDE_GEEDP"));			
-	tab_cont_viajeros.setValor("IDE_GTEMP", tab_empleadoModificado.getValor("IDE_GTEMP"));	    
+	tab_cont_viajeros.setValor("IDE_GTEMP", tab_empleadoModificado.getValor("IDE_GTEMP"));	
+	tab_cont_viajeros.modificar(tab_cont_viajeros.getFilaActual());
 	utilitario.addUpdate("tab_cont_viajeros");	
 
 	con_guardar.setMessage("Esta Seguro de Actualizar el Empleado");
