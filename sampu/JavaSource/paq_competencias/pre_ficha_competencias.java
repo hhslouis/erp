@@ -141,7 +141,6 @@ public class pre_ficha_competencias extends Pantalla {
 	public void seleccionar_arbol(NodeSelectEvent evt) {
 		arb_arbol.seleccionarNodo(evt);
 		tab_detalle_competenca.setCondicion("IDE_CMFAC="+arb_arbol.getValorSeleccionado());
-		System.out.println("valor de ide_cmfac: "+arb_arbol.getValorSeleccionado());
 		tab_detalle_competenca.ejecutarSql();	
 	}
 	
@@ -159,7 +158,6 @@ public class pre_ficha_competencias extends Pantalla {
 					tab_detalle_competenca.insertar();	
 					tab_detalle_competenca.setValor("IDE_CMFAC", arb_arbol.getValorSeleccionado());
 					tab_detalle_competenca.setValor("IDE_GEGCA", tab_grupo_cargo_area.getValorSeleccionado());
-					System.out.println("valor de insertar el ide_cmfac: "+arb_arbol.getValorSeleccionado());					
 				}else{
 					utilitario.agregarMensajeInfo("No se puede insertar", "Primero debe seleccionar un Factor de Competencia");
 				}								
