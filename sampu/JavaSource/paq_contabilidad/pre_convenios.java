@@ -7,8 +7,8 @@ package paq_contabilidad;
 import javax.ejb.EJB;
 
 import paq_general.ejb.ServicioGeneral;
-import paq_gestion.ejb.ServicioGestion;
 import paq_sistema.aplicacion.Pantalla;
+import framework.aplicacion.TablaGenerica;
 import framework.componentes.Arbol;
 import framework.componentes.Boton;
 import framework.componentes.Division;
@@ -25,8 +25,11 @@ public class pre_convenios extends Pantalla {
     private Tabla tab_tabla3 = new Tabla();
 
     private Arbol arb_arbol = new Arbol();
+    public static String par_tipo_persona_modulo;
     
   private SeleccionTabla set_tipo_persona=new SeleccionTabla();
+  private SeleccionTabla sel_tab_particular=new SeleccionTabla();
+  private SeleccionTabla sel_tab_funcionario=new SeleccionTabla();
   @EJB
 	private ServicioGeneral ser_general = (ServicioGeneral ) utilitario.instanciarEJB(ServicioGeneral.class);
   
@@ -92,15 +95,52 @@ public class pre_convenios extends Pantalla {
         agregarComponente(div_division);
         
         Boton bot_agregar = new Boton();
-        bot_agregar.setValue("Agregar Responsable Convenio");
-        bot_agregar.setMetodo("agregarResponsableConvenio");
+        bot_agregar.setValue("Agregar Tipo Persona");
+        bot_agregar.setMetodo("importarTipoPersona");
         bar_botones.agregarBoton(bot_agregar);
-        
+        par_tipo_persona_modulo=utilitario.getVariable("p_tipo_persona_modulo");
+
         set_tipo_persona.setId("set_tipo_persona");
         set_tipo_persona.setTitle("Tipo Persona");
-        //set_tipo_persona.setTab_seleccion(ser_general.getTablaTipoPersona("true"));
-        
-		//agregarComponente(set_tipo_persona);
+        set_tipo_persona.setSeleccionTabla(ser_general.getTipoPersona(par_tipo_persona_modulo),"");
+        set_tipo_persona.setTitle("Seleccione un Tipo de Persona");
+        set_tipo_persona.getBot_aceptar().setMetodo("aceptarTipoPersona");
+        agregarComponente(set_tipo_persona);
+        /*
+        sel_tab_particular.setId("sel_tab_particular");
+		sel_tab_particular.setTitle("PARTICULAR");
+		sel_tab_particular.setSeleccionTabla("SELECT ide_getip,detalle_getip from gen_tipo_persona WHERE ide_getip=-1 order by detalle_getip");
+		sel_tab_particular.getTab_seleccion().getColumna("detalle_getip").setFiltro(true);
+		sel_tab_particular.getBot_aceptar().setMetodo("aceptarReporte");
+		agregarComponente(sel_tab_particular);
+        */
+       
+    }
+
+    public void importarTipoPersona(){
+    	
+    	set_tipo_persona.getTab_seleccion().setSql(ser_general.getTipoPersona(par_tipo_persona_modulo));
+    	set_tipo_persona.getTab_seleccion().ejecutarSql();
+    	set_tipo_persona.dibujar();
+    	   	
+    	
+    }
+    public  void aceptarTipoPersona(){
+    	String str_seleccionados=set_tipo_persona.getSeleccionados();
+    	if(str_seleccionados!=null){
+    		//Inserto los empleados seleccionados en la tabla de participantes 
+    		TablaGenerica tab_generica= ser_general.getTablaTipoPersona(str_seleccionados);		   		
+    		System.out.println(" tabla generica"+tab_generica.getSql());
+    		
+    		for(int i=0;i<tab_generica.getTotalFilas();i++){
+    			tab_tabla2.insertar();
+    			tab_tabla2.setValor("ide_getip", tab_generica.getValor(i, "ide_getip"));			
+    		
+       		}
+    
+    		set_tipo_persona.cerrar();
+    		utilitario.addUpdate("tab_tabla2");	
+       	    }
     }
 
     @Override
@@ -156,6 +196,14 @@ public class pre_convenios extends Pantalla {
     public void setTab_tabla3(Tabla tab_tabla3) {
         this.tab_tabla3 = tab_tabla3;
     }
+
+	public SeleccionTabla getSet_tipo_persona() {
+		return set_tipo_persona;
+	}
+
+	public void setSet_tipo_persona(SeleccionTabla set_tipo_persona) {
+		this.set_tipo_persona = set_tipo_persona;
+	}
 
   
 }
