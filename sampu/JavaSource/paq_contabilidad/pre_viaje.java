@@ -4,6 +4,7 @@ import javax.ejb.EJB;
 import framework.aplicacion.TablaGenerica;
 import framework.componentes.Boton;
 import framework.componentes.Combo;
+import framework.componentes.Confirmar;
 import framework.componentes.Dialogo;
 import framework.componentes.Division;
 import framework.componentes.Etiqueta;
@@ -24,8 +25,11 @@ public class pre_viaje extends Pantalla{
 	
 	private Tabla tab_tiket_viaje = new Tabla();
 	private Tabla tab_cont_viajeros = new Tabla();	
+	
 	private Combo com_tipo_transporte=new Combo();
 	private SeleccionTabla set_empleado =new SeleccionTabla();
+	private SeleccionTabla set_actualizaViajero = new SeleccionTabla();
+	private Confirmar con_guardar=new Confirmar();
 
 
 	
@@ -35,8 +39,6 @@ public class pre_viaje extends Pantalla{
 	private ServicioNomina ser_nomina = (ServicioNomina) utilitario.instanciarEJB(ServicioNomina.class);
 	
 	public pre_viaje() {
-		
-		
 		
 		com_tipo_transporte.setCombo("select ide_cotit,detalle_cotit from cont_tipo_transporte where activo_cotit = true" +
 				" order by detalle_cotit");
@@ -105,26 +107,86 @@ public class pre_viaje extends Pantalla{
 		Boton bot_importar=new Boton();
 		bot_importar.setIcon("ui-icon-person");
 		bot_importar.setValue("Agregar Empleado");
+		
 		bot_importar.setMetodo("importarEmpleado");
+		
 		bar_botones.agregarBoton(bot_importar);
+		con_guardar.setId("con_guardar");
+		agregarComponente(con_guardar);
 		
 		set_empleado.setId("set_empleado");
+		//set_empleado.setHeader("IMPORTAR EMPLEADO"+ser_nomina.ideEmpleadoContrato(tab_tiket_viaje.getValor("ide_geedp")).getStringColumna("nombres_apellidos"));
+		
 		set_empleado.setSeleccionTabla(ser_nomina.servicioEmpleadoContrato("true"),"ide_geedp");
-		//set_empleado.setSeleccionTabla(ser_nomina.servicioEmpleadoContrato("true"),"ide_geedp");
-		
-		System.out.println("parametro..set_empleado .."+set_empleado);
-		
-		set_empleado.getTab_seleccion().getColumna(" documento_identidad_gtemp").setFiltro(true);
-		set_empleado.getTab_seleccion().getColumna(" nombres_apellidos").setFiltro(true);
+		set_empleado.getTab_seleccion().getColumna("documento_identidad_gtemp").setFiltro(true);
+		set_empleado.getTab_seleccion().getColumna("nombres_apellidos").setFiltro(true);
 
 		//set_empleado.getTab_seleccion().getColumna("nombre_apellido").setFiltro(true);
 		set_empleado.setTitle("Seleccione un Empleado");
 		set_empleado.getBot_aceptar().setMetodo("aceptarEmpleado");
-		agregarComponente(set_empleado);		
+		agregarComponente(set_empleado);	
 
 //fin dialogo empleado		
+//Boton actualizar		
+		Boton bot_actualizar=new Boton();
+		bot_actualizar.setIcon("ui-icon-person");
+		bot_actualizar.setValue("Actualizar Viajero");
+		bot_actualizar.setMetodo("actualizarViajero");
+		bar_botones.agregarBoton(bot_actualizar);	
+		
+		set_actualizaViajero.setId("set_actualizaViajero");
+		set_actualizaViajero.setSeleccionTabla(ser_nomina.servicioEmpleadoContrato("true"),"ide_geedp");
+		
+		System.out.println("parametro..set_actualizaViajero .."+set_actualizaViajero);
+		
+		set_actualizaViajero.getTab_seleccion().getColumna("documento_identidad_gtemp").setFiltro(true);
+		set_actualizaViajero.getTab_seleccion().getColumna("nombres_apellidos").setFiltro(true);
+		set_actualizaViajero.setRadio();
+    	set_actualizaViajero.getBot_aceptar().setMetodo("modificarViajero");
+		agregarComponente(set_actualizaViajero);	
+		
 	}
 
+public void actualizarViajero(){
+	if (tab_cont_viajeros.getValor("ide_covia")==null){
+		utilitario.agregarMensajeInfo("Debe seleccionar un Viajero para actualizar","");
+		return;
+
+	}
+	set_actualizaViajero.getTab_seleccion().setSql(ser_nomina.servicioEmpleadoContrato("true"));
+	set_actualizaViajero.getTab_seleccion().ejecutarSql();
+	set_actualizaViajero.dibujar();	
+	}	
+
+
+
+public void modificarViajero(){
+	String str_empleadoActualizado=set_actualizaViajero.getValorSeleccionado();
+   	TablaGenerica tab_empleadoModificado = ser_nomina.ideEmpleadoContrato(str_empleadoActualizado);		
+    tab_cont_viajeros.setValor("IDE_GEEDP", tab_empleadoModificado.getValor("IDE_GEEDP"));			
+	tab_cont_viajeros.setValor("IDE_GTEMP", tab_empleadoModificado.getValor("IDE_GTEMP"));	    
+	utilitario.addUpdate("tab_cont_viajeros");	
+
+	con_guardar.setMessage("Esta Seguro de Actualizar el Empleado");
+	con_guardar.setTitle("CONFIRMACION CANCELACION HORA EXTRA ");
+	con_guardar.getBot_aceptar().setMetodo("guardarActualilzarViajero");
+	con_guardar.dibujar();
+	utilitario.addUpdate("con_guardar");
+
+
+
+}
+public void guardarActualilzarViajero(){
+	System.out.println("Entra a guardar...");
+	tab_cont_viajeros.guardar();
+	con_guardar.cerrar();
+	set_actualizaViajero.cerrar();
+
+
+	guardarPantalla();
+
+}
+	
 	public void importarEmpleado(){
 		
 		if(com_tipo_transporte.getValue()==null){
@@ -139,7 +201,6 @@ public class pre_viaje extends Pantalla{
 		set_empleado.getTab_seleccion().setSql(ser_nomina.servicioEmpleadoContrato("true"));
 		set_empleado.getTab_seleccion().ejecutarSql();
 		set_empleado.dibujar();
-
 	}
 	
 
@@ -272,6 +333,22 @@ public void aceptarEmpleado(){
 
 	public void setSet_empleado(SeleccionTabla set_empleado) {
 		this.set_empleado = set_empleado;
+	}
+
+	public SeleccionTabla getSet_actualizaViajero() {
+		return set_actualizaViajero;
+	}
+
+	public void setSet_actualizaViajero(SeleccionTabla set_actualizaViajero) {
+		this.set_actualizaViajero = set_actualizaViajero;
+	}
+
+	public Confirmar getCon_guardar() {
+		return con_guardar;
+	}
+
+	public void setCon_guardar(Confirmar con_guardar) {
+		this.con_guardar = con_guardar;
 	}
 
 
