@@ -34,6 +34,7 @@ public class pre_catalogo_cuenta extends Pantalla{
 		
 					        
 		tab_tipo_catalogo_cuenta.setId("tab_tipo_catalogo_cuenta");
+		tab_tipo_catalogo_cuenta.setHeader("CATÀLOGO CUENTAS");
 		tab_tipo_catalogo_cuenta.setTipoFormulario(true);  //formulario 
 		tab_tipo_catalogo_cuenta.getGrid().setColumns(4); //hacer  columnas 
 		tab_tipo_catalogo_cuenta.setTabla("cont_catalogo_cuenta", "ide_cocac", 1);		
@@ -64,8 +65,10 @@ public class pre_catalogo_cuenta extends Pantalla{
 		
 		//tabla de años vigentes
 				tab_vigente.setId("tab_vigente");
+				tab_vigente.setHeader("AÑO VIGENTE");
 				tab_vigente.setTabla("cont_vigente", "ide_covig", 2);
 				tab_vigente.getColumna("ide_geani").setCombo("gen_anio","ide_geani","detalle_geani","");
+				tab_vigente.getColumna("ide_geani").setUnico(true);
 				// ocultar campos de las claves  foraneas
 				TablaGenerica  tab_generica=ser_contabilidad.getTablaVigente("cont_vigente");
 				for(int i=0;i<tab_generica.getTotalFilas();i++){
@@ -75,9 +78,7 @@ public class pre_catalogo_cuenta extends Pantalla{
 				}				
 	    		
 	       		}
-	    
-	    		
-				
+	    	    						
 				tab_vigente.dibujar();
 				PanelTabla pat_vigente = new PanelTabla();
 			    pat_vigente.setPanelTabla(tab_vigente); 
@@ -148,12 +149,6 @@ public class pre_catalogo_cuenta extends Pantalla{
 	}
 	public void setArb_catalogo_cuenta(Arbol arb_catalogo_cuenta) {
 		this.arb_catalogo_cuenta = arb_catalogo_cuenta;
-	}
-	public Tabla getTab_asociacion_presupuestaria() {
-		return tab_asociacion_presupuestaria;
-	}
-	public void setTab_asociacion_presupuestaria(Tabla tab_asociacion_presupuestaria) {
-		this.tab_asociacion_presupuestaria = tab_asociacion_presupuestaria;
 	}
 
 }
