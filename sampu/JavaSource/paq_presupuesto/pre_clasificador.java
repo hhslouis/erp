@@ -9,6 +9,7 @@ import framework.componentes.PanelTabla;
 import framework.componentes.Tabla;
 import paq_contabilidad.ejb.ServicioContabiliadad;
 import paq_sistema.aplicacion.Pantalla;
+import org.primefaces.event.NodeSelectEvent;
 
 public class pre_clasificador extends Pantalla {
 	private Tabla tab_presupuesto=new Tabla();
@@ -38,11 +39,13 @@ public class pre_clasificador extends Pantalla {
 		pat_clasificador.setPanelTabla(tab_presupuesto);
 		
 		arb_clasificador.setId("arb_clasificador");
-		arb_clasificador    .dibujar();
+    //DJ  Crea metodo al seleccionar el arbol
+		arb_clasificador.onSelect("seleccionoClasificador");  
+		arb_clasificador.dibujar();
 		
-		// tabla deaños vigente
+		// tabla deaÃ±os vigente
 		tab_vigente.setId("tab_vigente");
-		tab_vigente.setHeader("AÑO VIGENTE");
+		tab_vigente.setHeader("AÃ‘O VIGENTE");
 		tab_vigente.setTabla("cont_vigente", "ide_covig", 2);
 		tab_vigente.getColumna("ide_geani").setCombo("gen_anio","ide_geani","detalle_geani","");
 		tab_vigente.getColumna("ide_geani").setUnico(true);
@@ -77,7 +80,17 @@ public class pre_clasificador extends Pantalla {
 				
 	}
 		
-	
+	 /**DJ
+	 * Se ejecuta cuando se selecciona algun nodo del arbol
+	 */
+		public void seleccionoClasificador(NodeSelectEvent evt){
+		//Asigna evento al arbol
+		arb_clasificador.seleccionarNodo(evt);
+		//Filtra la tabla Padre
+		tab_presupuesto.ejecutarValorPadre(arb_clasificador.getValorSeleccionado());
+		//Filtra la tabla tab_vigente
+		tab_vigente.ejecutarValorForanea(tab_presupuesto.getValorSeleccionado());
+	  }
 	
 
 		@Override
