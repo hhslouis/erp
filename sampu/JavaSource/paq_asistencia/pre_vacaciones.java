@@ -954,6 +954,7 @@ public class pre_vacaciones extends Pantalla {
 
 	@Override
 	public void aceptarReporte() {
+		System.out.print("p_parametros...  "+p_parametros);
 		if (rep_reporte.getReporteSelecionado().equals("Detalle Vacaciones")){
 			if (tab_permisos.getTotalFilas()>0) {
 				if (rep_reporte.isVisible()){
@@ -1074,7 +1075,7 @@ public class pre_vacaciones extends Pantalla {
 					sel_tab_empleado.getTab_seleccion().setSql("SELECT emp.ide_gtemp,emp.documento_identidad_gtemp, " +
 							"emp.apellido_paterno_gtemp ||' '|| emp.apellido_materno_gtemp ||' '|| emp.primer_nombre_gtemp ||' '|| emp.segundo_nombre_gtemp as nombres FROM gth_empleado emp " +
 							"inner join gen_empleados_departamento_par edp on emp.ide_gtemp=edp.ide_gtemp " +
-							"where edp.ide_gedep in ("+sel_tab_departamento.getSeleccionados()+") and edp.activo_geedp=1 and emp.activo_gtemp=1");
+							"where edp.ide_gedep in ("+sel_tab_departamento.getSeleccionados()+") and edp.activo_geedp=true and emp.activo_gtemp=true");
 							set_empleado.getTab_seleccion().ejecutarSql();							
 							sel_tab_empleado.dibujar();															
 				}else{
