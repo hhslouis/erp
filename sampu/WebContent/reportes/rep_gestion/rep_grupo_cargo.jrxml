@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_grupo_cargo" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="218670df-2f73-4dc6-9c66-718de61af1aa">
-	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="IDE_GEGRO" class="java.lang.String">
@@ -39,18 +39,21 @@ CFUN.ACTIVO_GECAF
 ORDER BY
 ACTIVO ASC]]>
 	</queryString>
-	<field name="IDE_GEGRO" class="java.math.BigDecimal"/>
-	<field name="CARGO_OCUPACIONAL" class="java.lang.String"/>
-	<field name="SIGLAS" class="java.lang.String"/>
-	<field name="ACTIVO" class="java.math.BigDecimal"/>
-	<field name="CARGO" class="java.lang.String"/>
-	<field name="ACTIVO_CARGO" class="java.math.BigDecimal"/>
+	<field name="ide_gegro" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_gegro]]></fieldDescription>
+	</field>
+	<field name="cargo_ocupacional" class="java.lang.String"/>
+	<field name="siglas" class="java.lang.String"/>
+	<field name="activo" class="java.lang.Boolean"/>
+	<field name="cargo" class="java.lang.String"/>
+	<field name="activo_cargo" class="java.lang.Boolean"/>
 	<variable name="cont" class="java.lang.Integer" calculation="Count">
-		<variableExpression><![CDATA[$F{IDE_GEGRO}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_gegro}
+]]></variableExpression>
 		<initialValueExpression><![CDATA[1]]></initialValueExpression>
 	</variable>
 	<group name="ACTIVO">
-		<groupExpression><![CDATA[$F{ACTIVO}]]></groupExpression>
+		<groupExpression><![CDATA[$F{activo}]]></groupExpression>
 		<groupHeader>
 			<band height="40">
 				<textField>
@@ -65,7 +68,7 @@ ACTIVO ASC]]>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="9" isBold="true" isPdfEmbedded="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{ACTIVO}==1?"GRUPO ACTIVO":"GRUPO INACTIVO"]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{activo}==true?"GRUPO ACTIVO":"GRUPO INACTIVO"]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement uuid="72d99ba8-5d84-484f-80e0-df1cdb44afda" x="30" y="25" width="225" height="15"/>
@@ -141,7 +144,7 @@ ACTIVO ASC]]>
 		</groupHeader>
 	</group>
 	<group name="GRUPO">
-		<groupExpression><![CDATA[$F{IDE_GEGRO}]]></groupExpression>
+		<groupExpression><![CDATA[$F{ide_gegro}]]></groupExpression>
 		<groupHeader>
 			<band/>
 		</groupHeader>
@@ -184,7 +187,7 @@ ACTIVO ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{SIGLAS}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{siglas}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="eb7655f8-33b6-4481-b063-6fc16f503f2a" x="30" y="0" width="225" height="12"/>
@@ -198,7 +201,7 @@ ACTIVO ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CARGO_OCUPACIONAL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cargo_ocupacional}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="085b69e7-8c83-43c6-959b-43ced11fae9a" isPrintRepeatedValues="false" x="0" y="0" width="30" height="12"/>
@@ -226,7 +229,7 @@ ACTIVO ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CARGO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cargo}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="9fc0021d-bfc6-447e-8d1e-c96142ee955e" x="500" y="0" width="55" height="12"/>
@@ -240,7 +243,7 @@ ACTIVO ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ACTIVO_CARGO}==1?"SI":"NO"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{activo_cargo}==true?"SI":"NO"]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
