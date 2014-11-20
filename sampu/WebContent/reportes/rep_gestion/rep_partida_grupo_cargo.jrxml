@@ -50,24 +50,25 @@ WHERE PGC.ACTIVO_GEPGC IN($P!{ACTIVO_GEPGC})
 AND PGC.VACANTE_GEPGC IN($P!{VACANTE_GEPGC})
 ORDER BY
 PGC.ACTIVO_GEPGC desc,
-PGC.VACANTE_GEPGC desc
-]]>
+PGC.VACANTE_GEPGC desc]]>
 	</queryString>
-	<field name="IDE_GEPGC" class="java.math.BigDecimal"/>
-	<field name="ACTIVO" class="java.math.BigDecimal"/>
-	<field name="VACANTE" class="java.math.BigDecimal"/>
-	<field name="TIPO_EMPLEADO" class="java.lang.String"/>
-	<field name="GRUPO_OCUPACIONAL" class="java.lang.String"/>
-	<field name="CARGO_FUNCIONAL" class="java.lang.String"/>
-	<field name="SUCURSAL" class="java.lang.String"/>
-	<field name="AREA" class="java.lang.String"/>
-	<field name="DEPARTAMENTO" class="java.lang.String"/>
-	<field name="NUM_PARTIDA" class="java.lang.String"/>
-	<field name="FECHA_ACTIVACION" class="java.sql.Timestamp"/>
-	<field name="FECHA_DESACTIVACION" class="java.sql.Timestamp"/>
-	<field name="MOTIVO" class="java.lang.String"/>
+	<field name="ide_gepgc" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave foranea que proviene de la tabla de claves compuestas gen_partida_grupo_cargo.]]></fieldDescription>
+	</field>
+	<field name="activo" class="java.lang.Boolean"/>
+	<field name="vacante" class="java.lang.Boolean"/>
+	<field name="tipo_empleado" class="java.lang.String"/>
+	<field name="grupo_ocupacional" class="java.lang.String"/>
+	<field name="cargo_funcional" class="java.lang.String"/>
+	<field name="sucursal" class="java.lang.String"/>
+	<field name="area" class="java.lang.String"/>
+	<field name="departamento" class="java.lang.String"/>
+	<field name="num_partida" class="java.lang.String"/>
+	<field name="fecha_activacion" class="java.sql.Date"/>
+	<field name="fecha_desactivacion" class="java.sql.Date"/>
+	<field name="motivo" class="java.lang.String"/>
 	<variable name="contador" class="java.lang.Integer" calculation="Count">
-		<variableExpression><![CDATA[$F{IDE_GEPGC}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_gepgc}]]></variableExpression>
 		<initialValueExpression><![CDATA[1]]></initialValueExpression>
 	</variable>
 	<group name="ACTIVO">
@@ -96,7 +97,7 @@ PGC.VACANTE_GEPGC desc
 					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema_biess/rep_cabecera_horizontal.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera_horizontal.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
@@ -300,7 +301,7 @@ PGC.VACANTE_GEPGC desc
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{TIPO_EMPLEADO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tipo_empleado}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="a2b78f9d-59cf-4700-a9d7-9490d5cac271" positionType="Float" stretchType="RelativeToBandHeight" x="180" y="0" width="48" height="15" isPrintWhenDetailOverflows="true"/>
@@ -314,7 +315,7 @@ PGC.VACANTE_GEPGC desc
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{GRUPO_OCUPACIONAL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{grupo_ocupacional}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="3308d7e0-7f09-4e1d-bed8-6b1319448aa9" positionType="Float" stretchType="RelativeToBandHeight" x="228" y="0" width="87" height="15" isPrintWhenDetailOverflows="true"/>
@@ -328,7 +329,7 @@ PGC.VACANTE_GEPGC desc
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CARGO_FUNCIONAL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cargo_funcional}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="e414acbe-0276-4c71-96c0-dc7f1e176504" positionType="Float" stretchType="RelativeToBandHeight" x="315" y="0" width="65" height="15" isPrintWhenDetailOverflows="true"/>
@@ -342,7 +343,7 @@ PGC.VACANTE_GEPGC desc
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{SUCURSAL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{sucursal}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="0a28f6c8-df84-4b32-bcfb-d7b925b4cc5c" positionType="Float" stretchType="RelativeToBandHeight" x="380" y="0" width="40" height="15" isPrintWhenDetailOverflows="true"/>
@@ -356,7 +357,7 @@ PGC.VACANTE_GEPGC desc
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{AREA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{area}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="67c7f249-1b00-4a06-b5ae-40bc8a354da5" positionType="Float" stretchType="RelativeToBandHeight" x="420" y="0" width="75" height="15" isPrintWhenDetailOverflows="true"/>
@@ -370,7 +371,7 @@ PGC.VACANTE_GEPGC desc
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DEPARTAMENTO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{departamento}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="1888872f-8ee3-453f-876a-aa4a0c62624f" positionType="Float" stretchType="RelativeToBandHeight" x="495" y="0" width="100" height="15" isPrintWhenDetailOverflows="true"/>
@@ -384,7 +385,7 @@ PGC.VACANTE_GEPGC desc
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NUM_PARTIDA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{num_partida}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="yyyy/MM/dd" isBlankWhenNull="true">
 				<reportElement uuid="d87e45e1-ca39-485d-bdbe-e5a800118278" positionType="Float" stretchType="RelativeToBandHeight" x="595" y="0" width="80" height="15" isPrintWhenDetailOverflows="true"/>
@@ -398,7 +399,7 @@ PGC.VACANTE_GEPGC desc
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_ACTIVACION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_activacion}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="yyyy/MM/dd" isBlankWhenNull="true">
 				<reportElement uuid="bc50e549-90c7-44f9-af21-2c11e29e821d" positionType="Float" stretchType="RelativeToBandHeight" x="675" y="0" width="85" height="15" isPrintWhenDetailOverflows="true"/>
@@ -412,7 +413,7 @@ PGC.VACANTE_GEPGC desc
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_DESACTIVACION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_desactivacion}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="def60dc7-1a2f-40fc-b7dd-13641f53ee61" positionType="Float" stretchType="RelativeToBandHeight" x="760" y="0" width="42" height="15" isPrintWhenDetailOverflows="true"/>
@@ -426,7 +427,7 @@ PGC.VACANTE_GEPGC desc
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{MOTIVO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{motivo}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="99a58c41-bf2f-435a-9d61-12ab51379a30" positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="20" height="15"/>
@@ -454,8 +455,8 @@ PGC.VACANTE_GEPGC desc
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ACTIVO}==null?"no":
-$F{ACTIVO}==1?"si":"no"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{activo}==null?"no":
+$F{activo}==1?"si":"no"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="d49a43a8-80be-4899-96be-b6940059f5c1" positionType="Float" stretchType="RelativeToBandHeight" x="140" y="0" width="40" height="15"/>
@@ -469,8 +470,8 @@ $F{ACTIVO}==1?"si":"no"]]></textFieldExpression>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{VACANTE}==null?"no":
-$F{VACANTE}==1?"si":"no"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{vacante}==null?"no":
+$F{vacante}==1?"si":"no"]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
