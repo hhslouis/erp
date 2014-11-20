@@ -80,7 +80,7 @@ PGC.VACANTE_GEPGC desc]]>
 	<title>
 		<band height="53" splitType="Stretch">
 			<subreport>
-				<reportElement uuid="6dca0493-fcd7-4b3a-8587-771369faad71" x="0" y="4" width="802" height="42"/>
+				<reportElement uuid="6dca0493-fcd7-4b3a-8587-771369faad71" x="0" y="8" width="802" height="42"/>
 				<subreportParameter name="SUBREPORT_DIR">
 					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -456,7 +456,9 @@ PGC.VACANTE_GEPGC desc]]>
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{activo}==null?"no":
-$F{activo}==1?"si":"no"]]></textFieldExpression>
+$F{activo}==true?"true":"false"
+
+]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="d49a43a8-80be-4899-96be-b6940059f5c1" positionType="Float" stretchType="RelativeToBandHeight" x="140" y="0" width="40" height="15"/>
@@ -471,7 +473,7 @@ $F{activo}==1?"si":"no"]]></textFieldExpression>
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{vacante}==null?"no":
-$F{vacante}==1?"si":"no"]]></textFieldExpression>
+$F{vacante}==true?"true":"false"]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
