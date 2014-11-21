@@ -727,7 +727,7 @@ public class pre_anticipos extends Pantalla {
 		tab_datos_precancelacion.setSql("select IDE_NRPRE,AMO.NRO_CUOTA_NRAMO,AMO.CUOTA_NRAMO,DETALLE_GEINS,DOC_DEPOSITO_NRPRE,FECHA_DEPOSITO_NRPRE,FECHA_PRECANCELADO_NRPRE,PATH_FOTO_NRPRE from NRH_PRECANCELACION PRE " +
 				"INNER JOIN NRH_AMORTIZACION AMO ON AMO.IDE_NRAMO=PRE.IDE_NRAMO " +
 				"INNER JOIN GEN_INSTITUCION INS ON INS.IDE_GEINS=PRE.IDE_GEINS " +
-				"AND AMO.PRE_CANCELADO_NRAMO=1 " +
+				"AND AMO.PRE_CANCELADO_NRAMO=TRUE " +
 				"and amo.ide_nrani=-1 ");
 		tab_datos_precancelacion.setCampoPrimaria("IDE_NRPRE");
 		tab_datos_precancelacion.setNumeroTabla(13);
@@ -859,7 +859,7 @@ public class pre_anticipos extends Pantalla {
 
 
 	public void abrirDialogoDatosGarante(){
-
+System.out.println("variable ide_geedp_activo.... "+ide_geedp_activo);
 		aut_empleado_autoriza_memo.setAutoCompletar("SELECT EPAR.IDE_GEEDP,EMP.DOCUMENTO_IDENTIDAD_GTEMP, " +
 				"EMP.APELLIDO_PATERNO_GTEMP || ' ' ||  " +
 				" EMP.APELLIDO_MATERNO_GTEMP || ' ' || " +
@@ -874,6 +874,12 @@ public class pre_anticipos extends Pantalla {
 				"LEFT JOIN GEN_AREA AREA ON AREA.IDE_GEARE=EPAR.IDE_GEARE " +
 				"INNER JOIN GTH_TIPO_CONTRATO TCO ON TCO.IDE_GTTCO=EPAR.IDE_GTTCO AND TCO.GARANTE_GTTCO=true "+
 				"WHERE EPAR.ACTIVO_GEEDP=true and EPAR.IDE_GEEDP!="+ide_geedp_activo);
+		String sql_aut_empleado_autoriza_memo="";
+		sql_aut_empleado_autoriza_memo=aut_empleado_autoriza_memo.getAutocomplete();
+		System.out.println("sql_aut_empleado_autoriza_memo  ... "+ide_geedp_activo);
+		
+		
+		System.out.println("aut_empleado_autoriza_memo  ... "+aut_empleado_autoriza_memo);
 		eti_empleado.setValue("Empleado Garante: ");
 		aut_empleado_autoriza_memo.setValue(null);
 
