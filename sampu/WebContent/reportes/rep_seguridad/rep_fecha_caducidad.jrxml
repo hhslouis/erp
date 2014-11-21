@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="39deeb6a-4734-4bab-99b3-208242cdef44">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="32"/>
+	<property name="ireport.x" value="111"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="fecha_cacduc_usua" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -17,13 +17,25 @@ INNER join sis_perfil sp on sus.ide_perf=sp.ide_perf
 where fecha_caduc_usua<=TO_DATE($P{fecha_cacduc_usua}, 'yy-mm-dd')
 order by nom_usua]]>
 	</queryString>
-	<field name="NOM_USUA" class="java.lang.String"/>
-	<field name="NOM_PERF" class="java.lang.String"/>
-	<field name="NICK_USUA" class="java.lang.String"/>
-	<field name="FECHA_CADUC_USUA" class="java.sql.Timestamp"/>
-	<field name="MAIL_USUA" class="java.lang.String"/>
-	<field name="BLOQUEADO_USUA" class="java.math.BigDecimal"/>
-	<field name="FECHA_REG_USUA" class="java.sql.Timestamp"/>
+	<field name="nom_usua" class="java.lang.String">
+		<fieldDescription><![CDATA[nom_usua]]></fieldDescription>
+	</field>
+	<field name="nom_perf" class="java.lang.String">
+		<fieldDescription><![CDATA[nom_perf]]></fieldDescription>
+	</field>
+	<field name="nick_usua" class="java.lang.String">
+		<fieldDescription><![CDATA[nick_usua]]></fieldDescription>
+	</field>
+	<field name="fecha_caduc_usua" class="java.sql.Date">
+		<fieldDescription><![CDATA[fecha_caduc_usua]]></fieldDescription>
+	</field>
+	<field name="mail_usua" class="java.lang.String">
+		<fieldDescription><![CDATA[mail_usua]]></fieldDescription>
+	</field>
+	<field name="bloqueado_usua" class="java.lang.Boolean"/>
+	<field name="fecha_reg_usua" class="java.sql.Date">
+		<fieldDescription><![CDATA[fecha_reg_usua]]></fieldDescription>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -47,7 +59,7 @@ order by nom_usua]]>
 					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema_biess/rep_cabecera.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera.jasper"]]></subreportExpression>
 			</subreport>
 			<staticText>
 				<reportElement uuid="63f46aa5-e837-466a-9679-8d753c6618b2" positionType="Float" x="0" y="34" width="60" height="15"/>
@@ -167,7 +179,7 @@ order by nom_usua]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NOM_USUA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nom_usua}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="47d81c14-d075-4ba6-bd9e-376975eb1d3c" x="257" y="0" width="78" height="16"/>
@@ -182,7 +194,7 @@ order by nom_usua]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NICK_USUA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nick_usua}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="472a13ec-8eea-46fb-b5f2-dc40ed8e5074" x="140" y="0" width="117" height="16"/>
@@ -196,7 +208,7 @@ order by nom_usua]]>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NOM_PERF}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nom_perf}]]></textFieldExpression>
 			</textField>
 			<textField pattern="yyyy/MM/dd" isBlankWhenNull="true">
 				<reportElement uuid="4ddfa80b-e476-4128-8c82-edb033a91fbd" x="335" y="0" width="110" height="16"/>
@@ -210,7 +222,7 @@ order by nom_usua]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_REG_USUA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_reg_usua}]]></textFieldExpression>
 			</textField>
 			<textField pattern="yyyy/MM/dd" isBlankWhenNull="true">
 				<reportElement uuid="4616cf09-a2a0-425c-bd5e-5191f24e3194" x="445" y="0" width="110" height="16"/>
@@ -224,7 +236,7 @@ order by nom_usua]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_CADUC_USUA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_caduc_usua}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
