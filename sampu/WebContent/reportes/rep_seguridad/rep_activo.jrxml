@@ -145,7 +145,7 @@ order by ACTIVO_USUA ASC]]>
 	<title>
 		<band height="39" splitType="Stretch">
 			<subreport>
-				<reportElement uuid="5f9a9029-c8f8-4f6a-b82d-98d2797031ba" x="0" y="0" width="554" height="38"/>
+				<reportElement uuid="5f9a9029-c8f8-4f6a-b82d-98d2797031ba" x="0" y="0" width="555" height="39"/>
 				<subreportParameter name="SUBREPORT_DIR">
 					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
 				</subreportParameter>
