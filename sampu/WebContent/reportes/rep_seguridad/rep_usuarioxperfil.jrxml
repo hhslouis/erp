@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_usuarioxperfil" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="670be778-2e49-4258-9ef6-f225f42c4925">
-	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="ide_perf" class="java.lang.String">
@@ -19,12 +19,22 @@ left join sis_perfil perf on perf.ide_perf=su.ide_perf
 where perf.ide_perf in($P!{ide_perf})
 ORDER BY perf.ide_perf asc]]>
 	</queryString>
-	<field name="NOM_USUA" class="java.lang.String"/>
-	<field name="NICK_USUA" class="java.lang.String"/>
-	<field name="NOM_PERF" class="java.lang.String"/>
-	<field name="IDE_PERF" class="java.math.BigDecimal"/>
-	<field name="FECHA_REG_USUA" class="java.sql.Timestamp"/>
-	<field name="FECHA_CADUC_USUA" class="java.sql.Timestamp"/>
+	<field name="nom_usua" class="java.lang.String">
+		<fieldDescription><![CDATA[nom_usua]]></fieldDescription>
+	</field>
+	<field name="nick_usua" class="java.lang.String">
+		<fieldDescription><![CDATA[nick_usua]]></fieldDescription>
+	</field>
+	<field name="nom_perf" class="java.lang.String">
+		<fieldDescription><![CDATA[nom_perf]]></fieldDescription>
+	</field>
+	<field name="ide_perf" class="java.lang.Integer"/>
+	<field name="fecha_reg_usua" class="java.sql.Date">
+		<fieldDescription><![CDATA[fecha_reg_usua]]></fieldDescription>
+	</field>
+	<field name="fecha_caduc_usua" class="java.sql.Date">
+		<fieldDescription><![CDATA[fecha_caduc_usua]]></fieldDescription>
+	</field>
 	<variable name="estado" class="java.lang.String">
 		<variableExpression><![CDATA[]]></variableExpression>
 	</variable>
@@ -35,7 +45,7 @@ ORDER BY perf.ide_perf asc]]>
 		<groupExpression><![CDATA[$P{ide_perf}]]></groupExpression>
 	</group>
 	<group name="jk">
-		<groupExpression><![CDATA[$F{IDE_PERF}]]></groupExpression>
+		<groupExpression><![CDATA[$F{ide_perf}]]></groupExpression>
 		<groupHeader>
 			<band height="46">
 				<textField pattern="" isBlankWhenNull="true">
@@ -51,7 +61,7 @@ ORDER BY perf.ide_perf asc]]>
 						<font size="10" isBold="true"/>
 						<paragraph leftIndent="2"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Perfil: "+$F{NOM_PERF}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Perfil: "+$F{nom_perf}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement uuid="866bf1b6-7ca9-4b1c-b588-bbaa51bd1238" mode="Transparent" x="0" y="26" width="200" height="20"/>
@@ -145,7 +155,7 @@ ORDER BY perf.ide_perf asc]]>
 					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema_biess/rep_cabecera.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
@@ -168,7 +178,7 @@ ORDER BY perf.ide_perf asc]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NICK_USUA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nick_usua}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="8414e559-0099-4dc4-95fe-514c9f5e59d3" x="0" y="0" width="200" height="15"/>
@@ -183,7 +193,7 @@ ORDER BY perf.ide_perf asc]]>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NOM_USUA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nom_usua}]]></textFieldExpression>
 			</textField>
 			<textField pattern="yyyy/MM/dd" isBlankWhenNull="true">
 				<reportElement uuid="34fa9489-6d83-43cd-be63-0901a2774802" x="330" y="0" width="110" height="15"/>
@@ -197,7 +207,7 @@ ORDER BY perf.ide_perf asc]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_REG_USUA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_reg_usua}]]></textFieldExpression>
 			</textField>
 			<textField pattern="yyyy/MM/dd" isBlankWhenNull="true">
 				<reportElement uuid="45484ada-d264-4f06-90cc-8ffc348e46f4" x="440" y="0" width="115" height="15"/>
@@ -211,7 +221,7 @@ ORDER BY perf.ide_perf asc]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_CADUC_USUA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_caduc_usua}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
