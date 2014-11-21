@@ -3,7 +3,7 @@
 	<property name="ireport.zoom" value="1.1566298682885952"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="ide_opci" class="java.lang.String">
+	<parameter name="ide_opci" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String"/>
