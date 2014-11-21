@@ -60,13 +60,13 @@ ORDER BY NOMBRES ASC,ANT.IDE_NRANT DESC,AMO.NRO_CUOTA_NRAMO ASC,AMO.ACTIVO_NRAMO
 	</queryString>
 	<field name="IDE_NRAMO" class="java.math.BigDecimal"/>
 	<field name="IDE_GTEMP" class="java.math.BigDecimal"/>
-	<field name="ACTIVO_GTEMP" class="java.math.BigDecimal"/>
+	<field name="ACTIVO_GTEMP" class="java.lang.Boolean"/>
 	<field name="NOMBRES" class="java.lang.String"/>
 	<field name="IDE_NRANI" class="java.math.BigDecimal"/>
 	<field name="MONTO_APROBADO_NRANT" class="java.math.BigDecimal"/>
 	<field name="CAPITAL_NRAMO" class="java.math.BigDecimal"/>
 	<field name="PLAZO_NRANI" class="java.math.BigDecimal"/>
-	<field name="ACTIVO_NRAMO" class="java.math.BigDecimal"/>
+	<field name="ACTIVO_NRAMO" class="java.lang.Boolean"/>
 	<field name="FECHA_VENCIMIENTO_NRANT" class="java.sql.Timestamp"/>
 	<field name="FECHA_APROBACION_NRANT" class="java.sql.Timestamp"/>
 	<field name="APROBADO_NRANT" class="java.math.BigDecimal"/>
@@ -446,7 +446,7 @@ ORDER BY NOMBRES ASC,ANT.IDE_NRANT DESC,AMO.NRO_CUOTA_NRAMO ASC,AMO.ACTIVO_NRAMO
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="7" isBold="true" pdfFontName="Courier-Bold" isPdfEmbedded="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{ACTIVO_NRAMO}==1?"CUOTAS PAGADAS":"CUOTAS NO PAGADAS"]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{ACTIVO_NRAMO}==true?"CUOTAS PAGADAS":"CUOTAS NO PAGADAS"]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -464,7 +464,7 @@ ORDER BY NOMBRES ASC,ANT.IDE_NRANT DESC,AMO.NRO_CUOTA_NRAMO ASC,AMO.ACTIVO_NRAMO
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
 						<font size="7" isBold="true" isPdfEmbedded="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{ACTIVO_NRAMO}==1?"TOTAL PAGADO: "+" "+$V{CUOTA_NRAMO_1}
+					<textFieldExpression><![CDATA[$F{ACTIVO_NRAMO}==true?"TOTAL PAGADO: "+" "+$V{CUOTA_NRAMO_1}
 :$F{ACTIVO_NRAMO}==null?"DATOS NO ENCONTRADOS":"TOTAL POR PAGAR: "+"          "+$V{CUOTA_NRAMO_1}]]></textFieldExpression>
 				</textField>
 			</band>
@@ -490,7 +490,7 @@ ORDER BY NOMBRES ASC,ANT.IDE_NRANT DESC,AMO.NRO_CUOTA_NRAMO ASC,AMO.ACTIVO_NRAMO
 					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema_biess/rep_cabecera.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
