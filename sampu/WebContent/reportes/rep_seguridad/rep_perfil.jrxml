@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e50bbc16-e747-4132-8269-004dc2c0e3e1">
-	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="183"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="ide_sucu" class="java.lang.Integer"/>
 	<parameter name="ide_empr" class="java.lang.Integer"/>
@@ -13,9 +13,15 @@
 	<queryString>
 		<![CDATA[select UPPER(NOM_PERF) AS NOM_PERF,DESCRIPCION_PERF,ACTIVO_PERF from sis_perfil order by nom_perf]]>
 	</queryString>
-	<field name="NOM_PERF" class="java.lang.String"/>
-	<field name="DESCRIPCION_PERF" class="java.lang.String"/>
-	<field name="ACTIVO_PERF" class="java.math.BigDecimal"/>
+	<field name="nom_perf" class="java.lang.String">
+		<fieldDescription><![CDATA[nom_perf]]></fieldDescription>
+	</field>
+	<field name="descripcion_perf" class="java.lang.String">
+		<fieldDescription><![CDATA[descripcion_perf]]></fieldDescription>
+	</field>
+	<field name="activo_perf" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[Este campo define si el anticipo tiene o no abono.]]></fieldDescription>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -53,7 +59,7 @@
 					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"/reportes/rep_sistema_biess/rep_cabecera.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"/reportes/rep_sistema/rep_cabecera.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
@@ -123,7 +129,7 @@
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NOM_PERF}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nom_perf}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="9d96eb6f-5edd-4f14-a9a8-32a34a6640ea" x="193" y="0" width="255" height="20"/>
@@ -138,7 +144,7 @@
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DESCRIPCION_PERF}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{descripcion_perf}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="19038ed5-9996-44ba-aa92-f5c2ef966c17" x="448" y="0" width="106" height="20"/>
@@ -152,7 +158,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ACTIVO_PERF}.toString().equals("0")?"FALSE":"TRUE"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{activo_perf}.toString().equals("0")?"FALSE":"TRUE"]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
