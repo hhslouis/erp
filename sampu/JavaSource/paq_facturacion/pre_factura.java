@@ -18,7 +18,8 @@ public class pre_factura extends 	Pantalla{
 	private Tabla tab_detalle_factura=new Tabla();
 	private AutoCompletar aut_opciones=new AutoCompletar();
 	private Boolean tieneIvaProducto = new Boolean("true");
-
+	private double cantidad; 
+	private double precio;
 
 
 	public Boolean getTieneIvaProducto() {
@@ -38,6 +39,9 @@ public class pre_factura extends 	Pantalla{
 	}
 
 	public pre_factura() {
+		
+		 cantidad = 0; 
+		 precio = 0;
 		// TODO Auto-generated constructor stub
 		tab_factura.setHeader("FACTURACIÓN");
 		tab_factura.setId("tab_factura");
@@ -71,6 +75,8 @@ public class pre_factura extends 	Pantalla{
 		// ide_bomat---setcombo y set autocompletar
 		tab_detalle_factura.getColumna("ide_bomat").setCombo("select ide_bomat,codigo_bomat,detalle_bomat,iva_bomat from bodt_material order by detalle_bomat");
 		tab_detalle_factura.getColumna("ide_bomat").setAutoCompletar();
+		//definimos el metodo que va a ejecutar cuando el usuario seleccione del Autocompletar
+		tab_detalle_factura.getColumna("ide_bomat").setMetodoChange("seleccionoProducto");
 		tab_detalle_factura.dibujar();
 
 
@@ -149,6 +155,13 @@ public class pre_factura extends 	Pantalla{
 		return false;  //retorna false
 
 	}
+	
+	//Metodo metodo cuando se seleccione algun producto del autocompletar
+	public void setMetodoChange(SelectEvent evt){
+		tab_detalle_factura.seleccionarFila(evt); //simepre que se ejecuta un metodoChange
+		//desplegamos el producto seleccionado
+		utilitario.agregarMensaje (tab_detalle_factura.getValor("ide_bomat"),"");
+		}
 
 
 	@Override
