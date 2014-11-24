@@ -183,7 +183,7 @@ public class pre_nomina_global extends Pantalla {
 		set_rubros.setId("set_rubros");
 		set_rubros.setSeleccionTabla("select RUB.IDE_NRRUB,DETALLE_NRRUB from NRH_RUBRO RUB " +
 				"INNER JOIN NRH_DETALLE_RUBRO DER ON DER.IDE_NRRUB=RUB.IDE_NRRUB " +
-				"WHERE DER.IDE_NRDTN IN (-1) AND IMPRIME_NRDER=true " +
+				"WHERE DER.IDE_NRDTN IN (-1) AND IMPRIME_NRDER = true " +
 				"GROUP BY RUB.IDE_NRRUB,DETALLE_NRRUB,ORDEN_IMPRIME_NRDER "+
 				"ORDER BY ORDEN_IMPRIME_NRDER ASC","IDE_NRRUB");
 		set_rubros.getTab_seleccion().getColumna("DETALLE_NRRUB").setFiltro(true);
@@ -731,7 +731,7 @@ public class pre_nomina_global extends Pantalla {
 
 			TablaGenerica tab_rub_sel=utilitario.consultar("select RUB.IDE_NRRUB,DETALLE_NRRUB,ORDEN_IMPRIME_NRDER from NRH_RUBRO RUB " +
 					"INNER JOIN NRH_DETALLE_RUBRO DER ON DER.IDE_NRRUB=RUB.IDE_NRRUB " +
-					"WHERE DER.IDE_NRDTN IN ("+IDE_NRDTN+") AND IMPRIME_NRDER=true and IDE_NRTIR in ("+IDE_NRTIR+") " +
+					"WHERE DER.IDE_NRDTN IN ("+IDE_NRDTN+") AND IMPRIME_NRDER = true and IDE_NRTIR in ("+IDE_NRTIR+") " +
 					"GROUP BY RUB.IDE_NRRUB,DETALLE_NRRUB,ORDEN_IMPRIME_NRDER "+
 					"ORDER BY ORDEN_IMPRIME_NRDER ASC ");
 

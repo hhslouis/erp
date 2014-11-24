@@ -239,7 +239,7 @@ public class pre_rep_gerencial extends Pantalla {
 		set_rubros.setSeleccionTabla("SELECT RUB.IDE_NRRUB,DETALLE_NRRUB " +
 				"from NRH_RUBRO rub " +
 				"inner join NRH_DETALLE_RUBRO der on der.IDE_NRRUB=RUB.IDE_NRRUB " +
-				"and IMPRIME_NRDER=1 " +
+				"and IMPRIME_NRDER=true " +
 				"group by RUB.IDE_NRRUB,DETALLE_NRRUB","IDE_NRRUB");
 		set_rubros.getTab_seleccion().getColumna("DETALLE_NRRUB").setFiltro(true);
 		set_rubros.setDynamic(false);
@@ -605,7 +605,7 @@ public class pre_rep_gerencial extends Pantalla {
 				set_rubros.getTab_seleccion().setSql("SELECT RUB.IDE_NRRUB,DETALLE_NRRUB " +
 						"from NRH_RUBRO rub " +
 						"inner join NRH_DETALLE_RUBRO der on der.IDE_NRRUB=RUB.IDE_NRRUB " +
-						"and IMPRIME_NRDER=1 " +
+						"and IMPRIME_NRDER=true " +
 						"group by RUB.IDE_NRRUB,DETALLE_NRRUB");
 				set_rubros.getTab_seleccion().ejecutarSql();
 				set_rubros.getBot_aceptar().setMetodo("graficarRubrosVsTipoNomina");
