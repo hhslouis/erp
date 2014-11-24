@@ -223,7 +223,7 @@ ORDER BY AMZ.NRO_CUOTA_NRAMO,AMZ.FECHA_VENCIMIENTO_NRAMO ASC]]>
 				<textFieldExpression><![CDATA[$F{garante}]]></textFieldExpression>
 			</textField>
 			<subreport>
-				<reportElement uuid="2104cb95-2a3b-4cfa-9a40-3fe368342b46" x="7" y="0" width="555" height="34"/>
+				<reportElement uuid="2104cb95-2a3b-4cfa-9a40-3fe368342b46" x="1" y="0" width="555" height="34"/>
 				<subreportParameter name="SUBREPORT_DIR">
 					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
 				</subreportParameter>
