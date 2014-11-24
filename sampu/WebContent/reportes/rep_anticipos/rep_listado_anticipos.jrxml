@@ -58,7 +58,7 @@ where EMP.IDE_GTEMP IN($P!{IDE_GTEMP}) AND ANT.ACTIVO_NRANT IN($P!{ACTIV_ANTI})]
 	<field name="monto_emp" class="java.math.BigDecimal"/>
 	<field name="fec_vencimiento" class="java.sql.Date"/>
 	<field name="fec_apro" class="java.sql.Date"/>
-	<field name="aprobado" class="java.lang.Integer"/>
+	<field name="aprobado" class="java.lang.Boolean"/>
 	<field name="fecha_solicitud_nrant" class="java.sql.Date">
 		<fieldDescription><![CDATA[Este campo define la fecha de solicitud del anticipo.]]></fieldDescription>
 	</field>
