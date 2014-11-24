@@ -136,7 +136,18 @@ public class pre_factura extends 	Pantalla{
 		String str_sql="Select * from bodt_material where ide_bomat="+ide_bodtmat;
 		//Asi se hacen consultas a la BDD
 		TablaGenerica tab_consulta=utilitario.consultar(str_sql);
+		
+		//Preguntamos si la tabla no esta vacia es decir que si retorno un resultado la consulta
+				if ( tab_consulta.isEmpty()==false) {
+				//Obtenemos el valor del campo y lo almacenamos en un String
+				String str_aplica_valor_bodmat= tab_consulta.getValor("aplica_valor_bodmat");
+				//Preguntamos si el valor de la variable es true
+				if(str_aplica_valor_bodmat!=null && str_aplica_valor_bodmat.equals("true")){
+				return true; //Si carga iva
+				}
+				}
 		return false;  //retorna false
+		
 	}
 	
 
