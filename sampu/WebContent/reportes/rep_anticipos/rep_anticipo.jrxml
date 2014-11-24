@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_anticipo" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6a205b60-67f5-44f8-b4e3-cc852e5ec839">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="564"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.x" value="362"/>
+	<property name="ireport.y" value="3"/>
 	<parameter name="IDE_GTEMP" class="java.lang.Long">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -458,7 +458,7 @@ ORDER BY AMZ.NRO_CUOTA_NRAMO,AMZ.FECHA_VENCIMIENTO_NRAMO ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{cancelado}.toString().equals("1")?"X":""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cancelado}.toString().equals("true")?"X":""]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement uuid="5a45ee86-703d-4fc7-974f-6d31e1916aa9" stretchType="RelativeToBandHeight" x="107" y="0" width="52" height="12" isPrintInFirstWholeBand="true"/>
@@ -500,7 +500,7 @@ ORDER BY AMZ.NRO_CUOTA_NRAMO,AMZ.FECHA_VENCIMIENTO_NRAMO ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{pre_cancelado_nramo}==1?"X":""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pre_cancelado_nramo}==true?"X":""]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
