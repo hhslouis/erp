@@ -132,7 +132,10 @@ public class pre_factura extends 	Pantalla{
 	
 	// metodo tieneIvaProducto
 	private  boolean tieneIvaProducto(String ide_bodtmat){
-
+		//Declaramos un String con la consulta que vamos a ejecutar
+		String str_sql="Select * from bodt_material where ide_bomat="+ide_bodtmat;
+		//Asi se hacen consultas a la BDD
+		TablaGenerica tab_consulta=utilitario.consultar(str_sql);
 		return false;  //retorna false
 	}
 	
