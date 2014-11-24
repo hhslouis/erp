@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_coutas_anticipo" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e7dd9952-a409-447d-8e31-0b821fcad13a">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="45"/>
+	<property name="ireport.x" value="133"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="IDE_GTEMP" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -482,7 +482,7 @@ ORDER BY NOMBRES ASC,ANT.IDE_NRANT DESC,AMO.NRO_CUOTA_NRAMO ASC,AMO.ACTIVO_NRAMO
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="7" isBold="true" pdfFontName="Courier-Bold" isPdfEmbedded="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{activo_nramo}==true?"CUOTAS PAGADAS":"CUOTAS NO PAGADAS"]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{activo_nramo}==1?"CUOTAS PAGADAS":"CUOTAS NO PAGADAS"]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -500,7 +500,7 @@ ORDER BY NOMBRES ASC,ANT.IDE_NRANT DESC,AMO.NRO_CUOTA_NRAMO ASC,AMO.ACTIVO_NRAMO
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
 						<font size="7" isBold="true" isPdfEmbedded="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{activo_nramo}==true?"TOTAL PAGADO: "+" "+$V{CUOTA_NRAMO_1}
+					<textFieldExpression><![CDATA[$F{activo_nramo}==1?"TOTAL PAGADO: "+" "+$V{CUOTA_NRAMO_1}
 :$F{activo_nramo}==null?"DATOS NO ENCONTRADOS":"TOTAL POR PAGAR: "+"          "+$V{CUOTA_NRAMO_1}]]></textFieldExpression>
 				</textField>
 			</band>
