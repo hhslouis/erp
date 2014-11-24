@@ -1,7 +1,9 @@
 package paq_facturacion;
 
+import framework.aplicacion.TablaGenerica;
 import framework.componentes.Division;
 import framework.componentes.PanelTabla;
+import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import paq_sistema.aplicacion.Pantalla;
 import org.primefaces.event.SelectEvent;
@@ -15,16 +17,17 @@ public class pre_factura extends 	Pantalla{
 	private Tabla tab_factura = new Tabla();
 	private Tabla tab_detalle_factura=new Tabla();
 	private AutoCompletar aut_opciones=new AutoCompletar();
-	private AutoCompletar aut_opciones2=new AutoCompletar();
+	private SeleccionTabla set_tieneIvaProducto = new SeleccionTabla();
 	
 	
-	public AutoCompletar getAut_opciones2() {
-		return aut_opciones2;
+	public SeleccionTabla getSet_tieneIvaProducto() {
+		return set_tieneIvaProducto;
 	}
 
-	public void setAut_opciones2(AutoCompletar aut_opciones2) {
-		this.aut_opciones2 = aut_opciones2;
+	public void setSet_tieneIvaProducto(SeleccionTabla set_tieneIvaProducto) {
+		this.set_tieneIvaProducto = set_tieneIvaProducto;
 	}
+
 
 	public AutoCompletar getAut_opciones() {
 		return aut_opciones;
@@ -126,6 +129,19 @@ public class pre_factura extends 	Pantalla{
 	public void settab_detalle_factura(Tabla tab_detalle_factura) {
 		this.tab_detalle_factura = tab_detalle_factura;
 	}
+	
+	// metodo tieneIvaProducto
+	
+	public void tieneIvaProducto(){
+		if (tab_detalle_factura.getValor("ide_bodtmat ")==null){
+			utilitario.agregarMensajeInfo("Debe seleccionar el IDE_BOTMAT","");
+			return;
+		}
+		set_tieneIvaProducto.getTab_seleccion().setSql("Select * from bodt_material where ide_bomat=2");
+		set_tieneIvaProducto.getTab_seleccion().ejecutarSql();
+		set_tieneIvaProducto.dibujar();
+		
+		}	
 
 	@Override
 	public void insertar() {
