@@ -17,17 +17,17 @@ public class pre_factura extends 	Pantalla{
 	private Tabla tab_factura = new Tabla();
 	private Tabla tab_detalle_factura=new Tabla();
 	private AutoCompletar aut_opciones=new AutoCompletar();
-	private SeleccionTabla set_tieneIvaProducto = new SeleccionTabla();
+	private Boolean tieneIvaProducto = new Boolean("true");
+
 	
-	
-	public SeleccionTabla getSet_tieneIvaProducto() {
-		return set_tieneIvaProducto;
+
+	public Boolean getTieneIvaProducto() {
+		return tieneIvaProducto;
 	}
 
-	public void setSet_tieneIvaProducto(SeleccionTabla set_tieneIvaProducto) {
-		this.set_tieneIvaProducto = set_tieneIvaProducto;
+	public void setTieneIvaProducto(Boolean tieneIvaProducto) {
+		this.tieneIvaProducto = tieneIvaProducto;
 	}
-
 
 	public AutoCompletar getAut_opciones() {
 		return aut_opciones;
@@ -131,17 +131,11 @@ public class pre_factura extends 	Pantalla{
 	}
 	
 	// metodo tieneIvaProducto
+	private  boolean tieneIvaProducto(String ide_bodtmat){
+
+		return false;  //retorna false
+	}
 	
-	public void tieneIvaProducto(){
-		if (tab_detalle_factura.getValor("ide_bodtmat ")==null){
-			utilitario.agregarMensajeInfo("Debe seleccionar el IDE_BOTMAT","");
-			return;
-		}
-		set_tieneIvaProducto.getTab_seleccion().setSql("Select * from bodt_material where ide_bomat=2");
-		set_tieneIvaProducto.getTab_seleccion().ejecutarSql();
-		set_tieneIvaProducto.dibujar();
-		
-		}	
 
 	@Override
 	public void insertar() {
