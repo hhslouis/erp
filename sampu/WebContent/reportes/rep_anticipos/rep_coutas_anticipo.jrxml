@@ -58,29 +58,65 @@ WHERE ANT.IDE_GTEMP IN ($P!{IDE_GTEMP})
 AND ANT.ACTIVO_NRANT IN($P!{ACTIVO_NRANT})
 ORDER BY NOMBRES ASC,ANT.IDE_NRANT DESC,AMO.NRO_CUOTA_NRAMO ASC,AMO.ACTIVO_NRAMO DESC]]>
 	</queryString>
-	<field name="IDE_NRAMO" class="java.math.BigDecimal"/>
-	<field name="IDE_GTEMP" class="java.math.BigDecimal"/>
-	<field name="ACTIVO_GTEMP" class="java.lang.Boolean"/>
-	<field name="NOMBRES" class="java.lang.String"/>
-	<field name="IDE_NRANI" class="java.math.BigDecimal"/>
-	<field name="MONTO_APROBADO_NRANT" class="java.math.BigDecimal"/>
-	<field name="CAPITAL_NRAMO" class="java.math.BigDecimal"/>
-	<field name="PLAZO_NRANI" class="java.math.BigDecimal"/>
-	<field name="ACTIVO_NRAMO" class="java.lang.Boolean"/>
-	<field name="FECHA_VENCIMIENTO_NRANT" class="java.sql.Timestamp"/>
-	<field name="FECHA_APROBACION_NRANT" class="java.sql.Timestamp"/>
-	<field name="APROBADO_NRANT" class="java.math.BigDecimal"/>
-	<field name="FECHA_CANCELADO_NRAMO" class="java.sql.Timestamp"/>
-	<field name="CUOTA_NRAMO" class="java.math.BigDecimal"/>
-	<field name="FECHA_VENCIMIENTO_NRAMO" class="java.sql.Timestamp"/>
-	<field name="NRO_CUOTA_NRAMO" class="java.math.BigDecimal"/>
-	<field name="PRE_CANCELADO_NRAMO" class="java.math.BigDecimal"/>
-	<field name="NUM_MEMO" class="java.lang.String"/>
-	<field name="NRO_ANTICIPO_NRANT" class="java.math.BigDecimal"/>
-	<field name="DETALLE_NRRUB" class="java.lang.String"/>
-	<field name="SUCURSAL" class="java.lang.String"/>
-	<field name="IDE_NRANT" class="java.lang.Long"/>
-	<field name="DETALLE_NRMOA" class="java.lang.String"/>
+	<field name="ide_nramo" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla nrh_amortizacion, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="ide_gtemp" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gth_empleado, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="activo_gtemp" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[Este campo define si el registro se encuentra activo o no para su transaccionalidad, 1 SI / 0 No]]></fieldDescription>
+	</field>
+	<field name="nombres" class="java.lang.String"/>
+	<field name="ide_nrani" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave foranea que proviene de la tabla nrh_anticipo_interes.]]></fieldDescription>
+	</field>
+	<field name="monto_aprobado_nrant" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Este campo define el monto aprobado para el anticipo de acuerdo a la capacidad de pago.]]></fieldDescription>
+	</field>
+	<field name="capital_nramo" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Este campo define el valor del capital para cada mes, decuerdo al plazo solicitado del anticipo.]]></fieldDescription>
+	</field>
+	<field name="plazo_nrani" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define el numero de meses plazo solicitado para cancelar el anticipo.]]></fieldDescription>
+	</field>
+	<field name="activo_nramo" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[Este campo define si el registro se encuentra activo o no para su transaccionalidad, 1 SI / 0 No]]></fieldDescription>
+	</field>
+	<field name="fecha_vencimiento_nrant" class="java.sql.Date">
+		<fieldDescription><![CDATA[Este campo define la fecha de vencimiento del anticipo.]]></fieldDescription>
+	</field>
+	<field name="fecha_aprobacion_nrant" class="java.sql.Date">
+		<fieldDescription><![CDATA[Este campo define la fecha de aprobacion del anticipo.]]></fieldDescription>
+	</field>
+	<field name="aprobado_nrant" class="java.lang.Boolean"/>
+	<field name="fecha_cancelado_nramo" class="java.sql.Date">
+		<fieldDescription><![CDATA[Este campo define  la fecha en la que fue cancelado cada cuota por parte del empleador, ya sea por descuentos en nomina, o por una pre cancelación.]]></fieldDescription>
+	</field>
+	<field name="cuota_nramo" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Este campo define el valor de la cuota que tiene que pagar el empleado por concepto de anticipo.]]></fieldDescription>
+	</field>
+	<field name="fecha_vencimiento_nramo" class="java.sql.Date">
+		<fieldDescription><![CDATA[Este campo define la fecha de pago de la cuota, de acuerdo a est afecha se le realizara el respectivo descuento al empleado.]]></fieldDescription>
+	</field>
+	<field name="nro_cuota_nramo" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define el nro de la cuota de acuerdo al plazo.]]></fieldDescription>
+	</field>
+	<field name="pre_cancelado_nramo" class="java.lang.Boolean"/>
+	<field name="num_memo" class="java.lang.String"/>
+	<field name="nro_anticipo_nrant" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define el numero de anticipo que solicita el empleado.]]></fieldDescription>
+	</field>
+	<field name="detalle_nrrub" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del rubro para la generacion del respectivo rol, ejemplo DECIMO TERCER SUELDO, DECIMO CUARTO SUELDO, RETENCION A LA FUENTE, etc.]]></fieldDescription>
+	</field>
+	<field name="sucursal" class="java.lang.String"/>
+	<field name="ide_nrant" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla nrh_anticipo, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="detalle_nrmoa" class="java.lang.String">
+		<fieldDescription><![CDATA[detalle_nrmoa]]></fieldDescription>
+	</field>
 	<variable name="contador" class="java.lang.Integer" calculation="Count">
 		<variableExpression><![CDATA[]]></variableExpression>
 		<initialValueExpression><![CDATA[1]]></initialValueExpression>
@@ -446,7 +482,7 @@ ORDER BY NOMBRES ASC,ANT.IDE_NRANT DESC,AMO.NRO_CUOTA_NRAMO ASC,AMO.ACTIVO_NRAMO
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="7" isBold="true" pdfFontName="Courier-Bold" isPdfEmbedded="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{ACTIVO_NRAMO}==true?"CUOTAS PAGADAS":"CUOTAS NO PAGADAS"]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{ACTIVO_NRAMO}==1?"CUOTAS PAGADAS":"CUOTAS NO PAGADAS"]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -464,7 +500,7 @@ ORDER BY NOMBRES ASC,ANT.IDE_NRANT DESC,AMO.NRO_CUOTA_NRAMO ASC,AMO.ACTIVO_NRAMO
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
 						<font size="7" isBold="true" isPdfEmbedded="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{ACTIVO_NRAMO}==true?"TOTAL PAGADO: "+" "+$V{CUOTA_NRAMO_1}
+					<textFieldExpression><![CDATA[$F{ACTIVO_NRAMO}==1?"TOTAL PAGADO: "+" "+$V{CUOTA_NRAMO_1}
 :$F{ACTIVO_NRAMO}==null?"DATOS NO ENCONTRADOS":"TOTAL POR PAGAR: "+"          "+$V{CUOTA_NRAMO_1}]]></textFieldExpression>
 				</textField>
 			</band>
