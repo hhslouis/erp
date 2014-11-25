@@ -157,7 +157,7 @@ public class pre_factura extends 	Pantalla{
 	}
 	
 	//Metodo metodo cuando se seleccione algun producto del autocompletar
-	public void setMetodoChange(SelectEvent evt){
+	public void seleccionoProducto(SelectEvent evt){
 		tab_detalle_factura.seleccionarFila(evt); //simepre que se ejecuta un metodoChange
 		//desplegamos el producto seleccionado
 		utilitario.agregarMensaje (tab_detalle_factura.getValor("ide_bomat"),"");
