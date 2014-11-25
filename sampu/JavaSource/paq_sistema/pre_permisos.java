@@ -17,7 +17,7 @@ import paq_sistema.aplicacion.Pantalla;
 
 /**
  *
- * @author Diego
+ * 
  */
 public class pre_permisos extends Pantalla {
 
