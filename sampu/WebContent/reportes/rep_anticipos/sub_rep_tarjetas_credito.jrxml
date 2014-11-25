@@ -19,13 +19,17 @@ LEFT JOIN GTH_CUENTA_BANCARIA_EMPLEADO CBE ON CBE.IDE_GTEMP=TCE.IDE_GTEMP
 LEFT JOIN GEN_INSTITUCION INS ON INS.IDE_GEINS=CBE.IDE_GEINS
 WHERE
 ANT.IDE_NRANT=$P{IDE_NRANT} AND
-TCE.ACTIVO_GTTCE=1]]>
+TCE.ACTIVO_GTTCE=true]]>
 	</queryString>
-	<field name="IDE_NRANT" class="java.math.BigDecimal"/>
-	<field name="IDE_GTTCE" class="java.math.BigDecimal"/>
-	<field name="EMISOR" class="java.lang.String"/>
-	<field name="TARJETA" class="java.lang.String"/>
-	<field name="FECHA_VECIMIENTO" class="java.sql.Timestamp"/>
+	<field name="ide_nrant" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla nrh_anticipo, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="ide_gttce" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_gttce]]></fieldDescription>
+	</field>
+	<field name="emisor" class="java.lang.String"/>
+	<field name="tarjeta" class="java.lang.String"/>
+	<field name="fecha_vecimiento" class="java.sql.Date"/>
 	<pageHeader>
 		<band height="12">
 			<staticText>
@@ -60,7 +64,7 @@ TCE.ACTIVO_GTTCE=1]]>
 					<font size="7"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{EMISOR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{emisor}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="59beedd0-d5bb-44b2-b481-48bd696eea28" positionType="Float" stretchType="RelativeToBandHeight" x="406" y="0" width="149" height="10" isPrintWhenDetailOverflows="true"/>
@@ -75,7 +79,7 @@ TCE.ACTIVO_GTTCE=1]]>
 					<font size="7"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{TARJETA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tarjeta}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="yyyy/MM/dd" isBlankWhenNull="true">
 				<reportElement uuid="1d9dfd97-22a2-437c-ad08-5ec7051b0102" positionType="Float" stretchType="RelativeToBandHeight" x="235" y="0" width="102" height="10" isPrintWhenDetailOverflows="true"/>
@@ -90,7 +94,7 @@ TCE.ACTIVO_GTTCE=1]]>
 					<font size="7"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_VECIMIENTO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_vecimiento}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="21f34ee1-1e17-4ee7-91a7-965553f81255" positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="50" height="10" isPrintWhenDetailOverflows="true"/>
