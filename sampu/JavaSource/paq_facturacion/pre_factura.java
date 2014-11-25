@@ -1,6 +1,7 @@
 package paq_facturacion;
 
 import framework.aplicacion.TablaGenerica;
+import framework.componentes.Boton;
 import framework.componentes.Division;
 import framework.componentes.PanelTabla;
 import framework.componentes.SeleccionTabla;
@@ -16,7 +17,7 @@ public class pre_factura extends 	Pantalla{
 
 	private Tabla tab_factura = new Tabla();
 	private Tabla tab_detalle_factura=new Tabla();
-	private AutoCompletar aut_opciones=new AutoCompletar();
+	private AutoCompletar aut_factura=new AutoCompletar();
 	private Boolean tieneIvaProducto = new Boolean("true");
 	private double cantidad; 
 	private double precio;
@@ -30,12 +31,13 @@ public class pre_factura extends 	Pantalla{
 		this.tieneIvaProducto = tieneIvaProducto;
 	}
 
-	public AutoCompletar getAut_opciones() {
-		return aut_opciones;
+
+	public AutoCompletar getAut_factura() {
+		return aut_factura;
 	}
 
-	public void setAut_opciones(AutoCompletar aut_opciones) {
-		this.aut_opciones = aut_opciones;
+	public void setAut_factura(AutoCompletar aut_factura) {
+		this.aut_factura = aut_factura;
 	}
 
 	public pre_factura() {
@@ -80,14 +82,24 @@ public class pre_factura extends 	Pantalla{
 		
 
 		//el auto completar
-		aut_opciones.setId("aut_opciones"); //id del componente
+		aut_factura.setId("aut_opciones"); //id del componente
 		//Simpre el primer campo es el campo primario de la tabla, en este caso ide_opci
 		//El segundo campo es lo que va a visualizarse , en este caso los campos nom_opci,tipo_opci,paquete_opci
-		aut_opciones.setAutoCompletar("SELECT ide_fadaf,serie_factura_fadaf,autorizacion_fadaf,fecha_impresion_fadaf,fecha_vencimiento_fadaf " +
+		
+
+		Boton bot_limpiar = new Boton();
+		bot_limpiar.setIcon("ui-icon-cancel");
+		bot_limpiar.setMetodo("limpiar");
+		aut_factura.setId("aut_factura");	
+		aut_factura.setAutoCompletar("SELECT ide_fadaf,serie_factura_fadaf,autorizacion_fadaf,fecha_impresion_fadaf,fecha_vencimiento_fadaf " +
 				"FROM fac_datos_factura WHERE serie_factura_fadaf is not null order by serie_factura_fadaf");
-		aut_opciones.setMetodoChange("seleccionoAutocompletar"); //ejecuta el metodo seleccionoAutocompletar
-		bar_botones.agregarComponente(new Etiqueta("Seleccione una opción :")); //Agrego etiqueta a la barra de botones
-		bar_botones.agregarComponente(aut_opciones);//Agrego autocompletar a la barra de botones
+		aut_factura.setMetodoChange("seleccionoAutocompletar"); //ejecuta el metodo seleccionoAutocompletar
+		
+		Etiqueta eti_colaborador=new Etiqueta("Factura:");
+		bar_botones.agregarComponente(eti_colaborador);
+		bar_botones.agregarComponente(aut_factura);
+		bar_botones.agregarBoton(bot_limpiar);
+		
 		
 		tab_detalle_factura.dibujar();
 
@@ -102,18 +114,19 @@ public class pre_factura extends 	Pantalla{
 		agregarComponente(div_division);
 
 
+
 	}
 	//METDO AUTOCOMPLETAR
 	public void seleccionoAutocompletar(SelectEvent evt){
 		//Cuando selecciona una opcion del autocompletar
 		//siempre debe hacerse el onSelect(evt)
-		aut_opciones.onSelect(evt);
+		aut_factura.onSelect(evt);
 		//muestra el valor que selecciono
-		utilitario.agregarMensaje("VALOR", aut_opciones.getValor()); 
+		utilitario.agregarMensaje("VALOR", aut_factura.getValor()); 
 		//muestra el nombre que selecciono
-		utilitario.agregarMensaje("NOMBRE", aut_opciones.getValorArreglo(1)); 
+		utilitario.agregarMensaje("NOMBRE", aut_factura.getValorArreglo(1)); 
 
-		tab_factura.setCondicion("ide_fadaf="+aut_opciones.getValor());
+		tab_factura.setCondicion("ide_fadaf="+aut_factura.getValor());
 		tab_factura.ejecutarSql();
 		//tab_factura.ejecutarValorForanea(val)
 		tab_detalle_factura.ejecutarValorForanea(tab_factura.getValorSeleccionado());
@@ -169,13 +182,13 @@ public class pre_factura extends 	Pantalla{
 		// TODO Auto-generated method stub
 		if(tab_factura.isFocus()){
 			tab_factura.insertar();
-			aut_opciones.limpiar();
-			utilitario.addUpdate("idAutocompletar");
+			//aut_factura.limpiar();
+			//utilitario.addUpdate("idAutocompletar");
 		}
 		else if(tab_detalle_factura.isFocus()){
 			tab_detalle_factura.insertar();
-			aut_opciones.limpiar();
-			utilitario.addUpdate("idAutocompletar");
+			//aut_factura.limpiar();
+			//utilitario.addUpdate("idAutocompletar");
 		}
 
 
@@ -187,8 +200,8 @@ public class pre_factura extends 	Pantalla{
 		// TODO Auto-generated method stub
 		if(tab_factura.guardar()){
 			tab_detalle_factura.guardar();
-			aut_opciones.limpiar();
-			utilitario.addUpdate("idAutocompletar");
+			//aut_opciones.limpiar();
+			//utilitario.addUpdate("idAutocompletar");
 		}
 
 		guardarPantalla();
@@ -200,12 +213,15 @@ public class pre_factura extends 	Pantalla{
 		// TODO Auto-generated method stub
 		if(tab_factura.isFocus()){
 			tab_factura.eliminar();
-
-
 		}
 		else if(tab_factura.isFocus()){
 			tab_factura.eliminar();
-
+		}
+		if(tab_detalle_factura.isFocus()){
+			tab_detalle_factura.eliminar();
+		}
+		else if(tab_detalle_factura.isFocus()){
+			tab_detalle_factura.eliminar();
 
 		}
 
