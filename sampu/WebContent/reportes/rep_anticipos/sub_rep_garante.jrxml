@@ -41,35 +41,43 @@ LEFT JOIN NRH_TIPO_GARANTE  TGA ON TGA.IDE_NRTIG=GAR.IDE_NRTIG
 LEFT JOIN GTH_CONYUGE CON ON CON.IDE_GTEMP=EDP.IDE_GTEMP
 LEFT JOIN(
 SELECT ide_gttel,ide_nrgar,numero_telefono_gttel FROM gth_telefono WHERE IDE_GTTEL IN(
-SELECT MAX(ide_gttel) FROM gth_telefono WHERE activo_gttel=1
+SELECT MAX(ide_gttel) FROM gth_telefono WHERE activo_gttel=true
 GROUP BY ide_nrgar)
 )a on a.ide_nrgar=GAR.ide_nrgar
 LEFT JOIN(
-SELECT SUM(AVALUO_GTCSE) as MONTO_VIVIENDA,ide_gtemp FROM gth_casa_empleado WHERE activo_gtcse=1 group BY ide_gtemp
+SELECT SUM(AVALUO_GTCSE) as MONTO_VIVIENDA,ide_gtemp FROM gth_casa_empleado WHERE activo_gtcse=true group BY ide_gtemp
 )b on b.ide_gtemp=EDP.ide_gtemp
 left join(
-SELECT SUM(avaluo_gtvee) as MONTO_VEHICULO,ide_gtemp FROM gth_vehiculo_empleado WHERE activo_gtvee=1 group BY ide_gtemp
+SELECT SUM(avaluo_gtvee) as MONTO_VEHICULO,ide_gtemp FROM gth_vehiculo_empleado WHERE activo_gtvee=true group BY ide_gtemp
 )c on c.ide_gtemp=EDP.ide_gtemp
 WHERE GAR.IDE_NRANT=$P{IDE_NRANT}]]>
 	</queryString>
-	<field name="IDE_NRANT" class="java.math.BigDecimal"/>
-	<field name="IDE_GEEDP" class="java.math.BigDecimal"/>
-	<field name="IDE_GTCON" class="java.math.BigDecimal"/>
-	<field name="NOMBRES" class="java.lang.String"/>
-	<field name="CEDULA" class="java.lang.String"/>
-	<field name="NOMBRES_CONYUGE" class="java.lang.String"/>
-	<field name="CEDULA_CONYUGE" class="java.lang.String"/>
-	<field name="FECHA_INGRESO" class="java.sql.Timestamp"/>
-	<field name="RMU" class="java.math.BigDecimal"/>
-	<field name="CARGO" class="java.lang.String"/>
-	<field name="DEPARTAMENTO" class="java.lang.String"/>
-	<field name="MONTO_VIVIENDA" class="java.math.BigDecimal"/>
-	<field name="MONTO_VEHICULO" class="java.math.BigDecimal"/>
-	<field name="PATRIMONIO" class="java.math.BigDecimal"/>
-	<field name="DIRECCION" class="java.lang.String"/>
-	<field name="NUMERO_TELEFONO_GTTEL" class="java.lang.String"/>
-	<field name="TIENE_VIVIENDA" class="java.lang.String"/>
-	<field name="TIENE_VEHICULO" class="java.lang.String"/>
+	<field name="ide_nrant" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla nrh_anticipo, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="ide_geedp" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_empleados_departamento_par, valor entero generado.]]></fieldDescription>
+	</field>
+	<field name="ide_gtcon" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ide_gtcon]]></fieldDescription>
+	</field>
+	<field name="nombres" class="java.lang.String"/>
+	<field name="cedula" class="java.lang.String"/>
+	<field name="nombres_conyuge" class="java.lang.String"/>
+	<field name="cedula_conyuge" class="java.lang.String"/>
+	<field name="fecha_ingreso" class="java.sql.Date"/>
+	<field name="rmu" class="java.math.BigDecimal"/>
+	<field name="cargo" class="java.lang.String"/>
+	<field name="departamento" class="java.lang.String"/>
+	<field name="monto_vivienda" class="java.math.BigDecimal"/>
+	<field name="monto_vehiculo" class="java.math.BigDecimal"/>
+	<field name="patrimonio" class="java.math.BigDecimal"/>
+	<field name="direccion" class="java.lang.String"/>
+	<field name="numero_telefono_gttel" class="java.lang.String">
+		<fieldDescription><![CDATA[numero_telefono_gttel]]></fieldDescription>
+	</field>
+	<field name="tiene_vivienda" class="java.lang.String"/>
+	<field name="tiene_vehiculo" class="java.lang.String"/>
 	<columnHeader>
 		<band height="112">
 			<staticText>
@@ -130,7 +138,7 @@ WHERE GAR.IDE_NRANT=$P{IDE_NRANT}]]>
 					<font size="7"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CEDULA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cedula}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="a43584a3-a252-4b2f-a323-733684be5825" x="0" y="32" width="145" height="10"/>
@@ -160,7 +168,7 @@ WHERE GAR.IDE_NRANT=$P{IDE_NRANT}]]>
 					<font size="7"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CEDULA_CONYUGE}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cedula_conyuge}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="095538c9-9a4c-473f-8b73-0c4b7fb6d1ba" x="337" y="32" width="83" height="10"/>
@@ -190,7 +198,7 @@ WHERE GAR.IDE_NRANT=$P{IDE_NRANT}]]>
 					<font size="7"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_INGRESO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fecha_ingreso}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="53493a77-43e0-4824-983b-b847b667cad1" x="0" y="42" width="145" height="10"/>
@@ -220,7 +228,7 @@ WHERE GAR.IDE_NRANT=$P{IDE_NRANT}]]>
 					<font size="7"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{RMU}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{rmu}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="3b56cb5c-069d-49e9-94ae-afcc0dc17a68" x="337" y="52" width="83" height="10"/>
@@ -250,7 +258,7 @@ WHERE GAR.IDE_NRANT=$P{IDE_NRANT}]]>
 					<font size="7"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CARGO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cargo}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="32459b72-7bb9-4f4d-b999-2560588f1299" x="0" y="52" width="145" height="10"/>
@@ -280,7 +288,7 @@ WHERE GAR.IDE_NRANT=$P{IDE_NRANT}]]>
 					<font size="7"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DEPARTAMENTO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{departamento}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="34dd697b-10ae-4248-b286-4270ce76da87" x="0" y="62" width="145" height="10"/>
@@ -325,7 +333,7 @@ WHERE GAR.IDE_NRANT=$P{IDE_NRANT}]]>
 					<font size="7" isBold="false" isUnderline="false"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{TIENE_VIVIENDA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tiene_vivienda}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="b3939f38-c87e-4192-adca-d011e1144b52" x="0" y="82" width="145" height="10"/>
@@ -355,7 +363,7 @@ WHERE GAR.IDE_NRANT=$P{IDE_NRANT}]]>
 					<font size="7" isBold="false" isUnderline="false"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{TIENE_VEHICULO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tiene_vehiculo}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="e2aa2975-dea7-42a1-881f-328659fd7369" x="0" y="92" width="145" height="10"/>
@@ -385,7 +393,7 @@ WHERE GAR.IDE_NRANT=$P{IDE_NRANT}]]>
 					<font size="7"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{MONTO_VIVIENDA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{monto_vivienda}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="8281524c-30ab-45d5-8508-1119178c1350" x="337" y="82" width="83" height="10"/>
@@ -415,7 +423,7 @@ WHERE GAR.IDE_NRANT=$P{IDE_NRANT}]]>
 					<font size="7"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{MONTO_VEHICULO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{monto_vehiculo}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="cd25a4e8-c278-46f4-a92a-ced1c99720b2" x="337" y="92" width="83" height="10"/>
@@ -445,7 +453,7 @@ WHERE GAR.IDE_NRANT=$P{IDE_NRANT}]]>
 					<font size="7"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{PATRIMONIO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{patrimonio}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="ecb477c0-75bc-4f76-9df9-23d1a3b47766" x="0" y="102" width="145" height="10"/>
@@ -475,7 +483,7 @@ WHERE GAR.IDE_NRANT=$P{IDE_NRANT}]]>
 					<font size="7"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NOMBRES}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nombres}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="073a088d-c950-421d-a6d7-5b7daf4e043e" x="337" y="42" width="83" height="10"/>
@@ -505,7 +513,7 @@ WHERE GAR.IDE_NRANT=$P{IDE_NRANT}]]>
 					<font size="7"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DIRECCION}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="5db4e326-96c0-4688-879c-a2df91ddef6a" x="0" y="22" width="145" height="10"/>
@@ -535,7 +543,7 @@ WHERE GAR.IDE_NRANT=$P{IDE_NRANT}]]>
 					<font size="7"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NOMBRES_CONYUGE}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nombres_conyuge}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="3eb1fdeb-4089-46f9-9a27-13a72bc2ee18" x="420" y="42" width="135" height="10"/>
@@ -550,7 +558,7 @@ WHERE GAR.IDE_NRANT=$P{IDE_NRANT}]]>
 					<font size="7"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{NUMERO_TELEFONO_GTTEL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{numero_telefono_gttel}]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
