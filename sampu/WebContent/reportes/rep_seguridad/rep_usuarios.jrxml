@@ -28,7 +28,7 @@ group by FECHA_AUAC]]>
 		<variableExpression><![CDATA[$V{COUNT(IDE_AUAC)_1}]]></variableExpression>
 	</variable>
 	<variable name="COUNT(IDE_AUAC)_2" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$V{COUNT(IDE_AUAC)_2}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_auac}]]></variableExpression>
 	</variable>
 	<group name="fecha">
 		<groupExpression><![CDATA[$F{fecha_auac}]]></groupExpression>
@@ -42,11 +42,11 @@ group by FECHA_AUAC]]>
 					<textFieldExpression><![CDATA[$F{fecha_auac}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement uuid="7f10d1cb-3324-44e8-a75c-5e7cf9fae8c1" x="105" y="2" width="100" height="15"/>
+					<reportElement uuid="7f10d1cb-3324-44e8-a75c-5e7cf9fae8c1" x="106" y="2" width="100" height="15"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8" isBold="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{COUNT(IDE_AUAC)_2}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{ide_auac}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -115,13 +115,6 @@ group by FECHA_AUAC]]>
 	</columnHeader>
 	<summary>
 		<band height="31">
-			<textField>
-				<reportElement uuid="e6dc430a-0261-43a8-8e9b-a6996886dad8" x="106" y="6" width="100" height="15"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{COUNT(IDE_AUAC)_2}]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement uuid="9ae6bc09-9033-4261-8004-2cbaa485e6a8" positionType="Float" x="0" y="6" width="136" height="15"/>
 				<textElement textAlignment="Right">
@@ -129,6 +122,11 @@ group by FECHA_AUAC]]>
 				</textElement>
 				<text><![CDATA[Total Usuarios Conectados:]]></text>
 			</staticText>
+			<textField>
+				<reportElement uuid="8932a2d9-f718-475e-a5e7-ef4eb8fa49b0" x="156" y="6" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$V{COUNT(IDE_AUAC)_2}]]></textFieldExpression>
+			</textField>
 		</band>
 	</summary>
 </jasperReport>
