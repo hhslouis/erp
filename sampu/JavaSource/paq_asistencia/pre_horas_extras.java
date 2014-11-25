@@ -1159,8 +1159,9 @@ public class pre_horas_extras extends Pantalla {
 			if (rep_reporte.isVisible()){
 				p_parametros=new HashMap();		
 				rep_reporte.cerrar();	
+				//System.out.println("p_parametro "+ tab_permisos.getSql());
 				//System.out.println("IDE_GTEMP"+ser_nomina.getEmpleadoDepartamento(aut_empleado.getValor()).getValor("ide_gtemp"));
-				p_parametros.put("IDE_GEEDP",ide_geedp_activo);
+				p_parametros.put("IDE_GEEDP",Integer.parseInt(ide_geedp_activo));
 				p_parametros.put("titulo","BIESS GERENCIA ADMINISTRATIVA - FINANCIERA DEPARTAMENTO DE TALENTO HUMANO HORAS EXTRAS");
 				sef_reporte.setSeleccionFormatoReporte(p_parametros, rep_reporte.getPath());				
 				sef_reporte.dibujar();
