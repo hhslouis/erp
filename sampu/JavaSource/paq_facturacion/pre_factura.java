@@ -19,8 +19,6 @@ public class pre_factura extends 	Pantalla{
 	private Tabla tab_detalle_factura=new Tabla();
 	private AutoCompletar aut_factura=new AutoCompletar();
 	private Boolean tieneIvaProducto = new Boolean("true");
-	private double cantidad; 
-	private double precio;
 
 
 	public Boolean getTieneIvaProducto() {
@@ -42,8 +40,7 @@ public class pre_factura extends 	Pantalla{
 
 	public pre_factura() {
 		
-		 cantidad = 0; 
-		 precio = 0;
+		
 		// TODO Auto-generated constructor stub
 		tab_factura.setHeader("FACTURACIÓN");
 		tab_factura.setId("tab_factura");
@@ -112,6 +109,7 @@ public class pre_factura extends 	Pantalla{
 		
 
 	}
+	
    
      public void limpiar(){
      aut_factura.limpiar();
@@ -119,7 +117,9 @@ public class pre_factura extends 	Pantalla{
      tab_detalle_factura.limpiar();
      utilitario.addUpdate("aut_factura");
      }
+     
    
+
 	//METDO AUTOCOMPLETAR
 	public void seleccionoAutocompletar(SelectEvent evt){
 		//Cuando selecciona una opcion del autocompletar
@@ -163,9 +163,9 @@ public class pre_factura extends 	Pantalla{
 		//Preguntamos si la tabla no esta vacia es decir que si retorno un resultado la consulta
 		if ( tab_consulta.isEmpty()==false) {
 			//Obtenemos el valor del campo y lo almacenamos en un String
-			String str_aplica_valor_bodmat= tab_consulta.getValor("aplica_valor_bodmat");
+			String str_aplica_valor_bomat= tab_consulta.getValor("aplica_valor_bomat");
 			//Preguntamos si el valor de la variable es true
-			if(str_aplica_valor_bodmat!=null && str_aplica_valor_bodmat.equals("true")){
+			if(str_aplica_valor_bomat!=null && str_aplica_valor_bomat.equals("true")){
 				return true; //Si carga iva
 			}
 		}
@@ -176,11 +176,15 @@ public class pre_factura extends 	Pantalla{
 	//Metodo metodo cuando se seleccione algun producto del autocompletar
 	public void seleccionoProducto(SelectEvent evt){
 		tab_detalle_factura.modificar(evt); //simepre que se ejecuta un metodoChange
-		//desplegamos el producto seleccionado
-		utilitario.agregarMensaje (tab_detalle_factura.getValor("ide_bomat"),"");
+		//Consultamos si el producto seleccionado carga iva
+		boolean boo_iva=tieneIvaProducto(tab_detalle_factura.getValor("ide_bomat"));
+		//Mensaje producto, carga o no garga iva
+		utilitario.agregarMensaje
+		(tab_detalle_factura.getValor("ide_bomat"),boo_iva+"");
 		}
-
-
+	
+	
+	
 	@Override
 	public void insertar() {
 		// TODO Auto-generated method stub
