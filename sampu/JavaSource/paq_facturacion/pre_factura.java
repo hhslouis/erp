@@ -45,7 +45,7 @@ public class pre_factura extends 	Pantalla{
 		 cantidad = 0; 
 		 precio = 0;
 		// TODO Auto-generated constructor stub
-		tab_factura.setHeader("FACTURACIÓN");
+		tab_factura.setHeader("FACTURACIÃ“N");
 		tab_factura.setId("tab_factura");
 		tab_factura.setTabla("fac_factura", "ide_fafac", 1);
 		//para q no se dibuje antes q seleccione el autocompletar
@@ -81,11 +81,7 @@ public class pre_factura extends 	Pantalla{
 		tab_detalle_factura.getColumna("ide_bomat").setMetodoChange("seleccionoProducto");
 		
 
-		//el auto completar
-		aut_factura.setId("aut_opciones"); //id del componente
-		//Simpre el primer campo es el campo primario de la tabla, en este caso ide_opci
-		//El segundo campo es lo que va a visualizarse , en este caso los campos nom_opci,tipo_opci,paquete_opci
-		
+	  
 
 		Boton bot_limpiar = new Boton();
 		bot_limpiar.setIcon("ui-icon-cancel");
@@ -105,7 +101,7 @@ public class pre_factura extends 	Pantalla{
 
 
 		PanelTabla pat_detalle_factura= new PanelTabla();
-		pat_detalle_factura.setMensajeWarn("DETALLE FACTURACIÓN");
+		pat_detalle_factura.setMensajeWarn("DETALLE FACTURACIÃ“N");
 		pat_detalle_factura.setPanelTabla(tab_detalle_factura);
 
 
@@ -116,6 +112,14 @@ public class pre_factura extends 	Pantalla{
 		
 
 	}
+   
+     public void limpiar(){
+     aut_factura.limpiar();
+     tab_factura.limpiar();
+     tab_detalle_factura.limpiar();
+     utilitario.addUpdate("aut_factura");
+     }
+   
 	//METDO AUTOCOMPLETAR
 	public void seleccionoAutocompletar(SelectEvent evt){
 		//Cuando selecciona una opcion del autocompletar
@@ -182,13 +186,12 @@ public class pre_factura extends 	Pantalla{
 		// TODO Auto-generated method stub
 		if(tab_factura.isFocus()){
 			tab_factura.insertar();
-			//aut_factura.limpiar();
-			//utilitario.addUpdate("idAutocompletar");
+			aut_factura.limpiar();
+			utilitario.addUpdate("aut_factura");
 		}
 		else if(tab_detalle_factura.isFocus()){
 			tab_detalle_factura.insertar();
-			//aut_factura.limpiar();
-			//utilitario.addUpdate("idAutocompletar");
+		  
 		}
 
 
