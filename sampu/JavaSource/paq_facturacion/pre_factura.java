@@ -113,7 +113,7 @@ public class pre_factura extends 	Pantalla{
 		div_division.dividir2(pat_factura, pat_detalle_factura, "50%", "h");
 		agregarComponente(div_division);
 
-
+		
 
 	}
 	//METDO AUTOCOMPLETAR
