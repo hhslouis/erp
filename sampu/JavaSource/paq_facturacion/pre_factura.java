@@ -159,16 +159,18 @@ public class pre_factura extends 	Pantalla{
 		String str_sql="Select * from bodt_material where ide_bomat="+ide_bodtmat;
 		//Asi se hacen consultas a la BDD
 		TablaGenerica tab_consulta=utilitario.consultar(str_sql);
+	
 
 		//Preguntamos si la tabla no esta vacia es decir que si retorno un resultado la consulta
 		if ( tab_consulta.isEmpty()==false) {
 			//Obtenemos el valor del campo y lo almacenamos en un String
 			String str_aplica_valor_bomat= tab_consulta.getValor("aplica_valor_bomat");
 			//Preguntamos si el valor de la variable es true
-			if(str_aplica_valor_bomat!=null && str_aplica_valor_bomat.equals("true")){
+			if(str_aplica_valor_bomat!=null && str_aplica_valor_bomat.equals("TRUE")){
 				return true; //Si carga iva
 			}
 		}
+		System.out.println(tab_consulta.getValor("aplica_valor_bomat"));
 		return false;  //retorna false
 
 	}
@@ -179,8 +181,7 @@ public class pre_factura extends 	Pantalla{
 		//Consultamos si el producto seleccionado carga iva
 		boolean boo_iva=tieneIvaProducto(tab_detalle_factura.getValor("ide_bomat"));
 		//Mensaje producto, carga o no garga iva
-		utilitario.agregarMensaje
-		(tab_detalle_factura.getValor("ide_bomat"),boo_iva+"");
+		utilitario.agregarMensaje(tab_detalle_factura.getValor("ide_bomat"),boo_iva+"");
 		}
 	
 	
