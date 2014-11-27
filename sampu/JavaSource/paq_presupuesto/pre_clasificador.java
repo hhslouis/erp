@@ -49,6 +49,7 @@ public class pre_clasificador extends Pantalla {
 		tab_vigente.setTabla("cont_vigente", "ide_covig", 2);
 		tab_vigente.getColumna("ide_geani").setCombo("gen_anio","ide_geani","detalle_geani","");
 		tab_vigente.getColumna("ide_geani").setUnico(true);
+		tab_vigente.getColumna("ide_prcla").setUnico(true);
 		// ocultar campos de las claves  foraneas
 		TablaGenerica  tab_generica=ser_contabilidad.getTablaVigente("cont_vigente");
 		for(int i=0;i<tab_generica.getTotalFilas();i++){
