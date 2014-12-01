@@ -207,12 +207,33 @@ public class pre_factura extends 	Pantalla{
 	
 	//total_fadef
 	public void calcular(){
-		//cantidad_fadef * valor_fadef total_fadef 
-		//Obtenemos el valor del campo y lo almacenamos en un String
-		String str_cantidad_fadef= tab_detalle_factura.getValor("cantidad_fadef");
-		String str_valor_fadef= tab_detalle_factura.getValor("valor_fadef");
-		
-	}
+        //Variables para almacenar y calcular el total del detalle
+        double dou_cantidad_fadef=0;
+        double dou_valor_fadef=0;
+        double dou_total_fadef=0;
+
+       try {
+         //Obtenemos el valor de la cantidad
+          dou_cantidad_fadef=Double.parseDouble(tab_detalle_factura.getValor("cantidad_fadef"));
+         } catch (Exception e) {
+         }
+
+try {
+         //Obtenemos el valor
+         dou_valor_fadef=Double.parseDouble(tab_detalle_factura.getValor("valor_fadef"));
+         } catch (Exception e) {
+         }
+
+       //Calculamos el total
+         dou_total_fadef=dou_cantidad_fadef*dou_valor_fadef;
+
+       //Asignamos el total a la tabla detalle, con 2 decimales
+       tab_detalle_factura.setValor("total_fadef",utilitario.getFormatoNumero(dou_total_fadef));
+
+       //Actualizamos el campo de la tabla AJAX
+       utilitario.addUpdateTabla(tab_detalle_factura, "total_fadef", "");
+ }
+	
 	
 	
 	@Override
