@@ -1,5 +1,7 @@
 package paq_facturacion;
 
+import javax.faces.event.AjaxBehaviorEvent;
+
 import framework.aplicacion.TablaGenerica;
 import framework.componentes.Boton;
 import framework.componentes.Division;
@@ -116,6 +118,9 @@ public class pre_factura extends 	Pantalla{
 		
 		tab_detalle_factura.getColumna("total_fadef").setEtiqueta();
 		tab_detalle_factura.getColumna("total_fadef").setEstilo("font-size:13px;font-weight:bold;");
+		//LLAMAR A ESTE METODO CUANDO EL USUARIO, MODIFIQUE LA CANTIDAD O EL VALOR DESDE LA APLICACION
+		tab_detalle_factura.getColumna("cantidad_fadef").setMetodoChange("calcularDetalle");
+		tab_detalle_factura.getColumna("valor_fadef").setMetodoChange("calcularDetalle");
 		tab_detalle_factura.dibujar();
 
 
@@ -127,7 +132,7 @@ public class pre_factura extends 	Pantalla{
 		Division div_division=new Division();
 		div_division.dividir2(pat_factura, pat_detalle_factura, "50%", "h");
 		agregarComponente(div_division);
-
+		
 		
 	}
 	
@@ -146,11 +151,6 @@ public class pre_factura extends 	Pantalla{
 		//Cuando selecciona una opcion del autocompletar
 		//siempre debe hacerse el onSelect(evt)
 		aut_factura.onSelect(evt);
-		//muestra el valor que selecciono
-		utilitario.agregarMensaje("VALOR", aut_factura.getValor()); 
-		//muestra el nombre que selecciono
-		utilitario.agregarMensaje("NOMBRE", aut_factura.getValorArreglo(1)); 
-
 		tab_factura.setCondicion("ide_fadaf="+aut_factura.getValor());
 		tab_factura.ejecutarSql();
 		//tab_factura.ejecutarValorForanea(val)
@@ -233,7 +233,51 @@ try {
        utilitario.addUpdateTabla(tab_detalle_factura, "total_fadef", "");
  }
 	
+	public void calcularDetalle(AjaxBehaviorEvent evt) {
+		tab_detalle_factura.modificar(evt); //Siempre es la primera linea
+		calcular();
+	}
 	
+	//Vamos a calcular los totales tanto de iva como de valores de toda la factura
+
+	private void calcularFactura(){
+	//Enceramos las variables
+	dou_base_no_iva=0;
+	dou_base_cero=0;
+	dou_base_aprobada=0;
+	dou_valor_iva=0;
+	dou_total=0;
+
+	//Reccoremos todos los detalles de la factura
+	for (int i = 0; i < tab_detalle_factura.getTotalFilas(); i++) {
+	//Obtenemos si el producto actual tiene iva
+	boolean boo_iva=tieneIvaProducto(tab_detalle_factura.getValor(i,"ide_bomat"));
+	if(boo_iva){
+	//CARGA IVA
+	try {
+	//Acumulamos la base aprobada
+	dou_base_aprobada+=Double.parseDouble(tab_detalle_factura.getValor(i,
+	"total_fadef"));
+	//Acumulamos el valor del iva de cada detalle
+	dou_valor_iva+=(Double.parseDouble(tab_detalle_factura.getValor(i,
+	"total_fadef")) *  dou_por_iva);
+	} catch (Exception e) {
+	}
+	}
+	else{
+	//NO CARGA IVA
+	try {
+	//Acumulamos la base no iva
+	dou_base_no_iva+=Double.parseDouble(tab_detalle_factura.getValor(i,
+	"total_fadef"));
+	//Acumulamos la base cero
+	dou_base_cero+=Double.parseDouble(tab_detalle_factura.getValor(i,
+	"total_fadef"));
+	} catch (Exception e) {
+	}
+	}
+	}
+	}
 	
 	@Override
 	public void insertar() {
