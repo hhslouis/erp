@@ -278,6 +278,7 @@ try {
 	}
 	}
 	}
+	  dou_total=dou_valor_iva+dou_base_aprobada+dou_base_no_iva;
 	  tab_factura.setValor("base_no_iva_fafac",utilitario.getFormatoNumero(dou_base_no_iva,3));
 	  tab_factura.setValor("base_cero_fafac",utilitario.getFormatoNumero(dou_base_cero,3));
 	  tab_factura.setValor("base_aprobada_fafac",utilitario.getFormatoNumero(dou_base_aprobada,3));
