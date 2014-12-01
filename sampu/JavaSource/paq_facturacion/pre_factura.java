@@ -19,6 +19,12 @@ public class pre_factura extends 	Pantalla{
 	private Tabla tab_detalle_factura=new Tabla();
 	private AutoCompletar aut_factura=new AutoCompletar();
 	private Boolean tieneIvaProducto = new Boolean("true");
+	private double dou_por_iva=0.12;
+	double dou_base_no_iva=0;
+	double dou_base_cero=0;
+	double dou_base_aprobada=0;
+	double dou_valor_iva=0;
+	double dou_total=0;
 
 
 	public Boolean getTieneIvaProducto() {
@@ -42,7 +48,7 @@ public class pre_factura extends 	Pantalla{
 		
 		
 		// TODO Auto-generated constructor stub
-		tab_factura.setHeader("FACTURACIÓN");
+		tab_factura.setHeader("FACTURACION");
 		tab_factura.setId("tab_factura");
 		tab_factura.setTabla("fac_factura", "ide_fafac", 1);
 		//para q no se dibuje antes q seleccione el autocompletar
@@ -98,7 +104,7 @@ public class pre_factura extends 	Pantalla{
 
 
 		PanelTabla pat_detalle_factura= new PanelTabla();
-		pat_detalle_factura.setMensajeWarn("DETALLE FACTURACIÓN");
+		pat_detalle_factura.setMensajeWarn("DETALLE FACTURACION");
 		pat_detalle_factura.setPanelTabla(tab_detalle_factura);
 
 
@@ -106,6 +112,24 @@ public class pre_factura extends 	Pantalla{
 		div_division.dividir2(pat_factura, pat_detalle_factura, "50%", "h");
 		agregarComponente(div_division);
 
+		//TOTALES DE COLOR ROJO--ESTILO DE COLOR ROJO Y NEGRILLA
+				tab_factura.getColumna("base_no_iva_fafac").setEtiqueta();
+				tab_factura.getColumna("base_no_iva_fafac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
+
+				tab_factura.getColumna("base_cero_fafac").setEtiqueta();
+				tab_factura.getColumna("base_cero_fafac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
+
+				tab_factura.getColumna("base_aprobada_fafac").setEtiqueta();
+				tab_factura.getColumna("base_aprobada_fafac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
+
+				tab_factura.getColumna("valor_iva_fafac").setEtiqueta();
+				tab_factura.getColumna("valor_iva_fafac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
+
+				tab_factura.getColumna("total_fafac").setEtiqueta();
+				tab_factura.getColumna("total_fafac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
+				
+				tab_detalle_factura.getColumna("total_fadef").setEtiqueta();
+				tab_detalle_factura.getColumna("total_fadef").setEstilo("font-size:13px;font-weight:bold;");
 	}
 	
    
