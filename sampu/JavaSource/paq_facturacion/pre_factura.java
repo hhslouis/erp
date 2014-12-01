@@ -106,8 +106,6 @@ public class pre_factura extends 	Pantalla{
 		div_division.dividir2(pat_factura, pat_detalle_factura, "50%", "h");
 		agregarComponente(div_division);
 
-		
-
 	}
 	
    
@@ -160,7 +158,6 @@ public class pre_factura extends 	Pantalla{
 		//Asi se hacen consultas a la BDD
 		TablaGenerica tab_consulta=utilitario.consultar(str_sql);
 	
-
 		//Preguntamos si la tabla no esta vacia es decir que si retorno un resultado la consulta
 		if ( tab_consulta.isEmpty()==false) {
 			//Obtenemos el valor del campo y lo almacenamos en un String
@@ -184,6 +181,14 @@ public class pre_factura extends 	Pantalla{
 		utilitario.agregarMensaje(tab_detalle_factura.getValor("ide_bomat"),boo_iva+"");
 		}
 	
+	//total_fadef
+	public void calcular(){
+		//cantidad_fadef * valor_fadef total_fadef 
+		//Obtenemos el valor del campo y lo almacenamos en un String
+		String str_cantidad_fadef= tab_detalle_factura.getValor("cantidad_fadef");
+		String str_valor_fadef= tab_detalle_factura.getValor("valor_fadef");
+		
+	}
 	
 	
 	@Override
@@ -198,8 +203,6 @@ public class pre_factura extends 	Pantalla{
 			tab_detalle_factura.insertar();
 		  
 		}
-
-
 
 	}
 
