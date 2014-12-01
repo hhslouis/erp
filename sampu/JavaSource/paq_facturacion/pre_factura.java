@@ -227,10 +227,11 @@ try {
          dou_total_fadef=dou_cantidad_fadef*dou_valor_fadef;
 
        //Asignamos el total a la tabla detalle, con 2 decimales
-       tab_detalle_factura.setValor("total_fadef",utilitario.getFormatoNumero(dou_total_fadef));
+       tab_detalle_factura.setValor("total_fadef",utilitario.getFormatoNumero(dou_total_fadef,3));
 
        //Actualizamos el campo de la tabla AJAX
-       utilitario.addUpdateTabla(tab_detalle_factura, "total_fadef", "");
+       utilitario.addUpdateTabla(tab_detalle_factura, "total_fadef", "tab_factura");
+       calcularFactura();
  }
 	
 	public void calcularDetalle(AjaxBehaviorEvent evt) {
@@ -277,6 +278,12 @@ try {
 	}
 	}
 	}
+	  tab_factura.setValor("base_no_iva_fafac",utilitario.getFormatoNumero(dou_base_no_iva,3));
+	  tab_factura.setValor("base_cero_fafac",utilitario.getFormatoNumero(dou_base_cero,3));
+	  tab_factura.setValor("base_aprobada_fafac",utilitario.getFormatoNumero(dou_base_aprobada,3));
+	  tab_factura.setValor("valor_iva_fafac",utilitario.getFormatoNumero(dou_valor_iva,3));
+	  tab_factura.setValor("total_fafac",utilitario.getFormatoNumero(dou_total,3));
+
 	}
 	
 	@Override
