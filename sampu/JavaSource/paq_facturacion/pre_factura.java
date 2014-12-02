@@ -282,11 +282,9 @@ public class pre_factura extends 	Pantalla{
 				// TODO Auto-generated method stub
 			//tab_factura.getColumna("ide_fadaf").setValorDefecto(aut_factura.getValor());
 			tab_factura.insertar();
-			/*
 				if(tab_detalle_factura.isFocus()){
 						tab_detalle_factura.insertar(); 
 					}
-*/
 			}
 		
 
