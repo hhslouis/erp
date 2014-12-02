@@ -280,22 +280,20 @@ public class pre_factura extends 	Pantalla{
 		@Override
 		public void insertar() {
 				// TODO Auto-generated method stub
-				if(tab_factura.isFocus()){
-						tab_factura.insertar();
-						//aut_factura.limpiar();
-						//utilitario.addUpdate("aut_factura");
-					}
-				else if(tab_detalle_factura.isFocus()){
+			//tab_factura.getColumna("ide_fadaf").setValorDefecto(aut_factura.getValor());
+			tab_factura.insertar();
+			/*
+				if(tab_detalle_factura.isFocus()){
 						tab_detalle_factura.insertar(); 
 					}
-
+*/
 			}
 		
 
 		@Override
 		public void guardar() {
 				// TODO Auto-generated method stub
-            tab_factura.guardar();
+            tab_factura.guardar(); 
             tab_detalle_factura.guardar();
             utilitario.getConexion().setImprimirSqlConsola(true);
             guardarPantalla(); 						
@@ -316,12 +314,8 @@ public class pre_factura extends 	Pantalla{
 					}
 				else if(tab_detalle_factura.isFocus()){
 						tab_detalle_factura.eliminar();
-
+						
 					}
 
 			}
-
-
-
-
 }
