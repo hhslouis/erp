@@ -280,14 +280,18 @@ public class pre_factura extends 	Pantalla{
 		@Override
 		public void insertar() {
 				// TODO Auto-generated method stub
-			
-         if(tab_detalle_factura.isFocus()){
+           if (aut_factura.getValor()!=null){
+           if(tab_detalle_factura.isFocus()){
           tab_factura.getColumna("ide_fadaf").setValorDefecto(aut_factura.getValor());
           tab_factura.insertar();
           }
 			 	else if(tab_detalle_factura.isFocus()){
-						tab_detalle_factura.insertar(); 
+						tab_detalle_factura.insertar();
 					}
+           }
+                 else{
+                 utilitario.utilitario.agregarMensajeError("Debe seleccionar los datos de Facturación","");
+                 }
 			}
 		
 
