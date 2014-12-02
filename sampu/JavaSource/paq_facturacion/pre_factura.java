@@ -282,27 +282,30 @@ public class pre_factura extends 	Pantalla{
 				// TODO Auto-generated method stub
 				if(tab_factura.isFocus()){
 						tab_factura.insertar();
-						aut_factura.limpiar();
-						utilitario.addUpdate("aut_factura");
+						//aut_factura.limpiar();
+						//utilitario.addUpdate("aut_factura");
 					}
 				else if(tab_detalle_factura.isFocus()){
-						tab_detalle_factura.insertar();
-					  
+						tab_detalle_factura.insertar(); 
 					}
 
 			}
+		
 
 		@Override
 		public void guardar() {
 				// TODO Auto-generated method stub
-				if(tab_factura.guardar()){
-						tab_detalle_factura.guardar();
-						//aut_opciones.limpiar();
-						//utilitario.addUpdate("idAutocompletar");
-					}
-
-				guardarPantalla();
-
+				if(tab_detalle_factura.guardar()){
+					guardarPantalla();
+				}
+					//    tab_factura.guardar();
+					 //   guardarPantalla();
+				
+					//tab_detalle_factura.guardar();
+					//guardarPantalla();
+				
+				utilitario.getConexion().setImprimirSqlConsola(true);
+				
 			}
 
 		@Override
