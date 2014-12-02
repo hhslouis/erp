@@ -295,16 +295,10 @@ public class pre_factura extends 	Pantalla{
 		@Override
 		public void guardar() {
 				// TODO Auto-generated method stub
-				if(tab_detalle_factura.guardar()){
-					guardarPantalla();
-				}
-					//    tab_factura.guardar();
-					 //   guardarPantalla();
-				
-					//tab_detalle_factura.guardar();
-					//guardarPantalla();
-				
-				utilitario.getConexion().setImprimirSqlConsola(true);
+            tab_factura.guardar();
+            tab_detalle_factura.guardar();
+            utilitario.getConexion().setImprimirSqlConsola(true);
+            guardarPantalla(); 						
 				
 			}
 
