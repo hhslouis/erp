@@ -127,12 +127,12 @@ public class pre_factura extends 	Pantalla{
 			}
 		
 
-	public void limpiar(){
+	/*public void limpiar(){
 		aut_factura.limpiar();
 		tab_factura.limpiar();
 		tab_detalle_factura.limpiar();
 		utilitario.addUpdate("aut_factura");
-	}
+	}*/
 
 
 
@@ -280,17 +280,18 @@ public class pre_factura extends 	Pantalla{
 		@Override
 		public void insertar() {
 				// TODO Auto-generated method stub
-           if (aut_factura.getValor()!=null){
+          if (aut_factura.getValor()!=null){
            if(tab_detalle_factura.isFocus()){
-          tab_factura.getColumna("ide_fadaf").setValorDefecto(aut_factura.getValor());
-          tab_factura.insertar();
-          }
-			 	else if(tab_detalle_factura.isFocus()){
-						tab_detalle_factura.insertar();
-					}
+          tab_detalle_factura.insertar();
            }
+          else if(tab_detalle_factura.isFocus()){
+        	  tab_factura.getColumna("ide_fadaf").setValorDefecto(aut_factura.getValor());
+              tab_factura.insertar(); 
+          }
+			 
+         }
                  else{
-                 utilitario.utilitario.agregarMensajeError("Debe seleccionar los datos de Facturación","");
+                 utilitario.agregarMensajeError("Debe seleccionar los datos de Facturación","");
                  }
 			}
 		
@@ -298,8 +299,8 @@ public class pre_factura extends 	Pantalla{
 		@Override
 		public void guardar() {
 				// TODO Auto-generated method stub
-            tab_factura.guardar(); 
             tab_detalle_factura.guardar();
+            tab_factura.guardar(); 
             utilitario.getConexion().setImprimirSqlConsola(true);
             guardarPantalla(); 						
 				
@@ -311,16 +312,10 @@ public class pre_factura extends 	Pantalla{
 				if(tab_factura.isFocus()){
 						tab_factura.eliminar();
 					}
-				else if(tab_factura.isFocus()){
-						tab_factura.eliminar();
-					}
 				if(tab_detalle_factura.isFocus()){
-						tab_detalle_factura.eliminar();
-					}
-				else if(tab_detalle_factura.isFocus()){
-						tab_detalle_factura.eliminar();
-						
-					}
-
-			}
+					tab_detalle_factura.eliminar();
+				}
+						}
+		
+		
 }
