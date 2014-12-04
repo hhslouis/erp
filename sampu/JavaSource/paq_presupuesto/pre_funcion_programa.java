@@ -9,7 +9,7 @@ import framework.componentes.Arbol;
 import framework.componentes.Division;
 import framework.componentes.PanelTabla;
 import framework.componentes.Tabla;
-import paq_contabilidad.ejb.ServicioContabiliadad;
+import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_sistema.aplicacion.Pantalla;
 
 
@@ -17,7 +17,7 @@ public class pre_funcion_programa extends Pantalla {
 	private Tabla tab_funcion_programa=new Tabla();
 	private Tabla tab_vigente= new Tabla();
 	private Arbol arb_funcion_programa=new Arbol();
-	private ServicioContabiliadad ser_contabilidad = (ServicioContabiliadad ) utilitario.instanciarEJB(ServicioContabiliadad.class);
+	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
 	
 	public pre_funcion_programa (){
 		tab_funcion_programa.setId("tab_funcion_programa");
