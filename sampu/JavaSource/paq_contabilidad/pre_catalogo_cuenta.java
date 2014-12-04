@@ -11,7 +11,7 @@ import framework.componentes.AutoCompletar;
 import framework.componentes.Division;
 import framework.componentes.PanelTabla;
 import framework.componentes.Tabla;
-import paq_contabilidad.ejb.ServicioContabiliadad;
+import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_general.ejb.ServicioGeneral;
 import paq_sistema.aplicacion.Pantalla;
 
@@ -28,7 +28,7 @@ public class pre_catalogo_cuenta extends Pantalla{
 	 	
 	private Arbol arb_catalogo_cuenta=new Arbol();
 	 @EJB
-		private ServicioContabiliadad ser_contabilidad = (ServicioContabiliadad ) utilitario.instanciarEJB(ServicioContabiliadad.class);
+		private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
 		
 	public pre_catalogo_cuenta(){
 		
