@@ -6,6 +6,7 @@ import paq_sistema.aplicacion.Pantalla;
 
 public class pre_tipo_poliza extends Pantalla{
 	private Tabla tab_tipo_poliza= new Tabla();
+	private Tabla tab_renovacion_poliza= new Tabla();
 	
 	public pre_tipo_poliza(){
 		tab_tipo_poliza.setId("tab_tipo_poliza");
@@ -17,6 +18,8 @@ public class pre_tipo_poliza extends Pantalla{
 		
 		agregarComponente(pat_tipo_poliza);
 	}
+	
+	
 	
 	
 	@Override
@@ -47,6 +50,16 @@ public class pre_tipo_poliza extends Pantalla{
 
 	public void setTab_tipo_poliza(Tabla tab_tipo_poliza) {
 		this.tab_tipo_poliza = tab_tipo_poliza;
+	}
+
+
+	public Tabla getTab_renovacion_poliza() {
+		return tab_renovacion_poliza;
+	}
+
+
+	public void setTab_renovacion_poliza(Tabla tab_renovacion_poliza) {
+		this.tab_renovacion_poliza = tab_renovacion_poliza;
 	}
 
 
