@@ -7,7 +7,8 @@ import framework.componentes.Arbol;
 import framework.componentes.Division;
 import framework.componentes.PanelTabla;
 import framework.componentes.Tabla;
-import paq_contabilidad.ejb.ServicioContabilidad;
+import paq_contabilidad.ejb.ServicioContabiliadad;
+import paq_contabilidad.ejb.ServicioContabiliadad;
 import paq_sistema.aplicacion.Pantalla;
 import org.primefaces.event.NodeSelectEvent;
 
@@ -16,7 +17,7 @@ public class pre_clasificador extends Pantalla {
 	private Tabla tab_vigente=new Tabla();
 	private Arbol arb_clasificador=new Arbol();
 	 @EJB
-	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
+	private ServicioContabiliadad ser_contabilidad = (ServicioContabiliadad ) utilitario.instanciarEJB(ServicioContabiliadad.class);
 		
 
 
