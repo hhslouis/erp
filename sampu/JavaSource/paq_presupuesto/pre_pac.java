@@ -88,7 +88,7 @@ public pre_pac(){
 	        tab_archivo.setIdCompleto("tab_tabulador:tab_archivo");
 	        tab_archivo.setTipoFormulario(true);
 	        tab_archivo.getGrid().setColumns(4);
-	        tab_archivo.setTabla("pre_archivo_pac","ide_prarp",3);
+	        tab_archivo.setTabla("pre_archivo","ide_prarc",3);
 	        tab_archivo.getColumna("foto_prarp").setUpload("fotos");
 	        tab_archivo.dibujar();
 	        PanelTabla pat_archivo= new PanelTabla();
