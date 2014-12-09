@@ -39,7 +39,7 @@ public class pre_viaje extends Pantalla{
 	private ServicioNomina ser_nomina = (ServicioNomina) utilitario.instanciarEJB(ServicioNomina.class);
 	
 	public pre_viaje() {
-		
+		//crear combo transorte
 		com_tipo_transporte.setCombo("select ide_cotit,detalle_cotit from cont_tipo_transporte where activo_cotit = true" +
 				" order by detalle_cotit");
 		com_tipo_transporte.setMetodo("seleccionaTipoTransporte");
