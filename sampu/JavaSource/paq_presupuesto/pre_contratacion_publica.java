@@ -16,16 +16,22 @@ public class pre_contratacion_publica extends Pantalla {
 		tab_contratacion.setId("tab_contratacion");
 		tab_contratacion.setHeader("PROCESOS DE CONTRATACION PUBLICA");
 		tab_contratacion.setTabla("pre_contratacion_publica", "ide_prcop", 1);
+		tab_contratacion.getColumna("ide_prfop").setCombo("pre_forma_pago", "ide_prfop", "detalle_prfop", "");
+		tab_contratacion.getColumna("ide_coest").setCombo("cont_estado", " ide_coest", "detalle_coest", "");
+		tab_contratacion.getColumna("ide_gemos").setCombo("gen_modulo_secuencial", "ide_gemos", "numero_secuencial_gemos", "");
+		tab_contratacion.getColumna("ide_prtpc").setCombo("pre_tipo_contratacion", "ide_prtpc", "detalle_prtpc", "");
+		tab_contratacion.getColumna("ide_prpac").setCombo("pre_pac", "ide_prpac", "descripcion_prpac", "");
+		tab_contratacion.getColumna("ide_cotio").setCombo("cont_tipo_compra", "ide_cotio", "detalle_cotio", "");
 		tab_contratacion.setTipoFormulario(true);
 		tab_contratacion.getGrid().setColumns(4);
 		tab_contratacion.dibujar();
-		PanelTabla pat_contratacion=new PanelTabla();
+	  	PanelTabla pat_contratacion=new PanelTabla();
 		pat_contratacion.setPanelTabla(tab_contratacion);
 		
 		//tabla responsable
 		tab_responsable.setId("tab_responsable");
 		tab_responsable.setHeader("RESPONSABLE DE CONTATACION");
-		tab_responsable.setTabla("pre_contratacion_partida", "ide_prcoa", 2);
+		tab_responsable.setTabla("pre_responsable_contratacion", "ide_prrec", 2);
 		tab_responsable.setTipoFormulario(true);
 		tab_responsable.getGrid().setColumns(2);
 		tab_responsable.dibujar();
@@ -37,6 +43,7 @@ public class pre_contratacion_publica extends Pantalla {
 		tab_partida.setId("tab_partida");
 		tab_partida.setHeader("CONTRATACION PARTIDA");
 		tab_partida.setTabla("pre_contratacion_partida", "ide_prcoa", 3);
+		tab_partida.getColumna("ide_prpro").setCombo("pre_programa", "ide_prpro", "cod_programa_prpro", "");
 		tab_partida.setTipoFormulario(true);
 		tab_partida.getGrid().setColumns(2);
 		tab_partida.dibujar();
