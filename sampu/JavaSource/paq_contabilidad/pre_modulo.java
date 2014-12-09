@@ -1,5 +1,6 @@
 package paq_contabilidad;
 
+import framework.componentes.Arbol;
 import framework.componentes.Division;
 import framework.componentes.PanelTabla;
 import framework.componentes.Tabla;
@@ -11,27 +12,38 @@ public class pre_modulo extends Pantalla{
 	private Tabla tab_modulo=new Tabla();
 	private Tabla tab_modulo_estado=new Tabla();
 	private Tabla tab_persona_modulo=new Tabla();
+	private Tabla tab_modulo_secuencial=new Tabla();
+	private Arbol arb_modulo = new Arbol();
+	private Division div_modulo =new Division();
+	private Division div_division=new Division();
+	
+	
+	
 	
 	
 	
 	
 	public pre_modulo() {
 		tab_modulo.setId("tab_modulo");  
-		tab_modulo.setTabla("gen_modulo", "ide_gemod", 1);	
-		Tabulador tab_Tabulador=new Tabulador();
-		tab_Tabulador.setId("tab_tabulador");
-		
+		tab_modulo.setTabla("gen_modulo","ide_gemod", 1);	
+		tab_modulo.agregarRelacion(tab_modulo_estado);
+		tab_modulo.agregarRelacion(tab_persona_modulo);
+		tab_modulo.agregarRelacion(tab_modulo_secuencial);
+		tab_modulo.agregarArbol(arb_modulo);
 		tab_modulo.dibujar();
 		PanelTabla pat_modulo=new PanelTabla();
 		pat_modulo.setPanelTabla(tab_modulo);
-		tab_modulo.agregarRelacion(tab_modulo_estado);
-		tab_modulo.agregarRelacion(tab_persona_modulo);
-		agregarComponente(pat_modulo);
+		
+		//agregarComponente(pat_modulo);
+		Tabulador tab_Tabulador=new Tabulador();
+		tab_Tabulador.setId("tab_tabulador");
+		
+				
 		
 		//Estado por modulo//
 		tab_modulo_estado.setId("tab_modulo_estado");
 		tab_modulo_estado.setIdCompleto("tab_tabulador:tab_modulo_estado");
-		tab_modulo_estado.setTabla("gen_modulo_estado", "ide_gemoe", 2);
+		tab_modulo_estado.setTabla("gen_modulo_estado","ide_gemoe", 2);
 		tab_modulo_estado.getColumna("ide_gemod").setCombo("gen_modulo", "ide_gemod", "detalle_gemod", "");
 		tab_modulo_estado.getColumna("ide_coest").setCombo("cont_estado", "ide_coest", "detalle_coest", "");
 		tab_modulo_estado.dibujar();
@@ -48,16 +60,37 @@ public class pre_modulo extends Pantalla{
 		PanelTabla pat_panel3 = new PanelTabla();
 		pat_panel3.setPanelTabla(tab_persona_modulo);
 		
+		//modulo secuencial
+		tab_modulo_secuencial.setId("tab_modulo_secuencial");
+		tab_modulo_secuencial.setIdCompleto("tab_tabulador:tab_modulo_secuencial");
+		tab_modulo_secuencial.setTabla("gen_modulo_secuencial", "ide_gemos", 4);
+		tab_modulo_secuencial.getColumna("ide_gemod").setCombo("gen_modulo", "ide_gemod", "detalle_gemod", "");
+		tab_modulo_secuencial.dibujar();
+		PanelTabla pat_panel4= new PanelTabla();
+		pat_panel4.setPanelTabla(tab_modulo_secuencial);
+		
+		
 		tab_Tabulador.agregarTab("ESTADO POR MODULOS", pat_panel2);
 		tab_Tabulador.agregarTab("PERSONA POR MODULOS", pat_panel3);
+		tab_Tabulador.agregarTab("MODULOS SECUENCIAL", pat_panel4);
 		
+	
 		
 		
 		//dividir2
-		Division div_Division=new Division();
-		div_Division.dividir2(pat_modulo,tab_Tabulador, "50%", "H");
-		agregarComponente(div_Division);
-				
+		div_division=new Division();
+		div_division.dividir2(pat_modulo,tab_Tabulador,"50%","h");
+		//agregarComponente(div_division);
+		// division arbol
+		//arbol
+		arb_modulo.setId("arb_modulo");
+		arb_modulo.setArbol("gen_modulo", "ide_gemod", "detalle_gemod", "gen_ide_gemod");
+		arb_modulo.dibujar();
+		div_modulo =new Division();
+		div_modulo.setId("div_modulo");
+		div_modulo.dividir2(arb_modulo, div_division, "25%", "v");
+		agregarComponente(div_modulo);
+		
 		
 	}
 
@@ -78,7 +111,11 @@ public class pre_modulo extends Pantalla{
 			else if (tab_persona_modulo.isFocus()) {
 				tab_persona_modulo.insertar();
 				
-				}		
+				}
+			else if (tab_modulo_secuencial.isFocus()) {
+				tab_modulo_secuencial.insertar();
+				
+			}
 	}
 
 	@Override
@@ -86,7 +123,10 @@ public class pre_modulo extends Pantalla{
 		// TODO Auto-generated method stub
 		if (tab_modulo.guardar()){
 			if (tab_modulo_estado.guardar()) {
-				tab_persona_modulo.guardar();
+				if (tab_persona_modulo.guardar()) {
+					tab_modulo_secuencial.guardar();
+				}
+				
 				
 			}
 		}
@@ -123,6 +163,22 @@ public class pre_modulo extends Pantalla{
 
 	public void setTab_persona_modulo(Tabla tab_persona_modulo) {
 		this.tab_persona_modulo = tab_persona_modulo;
+	}
+
+	public Arbol getArb_modulo() {
+		return arb_modulo;
+	}
+
+	public void setArb_modulo(Arbol arb_modulo) {
+		this.arb_modulo = arb_modulo;
+	}
+
+	public Tabla getTab_modulo_secuencial() {
+		return tab_modulo_secuencial;
+	}
+
+	public void setTab_modulo_secuencial(Tabla tab_modulo_secuencial) {
+		this.tab_modulo_secuencial = tab_modulo_secuencial;
 	}
 
 
