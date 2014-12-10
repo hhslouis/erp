@@ -18,10 +18,9 @@ import paq_sistema.aplicacion.Pantalla;
 
 
 public class pre_factura extends Pantalla{
-	private Dialogo factura_dialogo=new Dialogo();
+	
 	private Tabla tab_factura = new Tabla();
 	private Tabla tab_detalle_factura=new Tabla();
-	private Tabla tab_fechas= new Tabla();
 	private AutoCompletar aut_factura=new AutoCompletar();
 	//CALENDARIO
 	private SeleccionCalendario sec_rango_fechas = new SeleccionCalendario();
@@ -115,16 +114,7 @@ public class pre_factura extends Pantalla{
 		pat_detalle_factura.setMensajeWarn("DETALLE FACTURACION");
 		pat_detalle_factura.setPanelTabla(tab_detalle_factura);
 
-		//TABLA FECHAS
-		tab_fechas.setId("tab_fechas");
-		tab_fechas.setNumeroTabla(1);
-		tab_fechas.setTabla("fac_factura", "ide_fafac", 1);
-		tab_fechas.dibujar();
-		PanelTabla pat_fechas=new PanelTabla();
-		pat_fechas.setPanelTabla(tab_fechas);
-		//agregarComponente(pat_fechas);
-		
-		
+			
 		Division div_division=new Division();
 		div_division.dividir2(pat_factura, pat_detalle_factura, "50%", "h");
 		agregarComponente(div_division);
