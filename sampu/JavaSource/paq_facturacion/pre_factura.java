@@ -4,8 +4,10 @@ import javax.faces.event.AjaxBehaviorEvent;
 
 import framework.aplicacion.TablaGenerica;
 import framework.componentes.Boton;
+import framework.componentes.Dialogo;
 import framework.componentes.Division;
 import framework.componentes.PanelTabla;
+import framework.componentes.SeleccionCalendario;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import paq_sistema.aplicacion.Pantalla;
@@ -16,17 +18,21 @@ import paq_sistema.aplicacion.Pantalla;
 
 
 public class pre_factura extends Pantalla{
-
+	private Dialogo factura_dialogo=new Dialogo();
 	private Tabla tab_factura = new Tabla();
 	private Tabla tab_detalle_factura=new Tabla();
+	private Tabla tab_fechas= new Tabla();
 	private AutoCompletar aut_factura=new AutoCompletar();
+	//CALENDARIO
+	private SeleccionCalendario sec_rango_fechas = new SeleccionCalendario();
 	private double dou_por_iva=0.12;
 	double dou_base_no_iva=0;
 	double dou_base_cero=0;
 	double dou_base_aprobada=0;
 	double dou_valor_iva=0;
 	double dou_total=0;
-
+	
+	
 	public pre_factura() {
 
 		// TODO Auto-generated constructor stub
@@ -82,9 +88,6 @@ public class pre_factura extends Pantalla{
 		//definimos el metodo que va a ejecutar cuando el usuario seleccione del Autocompletar
 		tab_detalle_factura.getColumna("ide_bomat").setMetodoChange("seleccionoProducto");
 		
-		Boton bot_facturar=new Boton();
-		bot_facturar.setId("con_guardar");
-		agregarComponente(bot_facturar);
 
 		Boton bot_limpiar = new Boton();
 		bot_limpiar.setIcon("ui-icon-cancel");
@@ -98,7 +101,9 @@ public class pre_factura extends Pantalla{
 		bar_botones.agregarComponente(eti_colaborador);
 		bar_botones.agregarComponente(aut_factura);
 		bar_botones.agregarBoton(bot_limpiar);
-
+		
+		
+		//DETALLE FACTURA
 		tab_detalle_factura.getColumna("total_fadef").setEtiqueta();
 		tab_detalle_factura.getColumna("total_fadef").setEstilo("font-size:13px;font-weight:bold;");
 		//LLAMAR A ESTE METODO CUANDO EL USUARIO, MODIFIQUE LA CANTIDAD O EL VALOR DESDE LA APLICACION
@@ -106,19 +111,39 @@ public class pre_factura extends Pantalla{
 		tab_detalle_factura.getColumna("valor_fadef").setMetodoChange("calcularDetalle");
 		tab_detalle_factura.dibujar();
 
-
 		PanelTabla pat_detalle_factura= new PanelTabla();
 		pat_detalle_factura.setMensajeWarn("DETALLE FACTURACION");
 		pat_detalle_factura.setPanelTabla(tab_detalle_factura);
 
-
+		//TABLA FECHAS
+		tab_fechas.setId("tab_fechas");
+		tab_fechas.setNumeroTabla(1);
+		tab_fechas.setTabla("fac_factura", "ide_fafac", 1);
+		tab_fechas.dibujar();
+		PanelTabla pat_fechas=new PanelTabla();
+		pat_fechas.setPanelTabla(tab_fechas);
+		//agregarComponente(pat_fechas);
+		
+		
 		Division div_division=new Division();
 		div_division.dividir2(pat_factura, pat_detalle_factura, "50%", "h");
 		agregarComponente(div_division);
 
 
+		//BOTON FACRURAR PERIODO
+		
+		Boton bot_abrir= new Boton();
+		bot_abrir.setValue("Facturar periodos");
+		bot_abrir.setIcon("ui-calendario");
+		bot_abrir.setMetodo("abrirRango");
+		bar_botones.agregarBoton(bot_abrir);
+		sec_rango_fechas.setId("sec_rango_fechas");
+		sec_rango_fechas.getBot_aceptar().setMetodo("aceptarRango");
+		sec_rango_fechas.setFechaActual();
+		agregarComponente(sec_rango_fechas);
+		
 	}
-
+	
 
 	public void limpiar(){
 		aut_factura.limpiar();
@@ -131,8 +156,7 @@ public class pre_factura extends Pantalla{
 
 	//METDO AUTOCOMPLETAR
 	public void seleccionoAutocompletar(SelectEvent evt){
-		//Cuando selecciona una opcion del autocompletar
-		//siempre debe hacerse el onSelect(evt)
+		//Cuando selecciona una opcion del autocompletar siempre debe hacerse el onSelect(evt)
 		aut_factura.onSelect(evt);
 		tab_factura.setCondicion("ide_fadaf="+aut_factura.getValor());
 		tab_factura.ejecutarSql();
@@ -289,6 +313,23 @@ public class pre_factura extends Pantalla{
 		// TODO Auto-generated method stub
 		utilitario.getTablaisFocus().eliminar();
 	}
+	
+	public void abrirRango(){
+		//Hace aparecer el componente
+		sec_rango_fechas.dibujar();
+		}
+	
+	public void aceptarRango(){
+		//Si las fechas seleccionadas son válidas, muestra las fechas seleccionadas
+		if(sec_rango_fechas.isFechasValidas()){
+		utilitario.agregarMensaje("FECHA INICIO ", sec_rango_fechas.getFecha1String());
+		utilitario.agregarMensaje("FECHA FIN ", sec_rango_fechas.getFecha2String());
+		}
+		else{
+		utilitario.agregarMensajeError("Las fecha seleccionadas no son válidas", "");
+		}
+		}
+	
 	public Tabla gettab_factura() {
 		return tab_factura;
 	}
@@ -312,6 +353,16 @@ public class pre_factura extends Pantalla{
 
 	public void setAut_factura(AutoCompletar aut_factura) {
 		this.aut_factura = aut_factura;
+	}
+
+
+	public SeleccionCalendario getSec_rango_fechas() {
+		return sec_rango_fechas;
+	}
+
+
+	public void setSec_rango_fechas(SeleccionCalendario sec_rango_fechas) {
+		this.sec_rango_fechas = sec_rango_fechas;
 	}
 
 }
