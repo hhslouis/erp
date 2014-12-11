@@ -15,6 +15,7 @@ public class pre_contrato extends Pantalla {
 		tab_contrato.setId("tab_contrato");
 		tab_contrato.setHeader("CONTRATO");
 		tab_contrato.setTabla("pre_contrato", "ide_prcon", 1);
+		tab_contrato.getColumna("ide_coest").setCombo("cont_estado", " ide_coest", "detalle_coest", "");
 		tab_contrato.setTipoFormulario(true);
 		tab_contrato.getGrid().setColumns(4);
 		tab_contrato.dibujar();
