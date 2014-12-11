@@ -18,12 +18,16 @@ import paq_sistema.aplicacion.Pantalla;
 
 
 public class pre_factura extends Pantalla{
-	
+
 	private Tabla tab_factura = new Tabla();
 	private Tabla tab_detalle_factura=new Tabla();
 	private AutoCompletar aut_factura=new AutoCompletar();
+	//SELCCION TABLA
+	private SeleccionTabla set_pantalla_dias= new SeleccionTabla();
 	//CALENDARIO
 	private SeleccionCalendario sec_rango_fechas = new SeleccionCalendario();
+	private String srt_fecha_inicio;
+	private String srt_fecha_fin;
 	private double dou_por_iva=0.12;
 	double dou_base_no_iva=0;
 	double dou_base_cero=0;
@@ -31,7 +35,8 @@ public class pre_factura extends Pantalla{
 	double dou_valor_iva=0;
 	double dou_total=0;
 	
-	
+
+
 	public pre_factura() {
 
 		// TODO Auto-generated constructor stub
@@ -86,7 +91,7 @@ public class pre_factura extends Pantalla{
 		tab_detalle_factura.getColumna("ide_bomat").setAutoCompletar();
 		//definimos el metodo que va a ejecutar cuando el usuario seleccione del Autocompletar
 		tab_detalle_factura.getColumna("ide_bomat").setMetodoChange("seleccionoProducto");
-		
+
 
 		Boton bot_limpiar = new Boton();
 		bot_limpiar.setIcon("ui-icon-cancel");
@@ -100,8 +105,8 @@ public class pre_factura extends Pantalla{
 		bar_botones.agregarComponente(eti_colaborador);
 		bar_botones.agregarComponente(aut_factura);
 		bar_botones.agregarBoton(bot_limpiar);
-		
-		
+
+
 		//DETALLE FACTURA
 		tab_detalle_factura.getColumna("total_fadef").setEtiqueta();
 		tab_detalle_factura.getColumna("total_fadef").setEstilo("font-size:13px;font-weight:bold;");
@@ -114,26 +119,35 @@ public class pre_factura extends Pantalla{
 		pat_detalle_factura.setMensajeWarn("DETALLE FACTURACION");
 		pat_detalle_factura.setPanelTabla(tab_detalle_factura);
 
-			
+
 		Division div_division=new Division();
 		div_division.dividir2(pat_factura, pat_detalle_factura, "50%", "h");
 		agregarComponente(div_division);
 
 
 		//BOTON FACRURAR PERIODO
-		
-		Boton bot_abrir= new Boton();
-		bot_abrir.setValue("Facturar periodos");
-		bot_abrir.setIcon("ui-calendario");
-		bot_abrir.setMetodo("abrirRango");
-		bar_botones.agregarBoton(bot_abrir);
+		Boton bot_abrir_periodos= new Boton();
+		bot_abrir_periodos.setValue("Facturar periodos");
+		bot_abrir_periodos.setIcon("ui-calendario");
+		bot_abrir_periodos.setMetodo("abrirRango");
+		bar_botones.agregarBoton(bot_abrir_periodos);
 		sec_rango_fechas.setId("sec_rango_fechas");
 		sec_rango_fechas.getBot_aceptar().setMetodo("aceptarRango");
 		sec_rango_fechas.setFechaActual();
-		agregarComponente(sec_rango_fechas);
 		
+
+		//---SELECCION TABLA
+		set_pantalla_dias.setId("set_pantalla_dias");
+		set_pantalla_dias.setTitle("PANTALLA DEL SISTEMA");
+		set_pantalla_dias.setSeleccionTabla("fac_detalle_factura", "ide_fadef", "observacion_fadef");
+		set_pantalla_dias.getBot_aceptar().setMetodo("aceptarSeleccionTabla");
+		agregarComponente(sec_rango_fechas);
+		agregarComponente(set_pantalla_dias);
+		//BOTON PARA ABRIR LA TABLA
+		Boton bot_abrir_dias= new Boton();
+		bot_abrir_dias.setMetodo("abrirSeleccionTabla");
+				
 	}
-	
 
 	public void limpiar(){
 		aut_factura.limpiar();
@@ -142,6 +156,31 @@ public class pre_factura extends Pantalla{
 		utilitario.addUpdate("aut_factura");
 	}
 
+
+	public void aceptarSeleccionTabla(){
+		utilitario.agregarMensaje("Buscar dias", set_pantalla_dias.getSeleccionados()+"");
+		set_pantalla_dias.cerrar();
+	}
+	public void abrirRango(){
+		//Hace aparecer el componente
+		sec_rango_fechas.dibujar();
+	}
+
+	public void aceptarRango(){
+        //Si las fechas seleccionadas son válidas, muestra las fechas seleccionadas
+        if(sec_rango_fechas.isFechasValidas()){
+       //Almacenamos las fechas seleccionadas en variables
+       srt_fecha_inicio=sec_rango_fechas.getFecha1String();
+       srt_fecha_fin=sec_rango_fechas.getFecha2String();
+      //Cerramos el seleccionCalendario
+      sec_rango_fechas.cerrar();
+      //Abrimos el seleccionTabla
+      set_pantalla_dias.dibujar();
+        }
+        else{
+        utilitario.agregarMensajeError("Las fecha seleccionadas no son válidas", "");
+        }
+        }
 
 
 	//METDO AUTOCOMPLETAR
@@ -293,7 +332,7 @@ public class pre_factura extends Pantalla{
 				guardarPantalla();
 			}
 		}
-		
+
 		utilitario.getConexion().setImprimirSqlConsola(true);						
 
 	}
@@ -303,23 +342,9 @@ public class pre_factura extends Pantalla{
 		// TODO Auto-generated method stub
 		utilitario.getTablaisFocus().eliminar();
 	}
-	
-	public void abrirRango(){
-		//Hace aparecer el componente
-		sec_rango_fechas.dibujar();
-		}
-	
-	public void aceptarRango(){
-		//Si las fechas seleccionadas son válidas, muestra las fechas seleccionadas
-		if(sec_rango_fechas.isFechasValidas()){
-		utilitario.agregarMensaje("FECHA INICIO ", sec_rango_fechas.getFecha1String());
-		utilitario.agregarMensaje("FECHA FIN ", sec_rango_fechas.getFecha2String());
-		}
-		else{
-		utilitario.agregarMensajeError("Las fecha seleccionadas no son válidas", "");
-		}
-		}
-	
+
+
+
 	public Tabla gettab_factura() {
 		return tab_factura;
 	}
@@ -354,5 +379,17 @@ public class pre_factura extends Pantalla{
 	public void setSec_rango_fechas(SeleccionCalendario sec_rango_fechas) {
 		this.sec_rango_fechas = sec_rango_fechas;
 	}
+
+	public SeleccionTabla getSet_pantalla_dias() {
+		return set_pantalla_dias;
+	}
+
+	public void setSet_pantalla_dias(SeleccionTabla set_pantalla_dias) {
+		this.set_pantalla_dias = set_pantalla_dias;
+	}
+
+
+
+
 
 }
