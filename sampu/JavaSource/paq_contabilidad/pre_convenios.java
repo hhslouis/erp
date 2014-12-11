@@ -4,15 +4,22 @@
  */
 package paq_contabilidad;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.ejb.EJB;
 
+import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_general.ejb.ServicioGeneral;
 import paq_sistema.aplicacion.Pantalla;
 import framework.aplicacion.TablaGenerica;
 import framework.componentes.Arbol;
 import framework.componentes.Boton;
+import framework.componentes.Dialogo;
 import framework.componentes.Division;
 import framework.componentes.PanelTabla;
+import framework.componentes.Reporte;
+import framework.componentes.SeleccionFormatoReporte;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import framework.componentes.Tabulador;
@@ -20,21 +27,34 @@ import framework.componentes.Tabulador;
 
 public class pre_convenios extends Pantalla {
 
-    private Tabla tab_tabla1 = new Tabla();
-    private Tabla tab_tabla2 = new Tabla();
-    private Tabla tab_tabla3 = new Tabla();
+	private Tabla tab_tabla1 = new Tabla();
+	private Tabla tab_tabla2 = new Tabla();
+	private Tabla tab_tabla3 = new Tabla();
+	private Arbol arb_arbol = new Arbol();
+	public static String par_modulo_convenio;
 
-    private Arbol arb_arbol = new Arbol();
-    public static String par_tipo_persona_modulo;
-    
-  private SeleccionTabla set_tipo_persona=new SeleccionTabla();
-  private SeleccionTabla sel_tab_particular=new SeleccionTabla();
-  private SeleccionTabla sel_tab_funcionario=new SeleccionTabla();
+	private SeleccionTabla set_tipo_persona = new SeleccionTabla();
+	private SeleccionTabla sel_tab_particular = new SeleccionTabla();
+	private SeleccionTabla sel_tab_funcionario = new SeleccionTabla();
+	private Dialogo dia_estados = new Dialogo();
+	private Map p_parametros = new HashMap();
+	private Reporte rep_reporte = new Reporte();
+	private SeleccionFormatoReporte self_reporte = new SeleccionFormatoReporte();
+	private SeleccionTabla set_estados = new SeleccionTabla();
   @EJB
 	private ServicioGeneral ser_general = (ServicioGeneral ) utilitario.instanciarEJB(ServicioGeneral.class);
-  
-
+   @EJB
+ 	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
+ 
     public pre_convenios() {
+    	
+    	  	rep_reporte.setId("rep_reporte"); //id
+    		rep_reporte.getBot_aceptar().setMetodo("aceptarReporte");//ejecuta el metodo al aceptar reporte
+    		agregarComponente(rep_reporte);//agrega el componente a la pantalla
+    		bar_botones.agregarReporte();//aparece el boton de reportes en la barra de botones
+    		self_reporte.setId("self_reporte"); //id
+    		agregarComponente(self_reporte); //agrego el componente a la pantall
+    		
     	Tabulador tab_tabulador = new Tabulador();
         tab_tabulador.setId("tab_tabulador");
 
@@ -98,28 +118,35 @@ public class pre_convenios extends Pantalla {
         bot_agregar.setValue("Agregar Tipo Persona");
         bot_agregar.setMetodo("importarTipoPersona");
         bar_botones.agregarBoton(bot_agregar);
-        par_tipo_persona_modulo=utilitario.getVariable("p_tipo_persona_modulo");
+        par_modulo_convenio=utilitario.getVariable("p_modulo_convenio");
+        
 
         set_tipo_persona.setId("set_tipo_persona");
-        set_tipo_persona.setTitle("Tipo Persona");
-        set_tipo_persona.setSeleccionTabla(ser_general.getTipoPersona(par_tipo_persona_modulo),"");
+        set_tipo_persona.setSeleccionTabla(ser_general.getTipoPersona("true",par_modulo_convenio),"");
         set_tipo_persona.setTitle("Seleccione un Tipo de Persona");
-        set_tipo_persona.getBot_aceptar().setMetodo("aceptarTipoPersona");
+        set_tipo_persona.getBot_aceptar().setMetodo("aceptarTipoPersona");        
         agregarComponente(set_tipo_persona);
-        /*
-        sel_tab_particular.setId("sel_tab_particular");
-		sel_tab_particular.setTitle("PARTICULAR");
-		sel_tab_particular.setSeleccionTabla("SELECT ide_getip,detalle_getip from gen_tipo_persona WHERE ide_getip=-1 order by detalle_getip");
-		sel_tab_particular.getTab_seleccion().getColumna("detalle_getip").setFiltro(true);
-		sel_tab_particular.getBot_aceptar().setMetodo("aceptarReporte");
-		agregarComponente(sel_tab_particular);
-        */
+        inicializarSetEstados();
        
     }
-
+    
+    public void inicializarSetEstados(){
+    	set_estados.setId("set_estados");
+    	set_estados.setTitle("SELECCIONE EL/LOS ESTADOS");
+    	set_estados.setSeleccionTabla(ser_contabilidad.getModuloEstados("true,false",par_modulo_convenio), "ide_coest");
+    	set_estados.getTab_seleccion().ejecutarSql();
+    	set_estados.getBot_aceptar().setMetodo("aceptarReporte");
+        agregarComponente(set_estados);     	
+    } 
+    public void reporteSetEstados(){
+     	set_estados.setSeleccionTabla(ser_contabilidad.getModuloEstados("true,false",par_modulo_convenio), "ide_coest");
+    	set_estados.getTab_seleccion().ejecutarSql();
+    	set_estados.getBot_aceptar().setMetodo("aceptarReporte");
+ 		set_estados.dibujar();
+    }
     public void importarTipoPersona(){
     	
-    	set_tipo_persona.getTab_seleccion().setSql(ser_general.getTipoPersona(par_tipo_persona_modulo));
+    	set_tipo_persona.getTab_seleccion().setSql(ser_general.getTipoPersona("true",par_modulo_convenio));
     	set_tipo_persona.getTab_seleccion().ejecutarSql();
     	set_tipo_persona.dibujar();
     	   	
@@ -129,7 +156,7 @@ public class pre_convenios extends Pantalla {
     	String str_seleccionados=set_tipo_persona.getSeleccionados();
     	if(str_seleccionados!=null){
     		//Inserto los empleados seleccionados en la tabla de participantes 
-    		TablaGenerica tab_generica= ser_general.getTablaTipoPersona(str_seleccionados);		   		
+    		TablaGenerica tab_generica= ser_general.getTablaTipoPersona("true",str_seleccionados);		   		
     		System.out.println(" tabla generica"+tab_generica.getSql());
     		
     		for(int i=0;i<tab_generica.getTotalFilas();i++){
@@ -142,13 +169,45 @@ public class pre_convenios extends Pantalla {
     		utilitario.addUpdate("tab_tabla2");	
        	    }
     }
-
+   
     @Override
-    public void insertar() {
-        utilitario.getTablaisFocus().insertar();
-    }
+	public void abrirListaReportes() {
+		// TODO Auto-generated method stub
+		rep_reporte.dibujar();
+	}
+    	@Override
+    public void aceptarReporte(){
+    	//Pregunta que reporte selecciono el usuario
+    	if (rep_reporte.getReporteSelecionado().equals("Convenios")){
+    		if (rep_reporte.isVisible()){
+				p_parametros=new HashMap();		
+				rep_reporte.cerrar();
+				p_parametros.clear();
+			    reporteSetEstados();
 
-    @Override
+    		}
+				else if (set_estados.isVisible()){
+					if(set_estados.getListaSeleccionados().size()>0){
+					p_parametros.put("titulo", "Convenios Vigentes");
+					p_parametros.put("ide_coest",Integer.parseInt(set_estados.getSeleccionados()));
+					p_parametros.put("ide_cotie", Integer.parseInt("1"));
+					p_parametros.put("ide_geins", Integer.parseInt("40"));
+					set_estados.cerrar();
+					self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
+					self_reporte.dibujar();
+					}
+					else {
+						utilitario.agregarMensajeInfo("No se puede continuar", "No ha Seleccionado Ningun Registro");
+
+					}
+				
+				}
+    	}
+    		
+    	
+   }
+
+	@Override
     public void guardar() {
         if (tab_tabla1.guardar()) {
             if (tab_tabla2.guardar()) {
@@ -163,6 +222,10 @@ public class pre_convenios extends Pantalla {
     @Override
     public void eliminar() {
         utilitario.getTablaisFocus().eliminar();
+    }
+    @Override
+	public void insertar() {
+        utilitario.getTablaisFocus().insertar();
     }
 
     public Arbol getArb_arbol() {
@@ -205,5 +268,30 @@ public class pre_convenios extends Pantalla {
 		this.set_tipo_persona = set_tipo_persona;
 	}
 
+	public Reporte getRep_reporte() {
+		return rep_reporte;
+	}
+
+	public void setRep_reporte(Reporte rep_reporte) {
+		this.rep_reporte = rep_reporte;
+	}
+
+	public SeleccionFormatoReporte getSelf_reporte() {
+		return self_reporte;
+	}
+
+	public void setSelf_reporte(SeleccionFormatoReporte self_reporte) {
+		this.self_reporte = self_reporte;
+	}
+
+    public SeleccionTabla getSet_estados() {
+			return set_estados;
+	}
+
+	public void setSet_estados(SeleccionTabla set_estados) {
+			this.set_estados = set_estados;
+	}
+
+	
   
 }
