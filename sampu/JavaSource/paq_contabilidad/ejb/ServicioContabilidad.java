@@ -57,4 +57,12 @@ public TablaGenerica getTablaAnio (String activo, String bloqueado ){
 			" order by detalle_geani desc");
 	return tab_anio;
 	}
+
+public String getModuloEstados (String estado,String modulo){
+	String consultaEstados="SELECT a.ide_coest,detalle_coest,detalle_gemod "
++"FROM gen_modulo_estado a,cont_estado b, gen_modulo c "
++"WHERE a.ide_coest= b.ide_coest AND a.ide_gemod = c.ide_gemod "
++"AND activo_gemoe in ("+estado+") AND a.ide_gemod ="+modulo+" order by detalle_coest";
+	return consultaEstados;
+}
 }
