@@ -274,7 +274,9 @@ public class Parametros {
         /*
          *  CONVENIOS = 12
          * */
-        lis_parametros.add(new Parametro("12", "p_tipo_persona_modulo","Indica lo tipos de persona que pueden clasificarse en los convenios","1","gen_modulo","ide_gemod","detalle_gemod"));
+        
+        lis_parametros.add(new Parametro("12", "p_modulo_convenio","Indica el modulo que pertenece a convenios","1","gen_modulo","ide_gemod","detalle_gemod"));
         return lis_parametros;
+
     }
 }
