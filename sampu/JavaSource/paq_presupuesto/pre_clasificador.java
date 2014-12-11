@@ -7,8 +7,7 @@ import framework.componentes.Arbol;
 import framework.componentes.Division;
 import framework.componentes.PanelTabla;
 import framework.componentes.Tabla;
-import paq_contabilidad.ejb.ServicioContabiliadad;
-import paq_contabilidad.ejb.ServicioContabiliadad;
+import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_sistema.aplicacion.Pantalla;
 import org.primefaces.event.NodeSelectEvent;
 
@@ -17,7 +16,7 @@ public class pre_clasificador extends Pantalla {
 	private Tabla tab_vigente=new Tabla();
 	private Arbol arb_clasificador=new Arbol();
 	 @EJB
-	private ServicioContabiliadad ser_contabilidad = (ServicioContabiliadad ) utilitario.instanciarEJB(ServicioContabiliadad.class);
+	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
 		
 
 
@@ -51,7 +50,7 @@ public class pre_clasificador extends Pantalla {
 		tab_vigente.getColumna("ide_geani").setCombo("gen_anio","ide_geani","detalle_geani","");
 		tab_vigente.getColumna("ide_geani").setUnico(true);
 		tab_vigente.getColumna("ide_prcla").setUnico(true);
-		// ocultar campos de las claves  foraneas
+		 //ocultar campos de las claves  foraneas
 		TablaGenerica  tab_generica=ser_contabilidad.getTablaVigente("cont_vigente");
 		for(int i=0;i<tab_generica.getTotalFilas();i++){
 		//muestra los ides q quiere mostras.
