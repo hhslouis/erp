@@ -65,4 +65,38 @@ public String getModuloEstados (String estado,String modulo){
 +"AND activo_gemoe in ("+estado+") AND a.ide_gemod ="+modulo+" order by detalle_coest";
 	return consultaEstados;
 }
+public TablaGenerica getTablaTipoConvenio (String tipo_convenio,String detalle ){
+	TablaGenerica tab_tipo_convenio= utilitario.consultar("select ide_cotie,detalle_cotie" +
+			"activo_cotie from cont_tipo_convenio" +
+			"where activo_cotie in (true,false) " +
+			"ordey by detalle_cotie");
+	
+		return tab_tipo_convenio;
+}
+
+public String getTipoConvenio (String tipo_convenio, String detalle){
+	String Tipo_convenio ="select ide_cotie,detalle_cotie" +
+			"activo_cotie from cont_tipo_convenio" +
+			"where activo_cotie in (true,false) " +
+			"ordey by detalle_cotie";
+	 	
+	return tipo_convenio ;
+
+}
+public TablaGenerica getTablaInstitucion ( String institucion, String detalle){
+	TablaGenerica tab_institucion= utilitario.consultar("select ide_geins,detalle_geins, activo_geins" +
+			"from gen_institucion" +
+			"where activo_geins in (true,false) "+
+			"ordey by detalle_institucion");
+	return tab_institucion;	
+	
+	}
+public String getInstitucion (String institucion, String detalle){
+	String Institucion ="select ide_geins,detalle_geins, activo_geins" +
+			"from gen_institucion" +
+			"where activo_geins in (true,false) "+
+			"ordey by detalle_institucion";
+	return institucion;
+}
+
 }
