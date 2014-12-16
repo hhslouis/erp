@@ -1,6 +1,5 @@
 package paq_facturacion;
-
-import java.sql.Date;
+import java.util.Date;
 
 import javax.faces.event.AjaxBehaviorEvent;
 
@@ -142,8 +141,8 @@ public class pre_factura extends Pantalla{
 		set_pantalla_dias.setId("set_pantalla_dias");
 		set_pantalla_dias.setTitle("PANTALLA DEL SISTEMA");
 		//CONSULTA
-		//set_pantalla_dias.setSeleccionTabla("select fecha_ingre from fac_detalle_factura", "ide_fadef");
-		set_pantalla_dias.setSql("select fecha_ingre as fecha from fac_detalle_factura");
+		set_pantalla_dias.setSeleccionTabla("select '' as dia, ''  as fecha from sis_empresa where ide_empr=-1","dia");
+		//set_pantalla_dias.setSql("select fecha_ingre as fecha from fac_detalle_factura");
 		set_pantalla_dias.getBot_aceptar().setMetodo("aceptarSeleccionTabla");
 		agregarComponente(sec_rango_fechas);
 		agregarComponente(set_pantalla_dias);
@@ -153,7 +152,7 @@ public class pre_factura extends Pantalla{
 
 	}
 	public void insertarDias(){
-		Date dat_fecha_actual;
+		
 		//limpiamos el seleccion tabla
 		set_pantalla_dias.Limpiar();
 		set_pantalla_dias.getTab_seleccion().setLectura(false);//para qpermita insertar
@@ -162,7 +161,7 @@ public class pre_factura extends Pantalla{
 				utilitario.getFecha(srt_fecha_fin));
 		System.out.println("NUM DIAS: "+int_num_dias);
 		//Insertamos el rango de dias
-		dat_fecha_actual=(Date) utilitario.getFecha(srt_fecha_fin);//fecha q vamos a restar los dias
+		Date dat_fecha_actual=utilitario.getFecha(srt_fecha_fin);//fecha q vamos a restar los dias
 		for(int i=int_num_dias;i>=0;i--){
 			//insertamos en la tabla seleccion
 			set_pantalla_dias.getTab_seleccion().insertar();
@@ -170,7 +169,7 @@ public class pre_factura extends Pantalla{
 			set_pantalla_dias.getTab_seleccion().setValor("dia", i+"");
 			set_pantalla_dias.getTab_seleccion().setValor("fecha",utilitario.getFormatoFecha(dat_fecha_actual));
 			//resto un dia a la fecha
-			dat_fecha_actual= (Date) utilitario.sumarDiasFecha(dat_fecha_actual,1 );
+			dat_fecha_actual= utilitario.sumarDiasFecha(dat_fecha_actual,1 );
 		}
 	}
 	public void limpiar(){
