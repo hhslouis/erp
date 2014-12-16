@@ -154,7 +154,7 @@ public class pre_factura extends Pantalla{
 	public void insertarDias(){
 		
 		//limpiamos el seleccion tabla
-		set_pantalla_dias.Limpiar();
+		set_pantalla_dias.getTab_seleccion().limpiar();
 		set_pantalla_dias.getTab_seleccion().setLectura(false);//para qpermita insertar
 		//Obtenemos el numero de dias entre las dos fechas
 		int int_num_dias=utilitario.getDiferenciasDeFechas(utilitario.getFecha(srt_fecha_inicio),
