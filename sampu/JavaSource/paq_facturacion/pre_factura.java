@@ -1,5 +1,7 @@
 package paq_facturacion;
 
+import java.sql.Date;
+
 import javax.faces.event.AjaxBehaviorEvent;
 
 import framework.aplicacion.TablaGenerica;
@@ -34,7 +36,7 @@ public class pre_factura extends Pantalla{
 	double dou_base_aprobada=0;
 	double dou_valor_iva=0;
 	double dou_total=0;
-	
+
 
 
 	public pre_factura() {
@@ -134,21 +136,43 @@ public class pre_factura extends Pantalla{
 		sec_rango_fechas.setId("sec_rango_fechas");
 		sec_rango_fechas.getBot_aceptar().setMetodo("aceptarRango");
 		sec_rango_fechas.setFechaActual();
-		
+
 
 		//---SELECCION TABLA
 		set_pantalla_dias.setId("set_pantalla_dias");
 		set_pantalla_dias.setTitle("PANTALLA DEL SISTEMA");
-		set_pantalla_dias.setSeleccionTabla("fac_detalle_factura", "ide_fadef", "observacion_fadef");
+		//CONSULTA
+		//set_pantalla_dias.setSeleccionTabla("select fecha_ingre from fac_detalle_factura", "ide_fadef");
+		set_pantalla_dias.setSql("select fecha_ingre as fecha from fac_detalle_factura");
 		set_pantalla_dias.getBot_aceptar().setMetodo("aceptarSeleccionTabla");
 		agregarComponente(sec_rango_fechas);
 		agregarComponente(set_pantalla_dias);
 		//BOTON PARA ABRIR LA TABLA
 		Boton bot_abrir_dias= new Boton();
 		bot_abrir_dias.setMetodo("abrirSeleccionTabla");
-				
-	}
 
+	}
+	public void insertarDias(){
+		Date dat_fecha_actual;
+		//limpiamos el seleccion tabla
+		set_pantalla_dias.Limpiar();
+		set_pantalla_dias.getTab_seleccion().setLectura(false);//para qpermita insertar
+		//Obtenemos el numero de dias entre las dos fechas
+		int int_num_dias=utilitario.getDiferenciasDeFechas(utilitario.getFecha(srt_fecha_inicio),
+				utilitario.getFecha(srt_fecha_fin));
+		System.out.println("NUM DIAS: "+int_num_dias);
+		//Insertamos el rango de dias
+		dat_fecha_actual=(Date) utilitario.getFecha(srt_fecha_fin);//fecha q vamos a restar los dias
+		for(int i=int_num_dias;i>=0;i--){
+			//insertamos en la tabla seleccion
+			set_pantalla_dias.getTab_seleccion().insertar();
+			//asignamos valores a los capos insertados
+			set_pantalla_dias.getTab_seleccion().setValor("dia", i+"");
+			set_pantalla_dias.getTab_seleccion().setValor("fecha",utilitario.getFormatoFecha(dat_fecha_actual));
+			//resto un dia a la fecha
+			dat_fecha_actual= (Date) utilitario.sumarDiasFecha(dat_fecha_actual,1 );
+		}
+	}
 	public void limpiar(){
 		aut_factura.limpiar();
 		tab_factura.limpiar();
@@ -166,7 +190,9 @@ public class pre_factura extends Pantalla{
 		sec_rango_fechas.dibujar();
 	}
 
-	public void aceptarRango(){
+
+
+public void aceptarRango(){
         //Si las fechas seleccionadas son válidas, muestra las fechas seleccionadas
         if(sec_rango_fechas.isFechasValidas()){
        //Almacenamos las fechas seleccionadas en variables
@@ -174,6 +200,7 @@ public class pre_factura extends Pantalla{
        srt_fecha_fin=sec_rango_fechas.getFecha2String();
       //Cerramos el seleccionCalendario
       sec_rango_fechas.cerrar();
+      insertarDias();  // llenamos la tabla
       //Abrimos el seleccionTabla
       set_pantalla_dias.dibujar();
         }
@@ -181,6 +208,7 @@ public class pre_factura extends Pantalla{
         utilitario.agregarMensajeError("Las fecha seleccionadas no son válidas", "");
         }
         }
+
 
 
 	//METDO AUTOCOMPLETAR
