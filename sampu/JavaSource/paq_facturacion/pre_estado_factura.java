@@ -1,5 +1,8 @@
 package paq_facturacion;
 
+import org.primefaces.event.SelectEvent;
+
+import framework.componentes.AutoCompletar;
 import framework.componentes.PanelTabla;
 import framework.componentes.Tabla;
 import paq_sistema.aplicacion.Pantalla;
@@ -13,6 +16,7 @@ public class pre_estado_factura extends Pantalla{
 		tab_cont_estado.setHeader("FACTURACÓN");
 		tab_cont_estado.setId("tab_cont_estado");
 		tab_cont_estado.setTabla("cont_estado","ide_coest", 1);
+		
 		tab_cont_estado.dibujar();
 		PanelTabla pat_estado_factura=new PanelTabla();
 		pat_estado_factura.setPanelTabla(tab_cont_estado);
@@ -22,6 +26,7 @@ public class pre_estado_factura extends Pantalla{
 	}
 
 
+	
 	@Override
 	public void insertar() {
 		// TODO Auto-generated method stub
