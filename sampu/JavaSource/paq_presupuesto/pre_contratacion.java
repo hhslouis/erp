@@ -2,6 +2,9 @@ package paq_presupuesto;
 
 
 
+import javax.ejb.EJB;
+
+import framework.aplicacion.TablaGenerica;
 import framework.componentes.Boton;
 import framework.componentes.Combo;
 import framework.componentes.Division;
@@ -11,6 +14,7 @@ import framework.componentes.PanelTabla;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import framework.componentes.Tabulador;
+import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_sistema.aplicacion.Pantalla;
 
 public class pre_contratacion extends Pantalla{
@@ -25,6 +29,11 @@ public class pre_contratacion extends Pantalla{
 	private Combo com_anio=new Combo();
 
 	private SeleccionTabla set_clasificador=new SeleccionTabla();
+	
+	 @EJB
+	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
+			
+
 
 
 
@@ -112,6 +121,15 @@ public class pre_contratacion extends Pantalla{
 		tab_archivo.setTabla("pre_archivo","ide_prarc",5);
 		tab_archivo.getColumna("foto_prarc").setUpload("presupuesto");
 		tab_archivo.setCampoForanea("ide_prpoa");
+		//ocultar campos de las claves  foraneas
+				TablaGenerica  tab_generica=ser_contabilidad.getTablaVigente("pre_archivo");
+				for(int i=0;i<tab_generica.getTotalFilas();i++){
+				//muestra los ides q quiere mostras.
+				//if(!tab_generica.getValor(i, "column_name").equals("ide_prpoa")){	
+				tab_archivo.getColumna(tab_generica.getValor(i, "column_name")).setVisible(false);	
+				//}				
+				
+		   		}
 		tab_archivo.dibujar();
 		PanelTabla pat_panel5= new PanelTabla();
 		pat_panel5.setPanelTabla(tab_archivo);
