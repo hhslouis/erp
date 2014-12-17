@@ -141,7 +141,7 @@ public class pre_factura extends Pantalla{
 		set_pantalla_dias.setId("set_pantalla_dias");
 		set_pantalla_dias.setTitle("PANTALLA DEL SISTEMA");
 		//CONSULTA
-		set_pantalla_dias.setSeleccionTabla("select '' as dia, ''  as fecha from sis_empresa where ide_empr=-1","dia");
+		set_pantalla_dias.setSeleccionTabla("select ide_empr,''  as dia from sis_empresa where ide_empr=-1",  "ide_empr");
 		//set_pantalla_dias.setSql("select fecha_ingre as fecha from fac_detalle_factura");
 		set_pantalla_dias.getBot_aceptar().setMetodo("aceptarSeleccionTabla");
 		agregarComponente(set_pantalla_dias);
@@ -159,7 +159,7 @@ public class pre_factura extends Pantalla{
 
 
 public void aceptarRango(){
-        //Si las fechas seleccionadas son v�lidas, muestra las fechas seleccionadas
+        //Si las fechas seleccionadas son válidas, muestra las fechas seleccionadas
         if(sec_rango_fechas.isFechasValidas()){
        //Almacenamos las fechas seleccionadas en variables
        srt_fecha_inicio=sec_rango_fechas.getFecha1String();
@@ -171,7 +171,7 @@ public void aceptarRango(){
       set_pantalla_dias.dibujar();
         }
         else{
-        utilitario.agregarMensajeError("Las fecha seleccionadas no son v�lidas", "");
+        utilitario.agregarMensajeError("Las fecha seleccionadas no son válidas", "");
         }
         }
 
@@ -189,9 +189,10 @@ public void aceptarRango(){
 		for(int i=int_num_dias;i>=0;i--){
 			//insertamos en la tabla seleccion
 			set_pantalla_dias.getTab_seleccion().insertar();
+      set_pantalla_dias.getTab_seleccion().getFilaSeleccionada().setRowKey((i+1)+"");	
 			//asignamos valores a los capos insertados
-			set_pantalla_dias.getTab_seleccion().setValor("dia", i+"");
-			set_pantalla_dias.getTab_seleccion().setValor("fecha",utilitario.getFormatoFecha(dat_fecha_actual));
+			set_pantalla_dias.getTab_seleccion().setValor("ide_empr", i+"");
+			set_pantalla_dias.getTab_seleccion().setValor("dia", utilitario.getFormatoFecha(dat_fecha_actual));
 			//resto un dia a la fecha
 			dat_fecha_actual= utilitario.sumarDiasFecha(dat_fecha_actual,1 );
 		}
@@ -346,7 +347,7 @@ public void aceptarRango(){
 			}
 		}
 		else{
-			utilitario.agregarMensajeError("Debe seleccionar los datos de Facturación","");
+			utilitario.agregarMensajeError("Debe seleccionar los datos de FacturaciÃ³n","");
 		}
 	}
 
