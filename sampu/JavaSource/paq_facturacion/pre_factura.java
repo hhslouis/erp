@@ -182,7 +182,7 @@ public class pre_factura extends Pantalla{
 		int int_num_dias=utilitario.getDiferenciasDeFechas(utilitario.getFecha(srt_fecha_inicio), utilitario.getFecha(srt_fecha_fin));
 		System.out.println("NUM DIAS: "+int_num_dias);
 		//Insertamos el rango de dias
-		Date dat_fecha_actual=utilitario.getFecha(srt_fecha_fin);//fecha q vamos a restar los dias
+		Date dat_fecha_actual=utilitario.getFecha(srt_fecha_inicio);//fecha q vamos a restar los dias
 		for(int i=int_num_dias;i>=0;i--){
 			//insertamos en la tabla seleccion
 			set_pantalla_dias.getTab_seleccion().insertar();
