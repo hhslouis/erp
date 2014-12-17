@@ -144,45 +144,12 @@ public class pre_factura extends Pantalla{
 		set_pantalla_dias.setSeleccionTabla("select '' as dia, ''  as fecha from sis_empresa where ide_empr=-1","dia");
 		//set_pantalla_dias.setSql("select fecha_ingre as fecha from fac_detalle_factura");
 		set_pantalla_dias.getBot_aceptar().setMetodo("aceptarSeleccionTabla");
-		agregarComponente(sec_rango_fechas);
 		agregarComponente(set_pantalla_dias);
+		agregarComponente(sec_rango_fechas);
 		//BOTON PARA ABRIR LA TABLA
 		Boton bot_abrir_dias= new Boton();
 		bot_abrir_dias.setMetodo("abrirSeleccionTabla");
 
-	}
-	public void insertarDias(){
-		
-		//limpiamos el seleccion tabla
-		set_pantalla_dias.getTab_seleccion().limpiar();
-		set_pantalla_dias.getTab_seleccion().setLectura(false);//para qpermita insertar
-		//Obtenemos el numero de dias entre las dos fechas
-		int int_num_dias=utilitario.getDiferenciasDeFechas(utilitario.getFecha(srt_fecha_inicio),
-				utilitario.getFecha(srt_fecha_fin));
-		System.out.println("NUM DIAS: "+int_num_dias);
-		//Insertamos el rango de dias
-		Date dat_fecha_actual=utilitario.getFecha(srt_fecha_fin);//fecha q vamos a restar los dias
-		for(int i=int_num_dias;i>=0;i--){
-			//insertamos en la tabla seleccion
-			set_pantalla_dias.getTab_seleccion().insertar();
-			//asignamos valores a los capos insertados
-			set_pantalla_dias.getTab_seleccion().setValor("dia", i+"");
-			set_pantalla_dias.getTab_seleccion().setValor("fecha",utilitario.getFormatoFecha(dat_fecha_actual));
-			//resto un dia a la fecha
-			dat_fecha_actual= utilitario.sumarDiasFecha(dat_fecha_actual,1 );
-		}
-	}
-	public void limpiar(){
-		aut_factura.limpiar();
-		tab_factura.limpiar();
-		tab_detalle_factura.limpiar();
-		utilitario.addUpdate("aut_factura");
-	}
-
-
-	public void aceptarSeleccionTabla(){
-		utilitario.agregarMensaje("Buscar dias", set_pantalla_dias.getSeleccionados()+"");
-		set_pantalla_dias.cerrar();
 	}
 	public void abrirRango(){
 		//Hace aparecer el componente
@@ -208,6 +175,38 @@ public void aceptarRango(){
         }
         }
 
+	public void insertarDias(){
+		
+		//limpiamos el seleccion tabla
+		set_pantalla_dias.getTab_seleccion().limpiar();
+		set_pantalla_dias.getTab_seleccion().setLectura(false);//para qpermita insertar
+		//Obtenemos el numero de dias entre las dos fechas
+		int int_num_dias=utilitario.getDiferenciasDeFechas(utilitario.getFecha(srt_fecha_inicio),
+				utilitario.getFecha(srt_fecha_fin));
+		System.out.println("NUM DIAS: "+int_num_dias);
+		//Insertamos el rango de dias
+		Date dat_fecha_actual=utilitario.getFecha(srt_fecha_fin);//fecha q vamos a restar los dias
+		for(int i=int_num_dias;i>=0;i--){
+			//insertamos en la tabla seleccion
+			set_pantalla_dias.getTab_seleccion().insertar();
+			//asignamos valores a los capos insertados
+			set_pantalla_dias.getTab_seleccion().setValor("dia", i+"");
+			set_pantalla_dias.getTab_seleccion().setValor("fecha",utilitario.getFormatoFecha(dat_fecha_actual));
+			//resto un dia a la fecha
+			dat_fecha_actual= utilitario.sumarDiasFecha(dat_fecha_actual,1 );
+		}
+	}
+
+	public void aceptarSeleccionTabla(){
+		utilitario.agregarMensaje("Buscar dias", set_pantalla_dias.getSeleccionados()+"");
+		set_pantalla_dias.cerrar();
+	}
+	public void limpiar(){
+		aut_factura.limpiar();
+		tab_factura.limpiar();
+		tab_detalle_factura.limpiar();
+		utilitario.addUpdate("aut_factura");
+	}
 
 
 	//METDO AUTOCOMPLETAR
