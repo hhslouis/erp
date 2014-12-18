@@ -114,6 +114,8 @@ public class pre_factura extends Pantalla{
 		//LLAMAR A ESTE METODO CUANDO EL USUARIO, MODIFIQUE LA CANTIDAD O EL VALOR DESDE LA APLICACION
 		tab_detalle_factura.getColumna("cantidad_fadef").setMetodoChange("calcularDetalle");
 		tab_detalle_factura.getColumna("valor_fadef").setMetodoChange("calcularDetalle");
+		tab_detalle_factura.setTipoFormulario(true);
+		tab_detalle_factura.getGrid().setColumns(4);
 		tab_detalle_factura.dibujar();
 
 		PanelTabla pat_detalle_factura= new PanelTabla();
@@ -191,7 +193,9 @@ public class pre_factura extends Pantalla{
 			set_pantalla_dias.getTab_seleccion().getFilaSeleccionada().setRowKey((i+1)+"");
 			//asignamos valores a los capos insertados
 			set_pantalla_dias.getTab_seleccion().setValor("ide_empr", i+"");
-			set_pantalla_dias.getTab_seleccion().setValor("dia",utilitario.getFormatoFecha(dat_fecha_actual));
+			//set_pantalla_dias.getTab_seleccion().setValor("dia",utilitario.getFormatoFecha(dat_fecha_actual));
+			//FECHA LARGA
+			set_pantalla_dias.getTab_seleccion().setValor("dia",utilitario.getFechaLarga(utilitario.getFormatoFecha(dat_fecha_actual)));
 			//resto un dia a la fecha
 			dat_fecha_actual=utilitario.sumarDiasFecha(dat_fecha_actual,1 );
 		}
@@ -330,7 +334,7 @@ public class pre_factura extends Pantalla{
 		tab_factura.setValor("base_aprobada_fafac",utilitario.getFormatoNumero(dou_base_aprobada,3));
 		tab_factura.setValor("valor_iva_fafac",utilitario.getFormatoNumero(dou_valor_iva,3));
 		tab_factura.setValor("total_fafac",utilitario.getFormatoNumero(dou_total,3));
-
+		tab_detalle_factura.modificar(tab_factura.getFilaActual());//para que haga el update
 	}
 
 	@Override
@@ -349,7 +353,7 @@ public class pre_factura extends Pantalla{
 			utilitario.agregarMensajeError("Debe seleccionar los datos de FacturaciÃ³n","");
 		}
 	}
-
+	
 	@Override
 	public void guardar() {
 		// TODO Auto-generated method stub
