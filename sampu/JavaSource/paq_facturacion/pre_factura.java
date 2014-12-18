@@ -167,6 +167,7 @@ public class pre_factura extends Pantalla{
 			sec_rango_fechas.cerrar(); 	  
 			  
 			//Abrimos el seleccionTabla
+      set_pantalla_dias.setDynamic(false);
       set_pantalla_dias.dibujar();
       insertarDias();  // llenamos la tabla
 		}
