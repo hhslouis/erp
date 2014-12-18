@@ -165,9 +165,10 @@ public class pre_factura extends Pantalla{
 			srt_fecha_fin=sec_rango_fechas.getFecha2String();
 			//Cerramos el seleccionCalendario
 			sec_rango_fechas.cerrar();
-			insertarDias();  // llenamos la tabla
+			//PARA Q ORDENE
+			insertarDias();  // llenamos la tabla  
 			//Abrimos el seleccionTabla
-			set_pantalla_dias.dibujar();
+            set_pantalla_dias.dibujar();
 		}
 		else{
 			utilitario.agregarMensajeError("Las fecha seleccionadas no son válidas", "");
