@@ -231,11 +231,17 @@ public class pre_factura extends Pantalla{
 	}
 
 	public void aceptarSeleccionTabla(){
-		utilitario.agregarMensaje("Buscar dias", set_pantalla_dias.getSeleccionados()+"");
-		set_insertarBodega.getTab_seleccion().insertar();
-		set_insertarBodega.dibujar();
-		set_pantalla_dias.cerrar();
-	}
+		String str_seleccionados=set_insertarBodega.getSeleccionados();
+		if(str_seleccionados!=null){ //valida que seleccione almenos 1 dia
+		   utilitario.agregarMensaje("Buscar dias",set_pantalla_dias.getSeleccionados()+"");
+		   set_pantalla_dias.cerrar(); //cierro seleccion dias
+		   set_insertarBodega.dibujar(); //abro seleccion bodega
+		}
+		else{
+		utilitario.agregarMensajeError("Debe seleccionar almenos un día", "");
+		}
+ }
+	
 	public void limpiar(){
 		aut_factura.limpiar();
 		tab_factura.limpiar();
