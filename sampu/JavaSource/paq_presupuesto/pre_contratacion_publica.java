@@ -4,6 +4,7 @@ import javax.ejb.EJB;
 
 import framework.aplicacion.TablaGenerica;
 import framework.componentes.Boton;
+import framework.componentes.Confirmar;
 import framework.componentes.Dialogo;
 import framework.componentes.Division;
 import framework.componentes.Etiqueta;
@@ -23,7 +24,9 @@ public class pre_contratacion_publica extends Pantalla {
 	private Tabla tab_partida=new Tabla();
 	private Tabla tab_archivo=new Tabla();
 	private SeleccionTabla set_empleado=new SeleccionTabla();
+	private SeleccionTabla set_actualizar = new SeleccionTabla();
 	private Dialogo dia_empleado=new Dialogo();
+	private Confirmar con_guardar =new Confirmar();
 	
 	@EJB
 	private ServicioGestion ser_gestion = (ServicioGestion) utilitario.instanciarEJB(ServicioGestion.class);
@@ -113,7 +116,7 @@ public class pre_contratacion_publica extends Pantalla {
 
 		tab_tabulador.agregarTab("RESPONSABLES DE CONTRATACION", pat_panel2);//intancia los tabuladores 
 		tab_tabulador.agregarTab("CONTRATACION PARTIDA",pat_panel3);
-		tab_tabulador.agregarTab("ARCHIVOS",pat_panel5);
+		tab_tabulador.agregarTab("ARCHIVOS ANEXOS",pat_panel5);
 		
 
 		//division2
@@ -124,11 +127,13 @@ public class pre_contratacion_publica extends Pantalla {
 		//Pantalla Dialogo 
 		//bara el boton empleado 
 		Boton bot_empleado=new Boton();
+		bot_empleado.setIcon("ui-icon-person");
 		bot_empleado.setValue("Agregar Responsable");
 		bot_empleado.setMetodo("importarEmpleado");
 		bar_botones.agregarBoton(bot_empleado);
+		con_guardar.setId("con_guardar");
+		agregarComponente(con_guardar);
 				
-			
 		set_empleado.setId("set_empleado");
 		set_empleado.setSeleccionTabla(ser_nomina.servicioEmpleadoContrato("true"),"ide_geedp");
 		set_empleado.getTab_seleccion().getColumna("documento_identidad_gtemp").setFiltro(true);
@@ -136,11 +141,66 @@ public class pre_contratacion_publica extends Pantalla {
 		set_empleado.setTitle("Seleccione un Empleado");
 		set_empleado.getBot_aceptar().setMetodo("aceptarEmpleado");
 		agregarComponente(set_empleado);
+	
+		// Boton Actualizar Representante
+		Boton bot_actualizar=new Boton();
+		bot_actualizar.setIcon("ui-icon-person");
+		bot_actualizar.setValue("Actualizar Responsable");
+		bot_actualizar.setMetodo("actualizarResponsable");
+		bar_botones.agregarBoton(bot_actualizar);
 		
+		set_actualizar.setId("set_actualizar");
+		set_actualizar.setSeleccionTabla(ser_nomina.servicioEmpleadoContrato("true"),"ide_geedp");
+		set_actualizar.getTab_seleccion().getColumna("documento_identidad_gtemp").setFiltro(true);
+		set_actualizar.getTab_seleccion().getColumna("nombres_apellidos").setFiltro(true);
+		set_actualizar.setRadio();
+		set_actualizar.getBot_aceptar().setMetodo("modificarResponsable");
+		agregarComponente(set_actualizar);	
+		
+	
 		
 		
 	}
+	public void actualizarResponsable(){
+		if (tab_responsable.getValor("ide_prrec")==null){
+			utilitario.agregarMensajeInfo("Debe seleccionar un Responsable para actualizar","");
+			return;
+		}
+		set_actualizar.getTab_seleccion().setSql(ser_nomina.servicioEmpleadoContrato("true"));
+		set_actualizar.getTab_seleccion().ejecutarSql();
+		set_actualizar.dibujar();	
+		
+	}
+	public void modificarResponsable(){
+		String str_empleadoActualizado=set_actualizar.getValorSeleccionado();
+	   	TablaGenerica tab_empleadoModificadoResponsable = ser_nomina.ideEmpleadoContrato(str_empleadoActualizado);		
+	    tab_responsable.setValor("IDE_GEEDP", tab_empleadoModificadoResponsable.getValor("IDE_GEEDP"));			
+	    tab_responsable.setValor("IDE_GTEMP", tab_empleadoModificadoResponsable.getValor("IDE_GTEMP"));	
+	    tab_responsable.modificar(tab_responsable.getFilaActual());
+		utilitario.addUpdate("tab_responsable");	
 
+		con_guardar.setMessage("Esta Seguro de Actualizar el Responsable");
+		con_guardar.setTitle("CONFIRMCION DE ACTUALIZAR");
+		con_guardar.getBot_aceptar().setMetodo("guardarActualilzarResponsable");
+		con_guardar.dibujar();
+		utilitario.addUpdate("con_guardar");
+
+
+	}
+	public void guardarActualilzarResponsable(){
+		System.out.println("Entra a guardar...");
+		tab_responsable.guardar();
+		con_guardar.cerrar();
+		set_actualizar.cerrar();
+
+
+		guardarPantalla();
+
+	}
+
+
+
+		
 	public void importarEmpleado(){
 		if (tab_contratacion.isEmpty()) {
 			utilitario.agregarMensajeInfo("Debe ingresar un registro en el contrato", "");
@@ -160,7 +220,7 @@ public class pre_contratacion_publica extends Pantalla {
 				//Inserto los empleados seleccionados en la tabla de resposable d econtratacion 
 				TablaGenerica tab_empleado_responsable = ser_nomina.ideEmpleadoContrato(str_seleccionados);		
 							
-				System.out.println(" tabla generica"+tab_empleado_responsable.getSql());
+				
 				for(int i=0;i<tab_empleado_responsable.getTotalFilas();i++){
 					tab_responsable.insertar();
 					tab_responsable.setValor("IDE_GEEDP", tab_empleado_responsable.getValor(i, "IDE_GEEDP"));			
@@ -190,11 +250,8 @@ public class pre_contratacion_publica extends Pantalla {
 	@Override
 	public void insertar() {
 		// TODO Auto-generated method stub
-		/*if(com_anio.getValue()==null){
-			utilitario.agregarMensaje("No se puede insertar", "Debe Seleccionar un Año");
-			return;
-
-		}*/
+		
+		
 		if (tab_contratacion.isFocus()) {
 			tab_contratacion.insertar();
 			//tab_contratacion.setValor("ide_geani", com_anio.getValue()+"");
@@ -292,6 +349,18 @@ public class pre_contratacion_publica extends Pantalla {
 
 	public void setDia_empleado(Dialogo dia_empleado) {
 		this.dia_empleado = dia_empleado;
+	}
+	public SeleccionTabla getSet_actualizar() {
+		return set_actualizar;
+	}
+	public void setSet_actualizar(SeleccionTabla set_actualizar) {
+		this.set_actualizar = set_actualizar;
+	}
+	public Confirmar getCon_guardar() {
+		return con_guardar;
+	}
+	public void setCon_guardar(Confirmar con_guardar) {
+		this.con_guardar = con_guardar;
 	}
 
 
