@@ -57,6 +57,7 @@ public class pre_factura extends Pantalla{
 		tab_factura.getColumna("ide_tedar").setVisible(false);
 		//tab_factura.getColumna("ide_retip").setCombo("rec_tipo", "ide_retip", "detalle_retip", "");
 		tab_factura.getColumna("ide_coest").setCombo("cont_estado", "ide_coest", "detalle_coest", "");
+		tab_factura.getColumna("ide_tetid").setCombo("tes_tipo_documento", "ide_tetid", "detalle_tetid", "");
 		tab_factura.getColumna("ide_recli").setCombo("select ide_recli,nombre_comercial_recli from rec_clientes order by nombre_comercial_recli");
 
 		//TOTALES DE COLOR ROJO--ESTILO DE COLOR ROJO Y NEGRILLA
@@ -334,7 +335,7 @@ public class pre_factura extends Pantalla{
 		tab_factura.setValor("base_aprobada_fafac",utilitario.getFormatoNumero(dou_base_aprobada,3));
 		tab_factura.setValor("valor_iva_fafac",utilitario.getFormatoNumero(dou_valor_iva,3));
 		tab_factura.setValor("total_fafac",utilitario.getFormatoNumero(dou_total,3));
-		tab_detalle_factura.modificar(tab_factura.getFilaActual());//para que haga el update
+		tab_factura.modificar(tab_factura.getFilaActual());//para que haga el update
 	}
 
 	@Override
@@ -369,9 +370,18 @@ public class pre_factura extends Pantalla{
 
 	@Override
 	public void eliminar() {
-		// TODO Auto-generated method stub
-		utilitario.getTablaisFocus().eliminar();
-	}
+        // TODO Auto-generated method stub
+        utilitario.getTablaisFocus().eliminar();
+        if(tab_detalle_factura.isFocus()){
+                calcularFactura();//calcula los totales
+                utilitario.addUpdate("tab_factura"); // actualiza la tabla
+                if(tab_factura.isFilaModificada()){
+                        //Para que haga el update
+                        tab_factura.modificar(tab_factura.getFilaActual());
+                }
+        }
+
+}
 
 
 
