@@ -57,7 +57,12 @@ public TablaGenerica getTablaAnio (String activo, String bloqueado ){
 			" order by detalle_geani desc");
 	return tab_anio;
 	}
-
+/**
+ * Metodo que devuelve los Estados clasificados por modulo 
+ * @param estado recibe el o los estados true y false, ejemplo: true   o  true,false
+ * @param modulo recibe el codigo del Modulo por el cual desea clasificar el estado 
+ * @return string SQL modulo estado
+ */
 public String getModuloEstados (String estado,String modulo){
 	String consultaEstados="SELECT a.ide_coest,detalle_coest,detalle_gemod "
 +"FROM gen_modulo_estado a,cont_estado b, gen_modulo c "
@@ -65,37 +70,33 @@ public String getModuloEstados (String estado,String modulo){
 +"AND activo_gemoe in ("+estado+") AND a.ide_gemod ="+modulo+" order by detalle_coest";
 	return consultaEstados;
 }
-public TablaGenerica getTablaTipoConvenio (String tipo_convenio,String detalle ){
-	TablaGenerica tab_tipo_convenio= utilitario.consultar("select ide_cotie,detalle_cotie" +
-			"activo_cotie from cont_tipo_convenio" +
-			"where activo_cotie in (true,false) " +
-			"ordey by detalle_cotie");
+public TablaGenerica getTablaTipoConvenio (String activo,String detalle){
+	TablaGenerica tab_tipo_convenio= utilitario.consultar("Select ide_cotie ,detalle_cotie " +
+			" from cont_tipo_convenio" +
+			"  where activo_cotie in ( true, false) order by detalle_cotie");
 	
 		return tab_tipo_convenio;
 }
 
-public String getTipoConvenio (String tipo_convenio, String detalle){
-	String Tipo_convenio ="select ide_cotie,detalle_cotie" +
-			"activo_cotie from cont_tipo_convenio" +
-			"where activo_cotie in (true,false) " +
-			"ordey by detalle_cotie";
-	 	
+public String getTipoConvenio (String activo, String detalle){
+	String tipo_convenio ="select ide_cotie ,detalle_cotie " +
+			" from cont_tipo_convenio" +
+			"  where activo_cotie in ( true, false) order by detalle_cotie";
+		
 	return tipo_convenio ;
 
 }
-public TablaGenerica getTablaInstitucion ( String institucion, String detalle){
-	TablaGenerica tab_institucion= utilitario.consultar("select ide_geins,detalle_geins, activo_geins" +
-			"from gen_institucion" +
-			"where activo_geins in (true,false) "+
-			"ordey by detalle_institucion");
+public TablaGenerica getTablaInstitucion ( String activo, String detalle){
+	TablaGenerica tab_institucion= utilitario.consultar("select ide_geins,detalle_geins" +
+			" from gen_institucion" +
+			" where activo_geins in (true,false) ordey by detalle_institucion");
 	return tab_institucion;	
 	
 	}
-public String getInstitucion (String institucion, String detalle){
-	String Institucion ="select ide_geins,detalle_geins, activo_geins" +
-			"from gen_institucion" +
-			"where activo_geins in (true,false) "+
-			"ordey by detalle_institucion";
+public String getInstitucion (String activo, String detalle){
+	String institucion ="select ide_geins,detalle_geins "+
+			" from gen_institucion" +
+			" where activo_geins in (true,false)  ordey by detalle_institucion";
 	return institucion;
 }
 
