@@ -276,7 +276,10 @@ public class Parametros {
          * */
         
         lis_parametros.add(new Parametro("12", "p_modulo_convenio","Indica el modulo que pertenece a convenios","1","gen_modulo","ide_gemod","detalle_gemod"));
+        lis_parametros.add(new Parametro("12", "p_funcionario_convenio","Indica el tipo de persona para convenios = funcionario","3","gen_tipo_persona","ide_getip","detalle_getip"));
+        lis_parametros.add(new Parametro("12", "p_particular_convenio","Indica el tipo de persona para convenios = particular","1","gen_tipo_persona","ide_getip","detalle_getip"));
         return lis_parametros;
+        
 
     }
 }
