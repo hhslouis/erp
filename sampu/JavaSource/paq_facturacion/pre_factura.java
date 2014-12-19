@@ -120,7 +120,7 @@ public class pre_factura extends Pantalla{
 		tab_detalle_factura.getGrid().setColumns(4);
 		tab_detalle_factura.dibujar();
 
-		
+
 		PanelTabla pat_detalle_factura= new PanelTabla();
 		pat_detalle_factura.setMensajeWarn("DETALLE FACTURACION");
 		pat_detalle_factura.setPanelTabla(tab_detalle_factura);
@@ -163,26 +163,45 @@ public class pre_factura extends Pantalla{
 		set_insertarBodega.getBot_aceptar().setMetodo("aceptarBodega");
 		agregarComponente(set_insertarBodega);
 	}
-	
+
 	public void aceptarBodega(){
 		String str_seleccionados=set_insertarBodega.getSeleccionados();
-		if(str_seleccionados!=null){
-				tab_detalle_factura.insertar();
-				tab_detalle_factura.setValorForanea("ide_bomat");
-			set_insertarBodega.cerrar();
-			utilitario.addUpdate("tab_detalle_factura");			
-		}
+		if(str_seleccionados!=null){// valido que seleccione
+			String vstr_arreglo[]=str_seleccionados.split(",");
 
+			for(int i=0;i<vstr_arreglo.length;i++){
+				tab_detalle_factura.insertar(); //inserto
+				tab_detalle_factura.setValor("ide_bomat",vstr_arreglo[i]);//asigno material
+			}
+			set_insertarBodega.cerrar();
+			utilitario.addUpdate("tab_detalle_factura");
+			utilitario.addUpdate("tab_factura");
+		}
+		else{
+			utilitario.agregarMensajeError("Debe seleccionar al menos un material", "");
+		}
+	}
+	
+	public void aceptarSeleccionTabla(){
+		String str_seleccionados=set_insertarBodega.getSeleccionados();
+		if(str_seleccionados!=null){ //valida que seleccione almenos 1 dia
+			utilitario.agregarMensaje("Buscar dias",set_pantalla_dias.getSeleccionados()+"");
+			set_pantalla_dias.cerrar(); //cierro seleccion dias
+			set_insertarBodega.dibujar(); //abro seleccion bodega
+		}
+		else{
+			utilitario.agregarMensajeError("Debe seleccionar almenos un día", "");
+		}
 	}
 
-	
+
 	public void abrirRango(){
 		utilitario.agregarMensaje("Requiere ingresar una factura para ingresar los detalles", "");
 		//Hace aparecer el componente
 		if(aut_factura.getValor()!=null){
-		sec_rango_fechas.dibujar();
+			sec_rango_fechas.dibujar();
 		}
-		
+
 	}
 
 
@@ -195,13 +214,13 @@ public class pre_factura extends Pantalla{
 			srt_fecha_fin=sec_rango_fechas.getFecha2String();
 			//Cerramos el seleccionCalendario
 			sec_rango_fechas.cerrar(); 	  
-			  
+
 			//Abrimos el seleccionTabla
-      set_pantalla_dias.setDynamic(false);
-      set_pantalla_dias.dibujar();
-      insertarDias();  // llenamos la tabla
+			set_pantalla_dias.setDynamic(false);
+			set_pantalla_dias.dibujar();
+			insertarDias();  // llenamos la tabla
 		}
-		
+
 		else{
 			utilitario.agregarMensajeError("Las fecha seleccionadas no son vÃ¡lidas", "");
 		}
@@ -230,18 +249,6 @@ public class pre_factura extends Pantalla{
 		}
 	}
 
-	public void aceptarSeleccionTabla(){
-		String str_seleccionados=set_insertarBodega.getSeleccionados();
-		if(str_seleccionados!=null){ //valida que seleccione almenos 1 dia
-		   utilitario.agregarMensaje("Buscar dias",set_pantalla_dias.getSeleccionados()+"");
-		   set_pantalla_dias.cerrar(); //cierro seleccion dias
-		   set_insertarBodega.dibujar(); //abro seleccion bodega
-		}
-		else{
-		utilitario.agregarMensajeError("Debe seleccionar almenos un día", "");
-		}
- }
-	
 	public void limpiar(){
 		aut_factura.limpiar();
 		tab_factura.limpiar();
@@ -390,7 +397,7 @@ public class pre_factura extends Pantalla{
 			utilitario.agregarMensajeError("Debe seleccionar los datos de FacturaciÃƒÂ³n","");
 		}
 	}
-	
+
 	@Override
 	public void guardar() {
 		// TODO Auto-generated method stub
@@ -406,18 +413,18 @@ public class pre_factura extends Pantalla{
 
 	@Override
 	public void eliminar() {
-        // TODO Auto-generated method stub
-        utilitario.getTablaisFocus().eliminar();
-        if(tab_detalle_factura.isFocus()){
-                calcularFactura();//calcula los totales
-                utilitario.addUpdate("tab_factura"); // actualiza la tabla
-                if(tab_factura.isFilaModificada()){
-                        //Para que haga el update
-                        tab_factura.modificar(tab_factura.getFilaActual());
-                }
-        }
+		// TODO Auto-generated method stub
+		utilitario.getTablaisFocus().eliminar();
+		if(tab_detalle_factura.isFocus()){
+			calcularFactura();//calcula los totales
+			utilitario.addUpdate("tab_factura"); // actualiza la tabla
+			if(tab_factura.isFilaModificada()){
+				//Para que haga el update
+				tab_factura.modificar(tab_factura.getFilaActual());
+			}
+		}
 
-}
+	}
 
 
 
