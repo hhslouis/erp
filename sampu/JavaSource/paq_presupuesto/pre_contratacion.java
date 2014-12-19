@@ -39,7 +39,7 @@ public class pre_contratacion extends Pantalla{
 
 	public pre_contratacion(){
 		com_anio.setCombo("select ide_geani,detalle_geani from gen_anio order by detalle_geani");
-		com_anio.setMetodo("seleccionaElAño");
+		com_anio.setMetodo("seleccionaElAnio");
 		bar_botones.agregarComponente(new Etiqueta("Seleccione El Año:"));
 		bar_botones.agregarComponente(com_anio);
 
@@ -258,7 +258,7 @@ public class pre_contratacion extends Pantalla{
 
 	}
 
-	public void seleccionaElAño (){
+	public void seleccionaElAnio (){
 		if(com_anio.getValue()!=null){
 			tab_poa.setCondicion("ide_geani="+com_anio.getValue());
 			tab_poa.ejecutarSql();
@@ -268,7 +268,7 @@ public class pre_contratacion extends Pantalla{
 			tab_financiamiento.ejecutarValorForanea(tab_poa.getValorSeleccionado());
 		}
 		else { 
-			tab_poa.setCondicion("ge_geani=-1");
+			tab_poa.setCondicion("ide_geani=-1");
 			tab_poa.ejecutarSql();
 			tab_mes.ejecutarValorForanea(tab_poa.getValorSeleccionado());
 			tab_reforma.ejecutarValorForanea(tab_poa.getValorSeleccionado());
