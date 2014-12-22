@@ -1,11 +1,12 @@
 package paq_facturacion;
 import java.util.Date;
+import java.util.List;
 
 import javax.faces.event.AjaxBehaviorEvent;
 
+import framework.aplicacion.Fila;
 import framework.aplicacion.TablaGenerica;
 import framework.componentes.Boton;
-import framework.componentes.Dialogo;
 import framework.componentes.Division;
 import framework.componentes.PanelTabla;
 import framework.componentes.SeleccionCalendario;
@@ -15,7 +16,6 @@ import paq_sistema.aplicacion.Pantalla;
 import org.primefaces.event.SelectEvent;
 import framework.componentes.AutoCompletar;
 import framework.componentes.Etiqueta;
-import paq_sistema.aplicacion.Pantalla;
 
 
 public class pre_factura extends Pantalla{
@@ -36,7 +36,7 @@ public class pre_factura extends Pantalla{
 	double dou_base_aprobada=0;
 	double dou_valor_iva=0;
 	double dou_total=0;
-
+	private List<Fila> lis_fechas_seleccionadas;
 
 
 	public pre_factura() {
@@ -99,7 +99,7 @@ public class pre_factura extends Pantalla{
 		Boton bot_limpiar = new Boton();
 		bot_limpiar.setIcon("ui-icon-cancel");
 		bot_limpiar.setMetodo("limpiar");
-		aut_factura.setId("aut_factura");	
+		aut_factura.setId("aut_factura");      
 		aut_factura.setAutoCompletar("SELECT ide_fadaf,serie_factura_fadaf,autorizacion_fadaf,fecha_impresion_fadaf,fecha_vencimiento_fadaf " +
 				"FROM fac_datos_factura WHERE serie_factura_fadaf is not null order by serie_factura_fadaf");
 		aut_factura.setMetodoChange("seleccionoAutocompletar"); //ejecuta el metodo seleccionoAutocompletar
@@ -116,8 +116,6 @@ public class pre_factura extends Pantalla{
 		//LLAMAR A ESTE METODO CUANDO EL USUARIO, MODIFIQUE LA CANTIDAD O EL VALOR DESDE LA APLICACION
 		tab_detalle_factura.getColumna("cantidad_fadef").setMetodoChange("calcularDetalle");
 		tab_detalle_factura.getColumna("valor_fadef").setMetodoChange("calcularDetalle");
-		tab_detalle_factura.setTipoFormulario(true);
-		tab_detalle_factura.getGrid().setColumns(4);
 		tab_detalle_factura.dibujar();
 
 
@@ -146,7 +144,7 @@ public class pre_factura extends Pantalla{
 		set_pantalla_dias.setId("set_pantalla_dias");
 		set_pantalla_dias.setTitle("PANTALLA DEL SISTEMA");
 		//CONSULTA
-		set_pantalla_dias.setSeleccionTabla("select ide_empr,''  as dia from sis_empresa where ide_empr=-1",  "ide_empr");
+		set_pantalla_dias.setSeleccionTabla("select ide_empr,''  as dia, '' as fecha from sis_empresa where ide_empr=-1",  "ide_empr");
 		//set_pantalla_dias.setSql("select fecha_ingre as fecha from fac_detalle_factura");
 		set_pantalla_dias.getBot_aceptar().setMetodo("aceptarSeleccionTabla");
 		//BOTON PARA ABRIR LA TABLA
@@ -167,11 +165,16 @@ public class pre_factura extends Pantalla{
 	public void aceptarBodega(){
 		String str_seleccionados=set_insertarBodega.getSeleccionados();
 		if(str_seleccionados!=null){// valido que seleccione
-			String vstr_arreglo[]=str_seleccionados.split(",");
-
-			for(int i=0;i<vstr_arreglo.length;i++){
-				tab_detalle_factura.insertar(); //inserto
-				tab_detalle_factura.setValor("ide_bomat",vstr_arreglo[i]);//asigno material
+			String vstr_arreglo[]=str_seleccionados.split(",");			
+			for (int j = 0; j < lis_fechas_seleccionadas.size(); j++) {
+				Object[] fila =lis_fechas_seleccionadas.get(j).getCampos();
+				//Obtenemos el campo de la fecha seleccionada
+				String str_fecha_actual =fila[2]+"";			
+				for(int i=0;i<vstr_arreglo.length;i++){
+					tab_detalle_factura.insertar(); //inserto
+					tab_detalle_factura.setValor("ide_bomat",vstr_arreglo[i]);//asigno material
+					tab_detalle_factura.setValor("fecha_fadef",str_fecha_actual);//asigno material
+				}
 			}
 			set_insertarBodega.cerrar();
 			utilitario.addUpdate("tab_detalle_factura");
@@ -181,16 +184,18 @@ public class pre_factura extends Pantalla{
 			utilitario.agregarMensajeError("Debe seleccionar al menos un material", "");
 		}
 	}
-	
+
 	public void aceptarSeleccionTabla(){
 		String str_seleccionados=set_insertarBodega.getSeleccionados();
 		if(str_seleccionados!=null){ //valida que seleccione almenos 1 dia
 			utilitario.agregarMensaje("Buscar dias",set_pantalla_dias.getSeleccionados()+"");
+			//Fechas que selecciono
+			lis_fechas_seleccionadas=set_pantalla_dias.getListaSeleccionados(); // seleccionar filas
 			set_pantalla_dias.cerrar(); //cierro seleccion dias
 			set_insertarBodega.dibujar(); //abro seleccion bodega
 		}
 		else{
-			utilitario.agregarMensajeError("Debe seleccionar almenos un d�a", "");
+			utilitario.agregarMensajeError("Debe seleccionar almenos un día", "");
 		}
 	}
 
@@ -205,13 +210,13 @@ public class pre_factura extends Pantalla{
 	}
 
 	public void aceptarRango(){
-		//Si las fechas seleccionadas son válidas, muestra las fechas seleccionadas
+		//Si las fechas seleccionadas son vÃ¡lidas, muestra las fechas seleccionadas
 		if(sec_rango_fechas.isFechasValidas()){
 			//Almacenamos las fechas seleccionadas en variables
 			srt_fecha_inicio=sec_rango_fechas.getFecha1String();
 			srt_fecha_fin=sec_rango_fechas.getFecha2String();
 			//Cerramos el seleccionCalendario
-			sec_rango_fechas.cerrar(); 	  
+			sec_rango_fechas.cerrar();        
 
 			//Abrimos el seleccionTabla
 			set_pantalla_dias.setDynamic(false);
@@ -220,7 +225,7 @@ public class pre_factura extends Pantalla{
 		}
 
 		else{
-			utilitario.agregarMensajeError("Las fecha seleccionadas no son válidas", "");
+			utilitario.agregarMensajeError("Las fecha seleccionadas no son vÃ¡lidas", "");
 		}
 	}
 
@@ -233,7 +238,7 @@ public class pre_factura extends Pantalla{
 		System.out.println("NUM DIAS: "+int_num_dias);
 		//Insertamos el rango de dias
 		Date dat_fecha_actual=utilitario.getFecha(srt_fecha_inicio);//fecha q vamos a restar los dias
-		for(int i=int_num_dias;i>=0;i--){
+		for(int i=0;i<=int_num_dias;i++){
 			//insertamos en la tabla seleccion
 			set_pantalla_dias.getTab_seleccion().insertar();
 			set_pantalla_dias.getTab_seleccion().getFilaSeleccionada().setRowKey((i+1)+"");
@@ -242,6 +247,9 @@ public class pre_factura extends Pantalla{
 			//set_pantalla_dias.getTab_seleccion().setValor("dia",utilitario.getFormatoFecha(dat_fecha_actual));
 			//FECHA LARGA
 			set_pantalla_dias.getTab_seleccion().setValor("dia",utilitario.getFechaLarga(utilitario.getFormatoFecha(dat_fecha_actual)));
+			//FECHA 
+			set_pantalla_dias.getTab_seleccion().setValor("fecha",utilitario.getFormatoFecha(dat_fecha_actual));
+
 			//resto un dia a la fecha
 			dat_fecha_actual=utilitario.sumarDiasFecha(dat_fecha_actual,1 );
 		}
@@ -392,7 +400,7 @@ public class pre_factura extends Pantalla{
 			}
 		}
 		else{
-			utilitario.agregarMensajeError("Debe seleccionar los datos de FacturaciÃ³n","");
+			utilitario.agregarMensajeError("Debe seleccionar los datos de FacturaciÃÂ³n","");
 		}
 	}
 
@@ -404,9 +412,6 @@ public class pre_factura extends Pantalla{
 				guardarPantalla();
 			}
 		}
-
-		utilitario.getConexion().setImprimirSqlConsola(true);						
-
 	}
 
 	@Override
@@ -476,3 +481,4 @@ public class pre_factura extends Pantalla{
 	}
 
 }
+
