@@ -48,18 +48,18 @@ public class pre_factura extends Pantalla{
 		//para q no se dibuje antes q seleccione el autocompletar
 		tab_factura.setCondicion("ide_fadaf=-1");
 		tab_factura.setTipoFormulario(true);
-		tab_factura.getGrid().setColumns(4);
-		//tab_factura.getColumna("ide_comov").setCombo("cont_movimiento", "ide_comov", "detalle_asiento_comov", "");
-		tab_factura.getColumna("ide_comov").setVisible(false);
+		tab_factura.getGrid().setColumns(6);
 		tab_factura.getColumna("ide_fadaf").setCombo("fac_datos_factura", "ide_fadaf", "serie_factura_fadaf", "");
+		tab_factura.getColumna("ide_comov").setVisible(false);
+		//tab_factura.getColumna("ide_comov").setCombo("cont_movimiento", "ide_comov", "detalle_asiento_comov", "");
 		tab_factura.getColumna("ide_gtemp").setCombo("gth_empleado", "ide_gtemp", "documento_identidad_gtemp", "");
+		tab_factura.getColumna("ide_sucu").setCombo("sis_sucursal", "ide_sucu", "nom_sucu", "");
 		tab_factura.getColumna("ide_retip").setCombo("rec_tipo", "ide_retip", "detalle_retip", "");
-		//tab_factura.getColumna("ide_tedar").setCombo("tes_datos_retencion", "ide_tedar", "tipo_retencion_tedar", "");
 		tab_factura.getColumna("ide_tedar").setVisible(false);
-		//tab_factura.getColumna("ide_retip").setCombo("rec_tipo", "ide_retip", "detalle_retip", "");
-		tab_factura.getColumna("ide_coest").setCombo("cont_estado", "ide_coest", "detalle_coest", "");
-		tab_factura.getColumna("ide_tetid").setCombo("tes_tipo_documento", "ide_tetid", "detalle_tetid", "");
+		//tab_factura.getColumna("ide_tedar").setCombo("tes_datos_retencion", "ide_tedar", "tipo_retencion_tedar", "");
 		tab_factura.getColumna("ide_recli").setCombo("select ide_recli,nombre_comercial_recli from rec_clientes order by nombre_comercial_recli");
+		tab_factura.getColumna("ide_tetid").setCombo("tes_tipo_documento", "ide_tetid", "detalle_tetid", "");
+		tab_factura.getColumna("ide_coest").setCombo("cont_estado", "ide_coest", "detalle_coest", "");
 
 		//TOTALES DE COLOR ROJO--ESTILO DE COLOR ROJO Y NEGRILLA
 		tab_factura.getColumna("base_no_iva_fafac").setEtiqueta();
@@ -203,8 +203,6 @@ public class pre_factura extends Pantalla{
 		}
 
 	}
-
-
 
 	public void aceptarRango(){
 		//Si las fechas seleccionadas son válidas, muestra las fechas seleccionadas
