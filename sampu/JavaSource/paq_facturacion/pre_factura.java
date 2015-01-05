@@ -161,16 +161,19 @@ public class pre_factura extends Pantalla{
 		set_insertarBodega.setId("set_insertarBodega");
 		set_insertarBodega.setTitle("SELECCIONE MATERIAL DE BODEGA");
 		//CONSULTA
-		set_insertarBodega.setSeleccionTabla("bodt_material", "ide_bomat", "detalle_bomat");
+		set_insertarBodega.setSeleccionTabla("bodt_material", "ide_bomat", "detalle_bomat,aplica_valor_bomat,valor_bomat");
 		set_insertarBodega.getBot_aceptar().setMetodo("aceptarBodega");
+		set_insertarBodega.getTab_seleccion().getColumna("detalle_bomat").setNombreVisual("MATERIAL");
+		set_insertarBodega.getTab_seleccion().getColumna("aplica_valor_bomat").setVisible(false);//Oculta campo
+		set_insertarBodega.getTab_seleccion().getColumna("valor_bomat").setVisible(false);//Oculta campo
 		agregarComponente(set_insertarBodega);
 
 		//PANTALLA TEXT0
-		
+
 	}
 
 
-	
+
 	public void aceptarBodega(){
 		String str_seleccionado=set_insertarBodega.getValorSeleccionado();//x q es radio
 		if(str_seleccionado!=null){// valido que seleccione
@@ -203,6 +206,7 @@ public class pre_factura extends Pantalla{
 			//Fechas que selecciono
 			lis_fechas_seleccionadas=set_pantalla_dias.getListaSeleccionados(); // seleccionar filas
 			set_pantalla_dias.cerrar(); //cierro seleccion dias
+			set_insertarBodega.getTab_seleccion().ejecutarSql();
 			set_insertarBodega.dibujar(); //abro seleccion bodega
 		}
 		else{
