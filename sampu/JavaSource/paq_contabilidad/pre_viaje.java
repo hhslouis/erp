@@ -215,6 +215,7 @@ public void aceptarEmpleado(){
 		
 		System.out.println(" tabla generica"+tab_empleado.getSql());
 		for(int i=0;i<tab_empleado.getTotalFilas();i++){
+			System.out.println(" entwr e afor 0"+i);
 			tab_cont_viajeros.insertar();
 			tab_cont_viajeros.setValor("IDE_GEEDP", tab_empleado.getValor(i, "IDE_GEEDP"));			
 			tab_cont_viajeros.setValor("IDE_GTEMP", tab_empleado.getValor(i, "IDE_GTEMP"));			
