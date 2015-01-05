@@ -42,7 +42,7 @@ public class pre_factura extends Pantalla{
 	double dou_valor_iva=0;
 	double dou_total=0;
 	private List<Fila> lis_fechas_seleccionadas;
-    
+
 	private Dialogo dia_valor=new Dialogo();
 	private Texto tex_valor=new Texto();
 	String str_smaterial_seleccionado;
@@ -180,20 +180,18 @@ public class pre_factura extends Pantalla{
 		dia_valor.getBot_aceptar().setMetodo("AceptarValor");
 		dia_valor.setWidth("25%");
 		dia_valor.setHeight("18%");
-		
+
 		Grid gri_valor=new Grid();
 		gri_valor.setColumns(2);
-		gri_valor.getChildren().add(new Etiqueta("Ingrese el Valor:"));
+		gri_valor.getChildren().add(new Etiqueta("Valor Aplica: "));
 		tex_valor.setSoloNumeros();
 		gri_valor.getChildren().add(tex_valor);
-		
+
 		dia_valor.setDialogo(gri_valor);		
 		agregarComponente(dia_valor);
-		
+
 	}
 
-
-	
 
 	private void insertarMaterial(String ide_bomat,String valor){
 		//Inserta en la tabla de detalles el matiial seleccionado
@@ -201,7 +199,6 @@ public class pre_factura extends Pantalla{
 			Object[] fila =lis_fechas_seleccionadas.get(j).getCampos();
 			//Obtenemos el campo de la fecha seleccionada
 			String str_fecha_actual =fila[2]+"";
-
 			tab_detalle_factura.insertar(); //inserto
 			tab_detalle_factura.setValor("ide_bomat",ide_bomat);//asigno material
 			tab_detalle_factura.setValor("fecha_fadef",str_fecha_actual);//asig fecha
@@ -223,24 +220,28 @@ public class pre_factura extends Pantalla{
 			String aplica_valor=fila.getCampos()[2]+"";		
 			//Pregunta si el campo aplica_valor= true
 			if(aplica_valor.equalsIgnoreCase("true")){
-				insertarMaterial(str_smaterial_seleccionado,fila.getCampos()[3]+"");
 				set_insertarBodega.cerrar();
-				utilitario.addUpdate("tab_detalle_factura");
-				utilitario.addUpdate("tab_factura");
+				if(fila.getCampos()[3]!=null){
+					tex_valor.setValue(fila.getCampos()[3]);
+				}
+				else{
+					tex_valor.setValue("0.00");
+				}				
 			}
 			else{
-				//Pide que ingrese en el valor
-				set_insertarBodega.cerrar();
-				dia_valor.dibujar();
-			}		
+				tex_valor.limpiar();
+			}
+			//Pide que ingrese en el valor
+			set_insertarBodega.cerrar();
+			dia_valor.dibujar();
 
 		}
 		else{
 			utilitario.agregarMensajeError("Debe seleccionar un material", "");
 		}
 	}
-	
-	
+
+
 	public void AceptarValor(){
 		if(tex_valor.getValue()!=null){
 			String str_valor=tex_valor.getValue()+"";
@@ -252,7 +253,7 @@ public class pre_factura extends Pantalla{
 		else{
 			utilitario.agregarMensajeError("Debe Ingresar un valor", "");	
 		}
-		
+
 	}
 
 	public void aceptarSeleccionFechas(){
@@ -360,7 +361,7 @@ public class pre_factura extends Pantalla{
 				return true; //Si carga iva
 			}
 		}
-		System.out.println(tab_consulta.getValor("aplica_valor_bomat"));
+		//System.out.println(tab_consulta.getValor("aplica_valor_bomat"));
 		return false;  //retorna false
 	}
 
@@ -558,5 +559,5 @@ public class pre_factura extends Pantalla{
 	public void setDia_valor(Dialogo dia_valor) {
 		this.dia_valor = dia_valor;
 	}
-	
+
 }
