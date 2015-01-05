@@ -49,7 +49,7 @@ public class pre_factura extends Pantalla{
 
 
 	public pre_factura() {
-
+		
 		// TODO Auto-generated constructor stub
 		set_insertarBodega.setRadio();
 		tab_factura.setHeader("FACTURACIÃ“N");
@@ -189,6 +189,9 @@ public class pre_factura extends Pantalla{
 
 		dia_valor.setDialogo(gri_valor);		
 		agregarComponente(dia_valor);
+		
+		// PARA Q SALGA EN UNA SOLA PAGINA
+		set_pantalla_dias.getTab_seleccion().setRows(200);
 
 	}
 
@@ -286,6 +289,10 @@ public class pre_factura extends Pantalla{
 			//Almacenamos las fechas seleccionadas en variables
 			srt_fecha_inicio=sec_rango_fechas.getFecha1String();
 			srt_fecha_fin=sec_rango_fechas.getFecha2String();
+			
+			 //Valiada que maxiomo seleccione un mes
+            int int_num_dias=utilitario.getDiferenciasDeFechas(utilitario.getFecha(srt_fecha_inicio),utilitario.getFecha(srt_fecha_fin));
+            if(int_num_dias<=31){
 			//Cerramos el seleccionCalendario
 			sec_rango_fechas.cerrar();       
 
@@ -293,10 +300,15 @@ public class pre_factura extends Pantalla{
 			set_pantalla_dias.setDynamic(false);
 			set_pantalla_dias.dibujar();
 			insertarDias();  // llenamos la tabla
-		}
+            }
+			else{
+                utilitario.agregarMensajeError("El rango debe ser máximo de un mes(31 días)", " Seleccione un rango menor");
+        }
+
+}
 
 		else{
-			utilitario.agregarMensajeError("Las fecha seleccionadas no son vÃ¡lidas", "");
+			utilitario.agregarMensajeError("Las fecha seleccionadas no son válidas", "");
 		}
 	}
 
