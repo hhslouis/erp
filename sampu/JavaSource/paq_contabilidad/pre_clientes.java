@@ -1,14 +1,19 @@
 package paq_contabilidad;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ejb.EJB;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import framework.componentes.Arbol;
 import framework.componentes.Division;
 import framework.componentes.PanelTabla;
 import framework.componentes.Tabla;
 import framework.componentes.Tabulador;
 import paq_gestion.ejb.ServicioGestion;
 import paq_sistema.aplicacion.Pantalla;
+
 
 public class pre_clientes extends Pantalla {
 	
@@ -18,6 +23,7 @@ public class pre_clientes extends Pantalla {
 	private Tabla tab_email=new Tabla();
 	private Tabla tab_documento=new Tabla();
 	private Tabla tab_clientes=new Tabla();
+	private Arbol arb_arbol = new Arbol();
 	@EJB
 	private ServicioGestion ser_gestion = (ServicioGestion) utilitario.instanciarEJB(ServicioGestion.class);
 
@@ -31,6 +37,8 @@ public class pre_clientes extends Pantalla {
 		tab_clientes.setId("tab_clientes");
 		tab_clientes.setTipoFormulario(true);  //formulario 
 	    tab_clientes.getGrid().setColumns(4); //hacer  columnas 
+	    tab_clientes.setCampoPadre("rec_ide_recli");
+	    tab_clientes.setCampoNombre("(select ruc_comercial_recli||' '|| nombre_comercial_recli as nombre_comercial_recli from rec_clientes b where b.ide_recli= rec_clientes.ide_recli)");
 		tab_clientes.setTabla("rec_clientes", "ide_recli",1);
 		tab_clientes.getColumna("ide_retic").setCombo("rec_tipo_contribuyente", "ide_retic", "detalle_retic", "");
 		tab_clientes.getColumna("ide_retia").setCombo("rec_tipo_asistencia", "ide_retia", "detalle_retia", "");
@@ -42,14 +50,52 @@ public class pre_clientes extends Pantalla {
 		tab_clientes.getColumna(" ide_gtesc ").setCombo("gth_estado_civil", " ide_gtesc ", "detalle_gtesc", "");
 		tab_clientes.getColumna("ruc_comercial_recli").setMetodoChange("validaDocumento");
 		tab_clientes.getColumna("representante_legal_recli").setMetodoChange("validaDocumentoRepre");
+		 // para contruir los radios
+		   List lista = new ArrayList();
+	       Object fila1[] = {
+	           "1", "MATRIZ"
+	       };
+	       Object fila2[] = {
+	           "0", "SUCURSAL"
+	       };
+	       
+	       lista.add(fila1);
+	       lista.add(fila2);
+	       tab_clientes.getColumna("matriz_sucursal_recli").setRadio(lista, "1");
+	       tab_clientes.getColumna("matriz_sucursal_recli").setRadioVertical(true);
+	       
+	       //RADIOS 
+	    // para contruir los radios
+		   List lista1 = new ArrayList();
+	       Object fila3[] = {
+	           "1", "MATRIZ"
+	       };
+	       Object fila4[] = {
+	           "0", "SUCURSAL"
+	       };
+	       
+	       lista1.add(fila3);
+	       lista1.add(fila4);
+	       tab_clientes.getColumna("factura_datos_recli").setRadio(lista1, "2");
+	       tab_clientes.getColumna("factura_datos_recli").setRadioVertical(true);
+	       
 		tab_clientes.agregarRelacion(tab_direccion);//agraga relacion para los tabuladores
 		tab_clientes.agregarRelacion(tab_telefono);
         tab_clientes.agregarRelacion(tab_email);
         //tab_clientes.agregarRelacion(tab_documento);
        // System.out.println("sql pc"+tab_clientes.getSql());
+        
+        tab_clientes.agregarArbol(arb_arbol);
         tab_clientes.dibujar();
 		PanelTabla pat_clientes=new PanelTabla ();
 		pat_clientes.setPanelTabla(tab_clientes);
+		
+
+	
+
+        //ARBOL
+        arb_arbol.setId("arb_arbol");
+		arb_arbol.dibujar();
 		
 		tab_direccion.setId("tab_direccion");
 		tab_direccion.setIdCompleto("tab_tabulador:tab_direccion");
@@ -90,12 +136,16 @@ public class pre_clientes extends Pantalla {
         tab_tabulador.agregarTab("DOCUMENTO", pat_panel5);
 		
 		
-		Division div_division=new Division();
+        /*Division div_division=new Division();
 		div_division.dividir2(pat_clientes,tab_tabulador,"70%","H");
+		agregarComponente(div_division);*/
+		
+       Division div3= new Division();
+		div3.dividir2(pat_clientes,tab_tabulador,"70%","H");
+		Division div_division=new Division();
+		div_division.setId("div_division");
+		div_division.dividir2(arb_arbol, div3, "21%", "V"); //ARBOL Y DIV3
 		agregarComponente(div_division);
-		
-      		
-		
 		
 	}
 	
@@ -225,4 +275,17 @@ public class pre_clientes extends Pantalla {
 	public void setTab_documento(Tabla tab_documento) {
 		this.tab_documento = tab_documento;
 	}
+
+
+
+	public Arbol getArb_arbol() {
+		return arb_arbol;
+	}
+
+
+
+	public void setArb_arbol(Arbol arb_arbol) {
+		this.arb_arbol = arb_arbol;
+	}
+	
 }
