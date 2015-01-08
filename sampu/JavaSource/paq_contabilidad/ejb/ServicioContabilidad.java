@@ -117,5 +117,18 @@ public String getInstitucion (String activo, String detalle){
 	
 	return institucion;
 }
+/**
+ * Metodo que devuelve la Cuenta Cantable
+ * @param estado recibe el o los estados true y false, ejemplo: true o false
+ * @param modulo recibe las cuentas contables activas o pasivas 
+ * @return string SQL Cuenta Contable 
+ */
+public String getCuentaContable (String activo){
+	String cuentacontable ="select ide_cocac,cue_codigo_cocac,cue_descripcion_cocac" +
+			"  from cont_catalogo_cuenta " +
+			"  WHERE activo_cocac IN ("+activo+")order by cue_codigo_cocac ";
+	return cuentacontable;
+}
 
 }
+
