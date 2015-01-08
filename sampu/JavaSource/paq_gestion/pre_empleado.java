@@ -18,6 +18,7 @@ import org.primefaces.component.submenu.Submenu;
 import org.primefaces.event.DateSelectEvent;
 import org.primefaces.event.SelectEvent;
 
+import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_gestion.ejb.ServicioGestion;
 import paq_nomina.ejb.ServicioNomina;
 import paq_sistema.aplicacion.Pantalla;
@@ -27,6 +28,8 @@ import paq_sistema.parametros.Parametros;
 public class pre_empleado extends Pantalla {
 
 	private AutoCompletar aut_empleado = new AutoCompletar();
+	private Tabla tab_cuenta_anticipo = new Tabla();
+	private Tabla tab_anio = new Tabla();
 	private Tabla tab_empleado = new Tabla();
 	private Tabla tab_documentacion = new Tabla();
 	private Tabla tab_conyuge = new Tabla();
@@ -97,6 +100,7 @@ public class pre_empleado extends Pantalla {
 
 	@EJB
 	private ServicioGestion ser_gestion = (ServicioGestion) utilitario.instanciarEJB(ServicioGestion.class);
+	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
 
 	@EJB
 	private ServicioNomina ser_nomina = (ServicioNomina) utilitario.instanciarEJB(ServicioNomina.class);
@@ -954,9 +958,9 @@ public class pre_empleado extends Pantalla {
 							"WHERE EDP.IDE_GEDEP IN("+set_departamento.getSeleccionados()+") " +
 							"AND ACTIVO_GTEMP in("+lis_activo.getSeleccionados()+") " +
 							"ORDER BY NOMBRES ASC");
-					
+
 					System.out.println("pe sql ... "+set_empleado_deducible.getTab_seleccion().getSql());
-					
+
 					set_empleado_deducible.getTab_seleccion().getColumna("DOCUMENTO_IDENTIDAD_GTEMP").setFiltro(true);
 					set_empleado_deducible.getTab_seleccion().getColumna("NOMBRES").setFiltro(true);
 					set_empleado_deducible.getTab_seleccion().ejecutarSql();
@@ -976,9 +980,9 @@ public class pre_empleado extends Pantalla {
 					System.out.println("pe p_parametros IDE_GTEMP ... "+p_parametros);
 
 					p_parametros.put("titulo","DETALLE GASTO DEDUCIBLE ");
-					
+
 					System.out.println("pe p_parametros titulo ... "+p_parametros);
-					
+
 					sef_reporte.setSeleccionFormatoReporte(p_parametros, rep_reporte.getPath());
 					set_empleado_deducible.cerrar();
 					sef_reporte.dibujar();
@@ -1607,7 +1611,7 @@ public class pre_empleado extends Pantalla {
 		itm_datos_empl.setMetodo("dibujarDatosPersona");
 		itm_datos_empl.setUpdate("pan_opcion");
 		sum_empleado.getChildren().add(itm_datos_empl);
-	
+
 
 		// ITEM 3 : OPCION 2
 		ItemMenu itm_empleado_departamento = new ItemMenu();
@@ -1632,7 +1636,14 @@ public class pre_empleado extends Pantalla {
 		itm_datos_emergencia.setMetodo("dibujarDatosEmergencia");
 		itm_datos_emergencia.setUpdate("pan_opcion");
 		sum_empleado.getChildren().add(itm_datos_emergencia);
-		
+
+		// ITEM 6 : OPCION 28		
+		ItemMenu itm_cuenta_anticipo = new ItemMenu();
+		itm_cuenta_anticipo.setValue("CUENTA ANTICIPO");
+		itm_cuenta_anticipo.setIcon("ui-icon-person");
+		itm_cuenta_anticipo.setMetodo("dibujarCuentaAnticipo");
+		itm_cuenta_anticipo.setUpdate("pan_opcion");
+		sum_empleado.getChildren().add(itm_cuenta_anticipo);
 
 		// SUB MENU 6
 		Submenu sum_datos_formacion_academica = new Submenu();
@@ -1669,8 +1680,8 @@ public class pre_empleado extends Pantalla {
 		itm_datos_capacitacion.setUpdate("pan_opcion");
 		sum_datos_experiencia_laboral.getChildren().add(itm_datos_capacitacion);
 
-		
-		
+
+
 		// ITEM 3 : OPCION 13
 		ItemMenu itm_datos_experiencia_docente = new ItemMenu();
 		itm_datos_experiencia_docente.setValue("EXPERIENCIA DOCENTE");
@@ -1691,7 +1702,7 @@ public class pre_empleado extends Pantalla {
 		Submenu sum_datos_situacion_financiera = new Submenu();
 		sum_datos_situacion_financiera.setLabel("INFORMACION SITUACION ECONOMICA");
 		pam_menu.getChildren().add(sum_datos_situacion_financiera);
-		
+
 		// ITEM 7 : OPCION 22
 		ItemMenu itm_datos_cuenta_bancaria = new ItemMenu();
 		itm_datos_cuenta_bancaria.setValue("CUENTAS BANCARIAS");
@@ -1699,7 +1710,7 @@ public class pre_empleado extends Pantalla {
 		itm_datos_cuenta_bancaria.setMetodo("dibujarDatosCuentaBancaria");
 		itm_datos_cuenta_bancaria.setUpdate("pan_opcion");
 		sum_datos_situacion_financiera.getChildren().add(itm_datos_cuenta_bancaria);
-				
+
 		// SUB MENU 11
 		Submenu sum_sri_proy_ing = new Submenu();
 		sum_sri_proy_ing.setLabel("SRI");
@@ -1713,7 +1724,7 @@ public class pre_empleado extends Pantalla {
 		itm_sri_proy_ing.setUpdate("pan_opcion");
 		sum_sri_proy_ing.getChildren().add(itm_sri_proy_ing);
 
-		// ITEM 1 : OPCION 28
+		// ITEM 1 : OPCION 29
 		ItemMenu itm_sri_gasto_deduc = new ItemMenu();
 		itm_sri_gasto_deduc.setValue("GASTOS DEDUCIBLES");
 		itm_sri_gasto_deduc.setIcon("ui-icon-person");
@@ -2315,11 +2326,77 @@ public class pre_empleado extends Pantalla {
 
 			tab_tabulador.agregarTab("DIRECCION", pat_panel2);
 			tab_tabulador.agregarTab("TELEFONOS", pat_panel3);
-
 			Division div_aux=new Division();
 			div_aux.dividir2(pat_panel1,tab_tabulador, "40%", "H");
 			pan_opcion.getChildren().add(div_aux);
 
+		} else {
+			utilitario.agregarMensajeInfo("No se puede abrir el item", "Seleccione un Colaborador en el autocompletar");
+			limpiar();
+		}
+	}
+
+	public void dibujarCuentaAnticipo() {
+		if (aut_empleado.getValor() != null) {
+			str_opcion = "28";
+			limpiarPanel();			
+			tab_cuenta_anticipo= new Tabla();
+			tab_cuenta_anticipo.setId("tab_cuenta_anticipo");
+			tab_cuenta_anticipo.setHeader("CUENTA ANTICIPO");
+			tab_cuenta_anticipo.setTabla("GTH_CUENTA_ANTICIPO","IDE_GTCUA",43);
+			tab_cuenta_anticipo.agregarRelacion(tab_anio);
+			tab_cuenta_anticipo.getColumna("ide_cocac").setCombo(ser_contabilidad.getCuentaContable("true,false"));
+			tab_cuenta_anticipo.getColumna("ide_geani").setCombo("gen_anio","ide_geani","detalle_geani","");
+			tab_cuenta_anticipo.getColumna("ide_gtemp").setVisible(false);
+
+			tab_cuenta_anticipo.setCondicion("IDE_GTEMP=" + aut_empleado.getValor());
+			//tab_partida_anticipo.setTipoFormulario(true);
+			//tab_partida_anticipo.getGrid().setColumns(4);
+			//tab_partida_anticipo.setMostrarNumeroRegistros(true);
+			tab_cuenta_anticipo.dibujar();
+			PanelTabla pat_panel1 = new PanelTabla();
+			pat_panel1.setPanelTabla(tab_cuenta_anticipo);
+			pat_panel1.getMenuTabla().getItem_insertar().setRendered(false);			
+			pat_panel1.getMenuTabla().getItem_eliminar().setRendered(false);
+			
+			tab_anio= new Tabla();
+			tab_anio.setId("tab_anio");
+			tab_anio.setHeader("AÑO ");
+			tab_anio.setTabla("GEN_ANIO","IDE_GEANI",44);
+			/*tab_vigente.setCondicion("IDE_GTEMP=" + aut_empleado.getValor());
+			tab_vigente.setTipoFormulario(true);
+			tab_vigente.getGrid().setColumns(4);
+			tab_vigente.setMostrarNumeroRegistros(true);
+			*/
+			TablaGenerica  tab_generica=ser_contabilidad.getTablaVigente("tab_anio");
+			for(int i=0;i<tab_generica.getTotalFilas();i++){
+	    		//muestra los ides q quiere mostras.
+				if(!tab_generica.getValor(i, "column_name").equals("ide_geani")){	
+					tab_anio.getColumna(tab_generica.getValor(i, "column_name")).setVisible(false);	
+				}				
+	    		
+	       		}
+			
+			tab_anio.dibujar();
+			
+			PanelTabla pat_panel2 = new PanelTabla();	
+			pat_panel2.setPanelTabla(tab_anio);
+			pat_panel2.getMenuTabla().getItem_insertar().setRendered(true);			
+			pat_panel2.getMenuTabla().getItem_eliminar().setRendered(true);
+
+			ItemMenu itm_modificar=new ItemMenu();
+			itm_modificar.setMetodo("modificaranio");
+			itm_modificar.setValue("Modificar");
+			pat_panel2.getMenuTabla().getChildren().add(itm_modificar);
+
+			Division div_anio=new Division();
+			div_anio.dividir2(pat_panel2,pat_panel1, "50%","H");		
+			pan_opcion.setTitle("CUENTA ANTICIPO");
+			pan_opcion.getChildren().add(div_anio);
+			
+		
+			
+			
 		} else {
 			utilitario.agregarMensajeInfo("No se puede abrir el item", "Seleccione un Colaborador en el autocompletar");
 			limpiar();
@@ -2970,7 +3047,7 @@ public class pre_empleado extends Pantalla {
 			tab_negocio_empl.getColumna("IDE_GTEMP").setVisible(false);
 			tab_negocio_empl.getColumna("ACTIVO_GTNEE").setCheck();
 			tab_negocio_empl.getColumna("PROPIO_GTNEE").setCheck();
-			
+
 			tab_negocio_empl.setCondicion("IDE_GTEMP =" + aut_empleado.getValor());
 			tab_negocio_empl.setTipoFormulario(true);
 			tab_negocio_empl.getGrid().setColumns(4);
@@ -3253,6 +3330,7 @@ public class pre_empleado extends Pantalla {
 			obj1[0]="1";
 			obj1[1]="Propio";
 			lis.add(obj1);
+			
 			tab_vehiculo.getColumna("PROPIO_PRENDADO_GTVEE").setRadio(lis, "0");
 			tab_vehiculo.getColumna("PROPIO_PRENDADO_GTVEE").setMetodoChange("cambiaTipoVehiculo");
 			tab_vehiculo.getColumna("PRENDADO_AFAVOR_GTVEE").setLectura(false);
@@ -3607,7 +3685,7 @@ public class pre_empleado extends Pantalla {
 
 	public void dibujarGastosDeducibles(){
 		if (aut_empleado.getValor() != null) {
-			str_opcion = "28";
+			str_opcion = "29";
 			limpiarPanel();		
 			tab_sri_impuesto_renta = new Tabla();
 			tab_sri_impuesto_renta.setId("tab_sri_impuesto_renta");
@@ -3779,7 +3857,8 @@ public class pre_empleado extends Pantalla {
 		else if(str_opcion.equals("25")){dibujarDatosTarjetaCredito();}
 		else if(str_opcion.equals("26")){dibujarDatosMembresias();}
 		else if(str_opcion.equals("27")){dibujarDatosProyeccionIngresos();}
-		else if(str_opcion.equals("28")){dibujarGastosDeducibles();};
+		else if(str_opcion.equals("28")){dibujarCuentaAnticipo();}
+		else if(str_opcion.equals("29")){dibujarGastosDeducibles();};
 
 		utilitario.addUpdate("pan_opcion");
 
@@ -3837,7 +3916,7 @@ public class pre_empleado extends Pantalla {
 					tab_telefonos.insertar();
 					tab_telefonos.setValor("IDE_GTEMP", aut_empleado.getValor());
 					tab_telefonos.setValor("IDE_GTCON", null);
-					}else{
+				}else{
 					utilitario.agregarMensajeInfo("No se puede insertar", "No existe datos del Colaborador");
 				}
 			}else if(tab_direccion.isFocus()){
@@ -3865,7 +3944,7 @@ public class pre_empleado extends Pantalla {
 							|| tab_empleado.getValor("DISCAPACITADO_GTEMP").equalsIgnoreCase("false")
 							|| tab_empleado.getValor("DISCAPACITADO_GTEMP").equalsIgnoreCase("0")){
 						utilitario.agregarMensajeInfo("No se puede insertar una discapacidad ", "el campo discapacitado se encuentra desactivado");
-												return;
+						return;
 					}
 
 					tab_discapacidad.insertar();
@@ -3929,7 +4008,7 @@ public class pre_empleado extends Pantalla {
 			}else {
 				utilitario.agregarMensajeInfo("No se puede insertar", "Debe seleccionar un Colaborador en el autocompletar");
 			}
-		}else if (str_opcion.equals("4")) {  // OPCION EN CASO DE EMERGENCIA
+				}else if (str_opcion.equals("4")) {  // OPCION EN CASO DE EMERGENCIA
 			if (aut_empleado.getValor()!=null){
 				if (tab_persona_emergencia.isFocus()){
 					tab_persona_emergencia.insertar();
@@ -3950,9 +4029,17 @@ public class pre_empleado extends Pantalla {
 						utilitario.agregarMensajeInfo("No se puede insertar", "No existe datos de emergencia");
 					}
 				}
+				
 			}else {
 				utilitario.agregarMensajeInfo("No se puede insertar", "Debe seleccionar un Colaborador en el autocompletar");
 			}
+				}else if (str_opcion.equals("28")) { // OPCION PARTIDA ANTICIPO
+					if (aut_empleado.getValor()!=null){
+						tab_cuenta_anticipo.insertar();
+						tab_cuenta_anticipo.setValor("IDE_GTEMP", aut_empleado.getValor());
+					}else {
+						utilitario.agregarMensajeInfo("No se puede insertar", "Debe seleccionar un Colaborador en el autocompletar");
+					}
 		}else if (str_opcion.equals("5")) {  // OPCION DEPENDIENTES (HIJOS-HERMANOS) 
 			if (aut_empleado.getValor()!=null){
 				tab_cargas_familiares.insertar();
@@ -4191,7 +4278,7 @@ public class pre_empleado extends Pantalla {
 				utilitario.agregarMensajeInfo("No se puede insertar", "Debe seleccionar un Colaborador en el autocompletar");
 			}
 		}
-		else if (str_opcion.equals("28")){ // OPCION GASTOS DEDUCIBLES
+		else if (str_opcion.equals("29")){ // OPCION GASTOS DEDUCIBLES
 			if (aut_empleado.getValor()!=null){
 				if (tab_sri_gastos_deducible.isFocus()){
 					tab_sri_gastos_deducible.insertar();
@@ -4374,7 +4461,11 @@ public class pre_empleado extends Pantalla {
 				}
 				tab_direccion.guardar();
 				guardarPantalla();
-			}
+			}//PARTIDA ANTICIPO
+		}else if (str_opcion.equals("28")) {
+			tab_cuenta_anticipo.guardar();
+			guardarPantalla();
+						
 		}else if (str_opcion.equals("5")) {
 			if(tab_cargas_familiares.getValor("IDE_GTTDI")==null || tab_cargas_familiares.getValor("IDE_GTTDI").isEmpty()){
 				utilitario.agregarMensajeInfo("No se puede guardar", "Debe ingresar un tipo de documento");
@@ -4652,7 +4743,7 @@ public class pre_empleado extends Pantalla {
 			}
 		}else if (str_opcion.equals("13")){
 
-			
+
 			if (tab_experiencia_docente.getValor("FECHA_INICIO_GTXDE")!=null && !tab_experiencia_docente.getValor("FECHA_INICIO_GTXDE").isEmpty()) {
 				if(utilitario.isFechaMayor(utilitario.getFecha(tab_experiencia_docente.getValor("FECHA_INICIO_GTXDE")),utilitario.getFecha(utilitario.getFechaActual()))){
 					utilitario.agregarMensajeInfo("No se puede guardar", "La fecha de ingreso no puede ser mayor que la fecha actual");
@@ -4678,8 +4769,8 @@ public class pre_empleado extends Pantalla {
 				guardarPantalla();
 			}
 		}else if (str_opcion.equals("14")){
-			
-			
+
+
 			if (tab_experiencia_laboral.getValor("FECHA_INGRESO_GTELE")!=null && !tab_experiencia_laboral.getValor("FECHA_INGRESO_GTELE").isEmpty()) {
 				if(utilitario.isFechaMayor(utilitario.getFecha(tab_experiencia_laboral.getValor("FECHA_INGRESO_GTELE")),utilitario.getFecha(utilitario.getFechaActual()))){
 					utilitario.agregarMensajeInfo("No se puede guardar", "La fecha de ingreso no puede ser mayor que la fecha actual");
@@ -4702,7 +4793,7 @@ public class pre_empleado extends Pantalla {
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
-			
+
 			if (tab_experiencia_laboral.guardar()){
 				guardarPantalla();
 			}
@@ -4725,7 +4816,7 @@ public class pre_empleado extends Pantalla {
 				utilitario.agregarMensajeInfo("No se puede Guardar el campo Otro Ingreso", "No Contiene Datos");
 				return;
 			}
-			
+
 
 			if (tab_situacion_economica.getValor("MONTO_MENSUAL_GTSEE")==null || tab_situacion_economica.getValor("MONTO_MENSUAL_GTSEE").isEmpty()) {
 				utilitario.agregarMensajeInfo("No se puede Guardar el campo Monto Mensual", "No Contiene Datos");
@@ -4740,9 +4831,9 @@ public class pre_empleado extends Pantalla {
 				guardarPantalla();
 			}
 		}else if (str_opcion.equals("17")){
-			
-			
-			
+
+
+
 			if (tab_negocio_empl.getValor("FECHA_VIGENCIA_RUC_GTNEE")!=null && !tab_negocio_empl.getValor("FECHA_VIGENCIA_RUC_GTNEE").isEmpty()) {
 				if(utilitario.isFechaMayor(utilitario.getFecha(tab_negocio_empl.getValor("FECHA_VIGENCIA_RUC_GTNEE")),utilitario.getFecha(utilitario.getFechaActual()))){
 					utilitario.agregarMensajeInfo("No se puede guardar", "La fecha de inicio de RUC no puede ser mayor que la fecha actual");
@@ -4750,29 +4841,29 @@ public class pre_empleado extends Pantalla {
 				}							
 			}
 
-			
+
 			if (tab_negocio_empl.getValor("RUC_GTNEE")!=null && !tab_negocio_empl.getValor("RUC_GTNEE").isEmpty()){
-			if (!utilitario.isEnteroPositivoyCero(tab_negocio_empl.getValor("RUC_GTNEE"))) {
-				utilitario.agregarMensajeInfo("No se puede Guardar el campo RUC", "Solo se admiten numeros enteros");
-				return ;
-			}
+				if (!utilitario.isEnteroPositivoyCero(tab_negocio_empl.getValor("RUC_GTNEE"))) {
+					utilitario.agregarMensajeInfo("No se puede Guardar el campo RUC", "Solo se admiten numeros enteros");
+					return ;
+				}
 			}
 
 			if (tab_negocio_empl.getValor("TOTAL_VENTA_GTNEE")!=null && !tab_negocio_empl.getValor("TOTAL_VENTA_GTNEE").isEmpty()){
-			if (!utilitario.isEnteroPositivoyCero(tab_negocio_empl.getValor("TOTAL_VENTA_GTNEE"))) {
-				utilitario.agregarMensajeInfo("No se puede Guardar el campo total venta", "Solo se admiten enteros positivos");
-				return ;
-			}
-			}
-			
-			if (tab_negocio_empl.getValor("TOTAL_GASTO_GTNEE")!=null && !tab_negocio_empl.getValor("TOTAL_GASTO_GTNEE").isEmpty()){
-			if (!utilitario.isEnteroPositivoyCero(tab_negocio_empl.getValor("TOTAL_GASTO_GTNEE"))) {
-				utilitario.agregarMensajeInfo("No se puede Guardar el campo total gasto", "Solo se admiten enteros positivos");
-				return ;
-			}
+				if (!utilitario.isEnteroPositivoyCero(tab_negocio_empl.getValor("TOTAL_VENTA_GTNEE"))) {
+					utilitario.agregarMensajeInfo("No se puede Guardar el campo total venta", "Solo se admiten enteros positivos");
+					return ;
+				}
 			}
 
-			
+			if (tab_negocio_empl.getValor("TOTAL_GASTO_GTNEE")!=null && !tab_negocio_empl.getValor("TOTAL_GASTO_GTNEE").isEmpty()){
+				if (!utilitario.isEnteroPositivoyCero(tab_negocio_empl.getValor("TOTAL_GASTO_GTNEE"))) {
+					utilitario.agregarMensajeInfo("No se puede Guardar el campo total gasto", "Solo se admiten enteros positivos");
+					return ;
+				}
+			}
+
+
 			if (tab_negocio_empl.guardar()){
 				for (int i = 0; i < tab_paticipantes_negocio.getTotalFilas(); i++) {
 					if (tab_paticipantes_negocio.isFilaInsertada(i)){
@@ -4808,56 +4899,56 @@ public class pre_empleado extends Pantalla {
 				guardarPantalla();
 			}
 		}else if (str_opcion.equals("18")){
-			
+
 			for (int j = 0; j < tab_terreno.getTotalFilas(); j++) {
 				if (tab_terreno.getValor(j,"AVALUO_GTTEE")!=null && !tab_terreno.getValor(j,"AVALUO_GTTEE").isEmpty()){
-				if (!utilitario.isNumeroPositivo(tab_terreno.getValor(j,"AVALUO_GTTEE"))){
-					utilitario.agregarMensajeInfo("No se puede Guardar", "El campo AVALUO es invalido, solo positivos");
-					return ;
-				}	
+					if (!utilitario.isNumeroPositivo(tab_terreno.getValor(j,"AVALUO_GTTEE"))){
+						utilitario.agregarMensajeInfo("No se puede Guardar", "El campo AVALUO es invalido, solo positivos");
+						return ;
+					}	
 				}
 			}
-			
+
 			if (tab_terreno.guardar()){
 				guardarPantalla();
 			}
 		}else if (str_opcion.equals("19")){
 
 			if (tab_casa.getValor("AVALUO_GTCSE")!=null && !tab_casa.getValor("AVALUO_GTCSE").isEmpty()){
-			if (!utilitario.isNumeroPositivo(tab_casa.getValor("AVALUO_GTCSE"))){
-				utilitario.agregarMensajeInfo("No se puede Guardar", "El campo AVALUO es invalido, solo positivos");
-				return ;
-			}	
+				if (!utilitario.isNumeroPositivo(tab_casa.getValor("AVALUO_GTCSE"))){
+					utilitario.agregarMensajeInfo("No se puede Guardar", "El campo AVALUO es invalido, solo positivos");
+					return ;
+				}	
 			}
 
 			if (tab_casa.getValor("MONTO_ARRIENDO_GTCSE")!=null && !tab_casa.getValor("MONTO_ARRIENDO_GTCSE").isEmpty()){
-			if (!utilitario.isNumeroPositivo(tab_casa.getValor("MONTO_ARRIENDO_GTCSE"))){
-				utilitario.agregarMensajeInfo("No se puede Guardar", "El campo MONTO ARRIENDO es invalido, solo positivos");
-				return ;
-			}	
+				if (!utilitario.isNumeroPositivo(tab_casa.getValor("MONTO_ARRIENDO_GTCSE"))){
+					utilitario.agregarMensajeInfo("No se puede Guardar", "El campo MONTO ARRIENDO es invalido, solo positivos");
+					return ;
+				}	
 			}
 
 			if (tab_casa.guardar()){
 				guardarPantalla();
 			}
 		}else if (str_opcion.equals("20")){
-			
-			
+
+
 			if (tab_vehiculo.getValor("AVALUO_GTVEE")!=null && !tab_vehiculo.getValor("AVALUO_GTVEE").isEmpty()){
-			if (!utilitario.isNumeroPositivo(tab_vehiculo.getValor("AVALUO_GTVEE"))){
-				utilitario.agregarMensajeInfo("No se puede Guardar", "El campo AVALUO es invalido, solo positivos");
-				return ;
-			}	
+				if (!utilitario.isNumeroPositivo(tab_vehiculo.getValor("AVALUO_GTVEE"))){
+					utilitario.agregarMensajeInfo("No se puede Guardar", "El campo AVALUO es invalido, solo positivos");
+					return ;
+				}	
 			}
 
 			if (tab_vehiculo.getValor("MONTO_SEGURO_GTVEE")!=null && !tab_vehiculo.getValor("MONTO_SEGURO_GTVEE").isEmpty()){
-			if (!utilitario.isNumeroPositivo(tab_vehiculo.getValor("MONTO_SEGURO_GTVEE"))){
-				utilitario.agregarMensajeInfo("No se puede Guardar", "El campo MONTO SEGURO es invalido, solo positivos");
-				return ;
-			}	
+				if (!utilitario.isNumeroPositivo(tab_vehiculo.getValor("MONTO_SEGURO_GTVEE"))){
+					utilitario.agregarMensajeInfo("No se puede Guardar", "El campo MONTO SEGURO es invalido, solo positivos");
+					return ;
+				}	
 			}
 
-			
+
 			if (tab_vehiculo.guardar()){
 				guardarPantalla();
 			}
@@ -4937,7 +5028,7 @@ public class pre_empleado extends Pantalla {
 				guardarPantalla();
 			}
 		}else if (str_opcion.equals("25")){
-			
+
 			if (tab_tarjeta_credito.guardar()){
 				guardarPantalla();
 			}
@@ -4957,7 +5048,7 @@ public class pre_empleado extends Pantalla {
 			if (tab_membresias.guardar()){
 				guardarPantalla();
 			}
-		}else if (str_opcion.equals("28")){
+		}else if (str_opcion.equals("29")){
 
 			if (validarGastosPersonalesDeducibles()){
 
@@ -5110,15 +5201,14 @@ public class pre_empleado extends Pantalla {
 					tab_persona_emergencia.eliminar();
 					filtrarTelefonoPersonaEmergencia();
 					filtrarDireccionPersonaEmergencia();
-				}else{
-					utilitario.agregarMensajeInfo("No se puede eliminar", "La tabla tiene detalles");
-				}
-			}else if(tab_telefonos.isFocus()){
+				}else if(tab_telefonos.isFocus()){
 				tab_telefonos.eliminar();
 			}else if(tab_direccion.isFocus()){
 				tab_direccion.eliminar();
 			}
-		}else if (str_opcion.equals("5")) {
+			}else if(str_opcion.equals("28")){
+				tab_cuenta_anticipo.eliminar();
+			}else if (str_opcion.equals("5")) {
 			tab_cargas_familiares.eliminar();
 		}else if (str_opcion.equals("6")) {
 			tab_familiar.eliminar();
@@ -5228,8 +5318,8 @@ public class pre_empleado extends Pantalla {
 		}else if (str_opcion.equals("26")){
 			if (tab_membresias.isFocus()){
 				tab_membresias.eliminar();
-			}
-		}else if (str_opcion.equals("28")){
+			}	
+				}else if (str_opcion.equals("29")){
 			if (tab_sri_gastos_deducible.isFocus()){
 				if (tab_sri_gastos_deducible.isFilaInsertada()){
 					tab_sri_gastos_deducible.eliminar();
@@ -5237,6 +5327,7 @@ public class pre_empleado extends Pantalla {
 					utilitario.addUpdate("tab_sri_gastos_deducible");
 				}
 			}
+		}
 		}
 	}
 
@@ -5632,6 +5723,18 @@ public class pre_empleado extends Pantalla {
 		return tab_deta_empleado_depar;
 	}
 
+	
+	public Tabla getTab_anio() {
+		return tab_anio;
+	}
+
+
+
+	public void setTab_anio(Tabla tab_anio) {
+		this.tab_anio = tab_anio;
+	}
+
+
 
 	public void setTab_deta_empleado_depar(Tabla tab_deta_empleado_depar) {
 		this.tab_deta_empleado_depar = tab_deta_empleado_depar;
@@ -5835,6 +5938,21 @@ public class pre_empleado extends Pantalla {
 	public SeleccionTabla getSel_tab_sucursal() {
 		return sel_tab_sucursal;
 	}
+
+
+
+
+	public Tabla getTab_cuenta_anticipo() {
+		return tab_cuenta_anticipo;
+	}
+
+
+
+	public void setTab_cuenta_anticipo(Tabla tab_cuenta_anticipo) {
+		this.tab_cuenta_anticipo = tab_cuenta_anticipo;
+	}
+
+
 
 	public void setSel_tab_sucursal(SeleccionTabla sel_tab_sucursal) {
 		this.sel_tab_sucursal = sel_tab_sucursal;
