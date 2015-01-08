@@ -22,6 +22,7 @@ public class pre_clientes extends Pantalla {
 	private Tabla tab_telefono=new Tabla();
 	private Tabla tab_email=new Tabla();
 	private Tabla tab_documento=new Tabla();
+	private Tabla tab_tarifa=new Tabla();
 	private Tabla tab_clientes=new Tabla();
 	private Arbol arb_arbol = new Arbol();
 	@EJB
@@ -82,6 +83,7 @@ public class pre_clientes extends Pantalla {
 		tab_clientes.agregarRelacion(tab_direccion);//agraga relacion para los tabuladores
 		tab_clientes.agregarRelacion(tab_telefono);
         tab_clientes.agregarRelacion(tab_email);
+        tab_clientes.agregarRelacion(tab_tarifa);
         //tab_clientes.agregarRelacion(tab_documento);
        // System.out.println("sql pc"+tab_clientes.getSql());
         
@@ -125,15 +127,25 @@ public class pre_clientes extends Pantalla {
         tab_documento.setTabla("rec_cliente_archivo","ide_recla",5);
         tab_documento.getColumna("foto_recla").setUpload("fotos");
         tab_documento.getColumna("foto_recla").setImagen("128", "128");
-        
         tab_documento.dibujar();
         PanelTabla pat_panel5 = new PanelTabla();
         pat_panel5.setPanelTabla(tab_documento);
+        
+        
+        tab_tarifa.setId("tab_tarifa");
+        tab_tarifa.setIdCompleto("tab_tabulador:tab_tarifa");
+        tab_tarifa.setTipoFormulario(true);
+        tab_tarifa.setTabla("tes_cliente_tarifa","ide_teclt",6);
+        tab_tarifa.dibujar();
+        PanelTabla pat_panel6 = new PanelTabla();
+        pat_panel6.setPanelTabla(tab_tarifa);
+        
         
         tab_tabulador.agregarTab("DIRECCION", pat_panel2);//intancia los tabuladores
         tab_tabulador.agregarTab("TELEFONO", pat_panel3);
         tab_tabulador.agregarTab("EMAIL", pat_panel4);
         tab_tabulador.agregarTab("DOCUMENTO", pat_panel5);
+        tab_tabulador.agregarTab("TARIFA", pat_panel6);
 		
 		
         /*Division div_division=new Division();
@@ -150,6 +162,18 @@ public class pre_clientes extends Pantalla {
 	}
 	
 	
+
+	public Tabla getTab_tarifa() {
+		return tab_tarifa;
+	}
+
+
+
+	public void setTab_tarifa(Tabla tab_tarifa) {
+		this.tab_tarifa = tab_tarifa;
+	}
+
+
 
 	@Override
 	public void insertar() {
