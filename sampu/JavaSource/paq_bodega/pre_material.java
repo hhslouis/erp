@@ -16,12 +16,13 @@ public class pre_material extends Pantalla{
 	
 		
 	public pre_material() {
+		tab_material.setHeader("MATERIALES DE BODEGA");
 		tab_material.setId("tab_material");  
 		tab_material.setTabla("bodt_material","ide_bomat", 1);	
 		tab_material.agregarRelacion(tab_material_tarifa); //CON ESTO LE DECIMOS Q TIENE RELACION
 		tab_material.setTipoFormulario(true);
 		tab_material.getGrid().setColumns(4);
-		tab_material.getColumna("ide_bounm").setCombo("bodt_unidad_medida", "ide_bounm", "detalle_bounm", "");
+		tab_material.getColumna("ide_bounm").setCombo("bodt_unidad_medida", "ide_bounm", "detalle_bounm,abreviatura_bounm", "");
 		tab_material.getColumna("ide_botip").setCombo("bodt_tipo_producto", "ide_botip", "detalle_botip", "");
 		tab_material.getColumna("ide_bogrm").setCombo("bodt_grupo_material", "ide_bogrm", "detalle_bogrm", "");
 		tab_material.getColumna("foto_bomat").setUpload("fotos");
@@ -45,10 +46,9 @@ public class pre_material extends Pantalla{
 		PanelTabla pat_material=new PanelTabla();
 		pat_material.setPanelTabla(tab_material);
 		
-		
+		tab_material_tarifa.setHeader("TARIFAS");
 		tab_material_tarifa.setId("tab_material_tarifa");
 		tab_material_tarifa.setTabla("tes_material_tarifa", "ide_temat", 2);
-		tab_material_tarifa.setTipoFormulario(true);
 		tab_material_tarifa.getGrid().setColumns(2);
 		tab_material_tarifa.getColumna("ide_tetar").setCombo("tes_tarifas", "ide_tetar", "detalle_tetar", "");
 		tab_material_tarifa.dibujar();
