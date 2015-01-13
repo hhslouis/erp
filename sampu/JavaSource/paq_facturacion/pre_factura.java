@@ -77,6 +77,13 @@ public class pre_factura extends Pantalla{
 		tab_factura.getColumna("ide_tetid").setCombo("tes_tipo_documento", "ide_tetid", "detalle_tetid", "");
 		tab_factura.getColumna("ide_coest").setCombo("cont_estado", "ide_coest", "detalle_coest", "");
 		tab_factura.getColumna("ide_geins").setCombo("gen_institucion", "ide_geins", "detalle_geins", "");
+		
+
+		tab_factura.getColumna("ide_recli").setCombo(ser_facturacion.getClientes());
+		tab_factura.getColumna("ide_recli").setAutoCompletar();
+		tab_factura.getColumna("ide_recli").setLectura(true);
+		tab_factura.getColumna("ide_recli").setUnico(true);
+		
 
 		//TOTALES DE COLOR ROJO--ESTILO DE COLOR ROJO Y NEGRILLA
 		tab_factura.getColumna("base_no_iva_fafac").setEtiqueta();
@@ -218,6 +225,8 @@ public class pre_factura extends Pantalla{
 		set_pantallacliente.setTitle("SELECCIONE CLIENTES");
 		set_pantallacliente.getBot_aceptar().setMetodo("aceptarCliente");
 		set_pantallacliente.setSeleccionTabla(ser_facturacion.getClientes(),"ide_recli");
+		set_pantallacliente.getTab_seleccion().getColumna("ruc_comercial_recli").setFiltro(true);
+		set_pantallacliente.getTab_seleccion().getColumna("nombre_comercial_recli").setFiltro(true);
 		set_pantallacliente.setRadio();
 		set_pantallacliente.getTab_seleccion().ejecutarSql();
 		agregarComponente(set_pantallacliente);
@@ -238,6 +247,7 @@ public class pre_factura extends Pantalla{
 	public void aceptarCliente(){
 		String str_seleccionado=set_pantallacliente.getValorSeleccionado();
 		if(str_seleccionado!=null){
+			//TablaGenerica tab_empleado_responsable = ser_nomina.ideEmpleadoContrato(str_seleccionados)
 			//Inserto los cleintes seleccionados en la tabla  
 				tab_factura.insertar();
 				tab_factura.setValor("ide_recli", str_seleccionado);				
