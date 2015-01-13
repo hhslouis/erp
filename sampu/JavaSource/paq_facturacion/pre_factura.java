@@ -2,6 +2,7 @@ package paq_facturacion;
 import java.util.Date;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.faces.event.AjaxBehaviorEvent;
 
 import framework.aplicacion.Fila;
@@ -15,6 +16,8 @@ import framework.componentes.SeleccionCalendario;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import framework.componentes.Texto;
+import paq_contabilidad.ejb.ServicioContabilidad;
+import paq_facturacion.ejb.ServicioFacturacion;
 import paq_sistema.aplicacion.Pantalla;
 import org.primefaces.event.SelectEvent;
 import framework.componentes.AutoCompletar;
@@ -28,7 +31,9 @@ public class pre_factura extends Pantalla{
 	private AutoCompletar aut_factura=new AutoCompletar();
 	//SELCCION TABLA
 	private SeleccionTabla set_pantalla_dias= new SeleccionTabla();
-	private SeleccionTabla set_insertarBodega = new SeleccionTabla();
+	private SeleccionTabla set_insertarbodega = new SeleccionTabla();
+	private SeleccionTabla set_pantallacliente= new SeleccionTabla();
+	
 
 
 	//CALENDARIO
@@ -47,11 +52,13 @@ public class pre_factura extends Pantalla{
 	private Texto tex_valor=new Texto();
 	String str_smaterial_seleccionado;
 
-
+	@EJB
+	private ServicioFacturacion ser_facturacion = (ServicioFacturacion ) utilitario.instanciarEJB(ServicioFacturacion.class);
+	
 	public pre_factura() {
 		
 		// TODO Auto-generated constructor stub
-		set_insertarBodega.setRadio();
+		
 		tab_factura.setHeader("FACTURACIÓN");
 		tab_factura.setId("tab_factura");
 		tab_factura.setTabla("fac_factura", "ide_fafac", 1);
@@ -66,10 +73,10 @@ public class pre_factura extends Pantalla{
 		tab_factura.getColumna("ide_sucu").setCombo("sis_sucursal", "ide_sucu", "nom_sucu", "");
 		tab_factura.getColumna("ide_retip").setCombo("rec_tipo", "ide_retip", "detalle_retip", "");
 		tab_factura.getColumna("ide_tedar").setVisible(false);
-		//tab_factura.getColumna("ide_tedar").setCombo("tes_datos_retencion", "ide_tedar", "tipo_retencion_tedar", "");
-		tab_factura.getColumna("ide_recli").setCombo("select ide_recli,nombre_comercial_recli from rec_clientes order by nombre_comercial_recli");
+		//tab_factura.getColumna("ide_recli").setCombo("select ide_recli,nombre_comercial_recli from rec_clientes order by nombre_comercial_recli");
 		tab_factura.getColumna("ide_tetid").setCombo("tes_tipo_documento", "ide_tetid", "detalle_tetid", "");
 		tab_factura.getColumna("ide_coest").setCombo("cont_estado", "ide_coest", "detalle_coest", "");
+		tab_factura.getColumna("ide_geins").setCombo("gen_institucion", "ide_geins", "detalle_geins", "");
 
 		//TOTALES DE COLOR ROJO--ESTILO DE COLOR ROJO Y NEGRILLA
 		tab_factura.getColumna("base_no_iva_fafac").setEtiqueta();
@@ -130,7 +137,7 @@ public class pre_factura extends Pantalla{
 
 
 		PanelTabla pat_detalle_factura= new PanelTabla();
-		pat_detalle_factura.setMensajeWarn("DETALLE FACTURACIÓN");
+		pat_detalle_factura.setMensajeWarn("DETALLE FACTURACION");
 		pat_detalle_factura.setPanelTabla(tab_detalle_factura);
 
 
@@ -141,7 +148,7 @@ public class pre_factura extends Pantalla{
 
 		//BOTON FACRURAR PERIODO
 		Boton bot_abrir_periodos= new Boton();
-		bot_abrir_periodos.setValue("Facturar periodos");
+		bot_abrir_periodos.setValue("FACTURAR PERIODOS");
 		bot_abrir_periodos.setIcon("ui-calendario");
 		bot_abrir_periodos.setMetodo("abrirRango");
 		bar_botones.agregarBoton(bot_abrir_periodos);
@@ -149,7 +156,8 @@ public class pre_factura extends Pantalla{
 		sec_rango_fechas.getBot_aceptar().setMetodo("aceptarRango");
 		sec_rango_fechas.setFechaActual();
 
-
+		
+		
 		//---SELECCION TABLA
 		set_pantalla_dias.setId("set_pantalla_dias");
 		set_pantalla_dias.setTitle("PANTALLA DEL SISTEMA");
@@ -162,18 +170,22 @@ public class pre_factura extends Pantalla{
 		bot_abrir_dias.setMetodo("abrirSeleccionTabla");
 		agregarComponente(set_pantalla_dias);
 		agregarComponente(sec_rango_fechas);
-
+		
+		
+		
 		//PANTALLA ESCOGER BODEGA
-		set_insertarBodega.setId("set_insertarBodega");
-		set_insertarBodega.setTitle("SELECCIONE MATERIAL DE BODEGA");
+		set_insertarbodega.setId("set_insertarBodega");
+		set_insertarbodega.setTitle("SELECCIONE MATERIAL DE BODEGA");
+		set_insertarbodega.setRadio();
 		//CONSULTA
-		set_insertarBodega.setSeleccionTabla("bodt_material", "ide_bomat", "detalle_bomat,aplica_valor_bomat,valor_bomat");
-		set_insertarBodega.getBot_aceptar().setMetodo("aceptarBodega");
-		set_insertarBodega.getTab_seleccion().getColumna("detalle_bomat").setNombreVisual("MATERIAL");
-		set_insertarBodega.getTab_seleccion().getColumna("aplica_valor_bomat").setVisible(false);//Oculta campo
-		set_insertarBodega.getTab_seleccion().getColumna("valor_bomat").setVisible(false);//Oculta campo
-		agregarComponente(set_insertarBodega);
+		set_insertarbodega.setSeleccionTabla("bodt_material", "ide_bomat", "detalle_bomat,aplica_valor_bomat");
+		set_insertarbodega.getBot_aceptar().setMetodo("aceptarBodega");
+		set_insertarbodega.getTab_seleccion().getColumna("detalle_bomat").setNombreVisual("MATERIAL");
+		set_insertarbodega.getTab_seleccion().getColumna("aplica_valor_bomat").setVisible(false);//Oculta campo
+		//set_insertarBodega.getTab_seleccion().getColumna("valor_bomat").setVisible(false);//Oculta campo
+		agregarComponente(set_insertarbodega);
 
+		
 		//PANTALLA TEXT0
 		dia_valor.setId("dia_valor");
 		dia_valor.setTitle("INGRESE VALOR DEL MATERIAL");
@@ -192,9 +204,51 @@ public class pre_factura extends Pantalla{
 		
 		// PARA Q SALGA EN UNA SOLA PAGINA
 		set_pantalla_dias.getTab_seleccion().setRows(200);
+		
 
+		//BOTON AGREGAR CLIENTE
+		Boton bot_agregarCliente=new Boton();
+		bot_agregarCliente.setValue("AGREGAR CLIENTE");
+		bot_agregarCliente.setIcon("ui-icon-person");
+		bot_agregarCliente.setMetodo("agregarCliente");
+		bar_botones.agregarBoton(bot_agregarCliente);
+
+		//PANTALLA SELECIONAR CLIENTE
+		set_pantallacliente.setId("set_pantallacliente");
+		set_pantallacliente.setTitle("SELECCIONE CLIENTES");
+		set_pantallacliente.getBot_aceptar().setMetodo("aceptarCliente");
+		set_pantallacliente.setSeleccionTabla(ser_facturacion.getClientes(),"ide_recli");
+		set_pantallacliente.setRadio();
+		set_pantallacliente.getTab_seleccion().ejecutarSql();
+		agregarComponente(set_pantallacliente);
+		
 	}
+	
 
+	public void agregarCliente(){
+		utilitario.agregarMensaje("Requiere ingresar una factura para ingresar los detalles", "");
+		//Hace aparecer el componente
+		if(aut_factura.getValor()!=null){
+			set_pantallacliente.getTab_seleccion().setSql(ser_facturacion.getClientes());
+			set_pantallacliente.getTab_seleccion().ejecutarSql();
+			set_pantallacliente.dibujar();
+		}	
+	}
+	
+	public void aceptarCliente(){
+		String str_seleccionado=set_pantallacliente.getValorSeleccionado();
+		if(str_seleccionado!=null){
+			//Inserto los cleintes seleccionados en la tabla  
+				tab_factura.insertar();
+				tab_factura.setValor("ide_recli", str_seleccionado);				
+			
+			set_pantallacliente.cerrar();
+			utilitario.addUpdate("tab_factura");			
+		}
+		else{
+			utilitario.agregarMensajeInfo("Debe seleccionar almenos un registro", "");
+		}
+	}
 
 	private void insertarMaterial(String ide_bomat,String valor){
 		//Inserta en la tabla de detalles el matiial seleccionado
@@ -217,13 +271,13 @@ public class pre_factura extends Pantalla{
 
 
 	public void aceptarBodega(){
-		str_smaterial_seleccionado=set_insertarBodega.getValorSeleccionado();//x q es radio
+		str_smaterial_seleccionado=set_insertarbodega.getValorSeleccionado();//x q es radio
 		if(str_smaterial_seleccionado!=null){// valido que seleccione
-			Fila fila=set_insertarBodega.getTab_seleccion().getFilaSeleccionada();
+			Fila fila=set_insertarbodega.getTab_seleccion().getFilaSeleccionada();
 			String aplica_valor=fila.getCampos()[2]+"";		
 			//Pregunta si el campo aplica_valor= true
 			if(aplica_valor.equalsIgnoreCase("true")){
-				set_insertarBodega.cerrar();
+				set_insertarbodega.cerrar();
 				if(fila.getCampos()[3]!=null){
 					tex_valor.setValue(fila.getCampos()[3]);
 				}
@@ -235,7 +289,7 @@ public class pre_factura extends Pantalla{
 				tex_valor.limpiar();
 			}
 			//Pide que ingrese en el valor
-			set_insertarBodega.cerrar();
+			set_insertarbodega.cerrar();
 			dia_valor.dibujar();
 
 		}
@@ -266,8 +320,8 @@ public class pre_factura extends Pantalla{
 			//Fechas que selecciono
 			lis_fechas_seleccionadas=set_pantalla_dias.getListaSeleccionados(); // seleccionar filas
 			set_pantalla_dias.cerrar(); //cierro seleccion dias
-			set_insertarBodega.getTab_seleccion().ejecutarSql();
-			set_insertarBodega.dibujar(); //abro seleccion bodega
+			set_insertarbodega.getTab_seleccion().ejecutarSql();
+			set_insertarbodega.dibujar(); //abro seleccion bodega
 		}
 		else{
 			utilitario.agregarMensajeError("Debe seleccionar almenos un día", "");
@@ -555,12 +609,6 @@ public class pre_factura extends Pantalla{
 	public void setSet_pantalla_dias(SeleccionTabla set_pantalla_dias) {
 		this.set_pantalla_dias = set_pantalla_dias;
 	}
-	public SeleccionTabla getSet_insertarBodega() {
-		return set_insertarBodega;
-	}
-	public void setSet_insertarBodega(SeleccionTabla set_insertarBodega) {
-		this.set_insertarBodega = set_insertarBodega;
-	}
 
 
 	public Dialogo getDia_valor() {
@@ -571,5 +619,26 @@ public class pre_factura extends Pantalla{
 	public void setDia_valor(Dialogo dia_valor) {
 		this.dia_valor = dia_valor;
 	}
+
+
+	public SeleccionTabla getSet_insertarbodega() {
+		return set_insertarbodega;
+	}
+
+
+	public void setSet_insertarbodega(SeleccionTabla set_insertarbodega) {
+		this.set_insertarbodega = set_insertarbodega;
+	}
+
+
+	public SeleccionTabla getSet_pantallacliente() {
+		return set_pantallacliente;
+	}
+
+
+	public void setSet_pantallacliente(SeleccionTabla set_pantallacliente) {
+		this.set_pantallacliente = set_pantallacliente;
+	}
+	
 
 }
