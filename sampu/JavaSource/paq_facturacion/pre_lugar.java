@@ -11,6 +11,7 @@ public class pre_lugar extends Pantalla{
 	
 	public pre_lugar (){
 		tab_lugar.setId("tab_lugar");
+		tab_lugar.setHeader("Lugar");
 		tab_lugar.setTabla("fac_lugar", "ide_falug", 1);
 		tab_lugar.agregarRelacion(tab_usuario_lugar);
 		tab_lugar.dibujar();
@@ -18,8 +19,9 @@ public class pre_lugar extends Pantalla{
 		pat_lugar.setPanelTabla(tab_lugar);
 		
 		tab_usuario_lugar.setId("tab_usuario_lugar");
+		tab_usuario_lugar.setHeader("Usuario Lugar");
 		tab_usuario_lugar.setTabla("fac_usuario_lugar", "ide_fausl", 2);
-		//tab_usuario_lugar.getColumna("ide_usua").setCombo(listaCombo)
+		tab_usuario_lugar.getColumna("ide_usua").setCombo("select ide_usua,nom_usua,nick_usua from sis_usuario order by nom_usua");
 		tab_usuario_lugar.dibujar();
 		PanelTabla pat_usuario_lugar=new PanelTabla();
 		pat_usuario_lugar.setPanelTabla(tab_usuario_lugar);
