@@ -123,12 +123,44 @@ public String getInstitucion (String activo, String detalle){
  * @param modulo recibe las cuentas contables activas o pasivas 
  * @return string SQL Cuenta Contable 
  */
+
+public TablaGenerica getTablaCuentaContable ( String activo){
+	TablaGenerica tab_cuenta_contable= utilitario.consultar("select ide_cocac,cue_codigo_cocac,cue_descripcion_cocac" +
+			"  from cont_catalogo_cuenta " +
+			"  WHERE activo_cocac IN ("+activo+")order by cue_codigo_cocac ");
+	
+	return tab_cuenta_contable;	
+}
 public String getCuentaContable (String activo){
 	String cuentacontable ="select ide_cocac,cue_codigo_cocac,cue_descripcion_cocac" +
 			"  from cont_catalogo_cuenta " +
 			"  WHERE activo_cocac IN ("+activo+")order by cue_codigo_cocac ";
 	return cuentacontable;
 }
+public TablaGenerica getTablaCatalogoCuentaAnio (String ide_geani){
+	
+	TablaGenerica tab_catalogo_cuenta_anio=utilitario.consultar("select a.ide_cocac,cue_codigo_cocac,cue_descripcion_cocac," +
+			"detalle_geani" +
+			"  from cont_catalogo_cuenta a,cont_vigente b,gen_anio c "+
+			" where a.ide_cocac = b.ide_cocac" +
+			" and b.ide_geani= c.ide_geani and b.ide_geani =("+ide_geani+")" +
+			" order by cue_codigo_cocac");
+	return tab_catalogo_cuenta_anio;
+	
+	
+}
+public String servicioCatalogoCuentaAnio (String ide_geani){
+	
+	String catalogo_cuenta_anio="select a.ide_cocac,cue_codigo_cocac,cue_descripcion_cocac,detalle_geani " +
+			" from cont_catalogo_cuenta a,cont_vigente b,gen_anio c where a.ide_cocac = b.ide_cocac" +
+			" and b.ide_geani= c.ide_geani and b.ide_geani ="+ide_geani +
+			" order by cue_codigo_cocac";	
+	System.out.println("consluat "+catalogo_cuenta_anio);
+	return catalogo_cuenta_anio;
+}
+
+
+
 
 }
 
