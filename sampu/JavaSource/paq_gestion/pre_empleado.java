@@ -12,7 +12,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 import framework.aplicacion.TablaGenerica;
 import framework.componentes.*;
 import framework.reportes.ReporteDataSource;
-
+import framework.componentes.Boton;
 import org.primefaces.component.panelmenu.PanelMenu;
 import org.primefaces.component.submenu.Submenu;
 import org.primefaces.event.DateSelectEvent;
@@ -78,6 +78,8 @@ public class pre_empleado extends Pantalla {
 	private SeleccionTabla set_empleado=new SeleccionTabla();
 	private Reporte rep_reporte=new Reporte();
 	private SeleccionFormatoReporte sef_reporte=new SeleccionFormatoReporte();
+	private SeleccionTabla set_actualizar_cuenta=new SeleccionTabla();
+	private SeleccionTabla set_cuenta_anticipo=new SeleccionTabla();
 	private SeleccionTabla set_sucursal=new SeleccionTabla();
 	private SeleccionTabla set_empleado_deducible=new SeleccionTabla();
 	private SeleccionTabla set_departamento=new SeleccionTabla();
@@ -97,6 +99,10 @@ public class pre_empleado extends Pantalla {
 	private SeleccionTabla sel_tab_departamento =new SeleccionTabla();
 	private SeleccionTabla sel_tab_sucursal=new SeleccionTabla();
 	private String parametro1;
+	private Confirmar con_guardar_cuenta=new Confirmar();
+
+	private Confirmar con_guardar=new Confirmar();
+
 
 	@EJB
 	private ServicioGestion ser_gestion = (ServicioGestion) utilitario.instanciarEJB(ServicioGestion.class);
@@ -151,7 +157,6 @@ public class pre_empleado extends Pantalla {
 		bar_botones.agregarBoton(bot_limpiar);
 
 
-
 		//con_ver_vacaciones.getBot_aceptar().setRendered(false);
 
 		//tabla detale empleado
@@ -179,7 +184,38 @@ public class pre_empleado extends Pantalla {
 		tab_dia_detalle_empleado_depar.setLectura(true);
 
 
+		///BOTON AGREGAR CUENTA ANTICIPO
+		Boton bot_cuenta_anticipo = new Boton();
+		bot_cuenta_anticipo.setValue("Agregar Cuenta Anticipo");
+		bot_cuenta_anticipo.setTitle("CUENTA ANTICIPO");
+		bot_cuenta_anticipo.setIcon("ui-icon-person");
+		bot_cuenta_anticipo.setMetodo("importarCuentaAnticipo");
+		bar_botones.agregarBoton(bot_cuenta_anticipo);
 
+	
+		set_cuenta_anticipo.setId("set_cuenta_anticipo");
+		set_cuenta_anticipo.setSeleccionTabla(ser_contabilidad.servicioCatalogoCuentaAnio("1"),"ide_cocac");
+		set_cuenta_anticipo.getTab_seleccion().getColumna("ide_cocac").setFiltro(true);
+		set_cuenta_anticipo.getBot_aceptar().setMetodo("aceptarCuentaAnticipo");
+		set_cuenta_anticipo.setRadio();
+		set_cuenta_anticipo.getTab_seleccion().ejecutarSql();
+		agregarComponente(set_cuenta_anticipo);
+
+		//ACTUALIZAR CUENTA A.		
+		Boton bot_actualizar = new Boton();
+		bot_actualizar.setIcon("ui-icon-person");
+		bot_actualizar.setValue("Actualizar Cuenta Anticipo");
+		bot_actualizar.setMetodo("actualizarCuentaAnticipo");
+		bar_botones.agregarBoton(bot_actualizar);
+
+		con_guardar_cuenta.setId("con_guardar_cuenta");
+		agregarComponente(con_guardar_cuenta);
+		
+		set_actualizar_cuenta.setId("set_actualizar_cuenta");
+		set_actualizar_cuenta.setSeleccionTabla(ser_contabilidad.servicioCatalogoCuentaAnio("1"),"ide_cocac");
+		set_actualizar_cuenta.setRadio();
+		set_actualizar_cuenta.getBot_aceptar().setMetodo("modificarCuentaAnticipo");
+		agregarComponente(set_actualizar_cuenta);
 
 		//Configuro el dialogo 
 		dia_deta_emplea_depar=new Dialogo();
@@ -320,9 +356,80 @@ public class pre_empleado extends Pantalla {
 		sel_tab_sucursal.getTab_seleccion().getColumna("nom_sucu").setFiltro(true);
 		sel_tab_sucursal.getBot_aceptar().setMetodo("aceptarReporte");
 		agregarComponente(sel_tab_sucursal);
-
 	}
 
+	public  void aceptarCuentaAnticipo(){
+		String str_seleccionado=set_cuenta_anticipo.getValorSeleccionado();
+		System.out.println("pruebabab f  "+str_seleccionado);
+		if (str_seleccionado!=null){
+			tab_cuenta_anticipo.insertar();
+			//tab_cuenta_anticipo.setValor("IDE_COCAC", tab_cuenta_anticipo.getValor(i, "IDE_COCAC"));			
+			tab_cuenta_anticipo.setValor("ide_cocac",str_seleccionado);
+			System.out.println("entre cc f  "+str_seleccionado);
+		}
+		set_cuenta_anticipo.cerrar();
+		utilitario.addUpdate("tab_cuenta_anticipo");
+	}
+
+	public void importarCuentaAnticipo(){
+		if(aut_empleado.getValor()!= null){
+			if(tab_anio.getValor("ide_geani")!=null){
+			set_cuenta_anticipo.getTab_seleccion().setSql(ser_contabilidad.servicioCatalogoCuentaAnio(tab_anio.getValorSeleccionado()));
+			set_cuenta_anticipo.getTab_seleccion().ejecutarSql();
+			set_cuenta_anticipo.dibujar();
+			}
+			else{
+				utilitario.agregarMensajeInfo("SELECCIONE UN AÑO","No se encuentra seleccionado un año para la cuenta de anticipo");
+			}
+			
+		}else {
+			utilitario.agregarMensajeInfo("SELECCIONE UN EMPLEADO","");
+
+		}
+
+	}
+public void actualizarCuentaAnticipo(){
+		 if(aut_empleado.getValor()!= null){
+			if(tab_cuenta_anticipo.getValor("ide_cocac")!=null){
+				set_actualizar_cuenta.getTab_seleccion().setSql(ser_contabilidad.servicioCatalogoCuentaAnio(tab_anio.getValorSeleccionado()));
+				set_actualizar_cuenta.getTab_seleccion().ejecutarSql();
+				set_actualizar_cuenta.dibujar();
+			}
+			else{
+				utilitario.agregarMensajeInfo("SELECCIONE UNA CUENTA","No se encuentra seleccionado la cuenta anticipo para actualizar");
+			}
+			
+		}else {
+			utilitario.agregarMensajeInfo("SELECCIONE UN EMPLEADO","");
+		}
+
+	}
+	
+public void modificarCuentaAnticipo(){
+		System.out.println("entre modificar  ");
+		String str_cuenta= set_actualizar_cuenta.getValorSeleccionado();
+		System.out.println("q selecciona  "+str_cuenta);
+		if(str_cuenta!=null){
+
+			tab_cuenta_anticipo.modificar(tab_cuenta_anticipo.getFilaActual());
+			tab_cuenta_anticipo.setValor("ide_cocac", str_cuenta);
+			utilitario.addUpdate("tab_cuenta_anticipo");
+
+			con_guardar_cuenta.setMessage("Esta Seguro de Actualizar la cuenta");
+			con_guardar_cuenta.setTitle("CONFIRMCION DE ACTUALIZAR");
+			con_guardar_cuenta.getBot_aceptar().setMetodo("guardarActualizarCuenta");
+			con_guardar_cuenta.dibujar();
+			utilitario.addUpdate("con_guardar_cuenta");
+		}
+	}
+	public void guardarActualizarCuenta(){
+		System.out.println("entre guardar  ");
+
+		tab_cuenta_anticipo.guardar();
+		con_guardar_cuenta.cerrar();
+		set_actualizar_cuenta.cerrar();
+		guardarPantalla();
+	}
 
 
 	public void aceptarAccionesEmpleado(){
@@ -2336,72 +2443,49 @@ public class pre_empleado extends Pantalla {
 		}
 	}
 
-	public void dibujarCuentaAnticipo() {
+	public void dibujarCuentaAnticipo() {		
 		if (aut_empleado.getValor() != null) {
 			str_opcion = "28";
-			limpiarPanel();			
-			tab_cuenta_anticipo= new Tabla();
-			tab_cuenta_anticipo.setId("tab_cuenta_anticipo");
-			tab_cuenta_anticipo.setHeader("CUENTA ANTICIPO");
-			tab_cuenta_anticipo.setTabla("GTH_CUENTA_ANTICIPO","IDE_GTCUA",43);
-			tab_cuenta_anticipo.agregarRelacion(tab_anio);
-			tab_cuenta_anticipo.getColumna("ide_cocac").setCombo(ser_contabilidad.getCuentaContable("true,false"));
-			tab_cuenta_anticipo.getColumna("ide_geani").setCombo("gen_anio","ide_geani","detalle_geani","");
-			tab_cuenta_anticipo.getColumna("ide_gtemp").setVisible(false);
-
-			tab_cuenta_anticipo.setCondicion("IDE_GTEMP=" + aut_empleado.getValor());
-			//tab_partida_anticipo.setTipoFormulario(true);
-			//tab_partida_anticipo.getGrid().setColumns(4);
-			//tab_partida_anticipo.setMostrarNumeroRegistros(true);
-			tab_cuenta_anticipo.dibujar();
-			PanelTabla pat_panel1 = new PanelTabla();
-			pat_panel1.setPanelTabla(tab_cuenta_anticipo);
-			pat_panel1.getMenuTabla().getItem_insertar().setRendered(false);			
-			pat_panel1.getMenuTabla().getItem_eliminar().setRendered(false);
-			
+			limpiarPanel();	
 			tab_anio= new Tabla();
 			tab_anio.setId("tab_anio");
 			tab_anio.setHeader("AÑO ");
 			tab_anio.setTabla("GEN_ANIO","IDE_GEANI",44);
-			/*tab_vigente.setCondicion("IDE_GTEMP=" + aut_empleado.getValor());
-			tab_vigente.setTipoFormulario(true);
-			tab_vigente.getGrid().setColumns(4);
-			tab_vigente.setMostrarNumeroRegistros(true);
-			*/
-			TablaGenerica  tab_generica=ser_contabilidad.getTablaVigente("tab_anio");
-			for(int i=0;i<tab_generica.getTotalFilas();i++){
-	    		//muestra los ides q quiere mostras.
-				if(!tab_generica.getValor(i, "column_name").equals("ide_geani")){	
-					tab_anio.getColumna(tab_generica.getValor(i, "column_name")).setVisible(false);	
-				}				
-	    		
-	       		}
-			
+			tab_anio.onSelect("seleccionarCuentaAnticipo");
+			//tab_anio.agregarRelacion(tab_cuenta_anticipo);
+			tab_anio.setLectura(true);
 			tab_anio.dibujar();
-			
+
 			PanelTabla pat_panel2 = new PanelTabla();	
 			pat_panel2.setPanelTabla(tab_anio);
-			pat_panel2.getMenuTabla().getItem_insertar().setRendered(true);			
-			pat_panel2.getMenuTabla().getItem_eliminar().setRendered(true);
 
-			ItemMenu itm_modificar=new ItemMenu();
-			itm_modificar.setMetodo("modificaranio");
-			itm_modificar.setValue("Modificar");
-			pat_panel2.getMenuTabla().getChildren().add(itm_modificar);
+
+			tab_cuenta_anticipo= new Tabla();
+			tab_cuenta_anticipo.setId("tab_cuenta_anticipo");
+			tab_cuenta_anticipo.setHeader("CUENTA ANTICIPO");
+			tab_cuenta_anticipo.setTabla("GTH_CUENTA_ANTICIPO","IDE_GTCUA",43);
+			tab_cuenta_anticipo.getColumna("ide_cocac").setCombo(ser_contabilidad.getCuentaContable("true,false"));
+			tab_cuenta_anticipo.getColumna("ide_cocac").setAutoCompletar();
+			tab_cuenta_anticipo.getColumna("ide_cocac").setLectura(true);
+			tab_cuenta_anticipo.getColumna("ide_gtemp").setVisible(false);
+			tab_cuenta_anticipo.getColumna("ide_geani").setVisible(false);
+			tab_cuenta_anticipo.setCondicion("IDE_GTEMP=" + aut_empleado.getValor()+" AND IDE_GEANI="+tab_anio.getValor("ide_geani"));
+			tab_cuenta_anticipo.dibujar();
+			PanelTabla pat_panel1 = new PanelTabla();
+			pat_panel1.setPanelTabla(tab_cuenta_anticipo);
 
 			Division div_anio=new Division();
 			div_anio.dividir2(pat_panel2,pat_panel1, "50%","H");		
 			pan_opcion.setTitle("CUENTA ANTICIPO");
 			pan_opcion.getChildren().add(div_anio);
-			
-		
-			
-			
+
 		} else {
 			utilitario.agregarMensajeInfo("No se puede abrir el item", "Seleccione un Colaborador en el autocompletar");
 			limpiar();
 		}
 	}
+
+
 
 	private void filtrarTelefonoPersonaEmergencia(){
 		tab_telefonos.setCondicion("IDE_GTPEE="+tab_persona_emergencia.getValor("IDE_GTPEE"));
@@ -3330,7 +3414,7 @@ public class pre_empleado extends Pantalla {
 			obj1[0]="1";
 			obj1[1]="Propio";
 			lis.add(obj1);
-			
+
 			tab_vehiculo.getColumna("PROPIO_PRENDADO_GTVEE").setRadio(lis, "0");
 			tab_vehiculo.getColumna("PROPIO_PRENDADO_GTVEE").setMetodoChange("cambiaTipoVehiculo");
 			tab_vehiculo.getColumna("PRENDADO_AFAVOR_GTVEE").setLectura(false);
@@ -3768,6 +3852,18 @@ public class pre_empleado extends Pantalla {
 		utilitario.addUpdate("tab_sri_gastos_deducible");
 	}
 
+	public void seleccionarCuentaAnticipo(SelectEvent evt){
+		tab_anio.seleccionarFila(evt);
+		tab_cuenta_anticipo.setCondicion("IDE_GTEMP=" + aut_empleado.getValor()+" AND IDE_GEANI="+tab_anio.getValor("ide_geani"));
+		tab_cuenta_anticipo.ejecutarSql();
+		//tab_cuenta_anticipo.getColumna("ide_gtemp").setValorDefecto(tab_anio.getValorSeleccionado());
+		tab_cuenta_anticipo.getColumna("ide_gtemp").setValorDefecto(aut_empleado.getValor());
+		tab_cuenta_anticipo.getColumna("ide_geani").setValorDefecto(tab_anio.getValorSeleccionado());
+		System.out.println("salir"+tab_cuenta_anticipo.getSql());
+		utilitario.addUpdate("tab_cuenta_anticipo");
+
+	}
+
 	/**
 	 * limpia toda la pantalla incluyendo el autocompletar
 	 */
@@ -3794,6 +3890,8 @@ public class pre_empleado extends Pantalla {
 		tab_negocio_empl.limpiar();
 		tab_paticipantes_negocio.limpiar();
 		tab_documentacion.limpiar();
+		tab_cuenta_anticipo.limpiar();
+		tab_anio.limpiar();
 		tab_cuenta_bancaria.limpiar();
 		tab_situacion_financiera.limpiar();
 		tab_inversion.limpiar();
@@ -4008,7 +4106,7 @@ public class pre_empleado extends Pantalla {
 			}else {
 				utilitario.agregarMensajeInfo("No se puede insertar", "Debe seleccionar un Colaborador en el autocompletar");
 			}
-				}else if (str_opcion.equals("4")) {  // OPCION EN CASO DE EMERGENCIA
+		}else if (str_opcion.equals("4")) {  // OPCION EN CASO DE EMERGENCIA
 			if (aut_empleado.getValor()!=null){
 				if (tab_persona_emergencia.isFocus()){
 					tab_persona_emergencia.insertar();
@@ -4029,17 +4127,17 @@ public class pre_empleado extends Pantalla {
 						utilitario.agregarMensajeInfo("No se puede insertar", "No existe datos de emergencia");
 					}
 				}
-				
+
 			}else {
 				utilitario.agregarMensajeInfo("No se puede insertar", "Debe seleccionar un Colaborador en el autocompletar");
 			}
-				}else if (str_opcion.equals("28")) { // OPCION PARTIDA ANTICIPO
-					if (aut_empleado.getValor()!=null){
-						tab_cuenta_anticipo.insertar();
-						tab_cuenta_anticipo.setValor("IDE_GTEMP", aut_empleado.getValor());
-					}else {
-						utilitario.agregarMensajeInfo("No se puede insertar", "Debe seleccionar un Colaborador en el autocompletar");
-					}
+		}else if (str_opcion.equals("28")) { // OPCION PARTIDA ANTICIPO
+			if (aut_empleado.getValor()!=null){
+				tab_cuenta_anticipo.insertar();
+				tab_cuenta_anticipo.setValor("IDE_GTEMP", aut_empleado.getValor());
+			}else {
+				utilitario.agregarMensajeInfo("No se puede insertar", "Debe seleccionar un Colaborador en el autocompletar");
+			}
 		}else if (str_opcion.equals("5")) {  // OPCION DEPENDIENTES (HIJOS-HERMANOS) 
 			if (aut_empleado.getValor()!=null){
 				tab_cargas_familiares.insertar();
@@ -4290,6 +4388,8 @@ public class pre_empleado extends Pantalla {
 		}
 	}
 
+
+
 	@Override
 	public void guardar() {
 		// TODO Auto-generated method stub
@@ -4465,7 +4565,7 @@ public class pre_empleado extends Pantalla {
 		}else if (str_opcion.equals("28")) {
 			tab_cuenta_anticipo.guardar();
 			guardarPantalla();
-						
+
 		}else if (str_opcion.equals("5")) {
 			if(tab_cargas_familiares.getValor("IDE_GTTDI")==null || tab_cargas_familiares.getValor("IDE_GTTDI").isEmpty()){
 				utilitario.agregarMensajeInfo("No se puede guardar", "Debe ingresar un tipo de documento");
@@ -5153,6 +5253,8 @@ public class pre_empleado extends Pantalla {
 	@Override
 	public void eliminar() {
 		// TODO Auto-generated method stub
+		System.out.println("entre metodo eleiminar");
+
 		if (str_opcion.equals("0")) {
 			if (tab_empleado.isFocus()){
 				if (tab_empleado.eliminar()){
@@ -5195,139 +5297,146 @@ public class pre_empleado extends Pantalla {
 			}							
 		}else if (str_opcion.equals("3")) {
 			tab_documentacion.eliminar();
-		}else if (str_opcion.equals("4")) {
+		}
+		else if(str_opcion.equals("28")){
+			if(tab_cuenta_anticipo.isFocus()){
+				tab_cuenta_anticipo.eliminar();
+			}
+		}
+		else if (str_opcion.equals("4")) {
 			if (tab_persona_emergencia.isFocus()){
 				if (tab_telefonos.getTotalFilas()==0){
 					tab_persona_emergencia.eliminar();
 					filtrarTelefonoPersonaEmergencia();
 					filtrarDireccionPersonaEmergencia();
 				}else if(tab_telefonos.isFocus()){
-				tab_telefonos.eliminar();
-			}else if(tab_direccion.isFocus()){
-				tab_direccion.eliminar();
-			}
-			}else if(str_opcion.equals("28")){
-				tab_cuenta_anticipo.eliminar();
+					tab_telefonos.eliminar();
+				}else if(tab_direccion.isFocus()){
+					tab_direccion.eliminar();
+				}
 			}else if (str_opcion.equals("5")) {
-			tab_cargas_familiares.eliminar();
-		}else if (str_opcion.equals("6")) {
-			tab_familiar.eliminar();
-		}
-		//		else if (str_opcion.equals("8")) {
-		//			tab_direccion.eliminar();
-		//		}else if (str_opcion.equals("9")) {
-		//			tab_telefonos.eliminar();
-		//		}else if (str_opcion.equals("10")) {
-		//			tab_correos.eliminar();
-		//		}
-		else if (str_opcion.equals("7")){
-			if (tab_seguro_vida.isFocus()){
-				tab_seguro_vida.eliminar();
-				filtrarBeneficiariosSeguroVida();
-			}else if (tab_beneficiario_seguro.isFocus()){
-				tab_beneficiario_seguro.eliminar();
+				tab_cargas_familiares.eliminar();
+			}else if (str_opcion.equals("6")) {
+				tab_familiar.eliminar();
 			}
-		}else if (str_opcion.equals("8")){
-			if (tab_registro_militar.isFocus()){
-				tab_registro_militar.eliminar();
-			}
-		}else if (str_opcion.equals("9")){
-			if (tab_hobbies.isFocus()){
-				tab_hobbies.eliminar();
-			}
-		}else if (str_opcion.equals("10")){
-			if (tab_educacion.isFocus()){
-				tab_educacion.eliminar();
-			}
-		}else if (str_opcion.equals("11")){
-			if (tab_idiomas.isFocus()){
-				tab_idiomas.eliminar();
-			}
-		}else if (str_opcion.equals("12")){
-			if (tab_capacitacion.isFocus()){
-				tab_capacitacion.eliminar();
-			}
-		}else if (str_opcion.equals("13")){
-			if (tab_experiencia_docente.isFocus()){
-				tab_experiencia_docente.eliminar();
-			}
-		}else if (str_opcion.equals("14")){
-			if (tab_experiencia_laboral.isFocus()){
-				if (tab_telefonos.getTotalFilas()==0){
-					tab_experiencia_laboral.eliminar();
-				}else{
-					utilitario.agregarMensajeInfo("No se puede eliminar", "La tabla tiene detalles");
+			//		else if (str_opcion.equals("8")) {
+			//			tab_direccion.eliminar();
+			//		}else if (str_opcion.equals("9")) {
+			//			tab_telefonos.eliminar();
+			//		}else if (str_opcion.equals("10")) {
+			//			tab_correos.eliminar();
+			//		}
+			else if (str_opcion.equals("7")){
+				if (tab_seguro_vida.isFocus()){
+					tab_seguro_vida.eliminar();
+					filtrarBeneficiariosSeguroVida();
+				}else if (tab_beneficiario_seguro.isFocus()){
+					tab_beneficiario_seguro.eliminar();
 				}
-			}else if(tab_telefonos.isFocus()){
-				tab_telefonos.eliminar();
-			}
-		}else if (str_opcion.equals("15")) {
-			tab_amigos.eliminar();
-		}else if (str_opcion.equals("16")){
-			if (tab_situacion_economica.isFocus()){
-				tab_situacion_economica.eliminar();
-			}
-		}else if (str_opcion.equals("17")){
-			if (tab_negocio_empl.isFocus()){
-				tab_negocio_empl.eliminar();
-				filtrarParticipantesNegocio();
-				filtrarTelefonosNegocio();
-				filtrarDireccionNegocio();
-				filtrarAnexosNegocio();
-			}else if (tab_paticipantes_negocio.isFocus()){
-				tab_paticipantes_negocio.eliminar();
-			}else if (tab_direccion.isFocus()){
-				tab_direccion.eliminar();
-			}else if (tab_telefonos.isFocus()){
-				tab_telefonos.eliminar();
-			}else if (tab_archivo_empleado.isFocus()){
-				tab_archivo_empleado.eliminar();
-			}
-		}else if (str_opcion.equals("18")){
-			if (tab_terreno.isFocus()){
-				tab_terreno.eliminar();
-			}
-		}else if (str_opcion.equals("19")){
-			if (tab_casa.isFocus()){
-				tab_casa.eliminar();
-			}
-		}else if (str_opcion.equals("20")){
-			if (tab_vehiculo.isFocus()){
-				tab_vehiculo.eliminar();
-			}
-		}else if (str_opcion.equals("21")){
-			if (tab_situacion_financiera.isFocus()){
-				tab_situacion_financiera.eliminar();
-			}
-		}else if (str_opcion.equals("22")){
-			if (tab_cuenta_bancaria.isFocus()){
-				tab_cuenta_bancaria.eliminar();
-			}
-		}else if (str_opcion.equals("23")){
-			if (tab_inversion.isFocus()){
-				tab_inversion.eliminar();
-			}
-		}else if (str_opcion.equals("24")){
-			if (tab_endeudamiento.isFocus()){
-				tab_endeudamiento.eliminar();
-			}
-		}else if (str_opcion.equals("25")){
-			if (tab_tarjeta_credito.isFocus()){
-				tab_tarjeta_credito.eliminar();
-			}
-		}else if (str_opcion.equals("26")){
-			if (tab_membresias.isFocus()){
-				tab_membresias.eliminar();
-			}	
-				}else if (str_opcion.equals("29")){
-			if (tab_sri_gastos_deducible.isFocus()){
-				if (tab_sri_gastos_deducible.isFilaInsertada()){
-					tab_sri_gastos_deducible.eliminar();
-					tab_sri_gastos_deducible.sumarColumnas();
-					utilitario.addUpdate("tab_sri_gastos_deducible");
+			}else if (str_opcion.equals("8")){
+				if (tab_registro_militar.isFocus()){
+					tab_registro_militar.eliminar();
+				}
+			}else if (str_opcion.equals("9")){
+				if (tab_hobbies.isFocus()){
+					tab_hobbies.eliminar();
+				}
+			}else if (str_opcion.equals("10")){
+				if (tab_educacion.isFocus()){
+					tab_educacion.eliminar();
+				}
+			}else if (str_opcion.equals("11")){
+				if (tab_idiomas.isFocus()){
+					tab_idiomas.eliminar();
+				}
+			}else if (str_opcion.equals("12")){
+				if (tab_capacitacion.isFocus()){
+					tab_capacitacion.eliminar();
+				}
+			}else if (str_opcion.equals("13")){
+				if (tab_experiencia_docente.isFocus()){
+					tab_experiencia_docente.eliminar();
+				}
+			}else if (str_opcion.equals("14")){
+				if (tab_experiencia_laboral.isFocus()){
+					if (tab_telefonos.getTotalFilas()==0){
+						tab_experiencia_laboral.eliminar();
+					}else{
+						utilitario.agregarMensajeInfo("No se puede eliminar", "La tabla tiene detalles");
+					}
+				}else if(tab_telefonos.isFocus()){
+					tab_telefonos.eliminar();
+				}
+			}else if (str_opcion.equals("15")) {
+				tab_amigos.eliminar();
+			}else if (str_opcion.equals("16")){
+				if (tab_situacion_economica.isFocus()){
+					tab_situacion_economica.eliminar();
+				}
+			}else if (str_opcion.equals("17")){
+				if (tab_negocio_empl.isFocus()){
+					tab_negocio_empl.eliminar();
+					filtrarParticipantesNegocio();
+					filtrarTelefonosNegocio();
+					filtrarDireccionNegocio();
+					filtrarAnexosNegocio();
+				}else if (tab_paticipantes_negocio.isFocus()){
+					tab_paticipantes_negocio.eliminar();
+				}else if (tab_direccion.isFocus()){
+					tab_direccion.eliminar();
+				}else if (tab_telefonos.isFocus()){
+					tab_telefonos.eliminar();
+				}else if (tab_archivo_empleado.isFocus()){
+					tab_archivo_empleado.eliminar();
+				}
+			}else if (str_opcion.equals("18")){
+				if (tab_terreno.isFocus()){
+					tab_terreno.eliminar();
+				}
+			}else if (str_opcion.equals("19")){
+				if (tab_casa.isFocus()){
+					tab_casa.eliminar();
+				}
+			}else if (str_opcion.equals("20")){
+				if (tab_vehiculo.isFocus()){
+					tab_vehiculo.eliminar();
+				}
+			}else if (str_opcion.equals("21")){
+				if (tab_situacion_financiera.isFocus()){
+					tab_situacion_financiera.eliminar();
+				}
+			}else if (str_opcion.equals("22")){
+				if (tab_cuenta_bancaria.isFocus()){
+					tab_cuenta_bancaria.eliminar();
+				}
+			}else if (str_opcion.equals("23")){
+				if (tab_inversion.isFocus()){
+					tab_inversion.eliminar();
+				}
+			}else if (str_opcion.equals("24")){
+				if (tab_endeudamiento.isFocus()){
+					tab_endeudamiento.eliminar();
+				}
+			}else if (str_opcion.equals("25")){
+				if (tab_tarjeta_credito.isFocus()){
+					tab_tarjeta_credito.eliminar();
 				}
 			}
-		}
+
+			else if (str_opcion.equals("26")){
+				if (tab_membresias.isFocus()){
+					tab_membresias.eliminar();
+				}	
+			}else if (str_opcion.equals("29")){
+				if (tab_sri_gastos_deducible.isFocus()){
+					if (tab_sri_gastos_deducible.isFilaInsertada()){
+						tab_sri_gastos_deducible.eliminar();
+						tab_sri_gastos_deducible.sumarColumnas();
+						utilitario.addUpdate("tab_sri_gastos_deducible");
+					}
+				}
+			}
+
 		}
 	}
 
@@ -5393,6 +5502,13 @@ public class pre_empleado extends Pantalla {
 
 	public void setTab_telefonos(Tabla tab_telefonos) {
 		this.tab_telefonos = tab_telefonos;
+	}
+	public SeleccionTabla getSet_actualizar_cuenta() {
+		return set_actualizar_cuenta;
+	}
+
+	public void setSet_actualizar_cuenta(SeleccionTabla set_actualizar_cuenta) {
+		this.set_actualizar_cuenta = set_actualizar_cuenta;
 	}
 
 	public Tabla getTab_correos() {
@@ -5723,7 +5839,7 @@ public class pre_empleado extends Pantalla {
 		return tab_deta_empleado_depar;
 	}
 
-	
+
 	public Tabla getTab_anio() {
 		return tab_anio;
 	}
@@ -5950,6 +6066,18 @@ public class pre_empleado extends Pantalla {
 
 	public void setTab_cuenta_anticipo(Tabla tab_cuenta_anticipo) {
 		this.tab_cuenta_anticipo = tab_cuenta_anticipo;
+	}
+
+
+
+	public SeleccionTabla getSet_cuenta_anticipo() {
+		return set_cuenta_anticipo;
+	}
+
+
+
+	public void setSet_cuenta_anticipo(SeleccionTabla set_cuenta_anticipo) {
+		this.set_cuenta_anticipo = set_cuenta_anticipo;
 	}
 
 
