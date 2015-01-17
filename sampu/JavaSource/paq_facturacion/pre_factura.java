@@ -343,20 +343,23 @@ public class pre_factura extends Pantalla{
 
 	public void aceptarBodega(){
 		String str_seleccionado=set_insertarbodega.getValorSeleccionado();//x q es radio
-		TablaGenerica validarTarifaUnica=utilitario.consultar("select ide_recli, aplica_mtarifa_recli from rec_clientes where aplica_mtarifa_recli=true and ide_recli="+tab_factura.getValor("ide_recli"));
-		TablaGenerica retornarValorUnico= utilitario.consultar("select a.ide_recli, a.aplica_mtarifa_recli, valor_temat from rec_clientes a, tes_tarifas b, tes_material_tarifa c where a.aplica_mtarifa_recli=true and " +
-				"b.ide_tetar= c.ide_tetar  and a.ide_recli="+tab_factura.getValor("ide_recli")+" and ide_bomat="+set_insertarbodega.getValorSeleccionado());
+		TablaGenerica validarTarifaUnica=utilitario.consultar("select ide_recli, aplica_mtarifa_recli from rec_clientes where aplica_mtarifa_recli=false and ide_recli="+tab_factura.getValor("ide_recli"));
+		System.out.println("imprimir xx validarTarifaUnica "+validarTarifaUnica.getSql());
+		TablaGenerica retornarValorUnico= utilitario.consultar(" select a.ide_recli, a.aplica_mtarifa_recli, valor_temat from rec_clientes a, tes_material_tarifa c  where  a.ide_tetar= c.ide_tetar  and a.ide_recli="+tab_factura.getValor("ide_recli")+" and ide_bomat="+set_insertarbodega.getValorSeleccionado());
+		System.out.println("imprimir xx retornarValorUnico "+retornarValorUnico.getSql());
+
 		TablaGenerica retornaValorMultiple=utilitario.consultar("select ide_teclt,a.ide_recli,ide_bomat,valor_temat from tes_cliente_tarifa a, rec_clientes b,tes_material_tarifa c"+
 				" where a.ide_recli = b.ide_recli and a.ide_temat = c.ide_temat and a.ide_recli ="+tab_factura.getValor("ide_recli")+" and ide_bomat="+set_insertarbodega.getValorSeleccionado());
+		System.out.println("imprimir xx retornaValorMultiple "+retornaValorMultiple.getSql());
 		
-		if(validarTarifaUnica!=null){
+		if(validarTarifaUnica.isEmpty()){
 			valor=retornaValorMultiple.getValor("valor_temat");
-			System.out.println("Multiple"+retornaValorMultiple.getSql());
+			System.out.println("Multiple "+valor);
 			
 		}
-		else if(validarTarifaUnica==null){
+		else {
 			valor=retornarValorUnico.getValor("valor_temat");
-			System.out.println("Valor Unico"+retornarValorUnico.getSql());
+			System.out.println("Valor Unico "+valor);
 		}
 		
 		if(str_seleccionado!=null){// valido que seleccione
