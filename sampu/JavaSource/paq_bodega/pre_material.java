@@ -34,12 +34,10 @@ public class pre_material extends Pantalla{
         Object fila2[] = {
             "0", "NO"
         };
-        Object fila3[] = {
-            "2", "NO  OBJETO"
-        };
+   
         lista.add(fila1);
         lista.add(fila2);
-        lista.add(fila3);
+       
         tab_material.getColumna("iva_bomat").setRadio(lista, "1");
         tab_material.getColumna("iva_bomat").setRadioVertical(true);
     	tab_material.agregarRelacion(tab_material_tarifa); //CON ESTO LE DECIMOS Q TIENE RELACION
@@ -58,6 +56,7 @@ public class pre_material extends Pantalla{
 		tab_material_tarifa.getColumna("ide_tetar").setCombo("tes_tarifas", "ide_tetar", "detalle_tetar", "");
 		tab_material_tarifa.getColumna("ide_tetar").setUnico(true);
 		tab_material_tarifa.getColumna("ide_bomat").setUnico(true);
+		tab_material_tarifa.setCampoForanea("ide_bomat");
 		tab_material_tarifa.dibujar();
 		PanelTabla pat_material_tarifa= new PanelTabla();
 		pat_material_tarifa.setPanelTabla(tab_material_tarifa);
@@ -66,6 +65,7 @@ public class pre_material extends Pantalla{
 		tab_punto_venta.setIdCompleto("tab_tabulador:tab_punto_venta");
 		tab_punto_venta.setHeader("punto ventas");
 		tab_punto_venta.setTabla("fac_punto_venta", "ide_fapuv", 3);
+		tab_punto_venta.setCampoForanea("ide_bomat");
 		tab_punto_venta.dibujar();
 		PanelTabla pat_punto_venta =new PanelTabla();
 		pat_punto_venta.setPanelTabla(tab_punto_venta);
