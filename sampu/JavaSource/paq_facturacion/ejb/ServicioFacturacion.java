@@ -24,6 +24,15 @@ public class ServicioFacturacion {
 	                " ORDER BY  nombre_comercial_recli";
 	    return tab_cliente;
 	}
+	
+	public TablaGenerica getTablaBodega (String tabla){
+		
+		TablaGenerica tab_bodega=utilitario.consultar("select a.ide_recli, a.aplica_mtarifa_recli " +
+				"FROM rec_clientes a, tes_tarifas b " +
+				"WHERE a.ide_tetar=b.ide_tetar and a.aplica_mtarifa_recli=true and ide_recli=1 and b.ide_tetar=1"+tabla+"'");
+		return tab_bodega;
+		
+		}
 
 
 	public ServicioFacturacion() {
