@@ -372,6 +372,7 @@ public class pre_factura extends Pantalla{
 				tab_detalle_factura.insertar(); //inserto
 				tab_detalle_factura.setValor("ide_bomat",str_seleccionado);//asigno material
 				tab_detalle_factura.setValor("fecha_fadef",str_fecha_actual);//asig material
+				tab_detalle_factura.setValor("valor_fadef",valor);
 				tab_detalle_factura.setValor("observacion_fadef",
 						tab_detalle_factura.getValorArreglo("ide_bomat", 2)+""+str_fecha_actual);
 				tab_detalle_factura.setValor("cantidad_fadef", "1");
@@ -626,7 +627,7 @@ public class pre_factura extends Pantalla{
 			}
 		}
 		else{
-			utilitario.agregarMensajeError("Debe seleccionar los datos de FacturaciÃƒÂƒÃ‚Â³n","");
+			utilitario.agregarMensajeError("Debe seleccionar los datos de Facturaci�n","");
 		}
 	}
 
