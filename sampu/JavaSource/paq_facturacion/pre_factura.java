@@ -86,9 +86,11 @@ public class pre_factura extends Pantalla{
 		tab_factura.getColumna("ide_geins").setCombo("gen_institucion", "ide_geins", "detalle_geins", "");
 
 
-		tab_factura.getColumna("ide_recli").setCombo(ser_facturacion.getClientes());
+		tab_factura.getColumna("ide_recli").setCombo(ser_facturacion.getClientes("0,1"));
 		tab_factura.getColumna("ide_recli").setAutoCompletar();
 		tab_factura.getColumna("ide_recli").setLectura(true);
+		
+		
 		
 		//TOTALES DE COLOR ROJO--ESTILO DE COLOR ROJO Y NEGRILLA
 		tab_factura.getColumna("base_no_iva_fafac").setEtiqueta();
@@ -158,7 +160,7 @@ public class pre_factura extends Pantalla{
 
 		//BOTON FACRURAR PERIODO
 		Boton bot_abrir_periodos= new Boton();
-		bot_abrir_periodos.setValue("FACTURAR PERIODOS");
+		bot_abrir_periodos.setValue("Facturar periodos");
 		bot_abrir_periodos.setIcon("ui-calendario");
 		bot_abrir_periodos.setMetodo("abrirRango");
 		bar_botones.agregarBoton(bot_abrir_periodos);
@@ -170,7 +172,7 @@ public class pre_factura extends Pantalla{
 
 		//---SELECCION TABLA
 		set_pantalla_dias.setId("set_pantalla_dias");
-		set_pantalla_dias.setTitle("PANTALLA DEL SISTEMA");
+		set_pantalla_dias.setTitle("PANTALLA SELECCIONAR RANGO");
 		//CONSULTA
 		set_pantalla_dias.setSeleccionTabla("select ide_empr,''  as dia, '' as fecha from sis_empresa where ide_empr=-1",  "ide_empr");
 		//set_pantalla_dias.setSql("select fecha_ingre as fecha from fac_detalle_factura");
@@ -218,7 +220,7 @@ public class pre_factura extends Pantalla{
 		//Boton Actualizar Cliente
 		Boton bot_actualizar_cliente=new Boton();
 		bot_actualizar_cliente.setIcon("ui-icon-person");
-		bot_actualizar_cliente.setValue("ACTUALIZAR CLIENTE");
+		bot_actualizar_cliente.setValue("Actualizar Cliente");
 		bot_actualizar_cliente.setMetodo("actualizarCliente");
 		bar_botones.agregarBoton(bot_actualizar_cliente);
 
@@ -226,7 +228,7 @@ public class pre_factura extends Pantalla{
 		agregarComponente(con_guardar_cliente);
 
 		set_actualizar_cliente.setId("set_actualizar_cliente");
-		set_actualizar_cliente.setSeleccionTabla(ser_facturacion.getClientes(),"ide_recli");
+		set_actualizar_cliente.setSeleccionTabla(ser_facturacion.getClientes("0,1"),"ide_recli");
 		set_actualizar_cliente.getTab_seleccion().getColumna("ruc_comercial_recli").setFiltro(true);
 		set_actualizar_cliente.getTab_seleccion().getColumna("nombre_comercial_recli").setFiltro(true);
 		set_actualizar_cliente.setRadio();
@@ -237,7 +239,7 @@ public class pre_factura extends Pantalla{
 
 		//BOTON AGREGAR CLIENTE
 		Boton bot_agregarCliente=new Boton();
-		bot_agregarCliente.setValue("AGREGAR CLIENTE");
+		bot_agregarCliente.setValue("Agregar Cliente");
 		bot_agregarCliente.setIcon("ui-icon-person");
 		bot_agregarCliente.setMetodo("agregarCliente");
 		bar_botones.agregarBoton(bot_agregarCliente);
@@ -246,7 +248,7 @@ public class pre_factura extends Pantalla{
 		set_pantallacliente.setId("set_pantallacliente");
 		set_pantallacliente.setTitle("SELECCIONE CLIENTES");
 		set_pantallacliente.getBot_aceptar().setMetodo("aceptarCliente");
-		set_pantallacliente.setSeleccionTabla(ser_facturacion.getClientes(),"ide_recli");
+		set_pantallacliente.setSeleccionTabla(ser_facturacion.getClientes("0,1"),"ide_recli");
 		set_pantallacliente.getTab_seleccion().getColumna("ruc_comercial_recli").setFiltro(true);
 		set_pantallacliente.getTab_seleccion().getColumna("nombre_comercial_recli").setFiltro(true);
 		set_pantallacliente.setRadio();
@@ -261,7 +263,7 @@ public class pre_factura extends Pantalla{
 		utilitario.agregarMensaje("Requiere ingresar una factura para ingresar los detalles", "");
 		//Hace aparecer el componente
 		if(aut_factura.getValor()!=null){
-			set_pantallacliente.getTab_seleccion().setSql(ser_facturacion.getClientes());
+			set_pantallacliente.getTab_seleccion().setSql(ser_facturacion.getClientes("0,1"));
 			set_pantallacliente.getTab_seleccion().ejecutarSql();
 			set_pantallacliente.dibujar();
 		}	
@@ -292,7 +294,7 @@ public class pre_factura extends Pantalla{
 				utilitario.agregarMensajeInfo("Debe seleccionar un cliente para actualizar","");
 				return;
 			}
-			set_actualizar_cliente.getTab_seleccion().setSql(ser_facturacion.getClientes());
+			set_actualizar_cliente.getTab_seleccion().setSql(ser_facturacion.getClientes("0,1"));
 			set_actualizar_cliente.getTab_seleccion().ejecutarSql();
 			set_actualizar_cliente.dibujar();
 		}
@@ -306,7 +308,7 @@ public class pre_factura extends Pantalla{
 			utilitario.addUpdate("tab_factura");
 			
 			con_guardar_cliente.setMessage("Esta Seguro de Actualizar el Cliente");
-			con_guardar_cliente.setTitle("CONFIRMCION DE ACTUALIZAR");
+			con_guardar_cliente.setTitle("Confirmación de actualizar");
 			con_guardar_cliente.getBot_aceptar().setMetodo("guardarActualizarCliente");
 			con_guardar_cliente.dibujar();
 			utilitario.addUpdate("con_guardar_cliente");
