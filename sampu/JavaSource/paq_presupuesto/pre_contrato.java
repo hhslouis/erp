@@ -109,6 +109,7 @@ public class pre_contrato extends Pantalla {
 		tab_archivo.getColumna(tab_generica.getValor(i, "column_name")).setVisible(false);	
 		}				
 		}
+		tab_archivo.setCondicion("ide_prcon!=null");
 		tab_archivo.dibujar();
 		PanelTabla pat_archivo= new PanelTabla();
 		pat_archivo.setPanelTabla(tab_archivo);
