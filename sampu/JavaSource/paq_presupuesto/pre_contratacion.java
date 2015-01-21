@@ -47,7 +47,7 @@ public class pre_contratacion extends Pantalla{
 		Tabulador tab_tabulador = new Tabulador();
 		tab_tabulador.setId("tab_tabulador");
 
-		tab_poa.setId("tab_poa");
+		tab_poa.setId("tab_poa");   
 		tab_poa.setHeader("PLAN OPERATIVO ANUAL (POA)");
 		tab_poa.setTabla("pre_poa","ide_prpoa",1);
 		tab_poa.getColumna("ide_geani").setVisible(false);
@@ -130,6 +130,7 @@ public class pre_contratacion extends Pantalla{
 				//}				
 				
 		   		}
+		tab_archivo.setCondicion("ide_prcon!=null");
 		tab_archivo.dibujar();
 		PanelTabla pat_panel5= new PanelTabla();
 		pat_panel5.setPanelTabla(tab_archivo);
