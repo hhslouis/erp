@@ -20,12 +20,12 @@ public class pre_ingreso_material extends Pantalla{
 		
 		tab_bodega.setId("tab_bodega");  
 		tab_bodega.setTabla("bodt_bodega","ide_bobod", 1);	
-		tab_bodega.getColumna("ide_bomat").setCombo("select ide_bomat,codigo_bomat,detalle_bomat,iva_bomat from bodt_material order by detalle_bomat");
-		tab_bodega.getColumna("IDE_GEEST").setCombo("gen_estados","ide_geest"," detalle_geest","");
-		tab_bodega.setTipoFormulario(true);
-		tab_bodega.getGrid().setColumns(4);	
 		tab_bodega.getColumna("ide_geani").setVisible(false);
 		tab_bodega.setCondicion("ide_geani=-1"); 
+		tab_bodega.getColumna("ide_bomat").setCombo("select ide_bomat,codigo_bomat,detalle_bomat,iva_bomat from bodt_material order by detalle_bomat");
+		tab_bodega.getColumna("IDE_COEST").setCombo("cont_estado","ide_coest"," detalle_coest","");
+		tab_bodega.setTipoFormulario(true);
+		tab_bodega.getGrid().setColumns(4);	
 		tab_bodega.dibujar();
 		PanelTabla pat_bodega=new PanelTabla();
 		pat_bodega.setPanelTabla(tab_bodega);
@@ -57,9 +57,13 @@ public class pre_ingreso_material extends Pantalla{
 		if(com_anio.getValue()==null){
 			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
 			return;
+		}else{
+			tab_bodega.isFocus(); 
+			tab_bodega.insertar();
+			tab_bodega.setValor("ide_geani", com_anio.getValue()+"");
+			
 		}
-		tab_bodega.insertar();
-		
+				
 	}
 
 	@Override
@@ -102,6 +106,16 @@ public class pre_ingreso_material extends Pantalla{
 
 	public void setTab_anio(Tabla tab_anio) {
 		this.tab_anio = tab_anio;
+	}
+
+
+	public Combo getCom_anio() {
+		return com_anio;
+	}
+
+
+	public void setCom_anio(Combo com_anio) {
+		this.com_anio = com_anio;
 	}
 	
 	
