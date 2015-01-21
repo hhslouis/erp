@@ -57,6 +57,26 @@ public TablaGenerica getTablaAnio (String activo, String bloqueado ){
 			" order by detalle_geani desc");
 	return tab_anio;
 	}
+public String getAnioDetalle (String activo, String bloqueado ){
+	String tab_anio= "select ide_geani,detalle_geani, " +
+			" CASE WHEN activo_geani = true THEN 'Activo' ELSE 'Inactivo' END AS activo_geani," +
+			" CASE WHEN bloqueado_geani = true THEN 'Bloqueado' ELSE 'Habilitado' END AS bloqueado_geani" +
+			" from gen_anio where activo_geani in("+activo+")" +
+			" and bloqueado_geani in ("+bloqueado+")" +
+			" order by detalle_geani desc" ;
+			
+	return tab_anio;
+
+	}
+public TablaGenerica getTablaAnioDetalle (String activo, String bloqueado ){
+	TablaGenerica tab_anio= utilitario.consultar("select ide_geani,detalle_geani," +
+			" CASE WHEN activo_geani = true THEN 'Activo' ELSE 'Inactivo' END AS activo_geani," +
+			" CASE WHEN bloqueado_geani = true THEN 'Bloqueado' ELSE 'Habilitado' END AS bloqueado_geani" +
+			" from gen_anio where activo_geani in("+activo+")  " +
+			" and bloqueado_geani in ("+bloqueado+")" +
+			" order by detalle_geani desc");
+	return tab_anio;
+	}
 /**
  * Metodo que devuelve los Estados clasificados por modulo 
  * @param estado recibe el o los estados true y false, ejemplo: true o false
@@ -158,7 +178,15 @@ public String servicioCatalogoCuentaAnio (String ide_geani){
 	System.out.println("consluat "+catalogo_cuenta_anio);
 	return catalogo_cuenta_anio;
 }
-
+public String getInventario(String ide_geani){
+	
+	String tab_inventario="SELECT ide_boinv, detalle_geani,ingreso_material_boinv,egreso_material_boinv," +
+			"existencia_inicial_boinv,costo_anterior_boinv," +
+			"costo_actual_boinv,fecha_ingr_articulo_boinv,costo_inicial_boinv,activo_boinv " +
+			" FROM bodt_inventario a, gen_anio b WHERE a.ide_geani=b.ide_geani and a.ide_geani IN ("+ide_geani+") " +
+			"ORDER by ide_boinv";	
+	return tab_inventario;
+}
 
 
 
