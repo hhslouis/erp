@@ -104,6 +104,7 @@ public class pre_contratacion_publica extends Pantalla {
 		tab_archivo.getColumna(tab_generica.getValor(i, "column_name")).setVisible(false);	
 		}				
 		}
+		tab_archivo.setCondicion("ide_prcon!=null");
 		tab_archivo.dibujar();
 		PanelTabla pat_panel5= new PanelTabla();
 		pat_panel5.setPanelTabla(tab_archivo);
