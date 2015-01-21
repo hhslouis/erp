@@ -58,7 +58,7 @@ public class pre_clientes extends Pantalla {
 		tab_clientes.getColumna("ide_reclr").setCombo("rec_cliente_ruta", "ide_reclr", "detalle_reclr", "");
 		tab_clientes.getColumna("ide_tetar").setCombo("tes_tarifas", "ide_tetar", "detalle_tetar", "");
 		
-		tab_clientes.getColumna("rec_ide_recli").setCombo(ser_facturacion.getClientes());
+		tab_clientes.getColumna("rec_ide_recli").setCombo(ser_facturacion.getClientes("0,1"));
 		tab_clientes.getColumna("rec_ide_recli").setAutoCompletar();
 		tab_clientes.getColumna("rec_ide_recli").setLectura(true);
 		// para contruir los radios
@@ -168,7 +168,9 @@ public class pre_clientes extends Pantalla {
 		set_pantalla_sucursal.setId("set_pantalla_sucursal");
 		set_pantalla_sucursal.setTitle("SELECCIONE MATRIZ");
 		set_pantalla_sucursal.getBot_aceptar().setMetodo("aceptarMatriz");
-		set_pantalla_sucursal.setSeleccionTabla(ser_facturacion.getClientes(),"ide_recli");
+		
+		set_pantalla_sucursal.setSeleccionTabla(ser_facturacion.getClientes("1"),"ide_recli");
+		System.out.println("Devuelve servicio...."+ser_facturacion.getClientes("1"));
 		//set_pantalla_sucursal.setSeleccionTabla("rec_clientes", "ide_recli", "nombre_comercial_recli,ruc_comercial_recli");
 		set_pantalla_sucursal.getTab_seleccion().getColumna("nombre_comercial_recli").setFiltro(true);
 		set_pantalla_sucursal.getTab_seleccion().getColumna("ruc_comercial_recli").setFiltro(true);
@@ -181,12 +183,14 @@ public class pre_clientes extends Pantalla {
 	public void agregarMatriz(){
 		//Hace aparecer el componente
 		if(tab_clientes.getValor("matriz_sucursal_recli")!=null && tab_clientes.getValor("matriz_sucursal_recli").equals("0")){
-		set_pantalla_sucursal.getTab_seleccion().setSql(ser_facturacion.getClientes());
+		set_pantalla_sucursal.getTab_seleccion().setSql(ser_facturacion.getClientes("1"));
 		set_pantalla_sucursal.getTab_seleccion().getColumna("ruc_comercial_recli").setFiltro(true);
 		set_pantalla_sucursal.getTab_seleccion().getColumna("nombre_comercial_recli").setFiltro(true);
 		set_pantalla_sucursal.setRadio();
 		set_pantalla_sucursal.getTab_seleccion().ejecutarSql();
 		set_pantalla_sucursal.dibujar();	
+		}else{
+			utilitario.agregarMensaje("No se puede registrar matriz a una matriz","");
 		}
 	}
 
