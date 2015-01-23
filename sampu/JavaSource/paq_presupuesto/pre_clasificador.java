@@ -1,5 +1,8 @@
 package paq_presupuesto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ejb.EJB;
 
 import framework.aplicacion.TablaGenerica;
@@ -34,6 +37,18 @@ public class pre_clasificador extends Pantalla {
 		tab_presupuesto.setCampoPadre("pre_ide_prcla"); //necesarios para el arbol
 		tab_presupuesto.setCampoNombre("(select codigo_clasificador_prcla||' '||descripcion_clasificador_prcla as descripcion_clasificador_prcla from pre_clasificador b where b. ide_prcla=pre_clasificador.ide_prcla)"); //necesarios para el arbol
 		tab_presupuesto.agregarArbol(arb_clasificador);//necesarios para el arbol
+		  List lista = new ArrayList();
+	       Object fila1[] = {
+	           "1", "INGRESOS"
+	       };
+	       Object fila2[] = {
+	           "0", "EGRESOS"
+	       };
+	       
+	       lista.add(fila1);
+	       lista.add(fila2);
+	    tab_presupuesto.getColumna("tipo_prcla").setRadio(lista, "1");
+	    tab_presupuesto.getColumna("tipo_prcla").setRadioVertical(true);
 		tab_presupuesto.dibujar();
 		PanelTabla pat_clasificador=new PanelTabla();
 		pat_clasificador.setPanelTabla(tab_presupuesto);
