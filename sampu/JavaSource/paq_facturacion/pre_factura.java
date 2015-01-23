@@ -135,8 +135,7 @@ public class pre_factura extends Pantalla{
 		bot_limpiar.setIcon("ui-icon-cancel");
 		bot_limpiar.setMetodo("limpiar");
 		aut_factura.setId("aut_factura");     
-		aut_factura.setAutoCompletar("SELECT ide_fadaf,serie_factura_fadaf,fecha_impresion_fadaf,fecha_vencimiento_fadaf " +
-				"FROM fac_datos_factura WHERE serie_factura_fadaf is not null order by serie_factura_fadaf");
+		aut_factura.setAutoCompletar("SELECT ide_fadaf,serie_factura_fadaf FROM fac_datos_factura WHERE serie_factura_fadaf is not null order by serie_factura_fadaf");
 		aut_factura.setMetodoChange("seleccionoAutocompletar"); //ejecuta el metodo seleccionoAutocompletar
 
 		Etiqueta eti_colaborador=new Etiqueta("FACTURACIÓN:");
@@ -246,13 +245,7 @@ public class pre_factura extends Pantalla{
 		set_actualizar_cliente.getBot_aceptar().setMetodo("modificarCliente");
 		agregarComponente(set_actualizar_cliente);
 
-		set_pantallacliente.setId("set_pantallacliente");
-
-		set_pantallacliente.setSeleccionTabla(ser_facturacion.getClientes("0,1"),"ide_recli");
-		set_pantallacliente.getTab_seleccion().getColumna("ruc_comercial_recli").setFiltro(true);
-		set_pantallacliente.getTab_seleccion().getColumna("nombre_comercial_recli").setFiltro(true);
-		agregarComponente(set_pantallacliente);
-
+		//
 
 		//BOTON AGREGAR CLIENTE
 		Boton bot_agregarCliente=new Boton();
@@ -260,6 +253,20 @@ public class pre_factura extends Pantalla{
 		bot_agregarCliente.setIcon("ui-icon-person");
 		bot_agregarCliente.setMetodo("agregarCliente");
 		bar_botones.agregarBoton(bot_agregarCliente);
+
+		//PANTALLA SELECIONAR CLIENTE
+		set_pantallacliente.setId("set_pantallacliente");
+		set_pantallacliente.setTitle("SELECCIONE CLIENTES");
+		set_pantallacliente.getBot_aceptar().setMetodo("aceptarCliente");
+		set_pantallacliente.setSeleccionTabla(ser_facturacion.getClientes("0,1"),"ide_recli");
+		set_pantallacliente.getTab_seleccion().getColumna("ruc_comercial_recli").setFiltro(true);
+		set_pantallacliente.getTab_seleccion().getColumna("nombre_comercial_recli").setFiltro(true);
+		set_pantallacliente.setRadio();
+		set_pantallacliente.getTab_seleccion().ejecutarSql();
+		agregarComponente(set_pantallacliente);
+	
+
+
 
 		//PANTALLA SELECIONAR CLIENTE
 		set_crear_cliente.setId("set_crear_cliente");
@@ -291,7 +298,7 @@ public class pre_factura extends Pantalla{
 		//Muestro solo los campos necesarios
 		tab_cliente.getColumna("nombre_comercial_recli").setVisible(true);	
 		tab_cliente.getColumna("nombre_comercial_recli").setNombreVisual("NOMBRE COMERCIAL");
-		tab_cliente.getColumna("ide_gttdi").setVisible(true);
+		tab_cliente.getColumna("ide_gttdi").setVisible(false);
 		tab_cliente.getColumna("ide_gttdi").setNombreVisual("ID.. ide_gttdi");
 		tab_cliente.getColumna("ruc_comercial_recli").setVisible(true);
 		tab_cliente.getColumna("ruc_comercial_recli").setNombreVisual("RUC COMERCIAL DEL CLIENTE");
@@ -388,6 +395,7 @@ public class pre_factura extends Pantalla{
 
 	public void aceptarCliente(){
 		String str_seleccionado=set_pantallacliente.getValorSeleccionado();
+		System.out.println("Entrar al aceptar"+str_seleccionado);
 		if(str_seleccionado!=null){
 			//Inserto los cleintes seleccionados en la tabla  
 			if(tab_factura.isFilaInsertada()==false){
