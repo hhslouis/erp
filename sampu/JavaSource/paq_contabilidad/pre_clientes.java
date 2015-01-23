@@ -138,9 +138,8 @@ public class pre_clientes extends Pantalla {
 
 		tab_tarifa.setId("tab_tarifa");
 		tab_tarifa.setIdCompleto("tab_tabulador:tab_tarifa");
-		tab_tarifa.setTipoFormulario(true);
 		tab_tarifa.setTabla("tes_cliente_tarifa","ide_teclt",6);
-		tab_tarifa.getColumna("ide_temat").setCombo("tes_material_tarifa", "ide_temat", "valor_temat", "");
+		tab_tarifa.getColumna("ide_temat").setCombo("select a.ide_temat,detalle_bomat,detalle_tetar,valor_temat from tes_material_tarifa a,bodt_material b,tes_tarifas c where a.ide_bomat = b.ide_bomat and  a.ide_tetar = c.ide_tetar order by detalle_bomat");
 		tab_tarifa.dibujar();
 		PanelTabla pat_panel6 = new PanelTabla();
 		pat_panel6.setPanelTabla(tab_tarifa);
