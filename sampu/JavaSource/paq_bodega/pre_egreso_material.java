@@ -41,7 +41,7 @@ public class pre_egreso_material extends Pantalla {
 		tab_concepto_egreso.setHeader("EGRESO DE MATERIALES");
 		tab_concepto_egreso.setTabla("bodt_concepto_egreso","ide_bocoe", 1);
 		tab_concepto_egreso.getColumna("ide_geani").setVisible(true);
-		tab_concepto_egreso.setCondicion("ide_geani=-1"); 
+		tab_concepto_egreso.setCondicion("ide_bocoe=-1"); 
 		tab_concepto_egreso.getColumna("IDE_GETIP").setCombo("gen_tipo_persona","ide_getip","detalle_getip","");
 		tab_concepto_egreso.getColumna("IDE_GEARE").setCombo("gen_area","ide_geare", "detalle_geare", "");
 		tab_concepto_egreso.getColumna("IDE_BODES").setCombo("bodt_destino","ide_bodes","detalle_bodes", "");
@@ -57,7 +57,7 @@ public class pre_egreso_material extends Pantalla {
 		tab_egreso.setId("tab_egreso");
 		tab_egreso.setHeader("DETALLE EGRESO DE MATERIALES");
 		tab_egreso.setTabla("bodt_egreso", "ide_boegr", 2);
-		tab_egreso.setCampoForanea("ide_bocoe");
+		//tab_egreso.setCampoForanea("ide_bocoe");
 		tab_egreso.getColumna("ide_bomat").setCombo("select ide_bomat,codigo_bomat,detalle_bomat,iva_bomat from bodt_material order by detalle_bomat");
 		tab_egreso.setTipoFormulario(true);
 		tab_egreso.getGrid().setColumns(4);	
@@ -92,44 +92,43 @@ public class pre_egreso_material extends Pantalla {
 		if(com_anio.getValue()!=null){
 			tab_concepto_egreso.setCondicion("ide_geani="+com_anio.getValue());
 			tab_concepto_egreso.ejecutarSql();
+			tab_concepto_egreso.ejecutarValorForanea(tab_egreso.getValorSeleccionado());
+
 
 		}
 		else{
-			tab_egreso.setCondicion("ide_geani="+com_anio.getValue());
 			tab_egreso.ejecutarSql();
+			tab_concepto_egreso.ejecutarValorForanea(tab_egreso.getValorSeleccionado());
 			utilitario.agregarMensajeInfo("Selecione un Año", "");
 
 		}
 	}
 
 	public  void aceptarInventario(){
-		String str_seleccionado=set_inventario.getValorSeleccionado();
+		String str_seleccionado = set_inventario.getValorSeleccionado();
 		System.out.println("pruebabab f  "+str_seleccionado);
 
 		if (str_seleccionado!=null){
 			tab_egreso.insertar();
-			//tab_egreso.setValor("IDE_COCAC", tab_cuenta_anticipo.getValor(i, "IDE_COCAC"));			
+			//tab_egreso.setValor("IDE_COCAC", tab_egreso.getValor(i, "IDE_COCAC"));			
 			tab_egreso.setValor("ide_boinv",str_seleccionado);
-			System.out.println("entre cc f  "+str_seleccionado);
-
 		}
 		set_inventario.cerrar();
 		utilitario.addUpdate("tab_egreso");
 	}
 
 	public void importarInventario(){
-		if(com_anio.getValue()!= null){
-
-				set_inventario.getTab_seleccion().setSql(ser_contabilidad.getInventario(tab_egreso.getValorSeleccionado()));
-				set_inventario.getTab_seleccion().ejecutarSql();
-				set_inventario.dibujar();
-			
-
-		}else {
-			utilitario.agregarMensajeInfo("SELECCIONE UN INVENTARIO","");
-
+		if(com_anio.getValue()==null){
+			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
+			return;
 		}
-
+		else if(tab_concepto_egreso.isEmpty()){
+			utilitario.agregarMensajeInfo("Debe insertar un registro", "");
+			return;
+		} 
+		set_inventario.getTab_seleccion().setSql(ser_contabilidad.getInventario(com_anio.getValue().toString()));
+		set_inventario.getTab_seleccion().ejecutarSql();
+		set_inventario.dibujar();
 
 	}
 	@Override
@@ -148,7 +147,7 @@ public class pre_egreso_material extends Pantalla {
 
 		else if (tab_egreso.isFocus()) {
 			tab_egreso.insertar();
-			tab_egreso.setValor("ide_boinv", com_anio.getValue()+"");
+			//tab_egreso.setValor("ide_boinv", com_anio.getValue()+"");
 
 		}	
 	}
