@@ -29,7 +29,7 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 		//AUTOCOMPLETAR
 		aut_ing_material.setId("aut_ing_material");
 		//MODIFICAR CONSULTA
-		aut_ing_material.setAutoCompletar("SELECT ide_adsoc,detalle_adsoc,nro_solicitud_adsoc,fecha_solicitud_adsoc FROM adq_solicitud_compra WHERE nro_solicitud_adsoc is not null order by detalle_adsoc");
+		aut_ing_material.setAutoCompletar("SELECT ide_bobod,descripcion_bobod,tipo_ingreso_bobod,marca_bobod FROM bodt_bodega WHERE tipo_ingreso_bobod is not null order by descripcion_bobod");
 		aut_ing_material.setMetodoChange("seleccionoAutocompletar");
 		bar_botones.agregarComponente(new Etiqueta("Seleccione"));
 		bar_botones.agregarComponente(aut_ing_material);
@@ -43,7 +43,7 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 	public void seleccionoAutocompletar(SelectEvent evt){
 		//Cuando selecciona una opcion del autocompletar siempre debe hacerse el onSelect(evt)
 		aut_ing_material.onSelect(evt);
-		tab_ingreso_material.setCondicion("ide_adfac="+aut_ing_material.getValor());
+		tab_ingreso_material.setCondicion("ide_bobod="+aut_ing_material.getValor());
 		tab_ingreso_material.ejecutarSql();
 		//tab_ingreso_material.ejecutarValorForanea(tab_ingreso_material.getValorSeleccionado());
 
@@ -56,7 +56,16 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 
 	@Override
 	public void insertar() {
-		utilitario.getTablaisFocus().insertar();
+		if (aut_ing_material.getValor()!=null){
+			if(tab_ingreso_material.isFocus()){
+				tab_ingreso_material.getColumna("ide_bobod").setValorDefecto(aut_ing_material.getValor());
+				tab_ingreso_material.insertar();
+			}
+			
+		}
+		else{
+			utilitario.agregarMensajeError("Debe seleccionar los datos de material","");
+		}
 
 	}
 
