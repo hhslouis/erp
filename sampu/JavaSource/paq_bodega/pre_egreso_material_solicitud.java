@@ -36,15 +36,12 @@ private AutoCompletar aut_egresos= new AutoCompletar();
 		
 		tab_egresos.setId("tab_egresos");
 		tab_egresos.setTabla("bodt_egreso", "ide_boegr", 2);//2 YA Q ES LA SEGUNDA TABLA
-		//FORMULARIO
 		tab_egresos.setTipoFormulario(true);
 		tab_egresos.getGrid().setColumns(2);
 		tab_egresos.getColumna("ide_bomat").setCombo("bodt_material", "ide_bomat ", "detalle_bomat", "");
 		tab_egresos.getColumna("ide_boinv").setCombo("bodt_inventario", "ide_boinv ", "ide_boinv", "");
 		tab_egresos.getColumna("ide_bocoe").setCombo("bodt_concepto_egreso", "ide_bocoe ", "ubicacion_bocoe", "");
 		tab_egresos.getColumna("ide_bomat").setCombo("bodt_material", "ide_bomat ", "detalle_bomat", "");
-		
-		
 		tab_egresos.dibujar();
 		PanelTabla pat_egresos=new PanelTabla();
 		pat_egresos.setPanelTabla(tab_egresos);
@@ -83,12 +80,19 @@ private AutoCompletar aut_egresos= new AutoCompletar();
 		}
 	
 	
-	
-	
 	@Override
 	public void insertar() {
-		if(aut_egresos.getValor()!=null){
-		utilitario.getTablaisFocus().insertar();
+		if (aut_egresos.getValor()!=null){
+			if(tab_concepto_egreso.isFocus()){
+				tab_concepto_egreso.getColumna("ide_adsoc").setValorDefecto(aut_egresos.getValor());
+				tab_concepto_egreso.insertar();
+			}
+			else if(tab_egresos.isFocus()){
+				tab_egresos.insertar();
+			}
+		}
+		else{
+			utilitario.agregarMensajeError("Debe seleccionar los datos de Egreso","");
 		}
 	}
 
