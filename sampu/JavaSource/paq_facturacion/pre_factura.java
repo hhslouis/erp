@@ -30,11 +30,16 @@ public class pre_factura extends Pantalla{
 	private Tabla tab_factura = new Tabla();
 	private Tabla tab_detalle_factura=new Tabla();
 	private AutoCompletar aut_factura=new AutoCompletar();
+	private Dialogo crear_cliente_dialogo=new Dialogo();
+	private Tabla tab_cliente=new Tabla();
+	private Tabla tab_direccion= new Tabla();
+
 	//SELCCION TABLA
 	private SeleccionTabla set_pantalla_dias= new SeleccionTabla();
 	private SeleccionTabla set_insertarbodega = new SeleccionTabla();
 	private SeleccionTabla set_pantallacliente= new SeleccionTabla();
 	private SeleccionTabla set_actualizar_cliente = new SeleccionTabla();
+	private SeleccionTabla set_crear_cliente = new SeleccionTabla();
 	private Confirmar con_guardar_cliente=new Confirmar();
 
 
@@ -50,6 +55,7 @@ public class pre_factura extends Pantalla{
 	double dou_valor_iva=0;
 	double dou_total=0;
 	private String valor;
+	private String mensaje;
 	private List<Fila> lis_fechas_seleccionadas;
 
 	private Dialogo dia_valor=new Dialogo();
@@ -89,9 +95,9 @@ public class pre_factura extends Pantalla{
 		tab_factura.getColumna("ide_recli").setCombo(ser_facturacion.getClientes("0,1"));
 		tab_factura.getColumna("ide_recli").setAutoCompletar();
 		tab_factura.getColumna("ide_recli").setLectura(true);
-		
-		
-		
+
+
+
 		//TOTALES DE COLOR ROJO--ESTILO DE COLOR ROJO Y NEGRILLA
 		tab_factura.getColumna("base_no_iva_fafac").setEtiqueta();
 		tab_factura.getColumna("base_no_iva_fafac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
@@ -129,7 +135,7 @@ public class pre_factura extends Pantalla{
 		bot_limpiar.setIcon("ui-icon-cancel");
 		bot_limpiar.setMetodo("limpiar");
 		aut_factura.setId("aut_factura");     
-		aut_factura.setAutoCompletar("SELECT ide_fadaf,serie_factura_fadaf,autorizacion_fadaf,fecha_impresion_fadaf,fecha_vencimiento_fadaf " +
+		aut_factura.setAutoCompletar("SELECT ide_fadaf,serie_factura_fadaf,fecha_impresion_fadaf,fecha_vencimiento_fadaf " +
 				"FROM fac_datos_factura WHERE serie_factura_fadaf is not null order by serie_factura_fadaf");
 		aut_factura.setMetodoChange("seleccionoAutocompletar"); //ejecuta el metodo seleccionoAutocompletar
 
@@ -227,6 +233,11 @@ public class pre_factura extends Pantalla{
 		con_guardar_cliente.setId("con_guardar_cliente");
 		agregarComponente(con_guardar_cliente);
 
+		/**
+		 *  ESTE COMPONENTE NO ESTAN OCUPANDO, en lugar de este se visualiza   set_pantallacliente
+		 *  
+		 *  OJO
+		 */
 		set_actualizar_cliente.setId("set_actualizar_cliente");
 		set_actualizar_cliente.setSeleccionTabla(ser_facturacion.getClientes("0,1"),"ide_recli");
 		set_actualizar_cliente.getTab_seleccion().getColumna("ruc_comercial_recli").setFiltro(true);
@@ -234,7 +245,13 @@ public class pre_factura extends Pantalla{
 		set_actualizar_cliente.setRadio();
 		set_actualizar_cliente.getBot_aceptar().setMetodo("modificarCliente");
 		agregarComponente(set_actualizar_cliente);
-		
+
+		set_pantallacliente.setId("set_pantallacliente");
+
+		set_pantallacliente.setSeleccionTabla(ser_facturacion.getClientes("0,1"),"ide_recli");
+		set_pantallacliente.getTab_seleccion().getColumna("ruc_comercial_recli").setFiltro(true);
+		set_pantallacliente.getTab_seleccion().getColumna("nombre_comercial_recli").setFiltro(true);
+		agregarComponente(set_pantallacliente);
 
 
 		//BOTON AGREGAR CLIENTE
@@ -245,19 +262,119 @@ public class pre_factura extends Pantalla{
 		bar_botones.agregarBoton(bot_agregarCliente);
 
 		//PANTALLA SELECIONAR CLIENTE
-		set_pantallacliente.setId("set_pantallacliente");
-		set_pantallacliente.setTitle("SELECCIONE CLIENTES");
-		set_pantallacliente.getBot_aceptar().setMetodo("aceptarCliente");
-		set_pantallacliente.setSeleccionTabla(ser_facturacion.getClientes("0,1"),"ide_recli");
-		set_pantallacliente.getTab_seleccion().getColumna("ruc_comercial_recli").setFiltro(true);
-		set_pantallacliente.getTab_seleccion().getColumna("nombre_comercial_recli").setFiltro(true);
-		set_pantallacliente.setRadio();
-		set_pantallacliente.getTab_seleccion().ejecutarSql();
-		agregarComponente(set_pantallacliente);
+		set_crear_cliente.setId("set_crear_cliente");
+		set_crear_cliente.setTitle("SELECCIONE CLIENTES");
+		set_crear_cliente.getBot_aceptar().setMetodo("aceptarCliente");
+		set_crear_cliente.setSeleccionTabla(ser_facturacion.getClientes("0,1"),"ide_recli");
+		set_crear_cliente.getTab_seleccion().getColumna("ruc_comercial_recli").setFiltro(true);
+		set_crear_cliente.getTab_seleccion().getColumna("nombre_comercial_recli").setFiltro(true);
+		set_crear_cliente.setRadio();
+		set_crear_cliente.getTab_seleccion().ejecutarSql();
+		agregarComponente(set_crear_cliente);
+
+
+		//PANTALLA CREAR CLIENTE
+		crear_cliente_dialogo.setId("crear_cliente_dialogo");
+		crear_cliente_dialogo.setTitle("CREAR CLIENTE");
+		crear_cliente_dialogo.setWidth("45%");
+		crear_cliente_dialogo.setHeight("45%");
+		Grid gri_cuerpo=new Grid();
+		tab_cliente.setId("tab_cliente");
+		tab_cliente.setTabla("rec_clientes", "ide_recli",10);
+		tab_cliente.setTipoFormulario(true);
+		tab_cliente.setCondicion("ide_recli=-1");//para que aparesca vacia
+		tab_cliente.getGrid().setColumns(2);
+		//oculto todos los campos
+		for(int i=0;i<tab_cliente.getTotalColumnas();i++){
+			tab_cliente.getColumnas()[i].setVisible(false);
+		}
+		//Muestro solo los campos necesarios
+		tab_cliente.getColumna("nombre_comercial_recli").setVisible(true);	
+		tab_cliente.getColumna("nombre_comercial_recli").setNombreVisual("NOMBRE COMERCIAL");
+		tab_cliente.getColumna("ide_gttdi").setVisible(true);
+		tab_cliente.getColumna("ide_gttdi").setNombreVisual("ID.. ide_gttdi");
+		tab_cliente.getColumna("ruc_comercial_recli").setVisible(true);
+		tab_cliente.getColumna("ruc_comercial_recli").setNombreVisual("RUC COMERCIAL DEL CLIENTE");
+		tab_cliente.getColumna("telefono_factura_recli").setVisible(true);
+		tab_cliente.getColumna("telefono_factura_recli").setNombreVisual("TELÉFONO");
+		tab_cliente.setMostrarNumeroRegistros(false);//PARA Q NO MUESTRE EL TITULO REGSITRO 1 DE 1
+		/**
+		 * AVERIGUAR Q VALOR VA EN ESTE CAMPO x defecto le pongo 0
+		 * OJO
+		 */
+		tab_cliente.getColumna("matriz_sucursal_recli").setValorDefecto("0");
 		
+		tab_cliente.dibujar();
+
+		gri_cuerpo.getChildren().add(tab_cliente);
+
+		//DIRECCION 
+		tab_direccion.setId("tab_direccion");
+		tab_direccion.setTabla("rec_cliente_direccion", "ide_recld", 11);
+		tab_direccion.setMostrarNumeroRegistros(false);//PARA Q NO MUESTRE EL TITULO REGSITRO 1 DE 1
+		tab_direccion.setTipoFormulario(true);
+		//oculto todos los campos
+		for(int i=0;i<tab_direccion.getTotalColumnas();i++){
+			tab_direccion.getColumnas()[i].setVisible(false);
+		}
+		tab_direccion.getColumna("direccion_recld").setVisible(true);
+		tab_direccion.setCondicion("ide_recld=-1");
+		tab_direccion.dibujar();
+
+		gri_cuerpo.getChildren().add(tab_direccion);
+
+
+
+		crear_cliente_dialogo.getBot_aceptar().setMetodo("aceptarDialogoCliente");
+
+		crear_cliente_dialogo.setDialogo(gri_cuerpo);
+		agregarComponente(crear_cliente_dialogo);
+
+		//BOTON CREAR CLIENTE
+		Boton bot_crearCliente=new Boton();
+		bot_crearCliente.setValue("Crear Cliente");
+		bot_crearCliente.setIcon("ui-icon-person");
+		bot_crearCliente.setMetodo("abrirDialogoCliente");
+		bar_botones.agregarBoton(bot_crearCliente);
+
+	}
+	public void abrirDialogoCliente(){
+
+		//Hace aparecer el componente
+		if(aut_factura.getValor()!=null){
+			tab_cliente.limpiar();
+			tab_cliente.insertar();
+			tab_direccion.limpiar();
+			tab_direccion.insertar();
+			crear_cliente_dialogo.dibujar();
+		}
+		else{
+			utilitario.agregarMensaje("Requiere ingresar una factura para crear el cliente", "");
+		}
 
 	}
 
+	public void aceptarDialogoCliente(){
+
+		if(tab_cliente.guardar()){ //si guarda el gliente cierra el dialogo
+			
+			tab_direccion.setValor("ide_recli",  tab_cliente.getValor("ide_recli"));
+			if(tab_direccion.guardar())
+			{
+				if(guardarPantalla().isEmpty()){
+					crear_cliente_dialogo.cerrar();	
+					tab_factura.actualizarCombos();//actualiza los combos para que aparezca el nuevo cliente	
+					if(tab_factura.isFilaInsertada()==false){
+						tab_factura.insertar();	
+					}
+				     //CARGA EL CLIENTE Q SE INSERTO
+					tab_factura.setValor("ide_recli",  tab_cliente.getValor("ide_recli"));
+				}				
+			}
+
+		}
+
+	}
 
 	public void agregarCliente(){
 		utilitario.agregarMensaje("Requiere ingresar una factura para ingresar los detalles", "");
@@ -277,7 +394,7 @@ public class pre_factura extends Pantalla{
 				//Controla que si ya esta insertada no vuelva a insertar
 				tab_factura.insertar();	
 			}
-			
+
 			tab_factura.setValor("ide_recli", str_seleccionado);				
 
 			set_pantallacliente.cerrar();
@@ -287,43 +404,43 @@ public class pre_factura extends Pantalla{
 			utilitario.agregarMensajeInfo("Debe seleccionar almenos un registro", "");
 		}
 	}
-	
-	//ACTUALIZAR CLIENTE
-		public void actualizarCliente(){
-			if (tab_factura.getValor("ide_recli")==null){
-				utilitario.agregarMensajeInfo("Debe seleccionar un cliente para actualizar","");
-				return;
-			}
-			set_actualizar_cliente.getTab_seleccion().setSql(ser_facturacion.getClientes("0,1"));
-			set_actualizar_cliente.getTab_seleccion().ejecutarSql();
-			set_actualizar_cliente.dibujar();
-		}
 
-		public void modificarCliente(){
-			String str_clienteActualizado=set_actualizar_cliente.getValorSeleccionado();
-			if(str_clienteActualizado!=null){
-		
+	//ACTUALIZAR CLIENTE
+	public void actualizarCliente(){
+		if (tab_factura.getValor("ide_recli")==null){
+			utilitario.agregarMensajeInfo("Debe seleccionar un cliente para actualizar","");
+			return;
+		}
+		set_actualizar_cliente.getTab_seleccion().setSql(ser_facturacion.getClientes("0,1"));
+		set_actualizar_cliente.getTab_seleccion().ejecutarSql();
+		set_actualizar_cliente.dibujar();
+	}
+
+	public void modificarCliente(){
+		String str_clienteActualizado=set_actualizar_cliente.getValorSeleccionado();
+		if(str_clienteActualizado!=null){
+
 			tab_factura.modificar(tab_factura.getFilaActual());
 			tab_factura.setValor("ide_recli", str_clienteActualizado);
 			utilitario.addUpdate("tab_factura");
-			
+
 			con_guardar_cliente.setMessage("Esta Seguro de Actualizar el Cliente");
 			con_guardar_cliente.setTitle("Confirmación de actualizar");
 			con_guardar_cliente.getBot_aceptar().setMetodo("guardarActualizarCliente");
 			con_guardar_cliente.dibujar();
 			utilitario.addUpdate("con_guardar_cliente");
-			}
-
 		}
 
-		public void guardarActualizarCliente(){
-			tab_factura.guardar();
-			con_guardar_cliente.cerrar();
-			set_actualizar_cliente.cerrar();
+	}
 
-			guardarPantalla();
-		}
-	
+	public void guardarActualizarCliente(){
+		tab_factura.guardar();
+		con_guardar_cliente.cerrar();
+		set_actualizar_cliente.cerrar();
+
+		guardarPantalla();
+	}
+
 	private void insertarMaterial(String ide_bomat,String valor){
 		//Inserta en la tabla de detalles el matiial seleccionado
 		for (int j = 0; j < lis_fechas_seleccionadas.size(); j++) {
@@ -353,17 +470,17 @@ public class pre_factura extends Pantalla{
 		TablaGenerica retornaValorMultiple=utilitario.consultar("select ide_teclt,a.ide_recli,ide_bomat,valor_temat from tes_cliente_tarifa a, rec_clientes b,tes_material_tarifa c"+
 				" where a.ide_recli = b.ide_recli and a.ide_temat = c.ide_temat and a.ide_recli ="+tab_factura.getValor("ide_recli")+" and ide_bomat="+set_insertarbodega.getValorSeleccionado());
 		System.out.println("imprimir xx retornaValorMultiple "+retornaValorMultiple.getSql());
-		
+
 		if(validarTarifaUnica.isEmpty()){
 			valor=retornaValorMultiple.getValor("valor_temat");
 			System.out.println("Multiple "+valor);
-			
+
 		}
 		else {
 			valor=retornarValorUnico.getValor("valor_temat");
 			System.out.println("Valor Unico "+valor);
 		}
-		
+
 		if(str_seleccionado!=null){// valido que seleccione
 
 			for (int j = 0; j < lis_fechas_seleccionadas.size(); j++) {
@@ -530,6 +647,31 @@ public class pre_factura extends Pantalla{
 		boolean boo_iva=tieneIvaProducto(tab_detalle_factura.getValor("ide_bomat"));
 		//Mensaje producto, carga o no garga iva
 		utilitario.agregarMensaje(tab_detalle_factura.getValor("ide_bomat"),boo_iva+"");
+
+		String str_seleccionado=tab_detalle_factura.getValor("ide_bomat");
+		TablaGenerica validarTarifaUnica=utilitario.consultar("select ide_recli, aplica_mtarifa_recli from rec_clientes where aplica_mtarifa_recli=false and ide_recli="+tab_factura.getValor("ide_recli"));
+		System.out.println("imprimir xx validarTarifaUnica "+validarTarifaUnica.getSql());
+		TablaGenerica retornarValorUnico= utilitario.consultar(" select a.ide_recli, a.aplica_mtarifa_recli, valor_temat from rec_clientes a, tes_material_tarifa c  where  a.ide_tetar= c.ide_tetar  and a.ide_recli="+tab_factura.getValor("ide_recli")+" and ide_bomat="+str_seleccionado);
+		System.out.println("imprimir xx retornarValorUnico "+retornarValorUnico.getSql());
+
+		TablaGenerica retornaValorMultiple=utilitario.consultar("select ide_teclt,a.ide_recli,ide_bomat,valor_temat from tes_cliente_tarifa a, rec_clientes b,tes_material_tarifa c"+
+				" where a.ide_recli = b.ide_recli and a.ide_temat = c.ide_temat and a.ide_recli ="+tab_factura.getValor("ide_recli")+" and ide_bomat="+str_seleccionado);
+		System.out.println("imprimir xx retornaValorMultiple "+retornaValorMultiple.getSql());
+
+		if(validarTarifaUnica.isEmpty()){
+			valor=retornaValorMultiple.getValor("valor_temat");
+			System.out.println("Multiple "+valor);
+
+		}
+		else {
+			valor=retornarValorUnico.getValor("valor_temat");
+			System.out.println("Valor Unico "+valor);
+		}
+		tab_detalle_factura.insertar(); //inserto
+		tab_detalle_factura.setValor("cantidad_fadef", "1");
+		tab_detalle_factura.setValor("valor_fadef",valor);
+		calcular();
+
 	}
 
 	//total_fadef
@@ -614,7 +756,7 @@ public class pre_factura extends Pantalla{
 		tab_factura.setValor("total_fafac",utilitario.getFormatoNumero(dou_total,3));
 		tab_factura.modificar(tab_factura.getFilaActual());//para que haga el update
 	}
-	
+
 
 	@Override
 	public void insertar() {
@@ -752,6 +894,28 @@ public class pre_factura extends Pantalla{
 
 	public void setCon_guardar_cliente(Confirmar con_guardar_cliente) {
 		this.con_guardar_cliente = con_guardar_cliente;
+	}
+
+
+	public Dialogo getCrear_cliente_dialogo() {
+		return crear_cliente_dialogo;
+	}
+
+
+	public void setCrear_cliente_dialogo(Dialogo crear_cliente_dialogo) {
+		this.crear_cliente_dialogo = crear_cliente_dialogo;
+	}
+	public Tabla getTab_cliente() {
+		return tab_cliente;
+	}
+	public void setTab_cliente(Tabla tab_cliente) {
+		this.tab_cliente = tab_cliente;
+	}
+	public Tabla getTab_direccion() {
+		return tab_direccion;
+	}
+	public void setTab_direccion(Tabla tab_direccion) {
+		this.tab_direccion = tab_direccion;
 	}
 
 
