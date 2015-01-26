@@ -14,6 +14,9 @@ public class pre_lugar extends Pantalla{
 	private Tabla tab_venta_lugar=new Tabla();
 	
 	public pre_lugar (){
+		Tabulador tab_tabulador = new Tabulador();
+		tab_tabulador.setId("tab_tabulador");
+		
 		tab_lugar.setId("tab_lugar");
 		tab_lugar.setHeader("Lugar");
 		tab_lugar.setTabla("fac_lugar", "ide_falug", 1);
@@ -23,8 +26,7 @@ public class pre_lugar extends Pantalla{
 		PanelTabla pat_lugar=new PanelTabla();
 		pat_lugar.setPanelTabla(tab_lugar);
 		
-		Tabulador tab_tabulador = new Tabulador();
-		tab_tabulador.setId("tab_tabulador");
+		
 		
 		tab_usuario_lugar.setId("tab_usuario_lugar");
 		tab_usuario_lugar.setHeader("Usuario Lugar");
@@ -32,25 +34,21 @@ public class pre_lugar extends Pantalla{
 		tab_usuario_lugar.setTabla("fac_usuario_lugar", "ide_fausl", 2);
 		tab_usuario_lugar.getColumna("ide_usua").setCombo("select ide_usua,nom_usua,nick_usua from sis_usuario order by nom_usua");
 		tab_usuario_lugar.getColumna("ide_usua").setUnico(true);
-		tab_usuario_lugar.getColumna("ide_fausl").setUnico(true);
-		tab_usuario_lugar.setCampoForanea("ide_falug");
+		tab_usuario_lugar.getColumna("ide_falug").setUnico(true);
 		tab_usuario_lugar.dibujar();
 		PanelTabla pat_usuario_lugar=new PanelTabla();
 		pat_usuario_lugar.setPanelTabla(tab_usuario_lugar);
-		
-
-
 
 		// venta lugar
 		tab_venta_lugar.setId("tab_venta_lugar");
-		tab_venta_lugar.setHeader("venta Lugar");
+		tab_venta_lugar.setHeader("Venta Lugar");
 		tab_venta_lugar.setIdCompleto("tab_tabulador:tab_venta_lugar");
-		tab_venta_lugar.setTabla("fac_venta_lugar", "ide_favel", 1);
+		tab_venta_lugar.setTabla("fac_venta_lugar", "ide_favel", 3);
 		tab_venta_lugar.getColumna("ide_bogrm").setCombo("select ide_bogrm,detalle_bogrm,autorizacion_sri_bogrm from bodt_grupo_material order by detalle_bogrm");
+		//tab_venta_lugar.setCampoForanea("ide_falug");
 		tab_venta_lugar.dibujar();
 		PanelTabla pat_venta=new PanelTabla();
 		pat_venta.setPanelTabla(tab_venta_lugar);
-		agregarComponente(pat_venta);
 		
 		tab_tabulador.agregarTab("USUARIO LUGAR", pat_usuario_lugar);//intancia los tabuladores 
 		tab_tabulador.agregarTab("VENTA LUGAR",pat_venta);
@@ -58,6 +56,7 @@ public class pre_lugar extends Pantalla{
 	//division2
 		
 		Division div_lugar=new Division();
+        div_lugar.setId("div_lugar");
 		div_lugar.dividir2(pat_lugar,tab_tabulador,"50%","H");
 		agregarComponente(div_lugar);
 		
@@ -122,4 +121,5 @@ public class pre_lugar extends Pantalla{
 		this.tab_venta_lugar = tab_venta_lugar;
 	}
 
-}
+
+	}
