@@ -42,7 +42,6 @@ public class pre_clientes extends Pantalla {
 		tab_clientes.setId("tab_clientes");
 		tab_clientes.setTipoFormulario(true);  //formulario 
 		tab_clientes.getGrid().setColumns(4); //hacer  columnas 
-		tab_clientes.setCampoNombre("(select ruc_comercial_recli||' '|| nombre_comercial_recli as nombre_comercial_recli from rec_clientes b where b.ide_recli= rec_clientes.ide_recli)");
 		tab_clientes.setTabla("rec_clientes", "ide_recli",1);
 		tab_clientes.getColumna("ide_retic").setCombo("rec_tipo_contribuyente", "ide_retic", "detalle_retic", "");
 		tab_clientes.getColumna("ide_retia").setCombo("rec_tipo_asistencia", "ide_retia", "detalle_retia", "");
@@ -94,7 +93,7 @@ public class pre_clientes extends Pantalla {
 		tab_clientes.agregarRelacion(tab_telefono);
 		tab_clientes.agregarRelacion(tab_email);
 		tab_clientes.agregarRelacion(tab_tarifa);
-		//tab_clientes.agregarRelacion(tab_documento);
+		tab_clientes.agregarRelacion(tab_documento);
 		// System.out.println("sql pc"+tab_clientes.getSql());
 
 		
@@ -114,6 +113,7 @@ public class pre_clientes extends Pantalla {
 		tab_telefono.setId("tab_telefono");
 		tab_telefono.setIdCompleto("tab_tabulador:tab_telefono");
 		tab_telefono.setTabla("rec_cliente_telefono","ide_reclt",3);
+		tab_telefono.getColumna("ide_reteo").setCombo("rec_telefono_operadora", "ide_reteo", "detalle_reteo", "");
 		tab_telefono.dibujar();
 		PanelTabla pat_panel3 = new PanelTabla();
 		pat_panel3.setPanelTabla(tab_telefono);
@@ -128,6 +128,7 @@ public class pre_clientes extends Pantalla {
 		tab_documento.setId("tab_documento");
 		tab_documento.setIdCompleto("tab_tabulador:tab_documento");
 		tab_documento.setTipoFormulario(true);
+		tab_documento.getGrid().setColumns(4);
 		tab_documento.setTabla("rec_cliente_archivo","ide_recla",5);
 		tab_documento.getColumna("foto_recla").setUpload("fotos");
 		tab_documento.getColumna("foto_recla").setImagen("128", "128");
@@ -153,6 +154,7 @@ public class pre_clientes extends Pantalla {
 
 
 		Division div_division=new Division();
+		div_division.setId("div_division");
 		div_division.dividir2(pat_clientes,tab_tabulador,"70%","H");
 		agregarComponente(div_division);
 
