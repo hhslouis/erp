@@ -33,6 +33,15 @@ public class ServicioFacturacion {
 		return tab_bodega;
 		
 		}
+	
+	public String getFacturas(String numeroFactura ){
+	    String tab_cliente="SELECT ide_bomat, codigo_bomat, detalle_bomat FROM bodt_material b WHERE codigo_bomat is not null " +
+				"and ide_bogrm in(select c.ide_bogrm from fac_usuario_lugar  a " +
+				"inner join fac_lugar b on a.ide_falug=b.ide_falug and a.ide_usua=" +utilitario.getVariable("ide_usua")+
+				" inner join fac_venta_lugar c on c.ide_falug=b.ide_falug " +
+				"inner join  bodt_grupo_material d on c.ide_bogrm=d.ide_bogrm ) order by detalle_bomat";
+	    return tab_cliente;
+	}
 
 
 	public ServicioFacturacion() {
