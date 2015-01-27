@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="rep_factura"
+
+		 language="groovy"		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Landscape"
+		 pageWidth="842"
+		 pageHeight="595"
+		 columnWidth="802"
+		 columnSpacing="0"
+		 leftMargin="20"
+		 rightMargin="20"
+		 topMargin="20"
+		 bottomMargin="20"
+		 whenNoDataType="NoPages"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.zoom" value="1.0" />
+	<property name="ireport.x" value="0" />
+	<property name="ireport.y" value="0" />
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+	<queryString><![CDATA[select a.ide_recli,telefono_factura,nombre_comercial_factura,matriz_sucursal_factura,ruc_comercial_factura,
+abreviatura_factura,fecha_transaccion_fafac,subtotal,cantidad_fadef,fecha_fadef,direccion_factura,
+valor_fadef,total_fadef,detalle_bomat,ide_bomat,valor_iva_fafac,total_fafac,razon_social_recli
+from (
+select ide_recli,(case when factura_datos_recli=0 then telefono_factura_reclim else telefono_factura_recli end) as telefono_factura,
+(case when factura_datos_recli=0 then nombre_comercial_reclim else nombre_comercial_recli end) as nombre_comercial_factura,
+(case when  factura_datos_recli=0 then matriz_sucursal_reclim  else matriz_sucursal_recli end) as matriz_sucursal_factura,
+(case when  factura_datos_recli=0 then ruc_comercial_reclim    else ruc_comercial_recli end) as ruc_comercial_factura,
+(case when  factura_datos_recli=0 then abreviatura_reclrm else  abreviatura_reclr end) as abreviatura_factura,
+(case when  factura_datos_recli=0 then direccion_recldm else direccion_recld end) as direccion_factura,
+ telefono_factura_recli as telefono_factura_sucursal, nombre_comercial_recli as nombre_comercial_sucursal,
+ matriz_sucursal_recli as matriz_sucursal_sucursal,ruc_comercial_recli as ruc_comercial_sucursal,
+ abreviatura_reclr as abreviatura_sucursal, direccion_recld as direccion_sucursal ,razon_social_recli
+from ( select a.ide_recli,a.rec_ide_recli,a.telefono_factura_recli,a.nombre_comercial_recli,a.matriz_sucursal_recli,
+a.ruc_comercial_recli, a.abreviatura_reclr,a.direccion_recld,a.factura_datos_recli, b.ide_recli as ide_clientem,b.rec_ide_recli,
+(case when a.rec_ide_recli is null then a.telefono_factura_recli else b.telefono_factura_recli end) as telefono_factura_reclim,
+(case when a.rec_ide_recli is null then a.nombre_comercial_recli else b.nombre_comercial_recli end) as nombre_comercial_reclim,
+(case when a.rec_ide_recli is null then a.matriz_sucursal_recli  else b.matriz_sucursal_recli end) as matriz_sucursal_reclim,
+(case when a.rec_ide_recli is null then a.ruc_comercial_recli    else b.ruc_comercial_recli end) as ruc_comercial_reclim,
+(case when a.rec_ide_recli is null then a.abreviatura_reclr else  b.abreviatura_reclr end) as abreviatura_reclrm,
+(case when a.rec_ide_recli is null then a.direccion_recld else b.direccion_recld end) as direccion_recldm ,razon_social_recli
+from ( select a.ide_recli,rec_ide_recli,telefono_factura_recli,nombre_comercial_recli,matriz_sucursal_recli,ruc_comercial_recli,
+abreviatura_reclr,direccion_recld,factura_datos_recli,razon_social_recli
+from ( select ide_recli,rec_ide_recli,telefono_factura_recli,
+nombre_comercial_recli,matriz_sucursal_recli,ruc_comercial_recli,abreviatura_reclr,factura_datos_recli,razon_social_recli
+from rec_clientes a, rec_cliente_ruta b where a.ide_reclr=b.ide_reclr )  a
+left join (select ide_recli,direccion_recld from rec_cliente_direccion where activo_recld=true ) b on a.ide_recli=b.ide_recli ) a
+left join ( select a.ide_recli,rec_ide_recli,telefono_factura_recli,nombre_comercial_recli,matriz_sucursal_recli,ruc_comercial_recli,
+abreviatura_reclr,direccion_recld from ( select ide_recli,rec_ide_recli,telefono_factura_recli,nombre_comercial_recli,
+matriz_sucursal_recli,ruc_comercial_recli,abreviatura_reclr from rec_clientes a, rec_cliente_ruta b where a.ide_reclr=b.ide_reclr )  a
+left join (select ide_recli,direccion_recld from rec_cliente_direccion where activo_recld=true
+) b on a.ide_recli=b.ide_recli ) b on a.rec_ide_recli=b.ide_recli
+) a order by nombre_comercial_recli
+) a
+left join (select ide_fafac,fecha_transaccion_fafac,ide_recli,valor_iva_fafac,
+total_fafac from fac_factura) b on a.ide_recli = b.ide_recli
+left join (select sum(valor_fadef) as subtotal,ide_fafac from fac_detalle_factura group by ide_fafac ) c on b.ide_fafac=c.ide_fafac
+left join (select ide_fafac,cantidad_fadef,fecha_fadef,valor_fadef,total_fadef,a.ide_bomat,detalle_bomat
+from fac_detalle_factura a, bodt_material b where a.ide_bomat = b.ide_bomat ) d on b.ide_fafac= d.ide_fafac
+where b.ide_fafac =2
+order by ide_bomat,fecha_fadef]]></queryString>
+
+	<field name="ide_recli" class="java.lang.Long"/>
+	<field name="telefono_factura" class="java.lang.String"/>
+	<field name="nombre_comercial_factura" class="java.lang.String"/>
+	<field name="matriz_sucursal_factura" class="java.lang.Integer"/>
+	<field name="ruc_comercial_factura" class="java.lang.String"/>
+	<field name="abreviatura_factura" class="java.lang.String"/>
+	<field name="fecha_transaccion_fafac" class="java.sql.Date"/>
+	<field name="subtotal" class="java.math.BigDecimal"/>
+	<field name="cantidad_fadef" class="java.math.BigDecimal"/>
+	<field name="fecha_fadef" class="java.sql.Date"/>
+	<field name="direccion_factura" class="java.lang.String"/>
+	<field name="valor_fadef" class="java.math.BigDecimal"/>
+	<field name="total_fadef" class="java.math.BigDecimal"/>
+	<field name="detalle_bomat" class="java.lang.String"/>
+	<field name="ide_bomat" class="java.lang.Long"/>
+	<field name="valor_iva_fafac" class="java.math.BigDecimal"/>
+	<field name="total_fafac" class="java.math.BigDecimal"/>
+	<field name="razon_social_recli" class="java.lang.String"/>
+
+
+		<group  name="ide_bomat" minHeightToStartNewPage="20" >
+			<groupExpression><![CDATA[$F{ide_bomat}]]></groupExpression>
+			<groupHeader>
+			<band height="17"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="98"
+						y="2"
+						width="100"
+						height="10"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{detalle_bomat}]]></textFieldExpression>
+				</textField>
+			</band>
+			</groupHeader>
+			<groupFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+			</groupFooter>
+		</group>
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="61"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="240"
+						y="37"
+						width="48"
+						height="12"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{telefono_factura}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="96"
+						y="3"
+						width="180"
+						height="12"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$F{razon_social_recli}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="651"
+						y="19"
+						width="127"
+						height="12"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{ruc_comercial_factura}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="96"
+						y="37"
+						width="178"
+						height="12"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$F{fecha_transaccion_fafac}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="96"
+						y="25"
+						width="180"
+						height="12"
+						key="textField-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$F{direccion_factura}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="96"
+						y="13"
+						width="180"
+						height="12"
+						key="textField-2"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$F{ruc_comercial_factura}]]></textFieldExpression>
+				</textField>
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="14"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="134"
+						y="4"
+						width="88"
+						height="10"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{nombre_comercial_factura}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="96"
+						y="4"
+						width="33"
+						height="10"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{cantidad_fadef}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="229"
+						y="4"
+						width="33"
+						height="10"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{valor_fadef}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="265"
+						y="4"
+						width="29"
+						height="10"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{total_fadef}]]></textFieldExpression>
+				</textField>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="33"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="194"
+						y="3"
+						width="100"
+						height="10"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right">
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{subtotal}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="194"
+						y="13"
+						width="100"
+						height="10"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right">
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{valor_iva_fafac}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="194"
+						y="23"
+						width="100"
+						height="10"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right">
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{total_fafac}]]></textFieldExpression>
+				</textField>
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</summary>
+</jasperReport>
