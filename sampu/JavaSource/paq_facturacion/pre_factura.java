@@ -20,6 +20,8 @@ import framework.componentes.Texto;
 import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_facturacion.ejb.ServicioFacturacion;
 import paq_sistema.aplicacion.Pantalla;
+
+import org.apache.poi.hssf.record.CalcCountRecord;
 import org.primefaces.event.SelectEvent;
 import framework.componentes.AutoCompletar;
 import framework.componentes.Etiqueta;
@@ -42,6 +44,7 @@ public class pre_factura extends Pantalla{
 	private SeleccionTabla set_crear_cliente = new SeleccionTabla();
 	private Confirmar con_guardar_cliente=new Confirmar();
 
+	private Etiqueta eti_total= new Etiqueta();
 
 
 	//CALENDARIO
@@ -135,7 +138,7 @@ public class pre_factura extends Pantalla{
 		bot_limpiar.setIcon("ui-icon-cancel");
 		bot_limpiar.setMetodo("limpiar");
 		aut_factura.setId("aut_factura");     
-		aut_factura.setAutoCompletar("SELECT ide_fadaf,serie_factura_fadaf FROM fac_datos_factura WHERE serie_factura_fadaf is not null order by serie_factura_fadaf");
+		aut_factura.setAutoCompletar("SELECT ide_bomat, codigo_bomat, detalle_bomat FROM bodt_material b WHERE codigo_bomat is not null order by detalle_bomat");
 		aut_factura.setMetodoChange("seleccionoAutocompletar"); //ejecuta el metodo seleccionoAutocompletar
 
 		Etiqueta eti_colaborador=new Etiqueta("FACTURACIÓN:");
@@ -157,9 +160,15 @@ public class pre_factura extends Pantalla{
 		pat_detalle_factura.setMensajeWarn("DETALLE FACTURACION");
 		pat_detalle_factura.setPanelTabla(tab_detalle_factura);
 
+		eti_total.setId("eti_total");
+		eti_total.setStyle("font-size:18px;color:red;widht:100%");
+		eti_total.setValue("TOTAL : 0.00");
+		Division div_aux=new Division();
+		div_aux.setFooter(pat_detalle_factura, eti_total,"85%");
+
 
 		Division div_division=new Division();
-		div_division.dividir2(pat_factura, pat_detalle_factura, "50%", "h");
+		div_division.dividir2(pat_factura, div_aux, "50%", "h");
 		agregarComponente(div_division);
 
 
@@ -264,7 +273,7 @@ public class pre_factura extends Pantalla{
 		set_pantallacliente.setRadio();
 		set_pantallacliente.getTab_seleccion().ejecutarSql();
 		agregarComponente(set_pantallacliente);
-	
+
 
 
 
@@ -310,7 +319,7 @@ public class pre_factura extends Pantalla{
 		 * OJO
 		 */
 		tab_cliente.getColumna("matriz_sucursal_recli").setValorDefecto("0");
-		
+
 		tab_cliente.dibujar();
 
 		gri_cuerpo.getChildren().add(tab_cliente);
@@ -364,7 +373,7 @@ public class pre_factura extends Pantalla{
 	public void aceptarDialogoCliente(){
 
 		if(tab_cliente.guardar()){ //si guarda el gliente cierra el dialogo
-			
+
 			tab_direccion.setValor("ide_recli",  tab_cliente.getValor("ide_recli"));
 			if(tab_direccion.guardar())
 			{
@@ -374,7 +383,7 @@ public class pre_factura extends Pantalla{
 					if(tab_factura.isFilaInsertada()==false){
 						tab_factura.insertar();	
 					}
-				     //CARGA EL CLIENTE Q SE INSERTO
+					//CARGA EL CLIENTE Q SE INSERTO
 					tab_factura.setValor("ide_recli",  tab_cliente.getValor("ide_recli"));
 				}				
 			}
@@ -541,7 +550,7 @@ public class pre_factura extends Pantalla{
 			set_insertarbodega.dibujar(); //abro seleccion bodega
 		}
 		else{
-			utilitario.agregarMensajeError("Debe seleccionar almenos un dÃ­a", "");
+			utilitario.agregarMensajeError("Debe seleccionar almenos un día", "");
 		}
 	}
 
@@ -625,6 +634,7 @@ public class pre_factura extends Pantalla{
 		tab_factura.ejecutarSql();
 		//tab_factura.ejecutarValorForanea(val)
 		tab_detalle_factura.ejecutarValorForanea(tab_factura.getValorSeleccionado());
+		calcularFactura();
 
 	}
 
@@ -675,9 +685,15 @@ public class pre_factura extends Pantalla{
 			valor=retornarValorUnico.getValor("valor_temat");
 			System.out.println("Valor Unico "+valor);
 		}
-		tab_detalle_factura.insertar(); //inserto
-		tab_detalle_factura.setValor("cantidad_fadef", "1");
-		tab_detalle_factura.setValor("valor_fadef",valor);
+
+		if (valor!=null){
+			tab_detalle_factura.setValor("valor_fadef",valor);	
+		}
+		else{
+			//Mensaje 
+			utilitario.agregarMensajeInfo("No existen tarifas para el cliente y el articulo seleccionado", "");
+		}
+
 		calcular();
 
 	}
@@ -763,6 +779,8 @@ public class pre_factura extends Pantalla{
 		tab_factura.setValor("valor_iva_fafac",utilitario.getFormatoNumero(dou_valor_iva,3));
 		tab_factura.setValor("total_fafac",utilitario.getFormatoNumero(dou_total,3));
 		tab_factura.modificar(tab_factura.getFilaActual());//para que haga el update
+		eti_total.setValue("TOTAL : "+utilitario.getFormatoNumero(dou_total,3));
+		utilitario.addUpdate("eti_total");
 	}
 
 
@@ -808,6 +826,30 @@ public class pre_factura extends Pantalla{
 
 	}
 
+	@Override
+	public void inicio() {
+		// TODO Auto-generated method stub
+		super.inicio();
+		calcularFactura();
+	}
+	@Override
+	public void siguiente() {
+		// TODO Auto-generated method stub
+		super.siguiente();
+		calcularFactura();
+	}
+	@Override
+	public void fin() {
+		// TODO Auto-generated method stub
+		super.fin();
+		calcularFactura();
+	}
+	@Override
+	public void atras() {
+		// TODO Auto-generated method stub
+		super.atras();
+		calcularFactura();
+	}
 
 
 	public Tabla gettab_factura() {
