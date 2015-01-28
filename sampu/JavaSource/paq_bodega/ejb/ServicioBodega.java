@@ -27,6 +27,11 @@ public class ServicioBodega {
 		return tab_inventario;
 
 	}
+	/**
+	 * Este servicio retorna los materiales existentes en el cálogo de materiales 
+	 * @param activo
+	 * @return
+	 */
 	public String getInventario (String activo){
 
 		String tab_inventario="select ide_bomat, codigo_bomat,detalle_bomat,detalle_bogrm " +
