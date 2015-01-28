@@ -274,8 +274,10 @@ public class ServicioEmpleadoJPA {
                 //asignar maximo
             	
             	long ideaspvh=new Long(utilitario.getConexion().getMaximo("GTH_TELEFONO", "IDE_GTTEL", 1));
-            	Integer conertideaspvh= (int) ideaspvh;
+            	System.out.println("guardar telefono "+ideaspvh);
+            	Integer conertideaspvh= 1; // (int) ideaspvh;
                 telefono.setIdeGttel(conertideaspvh); //maximo de utilitario
+                System.out.println("telefono "+telefono);
                 manejador.persist(telefono);
             } else {
                 manejador.merge(telefono);
