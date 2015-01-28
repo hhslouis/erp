@@ -9,7 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import framework.aplicacion.TablaGenerica;
 import framework.componentes.Boton;
+import framework.componentes.Confirmar;
 import framework.componentes.Dialogo;
 import framework.componentes.Division;
 import framework.componentes.Encriptar;
@@ -27,13 +29,15 @@ import framework.componentes.Texto;
 
 import javax.ejb.EJB;
 import javax.faces.event.AjaxBehaviorEvent;
+
+import paq_nomina.ejb.ServicioNomina;
 import paq_sistema.aplicacion.Pantalla;
 import paq_sistema.ejb.ServicioSeguridad;
 
 
 /**
  * 
- * @author Diego
+ * 
  */
 public class pre_usuarios extends Pantalla {
 
@@ -48,15 +52,19 @@ public class pre_usuarios extends Pantalla {
 	private Map map_parametros = new HashMap();
 	private SeleccionTabla set_tab_recursos=new SeleccionTabla();
 	private SeleccionTabla set_perfiles=new SeleccionTabla();
+	private SeleccionTabla set_empleado = new SeleccionTabla();	
 	private ListaSeleccion lis_estado_usuarios = new ListaSeleccion();
 	private Dialogo dia_estado_usuarios = new Dialogo();
 	private ListaSeleccion lis_estado_usuarios_2 = new ListaSeleccion();
 	private SeleccionCalendario sec_rango_reporte = new SeleccionCalendario();
+	private Confirmar con_guardar =new Confirmar();
 	@EJB
 	private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario
 	.instanciarEJB(ServicioSeguridad.class);
 	
-		
+	@EJB
+	private ServicioNomina ser_empleado = (ServicioNomina) utilitario.instanciarEJB(ServicioNomina.class);
+	
 	private int int_longitud_minima_login = ser_seguridad
 			.getLongitudMinimaLogin();
 	private Texto tex_nick;
@@ -66,6 +74,7 @@ public class pre_usuarios extends Pantalla {
 		Boton bot_generar = new Boton();
 		Boton bot_activar = new Boton();
 		Boton bot_desbloquear = new Boton();
+		Boton bot_agrearemple = new Boton();
 
 		bot_generar.setValue("Generar Nueva Clave");
 		bot_generar.setMetodo("abrirGenerarClave");
@@ -81,6 +90,8 @@ public class pre_usuarios extends Pantalla {
 		bot_desbloquear.setMetodo("desbloquearUsuario");
 		bar_botones.agregarBoton(bot_desbloquear);
 
+	
+		
 		tab_tabla1.setId("tab_tabla1");
 		tab_tabla1.setTipoFormulario(true);
 		tab_tabla1.setTabla("sis_usuario", "ide_usua", 1);
@@ -99,6 +110,9 @@ public class pre_usuarios extends Pantalla {
 		tab_tabla1.getColumna("FECHA_REG_USUA").setValorDefecto(
 				utilitario.getFechaActual());
 		tab_tabla1.getColumna("FECHA_REG_USUA").setLectura(true);
+		tab_tabla1.getColumna("IDE_GTEMP").setCombo(ser_empleado.servicioEmpleadosActivos("true,false"));
+		tab_tabla1.getColumna("IDE_GTEMP").setAutoCompletar();
+		tab_tabla1.getColumna("IDE_GTEMP").setLectura(true);
 		tab_tabla1.getColumna("NICK_USUA").setMetodoChange("asignarClave");		
 		tab_tabla1.getColumna("CAMBIA_CLAVE_USUA").setValorDefecto("true");
 		tab_tabla1.getColumna("CAMBIA_CLAVE_USUA").setLectura(true);
@@ -193,7 +207,28 @@ public class pre_usuarios extends Pantalla {
 		set_perfiles.getBot_aceptar().setMetodo("aceptarReporte");
 		set_perfiles.setTitle("SELECCION DE PERFILES");
 		agregarComponente(set_perfiles);
-
+		
+		
+		bot_agrearemple.setValue("Agregar / Editar Empleado");
+		bot_agrearemple.setTitle("Agregar Empleado al usuario actual");
+		bot_agrearemple.setMetodo("agregarEmpleado");
+		bar_botones.agregarBoton(bot_agrearemple);
+		
+		con_guardar.setId("con_guardar");
+		agregarComponente(con_guardar);
+				
+		set_empleado.setId("set_empleado");
+		set_empleado.setSeleccionTabla(ser_empleado.servicioEmpleadosActivos("true"),"ide_gtemp");
+		set_empleado.getTab_seleccion().getColumna("documento_identidad_gtemp").setFiltro(true);
+		set_empleado.getTab_seleccion().getColumna("apellido_paterno_gtemp").setFiltro(true);
+		set_empleado.getTab_seleccion().getColumna("apellido_materno_gtemp").setFiltro(true);
+		set_empleado.setRadio();
+		
+		//set_empleado.getTab_seleccion().getColumna("nombre_apellido").setFiltro(true);
+		set_empleado.setTitle("Seleccione un Empleado");
+		set_empleado.getBot_aceptar().setMetodo("aceptarEmpleado");
+		agregarComponente(set_empleado);
+		
 		List lista = new ArrayList();
 		Object fila1[] = { "1", "ACTIVOS" };
 		Object fila2[] = { "0", "INACTIVOS" };
@@ -233,6 +268,33 @@ public class pre_usuarios extends Pantalla {
 		//Para activar o desactivar el campo nick	
 		tex_nick=((Texto)utilitario.getComponente(tab_tabla1.getColumna("NICK_USUA").getId()));
 		cambiarEstadoNick();	
+	}
+	
+	public void agregarEmpleado(){
+		
+		set_empleado.getTab_seleccion().setSql(ser_empleado.servicioEmpleadosActivos("true"));
+		set_empleado.getTab_seleccion().ejecutarSql();
+		set_empleado.dibujar();
+
+	}
+	
+	public void aceptarEmpleado(){
+		String str_seleccionados=set_empleado.getValorSeleccionado();
+		if(str_seleccionados!=null){
+			//Inserto los empleados seleccionados en la tabla de resposable d econtratacion 
+			//TablaGenerica tab_empleado_responsable = ser_empleado.servicioEmpleadosActivos());		
+			tab_tabla1.setValor("ide_gtemp",str_seleccionados);			
+			
+			set_empleado.cerrar();		
+			tab_tabla1.modificar(tab_tabla1.getFilaActual());
+			utilitario.addUpdate("tab_tabla1");
+			tab_tabla1.guardar();
+			guardarPantalla();
+				
+		}
+		else{
+			utilitario.agregarMensajeInfo("Debe seleccionar almenos un registro", "");
+		}
 	}
 	
 	/**
@@ -413,6 +475,8 @@ public class pre_usuarios extends Pantalla {
 		}
 	}
 
+	
+	
 	/**
 	 * Activa el usuario seleccionado
 	 */
@@ -609,5 +673,21 @@ public class pre_usuarios extends Pantalla {
 
 	public void setDia_estado_usuarios(Dialogo dia_estado_usuarios) {
 		this.dia_estado_usuarios = dia_estado_usuarios;
+	}
+
+	public SeleccionTabla getSet_empleado() {
+		return set_empleado;
+	}
+
+	public void setSet_empleado(SeleccionTabla set_empleado) {
+		this.set_empleado = set_empleado;
+	}
+
+	public ServicioNomina getSer_empleado() {
+		return ser_empleado;
+	}
+
+	public void setSer_empleado(ServicioNomina ser_empleado) {
+		this.ser_empleado = ser_empleado;
 	}
 }
