@@ -5292,6 +5292,20 @@ System.out.println("sql getSqlEmpleadosRol..."+sql);
 
 	}
 
+	/**
+	 * Metodo que devuelve datos de empleados activos e inactivos
+	 * @param ide_gtemp  : CODIGO DEL EMPLEADO
+	 * @return String   resultado (CODIGO EMP, APELLIDO PAT, APELLIDO MAT, NOMBRES, NUM CEDULA)
+	 */
+	//servicio empleadosActivos
+		public String servicioEmpleadosActivos(String estado){
+			String sql_empleadosActivos="select ide_gtemp, apellido_paterno_gtemp, " +
+					"apellido_materno_gtemp,primer_nombre_gtemp, segundo_nombre_gtemp, " +
+					"documento_identidad_gtemp from gth_empleado where activo_gtemp in (true,false)  " +
+					"order by apellido_paterno_gtemp, apellido_materno_gtemp ";
+			return sql_empleadosActivos;
+		}
+		
 	//servicio empleadoContrato 
 	
 	public String servicioEmpleadoContrato(String estado){
