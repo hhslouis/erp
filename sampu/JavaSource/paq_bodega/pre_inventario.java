@@ -64,6 +64,9 @@ public class pre_inventario extends Pantalla{
 
 		set_material.setId("set_material");
 		set_material.setSeleccionTabla(ser_Bodega.getInventario("true"),"ide_bomat");
+		set_material.getTab_seleccion().getColumna("codigo_bomat").setFiltro(true);
+		set_material.getTab_seleccion().getColumna("detalle_bomat").setFiltro(true);
+		set_material.getTab_seleccion().getColumna("detalle_bogrm").setFiltro(true);
 		set_material.getBot_aceptar().setMetodo("aceptarMaterial");
 		set_material.getTab_seleccion().ejecutarSql();
 		agregarComponente(set_material);
@@ -80,6 +83,9 @@ public class pre_inventario extends Pantalla{
 
 		set_actualizamaterial.setId("set_actualizamaterial");
 		set_actualizamaterial.setSeleccionTabla(ser_Bodega.getInventario("true"),"ide_bomat");
+		set_actualizamaterial.getTab_seleccion().getColumna("codigo_bomat").setFiltro(true);
+		set_actualizamaterial.getTab_seleccion().getColumna("detalle_bomat").setFiltro(true);
+		set_actualizamaterial.getTab_seleccion().getColumna("detalle_bogrm").setFiltro(true);
 		set_actualizamaterial.getBot_aceptar().setMetodo("modificarMaterial");
 		set_actualizamaterial.setRadio();
 		agregarComponente(set_actualizamaterial);

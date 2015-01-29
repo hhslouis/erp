@@ -56,6 +56,10 @@ public class pre_ingreso_material extends Pantalla{
 
 		set_material.setId("set_material");
 		set_material.setSeleccionTabla(ser_Bodega.getInventario("true"),"ide_bomat");
+		set_material.setSeleccionTabla(ser_Bodega.getInventario("true"),"ide_bomat");
+		set_material.getTab_seleccion().getColumna("codigo_bomat").setFiltro(true);
+		set_material.getTab_seleccion().getColumna("detalle_bomat").setFiltro(true);
+		set_material.getTab_seleccion().getColumna("detalle_bogrm").setFiltro(true);
 		set_material.getBot_aceptar().setMetodo("aceptarMaterial");
 		set_material.getTab_seleccion().ejecutarSql();
 		agregarComponente(set_material);
@@ -72,6 +76,9 @@ public class pre_ingreso_material extends Pantalla{
 
 		set_actualizamaterial.setId("set_actualizamaterial");
 		set_actualizamaterial.setSeleccionTabla(ser_Bodega.getInventario("true"),"ide_bomat");
+		set_actualizamaterial.getTab_seleccion().getColumna("codigo_bomat").setFiltro(true);
+		set_actualizamaterial.getTab_seleccion().getColumna("detalle_bomat").setFiltro(true);
+		set_actualizamaterial.getTab_seleccion().getColumna("detalle_bogrm").setFiltro(true);
 		set_actualizamaterial.getBot_aceptar().setMetodo("modificarMaterial");
 		set_actualizamaterial.setRadio();
 		agregarComponente(set_actualizamaterial);
@@ -101,7 +108,7 @@ public class pre_ingreso_material extends Pantalla{
 		TablaGenerica tab_materialModificado = ser_Bodega.getTablaInventario(str_materialActualizado);
 		tab_bodega.setValor("IDE_BOMAT", tab_materialModificado.getValor("IDE_BOMAT"));			
 		tab_bodega.modificar(tab_bodega.getFilaActual());
-		utilitario.addUpdate("tab_inventario");	
+		utilitario.addUpdate("tab_bodega");	
 
 		con_guardar.setMessage("Esta Seguro de Actualizar el Material");
 		con_guardar.setTitle("CONFIRMACION ");
