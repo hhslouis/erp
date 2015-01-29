@@ -82,6 +82,8 @@ public class pre_egreso_material extends Pantalla {
 		set_inventario.setId("set_inventario");
 		set_inventario.setSeleccionTabla(ser_contabilidad.getInventario("1"),"ide_boinv");
 		set_inventario.getTab_seleccion().getColumna("ide_boinv").setFiltro(true);
+		set_inventario.getTab_seleccion().getColumna("codigo_bomat").setFiltro(true);
+		set_inventario.getTab_seleccion().getColumna("detalle_bomat").setFiltro(true);
 		set_inventario.getBot_aceptar().setMetodo("aceptarInventario");
 		set_inventario.setRadio();
 		set_inventario.getTab_seleccion().ejecutarSql();
