@@ -19,7 +19,7 @@ public class pre_egreso_material extends Pantalla {
 	private Tabla  tab_concepto_egreso=new Tabla();
 	private Tabla  tab_egreso=new Tabla();
 	private Combo com_anio=new Combo();
-
+	
 	private SeleccionTabla set_inventario=new SeleccionTabla();
 
 	@EJB
@@ -77,8 +77,7 @@ public class pre_egreso_material extends Pantalla {
 		bot_inventario.setIcon("ui-icon-person");
 		bot_inventario.setMetodo("importarInventario");
 		bar_botones.agregarBoton(bot_inventario);
-
-
+		
 		set_inventario.setId("set_inventario");
 		set_inventario.setSeleccionTabla(ser_contabilidad.getInventario("1"),"ide_boinv");
 		set_inventario.getTab_seleccion().getColumna("ide_boinv").setFiltro(true);
