@@ -32,12 +32,19 @@ public class ServicioBodega {
 	 * @param activo
 	 * @return
 	 */
-	public String getInventario (String activo){
+	public String getInventario (String grupo,String activo,String ide_botip){
 
 		String tab_inventario="select ide_bomat, codigo_bomat,detalle_bomat,detalle_bogrm " +
 				"from bodt_material a,bodt_grupo_material b" +
-				" WHERE activo_bomat in ("+activo+") AND a.ide_bogrm = b.ide_bogrm " +
-				"ORDER BY detalle_bogrm,detalle_bomat";
+				" WHERE activo_bomat in ("+activo+") AND a.ide_bogrm = b.ide_bogrm ";
+		if(grupo.equals("0")){
+		       tab_inventario +=" AND a.ide_bogrm = b.ide_bogrm AND a.ide_botip in("+ide_botip+") "	;
+		}
+		
+		        tab_inventario +="ORDER BY detalle_bogrm,detalle_bomat";
+		        
+		System.out.println("consluat "+tab_inventario);
+
 
 		return tab_inventario;
 
