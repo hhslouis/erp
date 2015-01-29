@@ -22,11 +22,13 @@ public class pre_inventario extends Pantalla{
 	private SeleccionTabla set_material=new SeleccionTabla();
 	private SeleccionTabla set_actualizamaterial=new SeleccionTabla();
 	private Confirmar con_guardar=new Confirmar();
+	public static String par_grupo_material;
 
 
 
 	@EJB
 	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
+	@EJB
 	private ServicioBodega ser_Bodega = (ServicioBodega) utilitario.instanciarEJB(ServicioBodega.class);
 	public pre_inventario() {
 
@@ -34,16 +36,18 @@ public class pre_inventario extends Pantalla{
 		com_anio.setMetodo("seleccionaElAnio");
 		bar_botones.agregarComponente(new Etiqueta("Seleccione El Año:"));
 		bar_botones.agregarComponente(com_anio);
+		par_grupo_material=utilitario.getVariable("p_grupo_material");
+
 
 		tab_inventario.setId("tab_inventario");  
 		tab_inventario.setTabla("bodt_inventario","ide_boinv", 1);
-		tab_inventario.getColumna("ide_bomat").setUnico(false);
+		tab_inventario.getColumna("ide_bomat").setUnico(true);
 		tab_inventario.getColumna("ide_geani").setUnico(true);
 		tab_inventario.getColumna("ide_geani").setVisible(false);
 		tab_inventario.getColumna("gen_ide_geani").setVisible(false);
 		tab_inventario.getColumna("IDE_GEARE").setVisible(false);
 		tab_inventario.setCondicion("ide_geani=-1"); 
-		tab_inventario.getColumna("ide_bomat").setCombo(ser_Bodega.getInventario("true,false"));
+		tab_inventario.getColumna("ide_bomat").setCombo(ser_Bodega.getInventario("1","true,false",""));
 		tab_inventario.getColumna("gen_ide_geani").setCombo(ser_contabilidad.getAnio("true,false","true,false"));
 		tab_inventario.getColumna("IDE_GEARE").setCombo("gen_area","ide_geare","detalle_geare","");
 		tab_inventario.dibujar();
@@ -63,7 +67,7 @@ public class pre_inventario extends Pantalla{
 		bar_botones.agregarBoton(bot_material);
 
 		set_material.setId("set_material");
-		set_material.setSeleccionTabla(ser_Bodega.getInventario("true"),"ide_bomat");
+		set_material.setSeleccionTabla(ser_Bodega.getInventario("0","true",par_grupo_material),"ide_bomat");
 		set_material.getTab_seleccion().getColumna("codigo_bomat").setFiltro(true);
 		set_material.getTab_seleccion().getColumna("detalle_bomat").setFiltro(true);
 		set_material.getTab_seleccion().getColumna("detalle_bogrm").setFiltro(true);
@@ -82,7 +86,7 @@ public class pre_inventario extends Pantalla{
 		bar_botones.agregarBoton(bot_actualizar);	
 
 		set_actualizamaterial.setId("set_actualizamaterial");
-		set_actualizamaterial.setSeleccionTabla(ser_Bodega.getInventario("true"),"ide_bomat");
+		set_actualizamaterial.setSeleccionTabla(ser_Bodega.getInventario("0","true",par_grupo_material),"ide_bomat");
 		set_actualizamaterial.getTab_seleccion().getColumna("codigo_bomat").setFiltro(true);
 		set_actualizamaterial.getTab_seleccion().getColumna("detalle_bomat").setFiltro(true);
 		set_actualizamaterial.getTab_seleccion().getColumna("detalle_bogrm").setFiltro(true);
@@ -99,7 +103,7 @@ public class pre_inventario extends Pantalla{
 
 		}
 		System.out.println("Entra a actualizar1...");
-		set_actualizamaterial.getTab_seleccion().setSql(ser_Bodega.getInventario("true"));
+		set_actualizamaterial.getTab_seleccion().setSql(ser_Bodega.getInventario("0","true",par_grupo_material));
 		set_actualizamaterial.getTab_seleccion().ejecutarSql();
 		set_actualizamaterial.dibujar();	
 	}	
@@ -139,7 +143,7 @@ public class pre_inventario extends Pantalla{
 			return;
 		}
 
-		set_material.getTab_seleccion().setSql(ser_Bodega.getInventario("true"));
+		set_material.getTab_seleccion().setSql(ser_Bodega.getInventario("0","true",par_grupo_material));
 		set_material.getTab_seleccion().ejecutarSql();
 		set_material.dibujar();
 
@@ -254,6 +258,12 @@ public class pre_inventario extends Pantalla{
 	}
 	public void setCon_guardar(Confirmar con_guardar) {
 		this.con_guardar = con_guardar;
+	}
+	public static String getPar_grupo_material() {
+		return par_grupo_material;
+	}
+	public static void setPar_grupo_material(String par_grupo_material) {
+		pre_inventario.par_grupo_material = par_grupo_material;
 	} 
 
 }

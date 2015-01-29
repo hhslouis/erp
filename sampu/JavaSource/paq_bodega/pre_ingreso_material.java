@@ -18,6 +18,8 @@ public class pre_ingreso_material extends Pantalla{
 	private Tabla tab_bodega=new Tabla();
 	private Tabla tab_anio=new Tabla();
 	private Combo com_anio=new Combo();
+	public static String par_grupo_material;
+
 	private SeleccionTabla set_material=new SeleccionTabla();
 	private SeleccionTabla set_actualizamaterial=new SeleccionTabla();
 	private Confirmar con_guardar=new Confirmar();
@@ -53,10 +55,10 @@ public class pre_ingreso_material extends Pantalla{
 		bot_material.setIcon("ui-icon-person");
 		bot_material.setMetodo("importarMaterial");
 		bar_botones.agregarBoton(bot_material);
+		par_grupo_material=utilitario.getVariable("p_grupo_material");
 
 		set_material.setId("set_material");
-		set_material.setSeleccionTabla(ser_Bodega.getInventario("true"),"ide_bomat");
-		set_material.setSeleccionTabla(ser_Bodega.getInventario("true"),"ide_bomat");
+		set_material.setSeleccionTabla(ser_Bodega.getInventario("0","true",par_grupo_material),"ide_bomat");
 		set_material.getTab_seleccion().getColumna("codigo_bomat").setFiltro(true);
 		set_material.getTab_seleccion().getColumna("detalle_bomat").setFiltro(true);
 		set_material.getTab_seleccion().getColumna("detalle_bogrm").setFiltro(true);
@@ -75,7 +77,7 @@ public class pre_ingreso_material extends Pantalla{
 		bar_botones.agregarBoton(bot_actualizar);	
 
 		set_actualizamaterial.setId("set_actualizamaterial");
-		set_actualizamaterial.setSeleccionTabla(ser_Bodega.getInventario("true"),"ide_bomat");
+		set_actualizamaterial.setSeleccionTabla(ser_Bodega.getInventario("0","true",par_grupo_material),"ide_bomat");
 		set_actualizamaterial.getTab_seleccion().getColumna("codigo_bomat").setFiltro(true);
 		set_actualizamaterial.getTab_seleccion().getColumna("detalle_bomat").setFiltro(true);
 		set_actualizamaterial.getTab_seleccion().getColumna("detalle_bogrm").setFiltro(true);
@@ -94,7 +96,7 @@ public class pre_ingreso_material extends Pantalla{
 
 		}
 		System.out.println("Entra a actualizar1...");
-		set_actualizamaterial.getTab_seleccion().setSql(ser_Bodega.getInventario("true"));
+		set_actualizamaterial.getTab_seleccion().setSql(ser_Bodega.getInventario("0","true",par_grupo_material));
 		set_actualizamaterial.getTab_seleccion().ejecutarSql();
 		set_actualizamaterial.dibujar();	
 	}	
@@ -134,7 +136,7 @@ public class pre_ingreso_material extends Pantalla{
 			return;
 		}
 
-		set_material.getTab_seleccion().setSql(ser_Bodega.getInventario("true"));
+		set_material.getTab_seleccion().setSql(ser_Bodega.getInventario("0","true",par_grupo_material));
 		set_material.getTab_seleccion().ejecutarSql();
 		set_material.dibujar();
 
