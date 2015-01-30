@@ -3,6 +3,9 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="21"/>
+	<parameter name="pide_fafac" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[select a.ide_fafac,a.ide_recli,nombre_comercial_recli,ruc_comercial_recli,telefono_factura_recli,
 direccion_recld,activo_recld,fecha_transaccion_fafac,valor_iva_fafac,total_fafac,
@@ -16,7 +19,7 @@ left join rec_cliente_direccion b on a.ide_recli = b.ide_recli  and activo_recld
 left join (select sum(total_fadef) as subtotal,ide_fafac from fac_detalle_factura group by ide_fafac ) c on a.ide_fafac=c.ide_fafac
 left join (select ide_fafac,cantidad_fadef,fecha_fadef,valor_fadef,total_fadef,a.ide_bomat,detalle_bomat
 from fac_detalle_factura a, bodt_material b where a.ide_bomat = b.ide_bomat ) d on a.ide_fafac= d.ide_fafac
-where a.ide_fafac =24
+where a.ide_fafac =$P{pide_fafac}
 order by ide_bomat,fecha_fadef]]>
 	</queryString>
 	<field name="ide_fafac" class="java.lang.Integer">
