@@ -48,17 +48,11 @@ left join (select ide_recli,direccion_recld from rec_cliente_direccion where act
 ) a
 left join (select ide_fafac,fecha_transaccion_fafac,ide_recli,valor_iva_fafac,
 total_fafac from fac_factura) b on a.ide_recli = b.ide_recli
-left join (select sum(valor_fadef) as subtotal,ide_fafac from fac_detalle_factura group by ide_fafac ) c on b.ide_fafac=c.ide_fafac
+left join (select sum(total_fadef) as subtotal,ide_fafac from fac_detalle_factura group by ide_fafac ) c on b.ide_fafac=c.ide_fafac
 left join (select ide_fafac,cantidad_fadef,fecha_fadef,valor_fadef,total_fadef,a.ide_bomat,detalle_bomat,detalle_bogrm
 from fac_detalle_factura a, bodt_material b ,bodt_grupo_material c where a.ide_bomat = b.ide_bomat and b.ide_bogrm=c.ide_bogrm ) d on b.ide_fafac= d.ide_fafac
 where b.ide_fafac =$P{pide_fafac}
-order by ide_bomat,fecha_fadef
-
-
-
-
-
-]]>
+order by ide_bomat,fecha_fadef]]>
 	</queryString>
 	<field name="ide_recli" class="java.lang.Long">
 		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla rec_clientes.]]></fieldDescription>
