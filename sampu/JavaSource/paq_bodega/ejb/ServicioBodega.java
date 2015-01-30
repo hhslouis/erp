@@ -42,11 +42,7 @@ public class ServicioBodega {
 		}
 		
 		        tab_inventario +="ORDER BY detalle_bogrm,detalle_bomat";
-		        
-		System.out.println("consluat "+tab_inventario);
-
-
-		return tab_inventario;
+			return tab_inventario;
 
 
 	}
