@@ -37,7 +37,7 @@ public class Parametros {
          */
         
         
-        lis_parametros.add(new Parametro("1", "p_tipo_cobro", "Permite definir el tipo de cobro inicial que se mostrará por defecto en la facturación",  "3","rec_tipo", "ide_retip", "detalle_retip"));
+        lis_parametros.add(new Parametro("1", "p_tipo_cobro_factura", "Permite definir el tipo de cobro inicial que se mostrará por defecto en la facturación",  "4","rec_tipo", "ide_retip", "detalle_retip"));
         lis_parametros.add(new Parametro("1", "p_gen_terminacion_encargo_posicion", "Permite al momento de hacer una terminacion de subrogacion volver a las caracteristicas del contrato que poseia antes de realizar la subrogacion", "46","GEN_ACCION_EMPLEADO_DEPA", "IDE_GEAED", "DETALLE_GEAED"));
         
         lis_parametros.add(new Parametro("1", "p_gen_status_stand_by", "Indica la categoria estatus stand by", "2","GEN_CATEGORIA_ESTATUS", "IDE_GECAE", "DETALLE_GECAE"));
