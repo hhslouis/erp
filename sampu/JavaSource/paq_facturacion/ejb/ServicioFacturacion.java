@@ -57,9 +57,10 @@ public class ServicioFacturacion {
 		String tab_datos_factura="select ide_fadaf,autorizacion_sri_bogrm,serie_factura_fadaf, detalle_bogrm " +
 						" from fac_datos_factura a, bodt_grupo_material b where a.ide_bogrm = b.ide_bogrm ";
 						if(grupos.equals("0")){
-							tab_datos_factura +=" b.ide_bogrm in ("+grupoMaterial+") ";
+							tab_datos_factura +=" and b.ide_bogrm in ("+grupoMaterial+") ";
 						}
 						tab_datos_factura += " order by autorizacion_sri_bogrm";
-		return tab_datos_factura;
+						System.out.println("datos factura");
+						return tab_datos_factura;
 	}
 }

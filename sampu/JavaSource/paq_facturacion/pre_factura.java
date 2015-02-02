@@ -1,6 +1,8 @@
 package paq_facturacion;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -13,7 +15,9 @@ import framework.componentes.Dialogo;
 import framework.componentes.Division;
 import framework.componentes.Grid;
 import framework.componentes.PanelTabla;
+import framework.componentes.Reporte;
 import framework.componentes.SeleccionCalendario;
+import framework.componentes.SeleccionFormatoReporte;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import framework.componentes.Texto;
@@ -66,7 +70,13 @@ public class pre_factura extends Pantalla{
 	private Dialogo dia_valor=new Dialogo();
 	private Texto tex_valor=new Texto();
 	String str_smaterial_seleccionado;
+	//REPORTE
+		private Map p_parametros = new HashMap();
+		private Reporte rep_reporte = new Reporte();
+		private SeleccionFormatoReporte self_reporte = new SeleccionFormatoReporte();
+		private Map map_parametros = new HashMap();
 
+	
 	@EJB
 	private ServicioFacturacion ser_facturacion = (ServicioFacturacion ) utilitario.instanciarEJB(ServicioFacturacion.class);
 	@EJB
@@ -76,8 +86,15 @@ public class pre_factura extends Pantalla{
 	
 	
 	
+	
 	public pre_factura() {
-
+		
+		rep_reporte.setId("rep_reporte"); //id
+		rep_reporte.getBot_aceptar().setMetodo("aceptarReporte");//ejecuta el metodo al aceptar reporte
+		agregarComponente(rep_reporte);//agrega el componente a la pantalla
+		bar_botones.agregarReporte();//aparece el boton de reportes en la barra de botones
+		self_reporte.setId("self_reporte"); //id
+		agregarComponente(self_reporte);
 		// TODO Auto-generated constructor stub
 
 		tab_factura.setHeader("FACTURACIÓN");
@@ -139,10 +156,12 @@ public class pre_factura extends Pantalla{
 		tab_detalle_factura.getColumna("cantidad_fadef").setValorDefecto("0");
 		tab_detalle_factura.getColumna("activo_fadef").setValorDefecto("true");
 		tab_detalle_factura.getColumna("activo_fadef").setLectura(true);
+		//tab_detalle_factura.getColumna("valor_fadef").setLectura(true);
+		
 		tab_detalle_factura.setCampoForanea("ide_fafac");
 
 		// ide_bomat---setcombo y set autocompletar
-		tab_detalle_factura.getColumna("ide_bomat").setCombo(ser_bodega.getInventario("true,false"));
+		tab_detalle_factura.getColumna("ide_bomat").setCombo(ser_bodega.getInventario("1","true,false",""));
 		tab_detalle_factura.getColumna("ide_bomat").setAutoCompletar();
 		//definimos el metodo que va a ejecutar cuando el usuario seleccione del Autocompletar
 		tab_detalle_factura.getColumna("ide_bomat").setMetodoChange("seleccionoProducto");
@@ -164,6 +183,8 @@ public class pre_factura extends Pantalla{
 		//DETALLE FACTURA
 		tab_detalle_factura.getColumna("total_fadef").setEtiqueta();
 		tab_detalle_factura.getColumna("total_fadef").setEstilo("font-size:13px;font-weight:bold;");
+		tab_detalle_factura.getColumna("valor_fadef").setEtiqueta();
+		tab_detalle_factura.getColumna("valor_fadef").setEstilo("font-size:13px;font-weight:bold;");
 		//LLAMAR A ESTE METODO CUANDO EL USUARIO, MODIFIQUE LA CANTIDAD O EL VALOR DESDE LA APLICACION
 		tab_detalle_factura.getColumna("cantidad_fadef").setMetodoChange("calcularDetalle");
 		tab_detalle_factura.getColumna("valor_fadef").setMetodoChange("calcularDetalle");
@@ -321,10 +342,13 @@ public class pre_factura extends Pantalla{
 		//Muestro solo los campos necesarios
 		tab_cliente.getColumna("nombre_comercial_recli").setVisible(true);	
 		tab_cliente.getColumna("nombre_comercial_recli").setNombreVisual("NOMBRE COMERCIAL");
-		tab_cliente.getColumna("ide_gttdi").setVisible(false);
-		tab_cliente.getColumna("ide_gttdi").setNombreVisual("ID.. ide_gttdi");
+		tab_cliente.getColumna("ide_gttdi").setCombo("gth_tipo_documento_identidad", "ide_gttdi", "detalle_gttdi", "");
+		tab_cliente.getColumna("ide_gttdi").setVisible(true);
+		tab_cliente.getColumna("ide_gttdi").setValorDefecto("3");
+		tab_cliente.getColumna("ide_gttdi").setNombreVisual("DOCUMENTO IDENTIDAD");
 		tab_cliente.getColumna("ruc_comercial_recli").setVisible(true);
 		tab_cliente.getColumna("ruc_comercial_recli").setNombreVisual("RUC COMERCIAL DEL CLIENTE");
+		tab_cliente.getColumna("ruc_comercial_recli").setMetodoChange("validaDocumento");
 		tab_cliente.getColumna("telefono_factura_recli").setVisible(true);
 		tab_cliente.getColumna("telefono_factura_recli").setNombreVisual("TELEFONO");
 		tab_cliente.getColumna("factura_datos_recli").setValorDefecto("1");
@@ -348,8 +372,9 @@ public class pre_factura extends Pantalla{
 		for(int i=0;i<tab_direccion.getTotalColumnas();i++){
 			tab_direccion.getColumnas()[i].setVisible(false);
 		}
-		tab_direccion.getColumna("direccion_recld").setNombreVisual("Dirección");
+		tab_direccion.getColumna("direccion_recld").setNombreVisual("DIRECCION");
 		tab_direccion.getColumna("direccion_recld").setVisible(true);
+		tab_direccion.getColumna("activo_recld").setValorDefecto("true");
 		tab_direccion.setCondicion("ide_recld=-1");
 		tab_direccion.dibujar();
 
@@ -387,6 +412,13 @@ public class pre_factura extends Pantalla{
 	}
 
 	public void aceptarDialogoCliente(){
+		if(!validarDocumentoIdentidad(tab_cliente.getValor("ide_gttdi"), tab_cliente.getValor("ruc_comercial_recli"))){
+			System.out.println("entre a validar cedula");
+			tab_cliente.setValor("ruc_comercial_recli","");
+			utilitario.addUpdate("tab_clientes");
+			return;
+			
+		}
 
 		if(tab_cliente.guardar()){ //si guarda el gliente cierra el dialogo
 
@@ -394,6 +426,7 @@ public class pre_factura extends Pantalla{
 			if(tab_direccion.guardar())
 			{
 				if(guardarPantalla().isEmpty()){
+					
 					crear_cliente_dialogo.cerrar();	
 					tab_factura.actualizarCombos();//actualiza los combos para que aparezca el nuevo cliente	
 					if(tab_factura.isFilaInsertada()==false){
@@ -431,7 +464,7 @@ public class pre_factura extends Pantalla{
 			}
 
 			tab_factura.setValor("ide_recli", str_seleccionado);				
-
+				
 			set_pantallacliente.cerrar();
 			utilitario.addUpdate("tab_factura");			
 		}
@@ -694,6 +727,7 @@ public class pre_factura extends Pantalla{
 
 		if (valor!=null){ 
 			tab_detalle_factura.setValor("valor_fadef",valor);	
+			
 			utilitario.addUpdateTabla(tab_detalle_factura, "valor_fadef", "");
 		
 		}
@@ -735,7 +769,7 @@ public class pre_factura extends Pantalla{
 		utilitario.addUpdateTabla(tab_detalle_factura, "total_fadef", "tab_factura");
 		calcularFactura();
 	}
-
+	
 	public void calcularDetalle(AjaxBehaviorEvent evt) {
 		tab_detalle_factura.modificar(evt); //Siempre es la primera linea
 		calcular();
@@ -790,6 +824,43 @@ public class pre_factura extends Pantalla{
 		eti_total.setValue("TOTAL : "+utilitario.getFormatoNumero(dou_total,3));
 		utilitario.addUpdate("eti_total");
 	}
+	public void validaDocumento(AjaxBehaviorEvent evt){
+		tab_cliente.modificar(evt);
+		if(!validarDocumentoIdentidad(tab_cliente.getValor("ide_gttdi"), tab_cliente.getValor("ruc_comercial_recli"))){
+			System.out.println("entre a validar cedula");
+			tab_cliente.setValor("ruc_comercial_recli","");
+			utilitario.addUpdate("tab_clientes");
+		}			
+
+	}
+
+
+	/**
+	 * @param ide_gttdi
+	 * @param documento_identidad_gttdi
+	 * @return
+	 * 
+	 * metodo booleano para validar el tipo de documento de identidad cedula y ruc
+	 */
+	public boolean validarDocumentoIdentidad(String ide_gttdi,String documento_identidad){
+		if (ide_gttdi!=null && !ide_gttdi.isEmpty()){
+			if (documento_identidad!=null && !documento_identidad.isEmpty()){
+				if (ide_gttdi.equals(utilitario.getVariable("p_gth_tipo_documento_cedula"))){
+					if (!utilitario.validarCedula(documento_identidad)){
+						utilitario.agregarMensajeInfo("Atencion", "El numero de cedula ingresado no es valido");
+						return false;
+					}
+				}else if (ide_gttdi.equals(utilitario.getVariable("p_gth_tipo_documento_ruc"))){
+					if (!utilitario.validarRUC(documento_identidad)){
+						utilitario.agregarMensajeInfo("Atencion", "El numero de RUC ingresado no es valido");
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+
 
 
 	@Override
@@ -846,6 +917,28 @@ public class pre_factura extends Pantalla{
 		}
 
 	}
+	
+	//REPORTE
+		public void abrirListaReportes() {
+			// TODO Auto-generated method stub
+			rep_reporte.dibujar();
+		}
+		public void aceptarReporte(){
+			if(rep_reporte.getReporteSelecionado().equals("Factura"));{
+				if (tab_factura.getTotalFilas()>0){
+				if (rep_reporte.isVisible()){
+					p_parametros=new HashMap();		
+					rep_reporte.cerrar();				
+				p_parametros.put("pide_fafac",Integer.parseInt(tab_factura.getValor("ide_fafac")));
+				self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
+				self_reporte.dibujar();
+				}
+			}else{
+				utilitario.agregarMensajeInfo("No se puede generar el reporte", "Debe seleccionar una Factura");
+
+			}
+		}
+		}
 
 	@Override
 	public void inicio() {
@@ -987,6 +1080,24 @@ public class pre_factura extends Pantalla{
 	}
 	public void setTab_direccion(Tabla tab_direccion) {
 		this.tab_direccion = tab_direccion;
+	}
+	public Map getP_parametros() {
+		return p_parametros;
+	}
+	public void setP_parametros(Map p_parametros) {
+		this.p_parametros = p_parametros;
+	}
+	public Reporte getRep_reporte() {
+		return rep_reporte;
+	}
+	public void setRep_reporte(Reporte rep_reporte) {
+		this.rep_reporte = rep_reporte;
+	}
+	public SeleccionFormatoReporte getSelf_reporte() {
+		return self_reporte;
+	}
+	public void setSelf_reporte(SeleccionFormatoReporte self_reporte) {
+		this.self_reporte = self_reporte;
 	}
 
 
