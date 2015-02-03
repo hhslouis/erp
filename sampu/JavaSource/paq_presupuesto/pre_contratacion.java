@@ -54,8 +54,8 @@ public class pre_contratacion extends Pantalla{
 		tab_poa.setCondicion("ide_geani=-1");  
 
 		tab_poa.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
-		tab_poa.getColumna("ide_prcla").setCombo("SELECT ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla FROM pre_clasificador ORDER BY codigo_clasificador_prcla");
-		tab_poa.getColumna("ide_prcla").setLectura(true);
+		//tab_poa.getColumna("ide_prcla").setCombo("SELECT ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla FROM pre_clasificador ORDER BY codigo_clasificador_prcla");
+		tab_poa.getColumna("ide_prcla").setAncho(50);
 		tab_poa.getColumna("ide_prsua").setCombo("pre_sub_actividad","ide_prsua","detalle_prsua","");
 		tab_poa.getColumna("ide_prfup").setCombo("pre_funcion_programa","ide_prfup","detalle_prfup","");
 		tab_poa.getColumna("ide_geuna").setCombo("gen_unidad_administrativa","ide_geuna","detalle_geuna","");
@@ -161,11 +161,11 @@ public class pre_contratacion extends Pantalla{
 		set_clasificador.setId("set_clasificador");
 		set_clasificador.setTitle("SELECCIONE UNA PARTIDA PRESUPUESTARIA");
 		set_clasificador.setRadio(); //solo selecciona una opcion
-		/*set_clasificador.setSeleccionTabla("SELECT ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla FROM pre_clasificador where ide_geani=-1" +
-				"ORDER BY codigo_clasificador_prcla", "ide_prcla"); */
-		//set_clasificador.getTab_seleccion().getColumna("codigo_clasificador_prcla").setFiltroContenido(); //pone filtro
-		//set_clasificador.getTab_seleccion().getColumna("descripcion_clasificador_prcla").setFiltroContenido();//pone filtro
-		//set_clasificador.getBot_aceptar().setMetodo("aceptarClasificador");
+		set_clasificador.setSeleccionTabla("SELECT ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla FROM pre_clasificador where ide_geani=-1" +
+				"ORDER BY codigo_clasificador_prcla", "ide_prcla"); 
+		set_clasificador.getTab_seleccion().getColumna("codigo_clasificador_prcla").setFiltroContenido(); //pone filtro
+		set_clasificador.getTab_seleccion().getColumna("descripcion_clasificador_prcla").setFiltroContenido();//pone filtro
+		set_clasificador.getBot_aceptar().setMetodo("aceptarClasificador");
 		agregarComponente(set_clasificador);
 	}
 
@@ -181,16 +181,16 @@ public class pre_contratacion extends Pantalla{
 			return;
 		}
 		//Filtrar los clasificadores del año seleccionado
-		/*set_clasificador.getTab_seleccion().setSql("SELECT ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla FROM pre_clasificador where ide_geani=" +com_anio.getValue()+
+		set_clasificador.getTab_seleccion().setSql("SELECT ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla FROM pre_clasificador where ide_geani=" +com_anio.getValue()+
 				" ORDER BY codigo_clasificador_prcla");
 		set_clasificador.getTab_seleccion().ejecutarSql();
-		set_clasificador.dibujar();*/
+		set_clasificador.dibujar();
 	}
 
 	public void aceptarClasificador(){
 		if(set_clasificador.getValorSeleccionado()!=null){
 			//Agrega la fila seleccionada al combo 			
-			//tab_poa.getColumna("ide_prcla").getListaCombo().add(set_clasificador.getTab_seleccion().getFilaSeleccionada().getCampos());			
+			tab_poa.getColumna("ide_prcla").getListaCombo().add(set_clasificador.getTab_seleccion().getFilaSeleccionada().getCampos());			
 			//Selecciona en el combo el q se selecciono en el dialogo
 			tab_poa.setValor("ide_prcla", set_clasificador.getValorSeleccionado());
 			//Actualiza 
