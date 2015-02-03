@@ -1,10 +1,13 @@
 package paq_contabilidad;
 
+import javax.ejb.EJB;
+
 import framework.componentes.Combo;
 import framework.componentes.Division;
 import framework.componentes.Etiqueta;
 import framework.componentes.PanelTabla;
 import framework.componentes.Tabla;
+import paq_nomina.ejb.ServicioNomina;
 import paq_sistema.aplicacion.Pantalla;
 
 public class pre_suministro extends Pantalla{
@@ -14,6 +17,8 @@ public class pre_suministro extends Pantalla{
 	private Tabla tab_servicios_basicos=new Tabla();
 	
 	private Combo com_servicios_basicos=new Combo();
+	@EJB
+	private ServicioNomina ser_nomina = (ServicioNomina) utilitario.instanciarEJB(ServicioNomina.class);
 	
 	public pre_suministro() {  
 						
@@ -40,6 +45,10 @@ public class pre_suministro extends Pantalla{
 		tab_servicio_suministrio.setId("tab_servicio_suministrio");
 		tab_servicio_suministrio.setTabla("cont_servicio_suministro","ide_coses",2);
 		tab_servicio_suministrio.setCampoForanea("ide_cosum");
+		tab_servicio_suministrio.getColumna("ide_geedp").setCombo(ser_nomina.servicioEmpleadoContrato("true,false"));
+		tab_servicio_suministrio.getColumna("factura_coses").setUpload("contabilidad");
+		tab_servicio_suministrio.setTipoFormulario(true);
+		tab_servicio_suministrio.getGrid().setColumns(4);
 		tab_servicio_suministrio.dibujar();
 		PanelTabla pat_servicio_suministrio=new PanelTabla();
 		pat_servicio_suministrio.setPanelTabla(tab_servicio_suministrio);
