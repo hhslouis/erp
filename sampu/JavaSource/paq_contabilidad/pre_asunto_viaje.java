@@ -21,16 +21,20 @@ public class pre_asunto_viaje extends Pantalla{
     	@Override
 	public void insertar() {
 		// TODO Auto-generated method stub
+    		tab_asunto.insertar();
 		
 	}
 	@Override
 	public void guardar() {
 		// TODO Auto-generated method stub
+		tab_asunto.guardar();
+		guardarPantalla();
 		
 	}
 	@Override
 	public void eliminar() {
 		// TODO Auto-generated method stub
+		tab_asunto.eliminar();
 		
 	}
 	public Tabla getTab_asunto() {
