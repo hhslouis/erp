@@ -43,6 +43,6 @@ public class pre_asunto_viaje extends Pantalla{
 	public void setTab_asunto(Tabla tab_asunto) {
 		this.tab_asunto = tab_asunto;
 	}
-	
+
 
 }
