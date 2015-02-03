@@ -99,7 +99,6 @@ public class pre_permisos extends Pantalla {
         tab_tabla5.setIdCompleto("tab_tabulador:tab_tabla5");
         tab_tabla5.setTabla("SIS_PERFIL_CAMPO", "IDE_PECA", 5);
         tab_tabla5.getColumna("IDE_CAMP").setCombo("SELECT IDE_CAMP,NOM_CAMP,TABLA_TABL FROM SIS_CAMPO,SIS_TABLA WHERE SIS_CAMPO.IDE_TABL = SIS_TABLA.IDE_TABL ORDER BY TABLA_TABL,NOM_CAMP");
-        tab_tabla5.getColumna("IDE_CAMP").setAutoCompletar();
         tab_tabla5.getColumna("VISIBLE_PECA").setValorDefecto("true");
         tab_tabla5.getColumna("VISIBLE_PECA").setCheck();
         tab_tabla5.getColumna("LECTURA_PECA").setCheck();        
