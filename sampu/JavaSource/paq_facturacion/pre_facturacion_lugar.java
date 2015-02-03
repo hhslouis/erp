@@ -119,7 +119,8 @@ public class pre_facturacion_lugar extends Pantalla{
 		tab_factura.getColumna("ide_recli").setAutoCompletar();
 		tab_factura.getColumna("ide_recli").setLectura(true);
 		tab_factura.getColumna("ide_falug").setCombo("fac_lugar", "ide_falug", "detalle_lugar_falug", "");
-		tab_factura.getColumna("ide_retip").setCombo(utilitario.getVariable("p_tipo_cobro_factura"));
+		tab_factura.getColumna("ide_retip").setCombo("rec_tipo", "ide_retip", "detalle_retip", "");
+		tab_factura.getColumna("ide_retip").setValorDefecto(utilitario.getVariable("p_tipo_cobro_factura"));
 		tab_factura.getColumna("ide_retip").setValorDefecto("4");
 		tab_factura.getColumna("ide_gtemp").setVisible(false);
 		tab_factura.getColumna("ide_falug").setVisible(false);
