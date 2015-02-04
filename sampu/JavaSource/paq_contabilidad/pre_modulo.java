@@ -13,6 +13,7 @@ public class pre_modulo extends Pantalla{
 	private Tabla tab_modulo_estado=new Tabla();
 	private Tabla tab_persona_modulo=new Tabla();
 	private Tabla tab_modulo_secuencial=new Tabla();
+	private Tabla tab_parametro=new Tabla();
 	private Arbol arb_modulo = new Arbol();
 	private Division div_modulo =new Division();
 	private Division div_division=new Division();
@@ -29,6 +30,7 @@ public class pre_modulo extends Pantalla{
 		tab_modulo.agregarRelacion(tab_modulo_estado);
 		tab_modulo.agregarRelacion(tab_persona_modulo);
 		tab_modulo.agregarRelacion(tab_modulo_secuencial);
+		tab_modulo.agregarRelacion(tab_parametro);
 		tab_modulo.agregarArbol(arb_modulo);
 		tab_modulo.dibujar();
 		PanelTabla pat_modulo=new PanelTabla();
@@ -69,10 +71,19 @@ public class pre_modulo extends Pantalla{
 		PanelTabla pat_panel4= new PanelTabla();
 		pat_panel4.setPanelTabla(tab_modulo_secuencial);
 		
+		//pagametros modulo
+		tab_parametro.setId("tab_parametro");
+		tab_parametro.setIdCompleto("tab_tabulador:tab_parametro");
+		tab_parametro.setTabla("cont_parametro_modulo", "ide_copam", 5);
+		tab_parametro.getColumna("ide_copag").setCombo("cont_parametros_general", "ide_copag", "detalle_copag", "");
+		tab_parametro.dibujar();
+		PanelTabla pat_panel5=new PanelTabla();
+		pat_panel5.setPanelTabla(tab_parametro);
 		
 		tab_Tabulador.agregarTab("ESTADO POR MODULOS", pat_panel2);
 		tab_Tabulador.agregarTab("PERSONA POR MODULOS", pat_panel3);
 		tab_Tabulador.agregarTab("MODULOS SECUENCIAL", pat_panel4);
+		tab_Tabulador.agregarTab("PARAMETRO MODULOS", pat_panel5);
 		
 	
 		
@@ -116,6 +127,10 @@ public class pre_modulo extends Pantalla{
 				tab_modulo_secuencial.insertar();
 				
 			}
+			else if (tab_parametro.isFocus()) {
+				tab_parametro.insertar();
+				
+			}
 	}
 
 	@Override
@@ -124,7 +139,9 @@ public class pre_modulo extends Pantalla{
 		if (tab_modulo.guardar()){
 			if (tab_modulo_estado.guardar()) {
 				if (tab_persona_modulo.guardar()) {
-					tab_modulo_secuencial.guardar();
+					if (tab_modulo_secuencial.guardar()){
+						tab_parametro.guardar();
+					}
 				}
 				
 				
@@ -179,6 +196,14 @@ public class pre_modulo extends Pantalla{
 
 	public void setTab_modulo_secuencial(Tabla tab_modulo_secuencial) {
 		this.tab_modulo_secuencial = tab_modulo_secuencial;
+	}
+
+	public Tabla getTab_parametro() {
+		return tab_parametro;
+	}
+
+	public void setTab_parametro(Tabla tab_parametro) {
+		this.tab_parametro = tab_parametro;
 	}
 
 
