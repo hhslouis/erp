@@ -1,13 +1,22 @@
 package paq_bodega;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.ejb.EJB;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import framework.aplicacion.TablaGenerica;
 import framework.componentes.Boton;
 import framework.componentes.Combo;
 import framework.componentes.Confirmar;
+import framework.componentes.Dialogo;
 import framework.componentes.Etiqueta;
+import framework.componentes.ListaSeleccion;
 import framework.componentes.PanelTabla;
+import framework.componentes.Radio;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import paq_bodega.ejb.ServicioBodega;
@@ -21,10 +30,21 @@ public class pre_ingreso_material extends Pantalla{
 	public static String par_grupo_material;
 
 	private SeleccionTabla set_material=new SeleccionTabla();
+	private SeleccionTabla set_proveedor=new SeleccionTabla();
+	private SeleccionTabla set_actualizaproveedor=new SeleccionTabla();
 	private SeleccionTabla set_actualizamaterial=new SeleccionTabla();
+	private SeleccionTabla set_guardar=new SeleccionTabla();
+	private Dialogo dia_bodega = new Dialogo();
+	private	Radio lis_activo=new Radio();
 	private Confirmar con_guardar=new Confirmar();
+	private Confirmar con_guardar_material=new Confirmar();
+	double dou_cantidad_ingreso_bobod=0;
+	double dou_valor_unitario_bobod=0;
+	double dou_valor_total_bobod=0;
+
 	@EJB
 	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
+	@EJB
 	private ServicioBodega ser_Bodega = (ServicioBodega) utilitario.instanciarEJB(ServicioBodega.class);
 
 
@@ -38,16 +58,20 @@ public class pre_ingreso_material extends Pantalla{
 		tab_bodega.setId("tab_bodega");  
 		tab_bodega.setTabla("bodt_bodega","ide_bobod", 1);	
 		tab_bodega.getColumna("ide_geani").setVisible(false);
-		tab_bodega.setCondicion("ide_geani=-1"); 
+		tab_bodega.getColumna("ide_tepro").setCombo(ser_Bodega.getProveedor("true,false"));
 		tab_bodega.getColumna("ide_bomat").setCombo("select ide_bomat,codigo_bomat,detalle_bomat,iva_bomat from bodt_material order by detalle_bomat");
 		tab_bodega.getColumna("IDE_COEST").setCombo("cont_estado","ide_coest"," detalle_coest","");
+		tab_bodega.getColumna("cantidad_ingreso_bobod").setMetodoChange("calcular");
+		tab_bodega.getColumna("valor_unitario_bobod").setMetodoChange("calcular");
+		tab_bodega.getColumna("valor_total_bobod").setEtiqueta();
+		tab_bodega.getColumna("valor_total_bobod").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
+		tab_bodega.setCondicion("ide_geani=-1"); 
 		tab_bodega.setTipoFormulario(true);
-		tab_bodega.getGrid().setColumns(4);	
+		tab_bodega.getGrid().setColumns(4);
 		tab_bodega.dibujar();
 		PanelTabla pat_bodega=new PanelTabla();
 		pat_bodega.setPanelTabla(tab_bodega);
 		agregarComponente(pat_bodega);
-
 
 		Boton bot_material = new Boton();
 		bot_material.setValue("Agregar Material");
@@ -85,8 +109,75 @@ public class pre_ingreso_material extends Pantalla{
 		set_actualizamaterial.setRadio();
 		agregarComponente(set_actualizamaterial);
 
+		///// BOTONES AGREGAR Y MODIFICAR PROVEEDOR
+		Boton bot_proveedor = new Boton();
+		bot_proveedor.setValue("Agregar Proveedor");
+		bot_proveedor.setTitle("MATERIAL");
+		bot_proveedor.setIcon("ui-icon-person");
+		bot_proveedor.setMetodo("importarProveedor");
+		bar_botones.agregarBoton(bot_proveedor);
+
+		set_proveedor.setId("set_proveedor");
+		set_proveedor.setSeleccionTabla(ser_Bodega.getProveedor("true"),"");
+		set_proveedor.getTab_seleccion().getColumna("nombre_tepro").setFiltro(true);
+		set_proveedor.getTab_seleccion().getColumna("ruc_tepro").setFiltro(true);
+		set_proveedor.getBot_aceptar().setMetodo("aceptarProveedor");
+		set_proveedor.getTab_seleccion().ejecutarSql();
+		agregarComponente(set_proveedor);
+
+		bar_botones.agregarBoton(bot_material);
+		con_guardar.setId("con_guardar");
+		agregarComponente(con_guardar);
+
+		Boton bot_actualizarproveedor=new Boton();
+		bot_actualizarproveedor.setIcon("ui-icon-person");
+		bot_actualizarproveedor.setValue("Actualizar Proveedor");
+		bot_actualizarproveedor.setMetodo("actualizarProveedor");
+		bar_botones.agregarBoton(bot_actualizarproveedor);	
+
+		set_actualizaproveedor.setId("set_actualizaproveedor");
+		set_actualizaproveedor.setSeleccionTabla(ser_Bodega.getProveedor("true"),"");
+		set_actualizaproveedor.getTab_seleccion().getColumna("nombre_tepro").setFiltro(true);
+		set_actualizaproveedor.getTab_seleccion().getColumna("ruc_tepro").setFiltro(true);
+		set_actualizaproveedor.getBot_aceptar().setMetodo("modificarProveedor");
+		set_actualizaproveedor.setRadio();
+		agregarComponente(set_actualizaproveedor);
+
+		List lista = new ArrayList();
+		Object fila1[] = {
+				"0", "AÑADIR AL INVENTARIO"
+		};
+		Object fila2[] = {
+				"1", "NO AÑADIR AL INVENTARIO"
+		};
+		lista.add(fila1);
+		lista.add(fila2);
+
+		lis_activo.setRadio(lista);
+		lis_activo.setVertical();
+		dia_bodega.setId("dia_filtro_activo");
+		dia_bodega.setTitle("SELECCIONE AÑADIR AL INVENTARIO / NO AÑADIR AL INVENTARIO ");
+		dia_bodega.getBot_aceptar().setMetodo("aceptaInventario");
+		dia_bodega.setDialogo(lis_activo);
+		dia_bodega.setHeight("40%");
+		dia_bodega.setWidth("40%");
+		dia_bodega.setDynamic(false);
+		agregarComponente(dia_bodega);
 
 
+	}
+	public void aceptaInventario() {
+		
+
+		//TablaGenerica material=utilitario.consultar(ser_contabilidad.getInventario(com_anio.getValue().toString(), "0", tab_bodega.getValor("ide_bomat")));
+		System.out.println("resulktado "+ser_Bodega.getResultado(tab_bodega.getValor("ide_bomat"), com_anio.getValue().toString()));
+		ser_Bodega.getResultado(tab_bodega.getValor("ide_bomat"), com_anio.getValue().toString());
+		
+			//System.out.print("sql.... del material"+sql.getSql());
+		System.out.print("tabla bodega"+tab_bodega.getValor("ide_bomat"));
+		System.out.print("combo año"+com_anio.getValue().toString());
+		//String sql="update bodt_inventarios set "
+		utilitario.agregarMensaje("se", "mm");
 	}
 	public void actualizarMaterial(){
 		System.out.println("Entra a actualizar...");
@@ -157,7 +248,75 @@ public class pre_ingreso_material extends Pantalla{
 		set_material.cerrar();
 		utilitario.addUpdate("tab_bodega");
 	}
+	////// BOTONES PROVEEDOR
+	public void actualizarProveedor(){
+		System.out.println("Entra a actualizar...");
+		if (tab_bodega.getValor("ide_geani")==null){
+			utilitario.agregarMensajeInfo("Debe seleccionar un año ","");
+			return;
+		}
+		System.out.println("Entra a actualizar1...");
+		set_actualizaproveedor.setSeleccionTabla(ser_Bodega.getProveedor("true"),"");
+		set_actualizaproveedor.getTab_seleccion().ejecutarSql();
+		set_actualizaproveedor.dibujar();	
+	}	
 
+	public void modificarProveedor(){
+		System.out.println("Entra modificar...");
+
+		String str_proveedorActualizado=set_actualizaproveedor.getValorSeleccionado();
+		System.out.println("Entra a guardar..."+str_proveedorActualizado);
+
+		TablaGenerica tab_materialModificado = ser_Bodega.getTablaProveedor(str_proveedorActualizado);
+		tab_bodega.setValor("IDE_TEPRO", tab_materialModificado.getValor("IDE_TEPRO"));			
+		tab_bodega.modificar(tab_bodega.getFilaActual());
+		utilitario.addUpdate("tab_bodega");	
+
+		con_guardar.setMessage("Esta Seguro de Actualizar el Proveedor");
+		con_guardar.setTitle("CONFIRMACION ");
+		con_guardar.getBot_aceptar().setMetodo("guardarActualilzarProveedor");
+		con_guardar.dibujar();
+		utilitario.addUpdate("con_guardar");
+
+	}
+	public void guardarActualilzarProveedor(){
+		System.out.println("Entra a guardar...");
+		tab_bodega.guardar();
+		con_guardar.cerrar();
+		set_actualizaproveedor.cerrar();
+
+
+		guardarPantalla();
+
+	}
+	public void importarProveedor(){
+		System.out.println(" ingresar al importar");
+		if(com_anio.getValue()==null){
+			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
+			return;
+		}
+
+		set_proveedor.setSeleccionTabla(ser_Bodega.getProveedor("true"),"");
+		set_proveedor.getTab_seleccion().ejecutarSql();
+		set_proveedor.dibujar();
+
+	}
+
+	public  void aceptarProveedor(){
+		String str_seleccionados = set_proveedor.getSeleccionados();
+		System.out.println("entra al str  "+str_seleccionados);
+
+		if (str_seleccionados!=null){
+			tab_bodega.insertar();
+			tab_bodega.setValor("ide_tepro",str_seleccionados);
+			tab_bodega.setValor("ide_geani", com_anio.getValue()+"");
+
+			System.out.println("inserta el valor  "+str_seleccionados);
+
+		}
+		set_proveedor.cerrar();
+		utilitario.addUpdate("tab_bodega");
+	}
 	public void seleccionaElAnio (){
 		if(com_anio.getValue()!=null){
 			tab_bodega.setCondicion("ide_geani="+com_anio.getValue());
@@ -170,6 +329,40 @@ public class pre_ingreso_material extends Pantalla{
 
 		}
 	}
+	///CALCULAR LOS MATERIALES 
+	public void calcular(){
+		//Variables para almacenar y calcular el total del detalle
+		double dou_cantidad_ingreso_bobod=0;
+		double dou_valor_unitario_bobod=0;
+		double dou_valor_total_bobod=0;
+
+		try {
+			//Obtenemos el valor de la cantidad
+			dou_cantidad_ingreso_bobod=Double.parseDouble(tab_bodega.getValor("cantidad_ingreso_bobod"));
+		} catch (Exception e) {
+		}
+
+		try {
+			//Obtenemos el valor
+			dou_valor_unitario_bobod=Double.parseDouble(tab_bodega.getValor("valor_unitario_bobod"));
+		} catch (Exception e) {
+		}
+
+		//Calculamos el total
+		dou_valor_total_bobod=dou_cantidad_ingreso_bobod*dou_valor_unitario_bobod;
+
+		//Asignamos el total a la tabla detalle, con 2 decimales
+		tab_bodega.setValor("valor_total_bobod",utilitario.getFormatoNumero(dou_valor_total_bobod,3));
+
+		//Actualizamos el campo de la tabla AJAX
+		utilitario.addUpdateTabla(tab_bodega, "valor_total_bobod", "");
+
+	}
+	public void calcular(AjaxBehaviorEvent evt) {
+		tab_bodega.modificar(evt); //Siempre es la primera linea
+		calcular();
+	}
+
 
 
 	@Override
@@ -178,6 +371,10 @@ public class pre_ingreso_material extends Pantalla{
 		if(com_anio.getValue()==null){
 			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
 			return;
+		}
+		if(tab_bodega.isFocus()) {
+			utilitario.agregarMensaje("No se puede insertar", "Debe Agregar Material");
+
 		}else{
 			tab_bodega.isFocus(); 
 			tab_bodega.insertar();
@@ -190,9 +387,16 @@ public class pre_ingreso_material extends Pantalla{
 	@Override
 	public void guardar() {
 		// TODO Auto-generated method stub
+		if(tab_bodega.getValorSeleccionado().equals("-1")){
+			dia_bodega.dibujar();
+					
+			
+		}else{
+		//tab_bodega.setCondicion("ide_bobod=-1"); 
+	
 		tab_bodega.guardar();
-		guardarPantalla();		
-
+		guardarPantalla();
+		}	
 	}
 
 	@Override
@@ -256,6 +460,20 @@ public class pre_ingreso_material extends Pantalla{
 	public void setCon_guardar(Confirmar con_guardar) {
 		this.con_guardar = con_guardar;
 	}
+	public SeleccionTabla getSet_proveedor() {
+		return set_proveedor;
+	}
+	public void setSet_proveedor(SeleccionTabla set_proveedor) {
+		this.set_proveedor = set_proveedor;
+	}
+	public SeleccionTabla getSet_actualizaproveedor() {
+		return set_actualizaproveedor;
+	}
+	public void setSet_actualizaproveedor(SeleccionTabla set_actualizaproveedor) {
+		this.set_actualizaproveedor = set_actualizaproveedor;
+	}
+
+
 
 
 
