@@ -63,10 +63,14 @@ public class ServicioFacturacion {
 						System.out.println("datos factura");
 						return tab_datos_factura;
 	}
-	 public String getCabeceraFactura(){
+	 public String getCabeceraFactura(String grupos,String cliente){
 		 String tab_cabecera_factura="select ide_fafac,secuencial_fafac,factura_fisica_fafac,fecha_transaccion_fafac,base_aprobada_fafac,detalle_bogrm,valor_iva_fafac,total_fafac" +
 		 		" from fac_datos_factura a, bodt_grupo_material b,fac_factura c " +
-		 		" where a.ide_bogrm = b.ide_bogrm and a.ide_fadaf=c.ide_fadaf order by secuencial_fafac";
+		 		" where a.ide_bogrm = b.ide_bogrm and a.ide_fadaf=c.ide_fadaf" ;
+		 		if(grupos.equals("0")){
+		 			tab_cabecera_factura+=" and c.ide_recli in("+cliente+")";		
+		 		}
+		 tab_cabecera_factura+=" order by secuencial_fafac";
 		 return tab_cabecera_factura;
 	 }
 	 public TablaGenerica getTablaGenericaFacturaCabecera(String codigo){
