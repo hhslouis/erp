@@ -46,7 +46,10 @@ public class pre_inventario extends Pantalla{
 		tab_inventario.getColumna("ide_geani").setVisible(false);
 		tab_inventario.getColumna("gen_ide_geani").setVisible(false);
 		tab_inventario.getColumna("IDE_GEARE").setVisible(false);
+	
+
 		tab_inventario.setCondicion("ide_geani=-1"); 
+		//tab_inventario.getColumna("activo_boinv").setValorDefecto();
 		tab_inventario.getColumna("ide_bomat").setCombo(ser_Bodega.getInventario("1","true,false",""));
 		tab_inventario.getColumna("gen_ide_geani").setCombo(ser_contabilidad.getAnio("true,false","true,false"));
 		tab_inventario.getColumna("IDE_GEARE").setCombo("gen_area","ide_geare","detalle_geare","");
