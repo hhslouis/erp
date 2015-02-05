@@ -35,11 +35,11 @@ public class pre_nota_credito extends Pantalla {
 		tab_nota_credito.getColumna("ide_fafac").setAutoCompletar();
 		tab_nota_credito.getColumna("ide_fafac").setLectura(true);
 		tab_nota_credito.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
-		tab_nota_credito.getColumna("iva_fanoc").setMetodoChange("calcular");
-		tab_nota_credito.getColumna("total_fanoc").setMetodoChange("calcular");
+		tab_nota_credito.getColumna("valor_referencial_fanoc").setMetodoChange("calcular");		
 		tab_nota_credito.getColumna("iva_fanoc").setEtiqueta();
 		tab_nota_credito.getColumna("iva_fanoc").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_nota_credito.getColumna("total_fanoc").setEtiqueta();
+		tab_nota_credito.getColumna("activo_fanoc").setValorDefecto("true");
 		tab_nota_credito.getColumna("total_fanoc").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_nota_credito.dibujar();
 		PanelTabla pat_nota_credito=new PanelTabla();
@@ -156,7 +156,8 @@ public class pre_nota_credito extends Pantalla {
 		///CALCULAR 
 		
 		public void calcular(AjaxBehaviorEvent evt) {
-			
+			tab_nota_credito.modificar(evt); //Siempre es la primera lineadoubler
+
 			double dou_valor_referencial_fanoc=0;
 			double duo_valor_iva=0.12;
 			double dou_iva_fanoc=0;
@@ -167,12 +168,7 @@ public class pre_nota_credito extends Pantalla {
 			dou_total_fanoc=dou_valor_referencial_fanoc+dou_iva_fanoc;
 			tab_nota_credito.setValor("iva_fanoc",utilitario.getFormatoNumero(dou_iva_fanoc,3));
 			tab_nota_credito.setValor("total_fanoc",utilitario.getFormatoNumero(dou_total_fanoc,3));
-			tab_nota_credito.modificar(tab_nota_credito.getFilaActual());//para que haga el update
-
-			//tab_nota_credito.modificar(evt); //Siempre es la primera lineadoubler
-			utilitario.addUpdateTabla(tab_nota_credito, "iva_fanoc,total_fanoc", "");
-
-		
+			utilitario.addUpdateTabla(tab_nota_credito, "iva_fanoc,total_fanoc", "");	
 					
 		}
 
