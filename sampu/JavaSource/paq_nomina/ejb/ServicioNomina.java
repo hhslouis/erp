@@ -25,7 +25,7 @@ import framework.componentes.Tabla;
 
 
 /**
- * @author byron
+ * @author 
  *
  */
 @Stateless
@@ -308,7 +308,7 @@ public class ServicioNomina {
 
 		String str_sql=getSqlEmpleadosTipoNomina(ide_nrdtn,fecha_fin_gepro);
 
-		utilitario.getConexion().agregarSql("update  NRH_AMORTIZACION set ACTIVO_NRAMO=0 " +
+		utilitario.getConexion().agregarSql("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 				"where FECHA_VENCIMIENTO_NRAMO " +
 				"BETWEEN to_date ('"+fecha_ini_gepro+"','yy-mm-dd') and to_date ('"+fecha_fin_gepro+"','yy-mm-dd') " +
 				"and IDE_NRANI in (select ide_nrani from NRH_ANTICIPO_INTERES " +
@@ -1152,7 +1152,7 @@ public class ServicioNomina {
 				"INNER JOIN NRH_FORMA_CALCULO FOC ON FOC.IDE_NRFOC=RUB.IDE_NRFOC " +
 				"inner join SIS_SUCURSAL SUC ON SUC.IDE_SUCU=EDP.IDE_SUCU " +
 				"LEFT JOIN GEN_DIVISION_POLITICA DIP ON DIP.IDE_GEDIP=SUC.IDE_GEDIP "+
-				"where DER.ACTIVO_NRDER=1 and DRO.IDE_NRROL="+IDE_NRROL+"  "+
+				"where DER.ACTIVO_NRDER=true and DRO.IDE_NRROL="+IDE_NRROL+"  "+
 				"order by NOMBRES,der.ORDEN_NRDER desc ");
 		return tab_det_rol;
 	}
@@ -1188,11 +1188,11 @@ public class ServicioNomina {
 				"INNER JOIN NRH_DETALLE_RUBRO DER ON DER.IDE_NRDER=DRO.IDE_NRDER " +
 				"INNER JOIN NRH_RUBRO RUB ON RUB.IDE_NRRUB=DER.IDE_NRRUB " +
 				"INNER JOIN NRH_FORMA_CALCULO FOC ON FOC.IDE_NRFOC=RUB.IDE_NRFOC " +
-				"where DER.ACTIVO_NRDER=1 and DRO.IDE_NRROL="+IDE_NRROL+"  "+
+				"where DER.ACTIVO_NRDER=true and DRO.IDE_NRROL="+IDE_NRROL+"  "+
 				"order by EMP.APELLIDO_PATERNO_GTEMP ASC,EMP.APELLIDO_MATERNO_GTEMP ASC,der.ORDEN_NRDER DESC "+
 				")a " +
 				") " +
-				"and ACTIVO_NRDER=1 " +
+				"and ACTIVO_NRDER=true " +
 				"and ide_nrdtn="+ide_nrdtn;
 
 
@@ -1282,10 +1282,10 @@ public class ServicioNomina {
 				"INNER JOIN NRH_DETALLE_RUBRO DER ON DER.IDE_NRDER=DRO.IDE_NRDER " +
 				"INNER JOIN NRH_RUBRO RUB ON RUB.IDE_NRRUB=DER.IDE_NRRUB " +
 				"INNER JOIN NRH_FORMA_CALCULO FOC ON FOC.IDE_NRFOC=RUB.IDE_NRFOC " +
-				"where DER.ACTIVO_NRDER=1 and DRO.IDE_NRROL="+IDE_NRROL+" and DRO.IDE_GEEDP="+IDE_GEEDP+" "+
+				"where DER.ACTIVO_NRDER=true and DRO.IDE_NRROL="+IDE_NRROL+" and DRO.IDE_GEEDP="+IDE_GEEDP+" "+
 				")a " +
 				") " +
-				"and ACTIVO_NRDER=1 " +
+				"and ACTIVO_NRDER=true " +
 				"and ide_nrdtn="+ide_nrdtn;
 
 
@@ -1300,7 +1300,7 @@ public class ServicioNomina {
 				"INNER JOIN NRH_DETALLE_RUBRO DER ON DER.IDE_NRDER=DRO.IDE_NRDER " +
 				"INNER JOIN NRH_RUBRO RUB ON RUB.IDE_NRRUB=DER.IDE_NRRUB " +
 				"INNER JOIN NRH_FORMA_CALCULO FOC ON FOC.IDE_NRFOC=RUB.IDE_NRFOC " +
-				"where DER.ACTIVO_NRDER=1 and DRO.IDE_NRROL="+IDE_NRROL+" and DRO.IDE_GEEDP="+IDE_GEEDP+" "+
+				"where DER.ACTIVO_NRDER=true and DRO.IDE_NRROL="+IDE_NRROL+" and DRO.IDE_GEEDP="+IDE_GEEDP+" "+
 				"order by der.ORDEN_NRDER desc ");
 		return tab_det_rol;
 	}
@@ -1488,7 +1488,7 @@ public class ServicioNomina {
 	 * @return
 	 */
 	public String getSalarioBasicoUnificado(String fecha){
-		TablaGenerica tab_salario=utilitario.consultar("SELECT * FROM NRH_SALARIO_BASICO WHERE  "+utilitario.getFormatoFechaSQL(fecha)+" BETWEEN FECHA_INICIO_NRSAB and FECHA_FIN_NRSAB  and ACTIVO_NRSAB=1");
+		TablaGenerica tab_salario=utilitario.consultar("SELECT * FROM NRH_SALARIO_BASICO WHERE  "+utilitario.getFormatoFechaSQL(fecha)+" BETWEEN FECHA_INICIO_NRSAB and FECHA_FIN_NRSAB  and ACTIVO_NRSAB=true");
 		if(!tab_salario.isEmpty()){			
 			return tab_salario.getValor("VALOR_SALARIO_NRSAB");
 		}
@@ -3091,7 +3091,7 @@ public class ServicioNomina {
 			fecha_fin_gepro=tab_per_rol.getValor("FECHA_FINAL_GEPRO");
 		}
 
-		utilitario.getConexion().ejecutarSql("update  NRH_AMORTIZACION set ACTIVO_NRAMO=0 " +
+		utilitario.getConexion().ejecutarSql("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 				"where FECHA_VENCIMIENTO_NRAMO " +
 				"BETWEEN to_date ('"+fecha_ini_gepro+"','yy-mm-dd') and to_date ('"+fecha_fin_gepro+"','yy-mm-dd') " +
 				"and IDE_NRANI in (select ide_nrani from NRH_ANTICIPO_INTERES " +
@@ -3101,7 +3101,7 @@ public class ServicioNomina {
 				//				"and EDP.IDE_SUCU=DTN.IDE_SUCU " +
 				"inner join GTH_EMPLEADO emp on EMP.ide_gtemp=EDP.IDE_GTEMP " +
 				"WHERE DTN.IDE_NRDTN IN ("+ide_nrdtn+")) " +
-				"AND ACTIVO_NRANT =1 ))");
+				"AND ACTIVO_NRANT =true ))");
 
 
 		// encera el rubro impuesto a la renta mensual de todos los empleados del rol
@@ -3238,7 +3238,7 @@ public class ServicioNomina {
 				"INNER JOIN NRH_DETALLE_RUBRO DER ON DER.IDE_NRDER=DRO.IDE_NRDER " +
 				"INNER JOIN NRH_RUBRO RUB ON RUB.IDE_NRRUB=DER.IDE_NRRUB " +
 				"INNER JOIN NRH_FORMA_CALCULO FOC ON FOC.IDE_NRFOC=RUB.IDE_NRFOC " +
-				"where DRO.IDE_NRROL="+str_ide_nrrol+" and DER.ACTIVO_NRDER!=1 )");
+				"where DRO.IDE_NRROL="+str_ide_nrrol+" and DER.ACTIVO_NRDER!=true )");
 
 
 		if (!IDE_NRTIN.equalsIgnoreCase(utilitario.getVariable("p_nrh_tipo_nomina_pago_decimos")) 
@@ -3296,7 +3296,7 @@ public class ServicioNomina {
 			fecha_fin_gepro=tab_per_rol.getValor("FECHA_FINAL_GEPRO");
 		}
 
-		utilitario.getConexion().ejecutarSql("update  NRH_AMORTIZACION set ACTIVO_NRAMO=0 " +
+		utilitario.getConexion().ejecutarSql("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 				"where FECHA_VENCIMIENTO_NRAMO " +
 				"BETWEEN to_date ('"+fecha_ini_gepro+"','yy-mm-dd') and to_date ('"+fecha_fin_gepro+"','yy-mm-dd') " +
 				"and IDE_NRANI in (select ide_nrani from NRH_ANTICIPO_INTERES " +
@@ -3306,7 +3306,7 @@ public class ServicioNomina {
 				//				"and EDP.IDE_SUCU=DTN.IDE_SUCU " +
 				"inner join GTH_EMPLEADO emp on EMP.ide_gtemp=EDP.IDE_GTEMP " +
 				"WHERE DTN.IDE_NRDTN IN ("+ide_nrdtn+")) " +
-				"AND ACTIVO_NRANT =1 ))");
+				"AND ACTIVO_NRANT =true ))");
 
 
 		//		//valida que no existan empleados con contrato inactivo en la nomina
@@ -3430,7 +3430,7 @@ public class ServicioNomina {
 				"INNER JOIN NRH_DETALLE_RUBRO DER ON DER.IDE_NRDER=DRO.IDE_NRDER " +
 				"INNER JOIN NRH_RUBRO RUB ON RUB.IDE_NRRUB=DER.IDE_NRRUB " +
 				"INNER JOIN NRH_FORMA_CALCULO FOC ON FOC.IDE_NRFOC=RUB.IDE_NRFOC " +
-				"where DRO.IDE_NRROL="+str_ide_nrrol+" and DER.ACTIVO_NRDER!=1 )");
+				"where DRO.IDE_NRROL="+str_ide_nrrol+" and DER.ACTIVO_NRDER!=true )");
 
 		if (!IDE_NRTIN.equalsIgnoreCase(utilitario.getVariable("p_nrh_tipo_nomina_pago_decimos")) 
 				&& !IDE_NRTIN.equalsIgnoreCase(utilitario.getVariable("p_nrh_tipo_nomina_liquidacion"))){
@@ -3523,7 +3523,7 @@ public class ServicioNomina {
 		TablaGenerica tab_rub_repetido=utilitario.consultar("select * from ( " +
 				"SELECT ide_nrder,COUNT(ide_nrder) as num_rub FROM ( " +
 				"select IDE_NRDRO,IDE_NRROL,IDE_GEEDP,DRO.IDE_NRDER,VALOR_NRDRO,DER.IDE_NRRUB,RUB.IDE_NRFOC,ORDEN_NRDER,DER.FORMULA_NRDER,DER.FECHA_INICIAL_NRDER,DER.FECHA_FINAL_NRDER,DER.FECHA_PAGO_NRDER,decimo_nrrub from NRH_DETALLE_ROL DRO INNER JOIN NRH_DETALLE_RUBRO DER ON DER.IDE_NRDER=DRO.IDE_NRDER INNER JOIN NRH_RUBRO RUB ON RUB.IDE_NRRUB=DER.IDE_NRRUB INNER JOIN NRH_FORMA_CALCULO FOC ON FOC.IDE_NRFOC=RUB.IDE_NRFOC " +
-				"where DER.ACTIVO_NRDER=1 and DRO.IDE_NRROL="+ide_nrrol+" and DRO.IDE_GEEDP="+ide_geedp+" " +
+				"where DER.ACTIVO_NRDER=true and DRO.IDE_NRROL="+ide_nrrol+" and DRO.IDE_GEEDP="+ide_geedp+" " +
 				"order by der.ide_nrder " +
 				")a GROUP BY ide_nrder " +
 				")a where num_rub >1"); 
@@ -3578,15 +3578,15 @@ public class ServicioNomina {
 		else if (ide_nrrub.equalsIgnoreCase(P_NRH_RUBRO_DESC_VALORES_LIQUIDAR)){
 			TablaGenerica tab_ant=utilitario.consultar("select ANT.IDE_NRANT,sum (cuota_nramo) as tot_desc_val_liq from NRH_ANTICIPO ant " +
 					"inner join NRH_ANTICIPO_INTERES ani on ANI.IDE_NRANT=ANT.IDE_NRANT " +
-					"inner join NRH_AMORTIZACION amo on amo.ide_nrani=ani.ide_nrani and activo_nramo=0 " +
+					"inner join NRH_AMORTIZACION amo on amo.ide_nrani=ani.ide_nrani and activo_nramo=false " +
 					"where ANT.IDE_GEEDP in ( " +
 					"select IDE_GEEDP from GEN_EMPLEADOS_DEPARTAMENTO_PAR where IDE_GTEMP in ( " +
 					"select IDE_GTEMP from GEN_EMPLEADOS_DEPARTAMENTO_PAR where IDE_GEEDP="+ide_geedp+")) " +
-					"and ACTIVO_NRANT=1 " +
+					"and ACTIVO_NRANT=true " +
 					"GROUP BY ANT.IDE_NRANT");
 			TablaGenerica tab_amor=utilitario.consultar("select ANT.IDE_NRANT,AMO.IDE_NRAMO from NRH_ANTICIPO ant " +
 					"inner join NRH_ANTICIPO_INTERES ani on ANI.IDE_NRANT=ANT.IDE_NRANT " +
-					"inner join NRH_AMORTIZACION amo on amo.ide_nrani=ani.ide_nrani and activo_nramo=0 " +
+					"inner join NRH_AMORTIZACION amo on amo.ide_nrani=ani.ide_nrani and activo_nramo=false " +
 					"where ANT.IDE_GEEDP in ( " +
 					"select IDE_GEEDP from GEN_EMPLEADOS_DEPARTAMENTO_PAR where IDE_GTEMP in ( " +
 					"select IDE_GTEMP from GEN_EMPLEADOS_DEPARTAMENTO_PAR where IDE_GEEDP="+ide_geedp+")) " +
@@ -4197,7 +4197,7 @@ public class ServicioNomina {
 		TablaGenerica tab_rub_repetido=utilitario.consultar("select * from ( " +
 				"SELECT ide_nrder,COUNT(ide_nrder) as num_rub FROM ( " +
 				"select IDE_NRDRO,IDE_NRROL,IDE_GEEDP,DRO.IDE_NRDER,VALOR_NRDRO,DER.IDE_NRRUB,RUB.IDE_NRFOC,ORDEN_NRDER,DER.FORMULA_NRDER,DER.FECHA_INICIAL_NRDER,DER.FECHA_FINAL_NRDER,DER.FECHA_PAGO_NRDER,decimo_nrrub from NRH_DETALLE_ROL DRO INNER JOIN NRH_DETALLE_RUBRO DER ON DER.IDE_NRDER=DRO.IDE_NRDER INNER JOIN NRH_RUBRO RUB ON RUB.IDE_NRRUB=DER.IDE_NRRUB INNER JOIN NRH_FORMA_CALCULO FOC ON FOC.IDE_NRFOC=RUB.IDE_NRFOC " +
-				"where DER.ACTIVO_NRDER=1 and DRO.IDE_NRROL="+ide_nrrol+" and DRO.IDE_GEEDP="+ide_geedp+" " +
+				"where DER.ACTIVO_NRDER=true and DRO.IDE_NRROL="+ide_nrrol+" and DRO.IDE_GEEDP="+ide_geedp+" " +
 				"order by der.ide_nrder " +
 				")a GROUP BY ide_nrder " +
 				")a where num_rub >1"); 
@@ -4270,7 +4270,7 @@ public class ServicioNomina {
 		TablaGenerica tab_rub_repetido=utilitario.consultar("select * from ( " +
 				"SELECT ide_nrder,COUNT(ide_nrder) as num_rub FROM ( " +
 				"select IDE_NRDRO,IDE_NRROL,IDE_GEEDP,DRO.IDE_NRDER,VALOR_NRDRO,DER.IDE_NRRUB,RUB.IDE_NRFOC,ORDEN_NRDER,DER.FORMULA_NRDER,DER.FECHA_INICIAL_NRDER,DER.FECHA_FINAL_NRDER,DER.FECHA_PAGO_NRDER,decimo_nrrub from NRH_DETALLE_ROL DRO INNER JOIN NRH_DETALLE_RUBRO DER ON DER.IDE_NRDER=DRO.IDE_NRDER INNER JOIN NRH_RUBRO RUB ON RUB.IDE_NRRUB=DER.IDE_NRRUB INNER JOIN NRH_FORMA_CALCULO FOC ON FOC.IDE_NRFOC=RUB.IDE_NRFOC " +
-				"where DER.ACTIVO_NRDER=1 and DRO.IDE_NRROL="+ide_nrrol+" and DRO.IDE_GEEDP="+ide_geedp+" " +
+				"where DER.ACTIVO_NRDER=true and DRO.IDE_NRROL="+ide_nrrol+" and DRO.IDE_GEEDP="+ide_geedp+" " +
 				"order by der.ide_nrder " +
 				")a GROUP BY ide_nrder " +
 				")a where num_rub >1"); 
@@ -4356,7 +4356,7 @@ public class ServicioNomina {
 				"FROM NRH_DETALLE_RUBRO DER " +
 				"INNER JOIN NRH_RUBRO RUB ON RUB.IDE_NRRUB=DER.IDE_NRRUB " +
 				"WHERE DER.IDE_NRDTN="+IDE_NRDTN+" " +
-				"AND DER.ACTIVO_NRDER=1 " +
+				"AND DER.ACTIVO_NRDER=true " +
 				"and der.IDE_NRRUB IN (select IDE_NRRUB from NRH_RUBRO where DECIMO_NRRUB is null or DECIMO_NRRUB !=1) " +
 				"or IDE_NRDER in ("+IDE_NRDER_DECIMOS+") " +
 				"ORDER BY DER.ORDEN_NRDER DESC ");
