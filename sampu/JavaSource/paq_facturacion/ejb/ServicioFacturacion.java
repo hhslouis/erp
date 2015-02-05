@@ -64,16 +64,16 @@ public class ServicioFacturacion {
 						return tab_datos_factura;
 	}
 	 public String getCabeceraFactura(){
-		 String tab_cabecera_factura="select ide_fafac,secuencial_fafac,factura_fisica_fafac,detalle_bogrm,base_aprobada_fafac,valor_iva_fafac,total_fafac" +
+		 String tab_cabecera_factura="select ide_fafac,secuencial_fafac,factura_fisica_fafac,fecha_transaccion_fafac,base_aprobada_fafac,detalle_bogrm,valor_iva_fafac,total_fafac" +
 		 		" from fac_datos_factura a, bodt_grupo_material b,fac_factura c " +
 		 		" where a.ide_bogrm = b.ide_bogrm and a.ide_fadaf=c.ide_fadaf order by secuencial_fafac";
 		 return tab_cabecera_factura;
 	 }
 	 public TablaGenerica getTablaGenericaFacturaCabecera(String codigo){
 		 
-		 TablaGenerica tab_cabecera_factura=utilitario.consultar("select ide_fafac,secuencial_fafac,factura_fisica_fafac,detalle_bogrm,base_aprobada_fafac,valor_iva_fafac,total_fafac" +
+		 TablaGenerica tab_cabecera_factura=utilitario.consultar("select ide_fafac,secuencial_fafac,factura_fisica_fafac,fecha_transaccion_fafac,detalle_bogrm,base_aprobada_fafac,valor_iva_fafac,total_fafac" +
 		 		" from fac_datos_factura a, bodt_grupo_material b,fac_factura c " +
-		 		" where a.ide_bogrm = b.ide_bogrm and a.ide_fadaf=c.ide_fadaf and c.ide_fafac="+codigo+" order by secuencial_fafac");
+		 		" where a.ide_bogrm = b.ide_bogrm and a.ide_fadaf=c.ide_fadaf and c.ide_fafac in ("+codigo+") order by secuencial_fafac");
 		 return tab_cabecera_factura;
 		 
 	 }
