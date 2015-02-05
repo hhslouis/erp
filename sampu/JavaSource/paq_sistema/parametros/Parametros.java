@@ -283,6 +283,11 @@ public class Parametros {
          *  bodega = 13
          * */
         lis_parametros.add(new Parametro("13", "p_grupo_material","Permite mostras el catalogo de matarieales de cuardo al grupo","1","bodt_tipo_producto","ide_botip","detalle_botip"));
+        /*
+         *  facturacion = 14
+         * */
+        lis_parametros.add(new Parametro("14", "p_valor_interes_mora_nd", "Indica  el valor para el calculo de interes de mora en las notas de debito", "9.33"));
+        lis_parametros.add(new Parametro("14", "p_dias_calculo_interes_mora_nd", "Indica  el numero de dias vigentes de una factura como pazo para su cancelacion a partir de ese dia se genera una nota de debito", "10"));
 
         return lis_parametros;
         
