@@ -1,23 +1,30 @@
 package paq_bodega.ejb;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
 import framework.aplicacion.TablaGenerica;
 
+import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_sistema.aplicacion.Utilitario;
 
 /**
  * Session Bean implementation class ServicioBodega
  */
+
 @Stateless
 @LocalBean
+
 public class ServicioBodega {
 
 	/**
 	 * Default constructor. 
 	 */
 	private Utilitario utilitario=new Utilitario();
+	@EJB
+	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
+
 	public TablaGenerica getTablaInventario (String codigo){
 
 		TablaGenerica tab_inventario = utilitario.consultar("select ide_bomat, codigo_bomat,detalle_bomat " +
@@ -46,5 +53,34 @@ public class ServicioBodega {
 
 
 	}
+	public TablaGenerica getTablaProveedor (String ide_tepro){
+		TablaGenerica tab_proveedor=utilitario.consultar("select ide_tepro,nombre_tepro,ruc_tepro " +
+				" from tes_proveedor where ide_tepro in ("+ide_tepro+")" +
+				" order by nombre_tepro");
+		return tab_proveedor;
+	}
+	
+	public String getProveedor (String activo){
+		String tab_proveedor="select ide_tepro,nombre_tepro,ruc_tepro " +
+				" from tes_proveedor where activo_tepro in ("+activo+")" +
+				" order by nombre_tepro";
+		return tab_proveedor;
+		
+	}
 
+public String getResultado(String ide_bomat,String ide_geani){
+	String  resultado;
+	TablaGenerica sql=utilitario.consultar("select inicial-egreso as resultado from (select ingreso_material_boinv,egreso_material_boinv," +
+			" (CASE WHEN ingreso_material_boinv is null THEN 0 ELSE ingreso_material_boinv end) as inicial," +
+			" (CASE WHEN egreso_material_boinv is null THEN 0 ELSE egreso_material_boinv end)as egreso" +
+			" from bodt_inventario" +
+			" where ide_bomat in ("+ide_bomat+") and ide_geani in ("+ide_geani+")) a");
+	
+	System.out.print("sql.... del material"+sql.getSql());
+ resultado=sql.getValor("resultado").toString();
+	System.out.print("sql del material"+resultado);
+  
+	return resultado;
+   
+}
 }
