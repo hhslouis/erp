@@ -77,4 +77,12 @@ public class ServicioFacturacion {
 		 return tab_cabecera_factura;
 		 
 	 }
+	 
+	 
+	 public String getClientesDatosBasicos(String matrizSucursal ){
+		    String tab_cliente="select a.ide_recli, ruc_comercial_recli,nombre_comercial_recli from rec_clientes a " +
+		            " LEFT JOIN rec_cliente_direccion b on a.ide_recli=b.ide_recli where MATRIZ_SUCURSAL_RECLI in ("+matrizSucursal+")" +
+		                " ORDER BY  nombre_comercial_recli";
+		    return tab_cliente;
+		}
 }
