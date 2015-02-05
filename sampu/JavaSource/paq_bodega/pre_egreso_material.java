@@ -79,7 +79,7 @@ public class pre_egreso_material extends Pantalla {
 		bar_botones.agregarBoton(bot_inventario);
 		
 		set_inventario.setId("set_inventario");
-		set_inventario.setSeleccionTabla(ser_contabilidad.getInventario("1"),"ide_boinv");
+		set_inventario.setSeleccionTabla(ser_contabilidad.getInventario("1","1",""),"ide_boinv");
 		set_inventario.getTab_seleccion().getColumna("ide_boinv").setFiltro(true);
 		set_inventario.getTab_seleccion().getColumna("codigo_bomat").setFiltro(true);
 		set_inventario.getTab_seleccion().getColumna("detalle_bomat").setFiltro(true);
@@ -129,7 +129,7 @@ public class pre_egreso_material extends Pantalla {
 			utilitario.agregarMensajeInfo("Debe insertar un registro", "");
 			return;
 		} 
-		set_inventario.getTab_seleccion().setSql(ser_contabilidad.getInventario(com_anio.getValue().toString()));
+		set_inventario.getTab_seleccion().setSql(ser_contabilidad.getInventario(com_anio.getValue().toString(),"1",""));
 		set_inventario.getTab_seleccion().ejecutarSql();
 		set_inventario.dibujar();
 
