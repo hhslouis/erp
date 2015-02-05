@@ -1,5 +1,8 @@
 package paq_facturacion;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.ejb.EJB;
 import javax.faces.event.AjaxBehaviorEvent;
 
@@ -8,6 +11,8 @@ import framework.componentes.Boton;
 import framework.componentes.Confirmar;
 import framework.componentes.Division;
 import framework.componentes.PanelTabla;
+import framework.componentes.Reporte;
+import framework.componentes.SeleccionFormatoReporte;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import paq_facturacion.ejb.ServicioFacturacion;
@@ -18,20 +23,33 @@ public class pre_nota_credito extends Pantalla {
 	private SeleccionTabla set_factura = new SeleccionTabla();
 	private SeleccionTabla set_actualizarfactura=new SeleccionTabla();
 	private Confirmar con_guardar = new Confirmar();
+	//REPORTE
+	private Map p_parametros = new HashMap();
+	private Reporte rep_reporte = new Reporte();
+	private SeleccionFormatoReporte self_reporte = new SeleccionFormatoReporte();
+	private Map map_parametros = new HashMap();
 	double dou_valor_referencial_fanoc=0;
 	double duo_valor_iva=0.12;
 	double dou_iva_fanoc=0;
 	double dou_total_fanoc=0;
+	
 	@EJB
 	private ServicioFacturacion ser_Facturacion = (ServicioFacturacion) utilitario.instanciarEJB(ServicioFacturacion.class);
 
 	public pre_nota_credito(){
+		rep_reporte.setId("rep_reporte"); //id
+		rep_reporte.getBot_aceptar().setMetodo("aceptarReporte");//ejecuta el metodo al aceptar reporte
+		agregarComponente(rep_reporte);//agrega el componente a la pantalla
+		bar_botones.agregarReporte();//aparece el boton de reportes en la barra de botones
+		self_reporte.setId("self_reporte"); //id
+		agregarComponente(self_reporte);
+		// TODO Auto-generated constructor stub
 		tab_nota_credito.setId("tab_nota_credito");
 		tab_nota_credito.setHeader("NOTA DE CRÈDITO");
 		tab_nota_credito.setTipoFormulario(true);
 		tab_nota_credito.getGrid().setColumns(4);
 		tab_nota_credito.setTabla("fac_nota_credito","ide_fanoc", 1);
-		tab_nota_credito.getColumna("ide_fafac").setCombo(ser_Facturacion.getCabeceraFactura());
+		tab_nota_credito.getColumna("ide_fafac").setCombo(ser_Facturacion.getCabeceraFactura("1",""));
 		tab_nota_credito.getColumna("ide_fafac").setAutoCompletar();
 		tab_nota_credito.getColumna("ide_fafac").setLectura(true);
 		tab_nota_credito.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
@@ -58,7 +76,7 @@ public class pre_nota_credito extends Pantalla {
 		bar_botones.agregarBoton(bot_factura);
 
 		set_factura.setId("set_factura");
-		set_factura.setSeleccionTabla(ser_Facturacion.getCabeceraFactura(),"ide_fafac");
+		set_factura.setSeleccionTabla(ser_Facturacion.getCabeceraFactura("1",""),"ide_fafac");
 		set_factura.getTab_seleccion().getColumna("factura_fisica_fafac").setFiltro(true);
 		set_factura.getTab_seleccion().getColumna("secuencial_fafac").setFiltro(true);
 		set_factura.getTab_seleccion().getColumna("detalle_bogrm").setFiltro(true);
@@ -78,7 +96,7 @@ public class pre_nota_credito extends Pantalla {
 		bar_botones.agregarBoton(bot_actualizarfactura);	
 
 		set_actualizarfactura.setId("set_actualizarfactura");
-		set_actualizarfactura.setSeleccionTabla(ser_Facturacion.getCabeceraFactura(),"ide_fafac");
+		set_actualizarfactura.setSeleccionTabla(ser_Facturacion.getCabeceraFactura("1",""),"ide_fafac");
 		set_actualizarfactura.getTab_seleccion().getColumna("factura_fisica_fafac").setFiltro(true);
 		set_actualizarfactura.getTab_seleccion().getColumna("secuencial_fafac").setFiltro(true);
 		set_actualizarfactura.getTab_seleccion().getColumna("detalle_bogrm").setFiltro(true);
@@ -90,7 +108,7 @@ public class pre_nota_credito extends Pantalla {
 	}
 	public void importarFactura(){
 		System.out.println(" ingresar al importar");
-		set_factura.getTab_seleccion().setSql(ser_Facturacion.getCabeceraFactura());
+		set_factura.getTab_seleccion().setSql(ser_Facturacion.getCabeceraFactura("1",""));
 		set_factura.getTab_seleccion().ejecutarSql();
 		set_factura.dibujar();
 
@@ -117,7 +135,7 @@ public class pre_nota_credito extends Pantalla {
 
 	///ACTUALIZAR FACTURA
 	public void actualizarFactura(){
-		set_actualizarfactura.getTab_seleccion().setSql(ser_Facturacion.getCabeceraFactura());
+		set_actualizarfactura.getTab_seleccion().setSql(ser_Facturacion.getCabeceraFactura("1",""));
 		set_actualizarfactura.getTab_seleccion().ejecutarSql();
 		set_actualizarfactura.dibujar();
 
@@ -171,7 +189,27 @@ public class pre_nota_credito extends Pantalla {
 			utilitario.addUpdateTabla(tab_nota_credito, "iva_fanoc,total_fanoc", "");	
 					
 		}
+		//REPORTE
+				public void abrirListaReportes() {
+					// TODO Auto-generated method stub
+					rep_reporte.dibujar();
+				}
+				public void aceptarReporte(){
+					if(rep_reporte.getReporteSelecionado().equals("Factura Credito"));{
+						if (tab_nota_credito.getTotalFilas()>0){
+						if (rep_reporte.isVisible()){
+							p_parametros=new HashMap();		
+							rep_reporte.cerrar();				
+						p_parametros.put("pide_fafac",Integer.parseInt(tab_nota_credito.getValor("ide_fanoc")));
+						self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
+						self_reporte.dibujar();
+						}
+					}else{
+						utilitario.agregarMensajeInfo("No se puede generar el reporte", "Debe seleccionar una Factura");
 
+					}
+				}
+				}
 
 
 		@Override
@@ -223,6 +261,30 @@ public class pre_nota_credito extends Pantalla {
 		}
 		public void setCon_guardar(Confirmar con_guardar) {
 			this.con_guardar = con_guardar;
+		}
+		public Reporte getRep_reporte() {
+			return rep_reporte;
+		}
+		public void setRep_reporte(Reporte rep_reporte) {
+			this.rep_reporte = rep_reporte;
+		}
+		public SeleccionFormatoReporte getSelf_reporte() {
+			return self_reporte;
+		}
+		public void setSelf_reporte(SeleccionFormatoReporte self_reporte) {
+			this.self_reporte = self_reporte;
+		}
+		public Map getMap_parametros() {
+			return map_parametros;
+		}
+		public void setMap_parametros(Map map_parametros) {
+			this.map_parametros = map_parametros;
+		}
+		public Map getP_parametros() {
+			return p_parametros;
+		}
+		public void setP_parametros(Map p_parametros) {
+			this.p_parametros = p_parametros;
 		}
 		
 		
