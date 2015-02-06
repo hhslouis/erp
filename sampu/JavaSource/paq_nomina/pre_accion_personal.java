@@ -970,6 +970,8 @@ public void cambiarPartida(){
 			tab_deta_empleado_depar.getColumna("IDE_GTEMP")
 			.setValorDefecto(aut_empleado.getValor());
 			actualizarCombosDepartamentoActivoEmpleado();
+			System.out.println("Imprime SQL");
+			tab_deta_empleado_depar.imprimirSql();
 		}
 		else{
 			tab_partida_vigente.limpiar();
