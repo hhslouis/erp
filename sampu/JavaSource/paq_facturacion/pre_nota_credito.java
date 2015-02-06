@@ -59,6 +59,7 @@ public class pre_nota_credito extends Pantalla {
 		tab_nota_credito.getColumna("total_fanoc").setEtiqueta();
 		tab_nota_credito.getColumna("activo_fanoc").setValorDefecto("true");
 		tab_nota_credito.getColumna("total_fanoc").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
+		tab_nota_credito.getColumna("fecha_fanoc").setValorDefecto(utilitario.getFechaActual());
 		tab_nota_credito.dibujar();
 		PanelTabla pat_nota_credito=new PanelTabla();
 		pat_nota_credito.setPanelTabla(tab_nota_credito);

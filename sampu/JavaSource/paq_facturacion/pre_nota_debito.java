@@ -47,6 +47,7 @@ public class pre_nota_debito extends Pantalla{
 		tab_debito.getColumna("total_fanod").setEtiqueta();
 		tab_debito.getColumna("interes_aplicado_fanod").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_debito.getColumna("interes_aplicado_fanod").setEtiqueta();
+		tab_debito.getColumna("fecha_emision_fanod").setValorDefecto(utilitario.getFechaActual());
 		tab_debito.getColumna("ide_recli").setVisible(false);
 		tab_debito.setTipoFormulario(true);
 		tab_debito.getGrid().setColumns(4);
