@@ -1789,14 +1789,7 @@ public void modificarCuentaAnticipo(){
 
 
 
-		// ITEM 3 : OPCION 13
-		ItemMenu itm_datos_experiencia_docente = new ItemMenu();
-		itm_datos_experiencia_docente.setValue("EXPERIENCIA DOCENTE");
-		itm_datos_experiencia_docente.setIcon("ui-icon-person");
-		itm_datos_experiencia_docente.setMetodo("dibujarDatosExperienciaDocente");
-		itm_datos_experiencia_docente.setUpdate("pan_opcion");
-		sum_datos_experiencia_laboral.getChildren().add(itm_datos_experiencia_docente);
-
+		
 		// ITEM 4 : OPCION 14		
 		ItemMenu itm_datos_experiencia_laboral = new ItemMenu();
 		itm_datos_experiencia_laboral.setValue("DATOS EXPERIENCIA LABORAL");
@@ -1890,7 +1883,6 @@ public void modificarCuentaAnticipo(){
 		tab_empleado.getGrid().setColumns(4);
 		tab_empleado.setMostrarNumeroRegistros(false);
 		tab_empleado.setValidarInsertar(true);
-		tab_empleado.getColumna("fecha_ingreso_grupo_gtemp").setMetodoChange("cargarFechaIngresoEmpleado");
 		tab_empleado.dibujar();
 		PanelTabla pat_panel1 = new PanelTabla();
 		pat_panel1.setPanelTabla(tab_empleado);
@@ -2955,40 +2947,6 @@ public void modificarCuentaAnticipo(){
 	}
 
 
-	/**
-	 * muestra en pantalla la tabla con los datos de formacion militar del colaborador si es que lo tiene 
-	 */
-	public void dibujarDatosExperienciaDocente(){
-		if (aut_empleado.getValor() != null) {
-			str_opcion = "13";
-			limpiarPanel();			
-			tab_experiencia_docente = new Tabla();
-			tab_experiencia_docente.setId("tab_experiencia_docente");
-			tab_experiencia_docente.setTabla("GTH_EXPERIENCIA_DOCENTE_EMPLEA", "IDE_GTXDE", 14);
-			tab_experiencia_docente.getColumna("IDE_GEINS").setCombo("GEN_INSTITUCION", "IDE_GEINS", "DETALLE_GEINS", "");
-			//tab_experiencia_docente.getColumna("IDE_GEINS").setAutoCompletar();
-			tab_experiencia_docente.getColumna("IDE_GTTCA").setCombo("GTH_TIPO_CATEDRA", "IDE_GTTCA", "DETALLE_GTTCA", "");
-			tab_experiencia_docente.getColumna("IDE_GEDIP").setCombo(ser_gestion.getSqlDivisionPoliticaCiudad());
-			//tab_experiencia_docente.getColumna("IDE_GEDIP").setAutoCompletar();
-			tab_experiencia_docente.getColumna("ACTIVO_GTXDE").setCheck();
-			tab_experiencia_docente.getColumna("IDE_GTEMP").setValorDefecto(aut_empleado.getValor());
-			tab_experiencia_docente.getColumna("IDE_GTEMP").setVisible(false);
-			tab_experiencia_docente.setCondicion("IDE_GTEMP =" + aut_empleado.getValor());
-			tab_experiencia_docente.setTipoFormulario(true);
-			tab_experiencia_docente.getGrid().setColumns(4);
-			tab_experiencia_docente.setMostrarNumeroRegistros(true);
-			tab_experiencia_docente.dibujar();
-			PanelTabla pat_panel1 = new PanelTabla();
-			pat_panel1.setPanelTabla(tab_experiencia_docente);
-			pan_opcion.setTitle("DATOS DE EXPERIENCIA DOCENTE");
-			pan_opcion.getChildren().add(pat_panel1);
-
-		} else {
-			utilitario.agregarMensajeInfo("No se puede abrir el item", "Seleccione un Colaborador en el autocompletar");
-			limpiar();
-		}
-	}
-
 
 	/**
 	 * muestra en pantalla la tabla con los datos de experiencia laboral del colaborador  
@@ -3015,28 +2973,7 @@ public void modificarCuentaAnticipo(){
 			pan_opcion.setTitle("DATOS DE EXPERIENCIA LABORAL");
 			pan_opcion.getChildren().add(pat_panel1);
 
-			//			tab_telefonos = new Tabla();
-			//			tab_telefonos.setId("tab_telefonos");
-			//			tab_telefonos.setTabla("GTH_TELEFONO", "IDE_GTTEL", 7);
-			//			tab_telefonos.getColumna("IDE_GTTIT").setCombo("GTH_TIPO_TELEFONO", "IDE_GTTIT", "DETALLE_GTTIT", "");
-			//			tab_telefonos.getColumna("IDE_GTCON").setVisible(false);
-			//			tab_telefonos.getColumna("IDE_GTPEE").setVisible(false);
-			//			tab_telefonos.getColumna("ACTIVO_GTTEL").setCheck();
-			//			tab_telefonos.getColumna("IDE_GTEMP").setVisible(false);
-			//			tab_telefonos.getColumna("IDE_GTELE").setVisible(false);
-			//			tab_telefonos.getColumna("IDE_GTELE").setValorDefecto(tab_experiencia_laboral.getValor("IDE_GTELE"));
-			//			tab_telefonos.getColumna("GTH_IDE_GTEMP").setVisible(false);
-			//			tab_telefonos.setCondicion("IDE_GTELE =" + tab_experiencia_laboral.getValor("IDE_GTELE"));
-			//			tab_telefonos.dibujar();
-			//			PanelTabla pat_panel2 = new PanelTabla();
-			//			pat_panel2.setMensajeWarn("TELEFONOS");
-			//			pat_panel2.setPanelTabla(tab_telefonos);
-			//
-			//			Division div_aux=new Division();
-			//			div_aux.dividir2(pat_panel1, pat_panel2, "60%", "H");
-			//			pan_opcion.getChildren().add(div_aux);
-
-
+			
 		} else {
 			utilitario.agregarMensajeInfo("No se puede abrir el item", "Seleccione un Colaborador en el autocompletar");
 			limpiar();
@@ -3521,7 +3458,7 @@ public void modificarCuentaAnticipo(){
 			lis.add(obj1);						
 			tab_cuenta_bancaria.getColumna("INDIVIDUAL_CONJUNTA_GTCBE").setRadio(lis, "0");
 			tab_cuenta_bancaria.getColumna("IDE_GEBEN").setVisible(false);		
-			tab_cuenta_bancaria.setTipoFormulario(false);
+			tab_cuenta_bancaria.setTipoFormulario(true);
 			tab_cuenta_bancaria.getGrid().setColumns(4);
 			tab_cuenta_bancaria.setMostrarNumeroRegistros(true);
 			tab_cuenta_bancaria.dibujar();
@@ -3940,7 +3877,6 @@ public void modificarCuentaAnticipo(){
 		else if(str_opcion.equals("10")){dibujarDatosEducacion();}
 		else if(str_opcion.equals("11")){dibujarDatosIdiomas();}
 		else if(str_opcion.equals("12")){dibujarDatosCapacitacion();}
-		else if(str_opcion.equals("13")){dibujarDatosExperienciaDocente();}
 		else if(str_opcion.equals("14")){dibujarDatosExperienciaLaboral();}
 		else if(str_opcion.equals("15")){dibujarDatosAmigos();}
 		else if(str_opcion.equals("16")){dibujarDatosSituacionEconomica();}
@@ -4871,8 +4807,8 @@ public void modificarCuentaAnticipo(){
 		}else if (str_opcion.equals("14")){
 
 
-			if (tab_experiencia_laboral.getValor("FECHA_INGRESO_GTELE")!=null && !tab_experiencia_laboral.getValor("FECHA_INGRESO_GTELE").isEmpty()) {
-				if(utilitario.isFechaMayor(utilitario.getFecha(tab_experiencia_laboral.getValor("FECHA_INGRESO_GTELE")),utilitario.getFecha(utilitario.getFechaActual()))){
+			if (tab_experiencia_laboral.getValor("fecha_ingreso_gtele")!=null && !tab_experiencia_laboral.getValor("fecha_ingreso_gtele").isEmpty()) {
+				if(utilitario.isFechaMayor(utilitario.getFecha(tab_experiencia_laboral.getValor("fecha_ingreso_gtele")),utilitario.getFecha(utilitario.getFechaActual()))){
 					utilitario.agregarMensajeInfo("No se puede guardar", "La fecha de ingreso no puede ser mayor que la fecha actual");
 					return;
 				}							
@@ -4886,7 +4822,7 @@ public void modificarCuentaAnticipo(){
 			}
 
 			try {
-				if(utilitario.isFechaMayor(utilitario.getFecha(tab_experiencia_laboral.getValor("FECHA_INGRESO_GTELE")),utilitario.getFecha(tab_experiencia_laboral.getValor("FECHA_SALIDA_GTELE")))){
+				if(utilitario.isFechaMayor(utilitario.getFecha(tab_experiencia_laboral.getValor("fecha_ingreso_gtele")),utilitario.getFecha(tab_experiencia_laboral.getValor("FECHA_SALIDA_GTELE")))){
 					utilitario.agregarMensajeInfo("No se puede guardar", "La fecha de ingreso no puede ser mayor que la fecha de salida");
 					return;
 				}		
@@ -5058,28 +4994,11 @@ public void modificarCuentaAnticipo(){
 			}
 		}else if (str_opcion.equals("22")){
 
-
-
-			if (tab_cuenta_bancaria.getValor("NUMERO_CUENTA_GTCBE")==null || tab_cuenta_bancaria.getValor("NUMERO_CUENTA_GTCBE").isEmpty()) {
-				utilitario.agregarMensajeInfo("No se puede Guardar el campo Numero Cuenta", "No Contiene Datos");
-				return;
-			}
-
-
-			if (tab_cuenta_bancaria.getValor("SALDO_PROMEDIO_GTCBE")==null || tab_cuenta_bancaria.getValor("SALDO_PROMEDIO_GTCBE").isEmpty()) {
-				utilitario.agregarMensajeInfo("No se puede Guardar el campo Saldo Promedio", "No Contiene Datos");
-				return;
-			}
-
-			if (!utilitario.isNumeroPositivo(tab_cuenta_bancaria.getValor("SALDO_PROMEDIO_GTCBE"))) {
-				utilitario.agregarMensajeInfo("No se puede Guardar el Saldo Promedio", "Recuerde ingresar un valor valido");
-				return ;
-			}
-
-			if (validarIngresoCuentasBancarias()){
+		
+						
 				if (tab_cuenta_bancaria.guardar()){
 					guardarPantalla();
-				}
+				
 			}
 		}else if (str_opcion.equals("23")){
 			if (tab_inversion.guardar()){
@@ -5277,7 +5196,9 @@ public void modificarCuentaAnticipo(){
 			else if (tab_archivo_empleado.isFocus()){
 				tab_archivo_empleado.eliminar();
 			}
-		} else if (str_opcion.equals("1")) {
+		} 
+		
+		else if (str_opcion.equals("1")) {
 			if (tab_conyuge.isFocus()){
 				tab_conyuge.eliminar();
 				filtrarTelefonosConyugue();
@@ -5287,7 +5208,8 @@ public void modificarCuentaAnticipo(){
 			}else if (tab_union_libre.isFocus()){
 				tab_union_libre.eliminar();
 			}
-		}else if (str_opcion.equals("2")) {
+		}
+		else if (str_opcion.equals("2")) {
 			if(tab_empleado_departamento.isFocus()){
 				if (tab_empleado_departamento.eliminar()){
 					actualizarCombosDepartamentoEmpleado();
@@ -5295,7 +5217,8 @@ public void modificarCuentaAnticipo(){
 			}else if (tab_deta_empleado_depar.isFocus()){
 				tab_deta_empleado_depar.eliminar();
 			}							
-		}else if (str_opcion.equals("3")) {
+		}
+		else if (str_opcion.equals("3")) {
 			tab_documentacion.eliminar();
 		}
 		else if(str_opcion.equals("28")){
@@ -5314,9 +5237,14 @@ public void modificarCuentaAnticipo(){
 				}else if(tab_direccion.isFocus()){
 					tab_direccion.eliminar();
 				}
-			}else if (str_opcion.equals("5")) {
+			}
+		}
+		
+		else if (str_opcion.equals("5")) {
 				tab_cargas_familiares.eliminar();
-			}else if (str_opcion.equals("6")) {
+			}
+		
+		else if (str_opcion.equals("6")) {
 				tab_familiar.eliminar();
 			}
 			//		else if (str_opcion.equals("8")) {
@@ -5353,19 +5281,11 @@ public void modificarCuentaAnticipo(){
 				if (tab_capacitacion.isFocus()){
 					tab_capacitacion.eliminar();
 				}
-			}else if (str_opcion.equals("13")){
-				if (tab_experiencia_docente.isFocus()){
-					tab_experiencia_docente.eliminar();
-				}
-			}else if (str_opcion.equals("14")){
-				if (tab_experiencia_laboral.isFocus()){
-					if (tab_telefonos.getTotalFilas()==0){
+			}
+			
+			else if (str_opcion.equals("14")){
+				if(tab_experiencia_laboral.isFocus()){
 						tab_experiencia_laboral.eliminar();
-					}else{
-						utilitario.agregarMensajeInfo("No se puede eliminar", "La tabla tiene detalles");
-					}
-				}else if(tab_telefonos.isFocus()){
-					tab_telefonos.eliminar();
 				}
 			}else if (str_opcion.equals("15")) {
 				tab_amigos.eliminar();
@@ -5373,61 +5293,16 @@ public void modificarCuentaAnticipo(){
 				if (tab_situacion_economica.isFocus()){
 					tab_situacion_economica.eliminar();
 				}
-			}else if (str_opcion.equals("17")){
-				if (tab_negocio_empl.isFocus()){
-					tab_negocio_empl.eliminar();
-					filtrarParticipantesNegocio();
-					filtrarTelefonosNegocio();
-					filtrarDireccionNegocio();
-					filtrarAnexosNegocio();
-				}else if (tab_paticipantes_negocio.isFocus()){
-					tab_paticipantes_negocio.eliminar();
-				}else if (tab_direccion.isFocus()){
-					tab_direccion.eliminar();
-				}else if (tab_telefonos.isFocus()){
-					tab_telefonos.eliminar();
-				}else if (tab_archivo_empleado.isFocus()){
-					tab_archivo_empleado.eliminar();
-				}
-			}else if (str_opcion.equals("18")){
-				if (tab_terreno.isFocus()){
-					tab_terreno.eliminar();
-				}
-			}else if (str_opcion.equals("19")){
-				if (tab_casa.isFocus()){
-					tab_casa.eliminar();
-				}
-			}else if (str_opcion.equals("20")){
-				if (tab_vehiculo.isFocus()){
-					tab_vehiculo.eliminar();
-				}
-			}else if (str_opcion.equals("21")){
-				if (tab_situacion_financiera.isFocus()){
-					tab_situacion_financiera.eliminar();
-				}
-			}else if (str_opcion.equals("22")){
-				if (tab_cuenta_bancaria.isFocus()){
-					tab_cuenta_bancaria.eliminar();
-				}
-			}else if (str_opcion.equals("23")){
-				if (tab_inversion.isFocus()){
-					tab_inversion.eliminar();
-				}
-			}else if (str_opcion.equals("24")){
-				if (tab_endeudamiento.isFocus()){
-					tab_endeudamiento.eliminar();
-				}
-			}else if (str_opcion.equals("25")){
-				if (tab_tarjeta_credito.isFocus()){
-					tab_tarjeta_credito.eliminar();
-				}
 			}
-
-			else if (str_opcion.equals("26")){
-				if (tab_membresias.isFocus()){
-					tab_membresias.eliminar();
-				}	
-			}else if (str_opcion.equals("29")){
+			else if (str_opcion.equals("22")){ 
+				
+				System.out.println("emtere a eliminar cuenta bancaria");
+				
+					tab_cuenta_bancaria.eliminar();
+				
+			}
+			
+			else if (str_opcion.equals("29")){
 				if (tab_sri_gastos_deducible.isFocus()){
 					if (tab_sri_gastos_deducible.isFilaInsertada()){
 						tab_sri_gastos_deducible.eliminar();
@@ -5437,7 +5312,7 @@ public void modificarCuentaAnticipo(){
 				}
 			}
 
-		}
+		
 	}
 
 	public AutoCompletar getAut_empleado() {
