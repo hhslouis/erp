@@ -42,7 +42,7 @@ import framework.componentes.Texto;
 import framework.componentes.Upload;
 
 /**
- * @author Byron
+ * @author 
  *
  */
 public class pre_generar_rol extends Pantalla{
@@ -588,18 +588,18 @@ public class pre_generar_rol extends Pantalla{
 				String fecha_ini_gepro=tab_per_rol.getValor("FECHA_INICIAL_GEPRO");
 				String fecha_fin_gepro=tab_per_rol.getValor("FECHA_FINAL_GEPRO");
 
-				String str_update_anticipos="update  NRH_AMORTIZACION set ACTIVO_NRAMO=0 " +
+				String str_update_anticipos="update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 						"where FECHA_VENCIMIENTO_NRAMO " +
 						"BETWEEN to_date ('"+fecha_ini_gepro+"','yy-mm-dd') and to_date ('"+fecha_fin_gepro+"','yy-mm-dd') " +
 						"and IDE_NRANI IN (SELECT IDE_NRANI FROM NRH_ANTICIPO_INTERES WHERE " +
 						"IDE_NRANT IN (SELECT IDE_NRANT FROM NRH_ANTICIPO WHERE " +
-						"CALIFICADO_NRANT=1 AND APROBADO_NRANT=1 AND ACTIVO_NRANT=1 AND " +
+						"CALIFICADO_NRANT=true AND APROBADO_NRANT=true AND ACTIVO_NRANT=true AND " +
 						"IDE_GEEDP IN (select EDP.IDE_GEEDP from GEN_EMPLEADOS_DEPARTAMENTO_PAR edp " +
 						"inner join NRH_DETALLE_TIPO_NOMINA dtn on EDP.IDE_GTTEM=DTN.IDE_GTTEM " +
 						"and EDP.IDE_SUCU=DTN.IDE_SUCU " +
 						"inner join GTH_EMPLEADO emp on EMP.ide_gtemp=EDP.IDE_GTEMP " +
 						"WHERE DTN.IDE_NRDTN="+fila.getRowKey()+" " +
-						"AND EDP.ACTIVO_GEEDP=1 " +
+						"AND EDP.ACTIVO_GEEDP=true " +
 						")))";
 				utilitario.getConexion().agregarSql(str_update_anticipos);
 				System.out.println("update nticipos "+str_update_anticipos);
@@ -825,7 +825,7 @@ public class pre_generar_rol extends Pantalla{
 		tab_rol.setValor("IDE_NRDTN", IDE_NRDTN);
 		tab_rol.setValor("IDE_GEPRO", IDE_GEPRO);
 		tab_rol.setValor("FECHA_NRROL", utilitario.getFechaActual());
-		tab_rol.setValor("ACTIVO_NRROL", "1");
+		tab_rol.setValor("ACTIVO_NRROL", "true");
 		tab_rol.setValor("IDE_USUA", utilitario.getVariable("IDE_USUA"));
 		if (tab_rol.guardar()){
 			return tab_rol.getValor(0,"IDE_NRROL");
