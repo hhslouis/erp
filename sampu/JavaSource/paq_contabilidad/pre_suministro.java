@@ -29,6 +29,7 @@ public class pre_suministro extends Pantalla{
 				
 		
 		tab_suministro.setId("tab_suministro");
+		tab_suministro.setHeader("SUMINISTRO");
 		//tab_suministro.setNumeroTabla(1);
 		tab_suministro.setTabla("cont_suministro", "ide_cosum",1);
 		tab_suministro.getColumna("ide_coseb").setVisible(false);
@@ -43,6 +44,7 @@ public class pre_suministro extends Pantalla{
 		
 		//tabla 2
 		tab_servicio_suministrio.setId("tab_servicio_suministrio");
+		tab_servicio_suministrio.setHeader("REGISTRO DE FACTURA SUMINISTRO");
 		tab_servicio_suministrio.setTabla("cont_servicio_suministro","ide_coses",2);
 		tab_servicio_suministrio.setCampoForanea("ide_cosum");
 		tab_servicio_suministrio.getColumna("ide_geedp").setCombo(ser_nomina.servicioEmpleadoContrato("true,false"));
