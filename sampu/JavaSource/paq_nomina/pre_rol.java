@@ -915,7 +915,7 @@ public class pre_rol extends Pantalla{
 						"where IDE_ASDHE in (select IDE_ASDHE from ASI_VALIDA_NOMINA where IDE_NRROL="+tab_rol.getValorSeleccionado()+")");
 
 				
-				utilitario.getConexion().agregarSqlPantalla("update NRH_AMORTIZACION set ACTIVO_NRAMO=FALSE, " +
+				utilitario.getConexion().agregarSqlPantalla("update NRH_AMORTIZACION set ACTIVO_NRAMO=false, " +
 						"fecha_cancelado_nramo=null " +
 						"where ide_nrrol in ("+tab_rol.getValorSeleccionado()+") ");
 
@@ -1486,48 +1486,7 @@ public class pre_rol extends Pantalla{
 						if (ser_nomina.importarValoresRubro(lis_importa, tab_rol.getValor(i, "IDE_NRROL"), tab_rol.getValor(i, "IDE_NRDTN"), str_IDE_NRDER, fecha_ini_gepro, fecha_fin_gepro)){
 							utilitario.agregarMensaje("Los valores se importaron correctamente", "");
 						}
-						//						String str_sql=ser_nomina.getSqlEmpleadosTipoNomina(tab_rol.getValor(i,"ide_nrdtn"));
-						//						utilitario.getConexion().ejecutarSql("update  NRH_AMORTIZACION set ACTIVO_NRAMO=FALSE " +
-						//								"where FECHA_VENCIMIENTO_NRAMO " +
-						//								"BETWEEN to_date ('"+fecha_ini_gepro+"','yy-mm-dd') and to_date ('"+fecha_fin_gepro+"','yy-mm-dd') " +
-						//								"and IDE_NRANI in (select ide_nrani from NRH_ANTICIPO_INTERES " +
-						//								"where IDE_NRANT in (select ide_nrant from NRH_ANTICIPO " +
-						//								"where IDE_GTEMP in (select emp.ide_gtemp from GEN_EMPLEADOS_DEPARTAMENTO_PAR edp " +
-						//								"inner join NRH_DETALLE_TIPO_NOMINA dtn on EDP.IDE_GTTEM=DTN.IDE_GTTEM " +
-						//								"and EDP.IDE_SUCU=DTN.IDE_SUCU " +
-						//								"inner join GTH_EMPLEADO emp on EMP.ide_gtemp=EDP.IDE_GTEMP " +
-						//								"WHERE DTN.IDE_NRDTN IN ("+tab_rol.getValor(i, "ide_nrdtn")+"))))");
-						//
-						//						//Recupera los empleados de la nomina
-						//
-						//						TablaGenerica tab_emp_dep=utilitario.consultar(str_sql);
-						//						//Recorre la tabla de empleados y compara con la lista obtenida del archivo xls
-						//
-						//						ser_nomina.cargarRubrosRolVacia();
-						//
-						//						for (int j = 0; j < tab_emp_dep.getTotalFilas(); j++) {	
-						//							String str_documento=tab_emp_dep.getValor(j, "DOCUMENTO_IDENTIDAD_GTEMP");
-						//							String str_valor=null;
-						//							for (int k = 0; k < lis_importa.size(); k++) {						
-						//								//busco el valor
-						//								if(str_documento.equalsIgnoreCase(((String[])lis_importa.get(k))[0])){
-						//									str_valor=((String[])lis_importa.get(k))[1];
-						//									lis_importa.remove(k);
-						//									break;
-						//								}
-						//							}
-						//
-						//							if(str_valor!=null){
-						//								//Cargo el rol del empleado seleccionado
-						//								utilitario.getConexion().agregarSqlPantalla("UPDATE NRH_DETALLE_ROL set VALOR_NRDRO="+str_valor+" " +
-						//										"where IDE_NRROL="+tab_rol.getValor(i, "IDE_NRROL")+" " +
-						//										"and IDE_NRDER="+str_IDE_NRDER+" " +
-						//										"and IDE_GEEDP="+tab_emp_dep.getValor(j,"ide_geedp"));
-						//							}
-						//							
-						//						}
-						//						
-						//						guardarPantalla();
+						
 					}else{
 						utilitario.agregarMensajeInfo("No se puede importar", "La nomina seleccionada no tiene estado PRE-NOMINA");
 					}
@@ -1556,47 +1515,7 @@ public class pre_rol extends Pantalla{
 						utilitario.agregarMensaje("Los valores se importaron correctamente", "");
 					}
 
-					//					String str_sql=ser_nomina.getSqlEmpleadosTipoNomina(tab_rol.getValor("ide_nrdtn"));
-					//					utilitario.getConexion().ejecutarSql("update  NRH_AMORTIZACION set ACTIVO_NRAMO=FALSE" +
-					//							"where FECHA_VENCIMIENTO_NRAMO " +
-					//							"BETWEEN to_date ('"+fecha_ini_gepro+"','yy-mm-dd') and to_date ('"+fecha_fin_gepro+"','yy-mm-dd') " +
-					//							"and IDE_NRANI in (select ide_nrani from NRH_ANTICIPO_INTERES " +
-					//							"where IDE_NRANT in (select ide_nrant from NRH_ANTICIPO " +
-					//							"where IDE_GTEMP in (select emp.ide_gtemp from GEN_EMPLEADOS_DEPARTAMENTO_PAR edp " +
-					//							"inner join NRH_DETALLE_TIPO_NOMINA dtn on EDP.IDE_GTTEM=DTN.IDE_GTTEM " +
-					//							"and EDP.IDE_SUCU=DTN.IDE_SUCU " +
-					//							"inner join GTH_EMPLEADO emp on EMP.ide_gtemp=EDP.IDE_GTEMP " +
-					//							"WHERE DTN.IDE_NRDTN IN ("+tab_rol.getValor( "ide_nrdtn")+"))))");
-					//
-					//					//Recupera los empleados de la nomina
-					//
-					//					TablaGenerica tab_emp_dep=utilitario.consultar(str_sql);
-					//					//Recorre la tabla de empleados y compara con la lista obtenida del archivo xls
-					//
-					//					ser_nomina.cargarRubrosRolVacia();
-					//
-					//					for (int j = 0; j < tab_emp_dep.getTotalFilas(); j++) {	
-					//						String str_documento=tab_emp_dep.getValor(j, "DOCUMENTO_IDENTIDAD_GTEMP");
-					//						String str_valor=null;
-					//						for (int k = 0; k < lis_importa.size(); k++) {						
-					//							//busco el valor
-					//							if(str_documento.equalsIgnoreCase(((String[])lis_importa.get(k))[0])){
-					//								str_valor=((String[])lis_importa.get(k))[1];
-					//								lis_importa.remove(k);
-					//								break;
-					//							}
-					//						}
-					//
-					//						if(str_valor!=null){
-					//							//Cargo el rol del empleado seleccionado
-					//							utilitario.getConexion().agregarSqlPantalla("UPDATE NRH_DETALLE_ROL set VALOR_NRDRO="+str_valor+" " +
-					//									"where IDE_NRROL="+tab_rol.getValor("IDE_NRROL")+" " +
-					//									"and IDE_NRDER="+str_IDE_NRDER+" " +
-					//									"and IDE_GEEDP="+tab_emp_dep.getValor(j,"ide_geedp"));
-					//						}				
-					//					}
-					//					guardarPantalla();
-
+					
 					dia_importar.cerrar();
 					dia_valida_empleado.cerrar();
 					cargarEmpleadosDepartamento();
@@ -1968,7 +1887,7 @@ public class pre_rol extends Pantalla{
 
 
 		
-		utilitario.getConexion().agregarSql("update NRH_AMORTIZACION set FECHA_CANCELADO_NRAMO=null,PRE_CANCELADO_NRAMO=0,ACTIVO_NRAMO=FALSE where IDE_NRROL="+tab_rol.getValor("IDE_NRROL"));
+		utilitario.getConexion().agregarSql("update NRH_AMORTIZACION set FECHA_CANCELADO_NRAMO=null,PRE_CANCELADO_NRAMO=false,ACTIVO_NRAMO=false where IDE_NRROL="+tab_rol.getValor("IDE_NRROL"));
 		utilitario.getConexion().agregarSql("update NRH_AMORTIZACION set ide_nrrol=null where IDE_NRROL="+tab_rol.getValor("IDE_NRROL"));
 		utilitario.getConexion().agregarSql("delete from NRH_DETALLE_ROL where ide_nrrol ="+tab_rol.getValor("IDE_NRROL"));
 		utilitario.getConexion().agregarSql("delete from NRH_ROL where ide_nrrol ="+tab_rol.getValor("IDE_NRROL"));
