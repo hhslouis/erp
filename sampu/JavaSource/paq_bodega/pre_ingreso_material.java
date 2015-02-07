@@ -170,12 +170,18 @@ public class pre_ingreso_material extends Pantalla{
 		
 
 		//TablaGenerica material=utilitario.consultar(ser_contabilidad.getInventario(com_anio.getValue().toString(), "0", tab_bodega.getValor("ide_bomat")));
-		System.out.println("resulktado "+ser_Bodega.getResultado(tab_bodega.getValor("ide_bomat"), com_anio.getValue().toString()));
-		ser_Bodega.getResultado(tab_bodega.getValor("ide_bomat"), com_anio.getValue().toString());
+		//ser_Bodega.getResultado(tab_bodega.getValor("ide_bomat"), com_anio.getValue().toString());
 		
 			//System.out.print("sql.... del material"+sql.getSql());
+		System.out.println("Entre Hola1");
 		System.out.print("tabla bodega"+tab_bodega.getValor("ide_bomat"));
+		System.out.println("salida Hola1");
+
+		System.out.println("Entre Hola");
 		System.out.print("combo año"+com_anio.getValue().toString());
+		System.out.println("salida Hola");
+		System.out.println("resulktado "+ser_Bodega.getResultado(tab_bodega.getValor("ide_bomat"), com_anio.getValue().toString()));
+
 		//String sql="update bodt_inventarios set "
 		utilitario.agregarMensaje("se", "mm");
 	}
