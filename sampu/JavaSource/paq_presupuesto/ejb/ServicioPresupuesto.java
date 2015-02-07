@@ -15,19 +15,36 @@ import framework.aplicacion.TablaGenerica;
 public class ServicioPresupuesto {
 	private Utilitario utilitario= new Utilitario();
 
- public String getCatalogoPresupuestario(String anio){
+ public String getCatalogoPresupuestario(){
 	 
-	 String tab_presupesto="SELECT ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla FROM pre_clasificador where ide_geani=" +anio+
-				" ORDER BY codigo_clasificador_prcla";
+	 String tab_presupesto="SELECT ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla FROM pre_clasificador" +
+	 		
+	 		" ORDER BY codigo_clasificador_prcla";
+
+
 	 	 return tab_presupesto;
 			 
  }
  public TablaGenerica getTablaCatalogoPresupuestario(String ideClasificador){
 	 
-	 TablaGenerica tab_presupesto=utilitario.consultar("SELECT ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla FROM pre_clasificador where ide_prcla=" +ideClasificador+
+	 TablaGenerica tab_presupesto=utilitario.consultar("SELECT ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla " +
+	 		" FROM pre_clasificador where ide_prcla=" +ideClasificador+
 				" ORDER BY codigo_clasificador_prcla");
 	 return tab_presupesto;
 			 
  } 
-
+public String getFuncionPrograma(){
+	String tab_funcion="select ide_prfup,detalle_prfup,codigo_prfup  " +
+			"from pre_funcion_programa ";
+	return tab_funcion;
+	
+}
+TablaGenerica getTablaGenericaFuncionPro(String ideanio){
+	TablaGenerica tab_funcion_progra=utilitario.consultar("select ide_prfup,detalle_prfup from pre_funcion_programa " +
+			" where ide_prfup in (select ide_prfup from cont_vigente where ide_geani=" +ideanio+
+			
+			"	order by detalle_prfup");
+	return tab_funcion_progra;
+	
+}
 }
