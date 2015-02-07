@@ -44,7 +44,7 @@ public pre_pac(){
         tab_pac.setId("tab_pac");
         tab_pac.setHeader("PLAN ANUAL DE CONTRATACIÒN (PAC)");
         tab_pac.setTabla("pre_pac","ide_prpac",1);
-        tab_pac.getColumna("ide_copec").setCombo("cont_periodo_cuatrimestre","ide_copec","detalle_copec","");
+        //tab_pac.getColumna("ide_copec").setCombo("cont_periodo_cuatrimestre","ide_copec","detalle_copec","");
         tab_pac.getColumna("ide_cotio").setCombo("cont_tipo_compra","ide_cotio","detalle_cotio","");
         tab_pac.getColumna("ide_coest").setCombo("cont_estado", "ide_coest","detalle_coest","");
         tab_pac.getColumna("ide_bounm").setCombo("bodt_unidad_medida","ide_bounm","detalle_bounm","");
@@ -116,7 +116,7 @@ public pre_pac(){
 		bar_botones.agregarBoton(bot_importar);
 
 		set_clasificador.setId("set_clasificador");
-		set_clasificador.setSeleccionTabla(ser_presupuesto.getCatalogoPresupuestario("-1"),"ide_prcla");
+		set_clasificador.setSeleccionTabla(ser_presupuesto.getCatalogoPresupuestario(),"ide_prcla");
 		set_clasificador.getTab_seleccion().getColumna("DESCRIPCION_CLASIFICADOR_PRCLA").setFiltro(true);		
 		set_clasificador.setTitle("SELECCION UNA PARTIDA");		
 		set_clasificador.getBot_aceptar().setMetodo("aceptarClasificador");
@@ -145,7 +145,7 @@ public void importarClasificador(){
 	}
 
 	//Filtrar los clasificadores del año seleccionado
-	set_clasificador.getTab_seleccion().setSql(ser_presupuesto.getCatalogoPresupuestario(com_anio.getValue()+""));
+	set_clasificador.getTab_seleccion().setSql(ser_presupuesto.getCatalogoPresupuestario());
 	set_clasificador.getTab_seleccion().ejecutarSql();
 	set_clasificador.dibujar();
 
