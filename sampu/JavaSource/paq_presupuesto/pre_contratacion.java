@@ -7,6 +7,7 @@ import javax.ejb.EJB;
 import framework.aplicacion.TablaGenerica;
 import framework.componentes.Boton;
 import framework.componentes.Combo;
+import framework.componentes.Confirmar;
 import framework.componentes.Division;
 import framework.componentes.Etiqueta;
 import framework.componentes.Imagen;
@@ -15,6 +16,7 @@ import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import framework.componentes.Tabulador;
 import paq_contabilidad.ejb.ServicioContabilidad;
+import paq_presupuesto.ejb.ServicioPresupuesto;
 import paq_sistema.aplicacion.Pantalla;
 
 public class pre_contratacion extends Pantalla{
@@ -29,10 +31,15 @@ public class pre_contratacion extends Pantalla{
 	private Combo com_anio=new Combo();
 
 	private SeleccionTabla set_clasificador=new SeleccionTabla();
-	
-	 @EJB
+	private SeleccionTabla set_funcion=new SeleccionTabla();
+	private SeleccionTabla set_actualizarfuncion=new SeleccionTabla();
+	private Confirmar con_guardar=new Confirmar();
+
+	@EJB
 	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
-			
+
+	@EJB
+	private ServicioPresupuesto ser_presupuesto = (ServicioPresupuesto ) utilitario.instanciarEJB(ServicioPresupuesto.class);
 
 
 
@@ -54,25 +61,26 @@ public class pre_contratacion extends Pantalla{
 		tab_poa.setCondicion("ide_geani=-1");  
 
 		tab_poa.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
-		//tab_poa.getColumna("ide_prcla").setCombo("SELECT ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla FROM pre_clasificador ORDER BY codigo_clasificador_prcla");
+		tab_poa.getColumna("ide_prcla").setCombo(ser_presupuesto.getCatalogoPresupuestario());
+		//tab_poa.getColumna("ide_prcla").setAutoCompletar();
 		tab_poa.getColumna("ide_prcla").setAncho(50);
-		tab_poa.getColumna("ide_prsua").setCombo("pre_sub_actividad","ide_prsua","detalle_prsua","");
-		tab_poa.getColumna("ide_prfup").setCombo("pre_funcion_programa","ide_prfup","detalle_prfup","");
+		tab_poa.getColumna("ide_prsua").setCombo("pre_sub_actividad","ide_prsua","codigo_prsua,detalle_prsua","");
+		tab_poa.getColumna("ide_prfup").setCombo(ser_presupuesto.getFuncionPrograma());
 		tab_poa.getColumna("ide_geuna").setCombo("gen_unidad_administrativa","ide_geuna","detalle_geuna","");
 
 		tab_poa.setTipoFormulario(true);
 		tab_poa.getGrid().setColumns(4);
 
-	
+
 		tab_poa.agregarRelacion(tab_mes);//agraga relacion para los tabuladores
 		tab_poa.agregarRelacion(tab_financiamiento);
 		tab_poa.agregarRelacion(tab_reforma);
-		
-				
+
+
 		tab_poa.dibujar();
 		PanelTabla pat_poa=new PanelTabla();
 		pat_poa.setPanelTabla(tab_poa);
-		
+
 		//EJECUCION MENSUAL
 		tab_mes.setId("tab_mes");
 		tab_mes.setHeader("EJECUCION MENSUAL (POA)");
@@ -83,7 +91,7 @@ public class pre_contratacion extends Pantalla{
 		tab_mes.dibujar();
 		PanelTabla pat_panel2 = new PanelTabla();
 		pat_panel2.setPanelTabla(tab_mes);
-	   	
+
 		// REFORMA MENSUAL
 		tab_reforma.setId("tab_reforma");
 		tab_reforma.setHeader("REFORMA MENSUAL (POA)");
@@ -91,10 +99,10 @@ public class pre_contratacion extends Pantalla{
 		tab_reforma.setTabla("pre_poa_reforma", "ide_prpor",3);
 		tab_reforma.setCampoForanea("ide_prpoa");
 		tab_reforma.getColumna("pre_ide_prpoa").setCombo("select ide_prpoa,num_resolucion_prpoa,codigo_clasificador_prcla,descripcion_clasificador_prcla " +	
-		"from pre_poa  a, (select ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla  from pre_clasificador ) b where a.ide_prcla=b.ide_prcla");
+				"from pre_poa  a, (select ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla  from pre_clasificador ) b where a.ide_prcla=b.ide_prcla");
 		tab_reforma.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
 		tab_reforma.getColumna("ide_gemes").setCombo("select ide_gemes,detalle_gemes from gen_mes order by ide_gemes");
-		
+
 		tab_reforma.setTipoFormulario(true);
 		tab_reforma.getGrid().setColumns(4);
 		tab_reforma.dibujar();
@@ -121,16 +129,10 @@ public class pre_contratacion extends Pantalla{
 		tab_archivo.setTabla("pre_archivo","ide_prarc",5);
 		tab_archivo.getColumna("foto_prarc").setUpload("presupuesto");
 		tab_archivo.setCampoForanea("ide_prpoa");
-		//ocultar campos de las claves  foraneas
-				TablaGenerica  tab_generica=ser_contabilidad.getTablaVigente("pre_archivo");
-				for(int i=0;i<tab_generica.getTotalFilas();i++){
-				//muestra los ides q quiere mostras.
-				//if(!tab_generica.getValor(i, "column_name").equals("ide_prpoa")){	
-				tab_archivo.getColumna(tab_generica.getValor(i, "column_name")).setVisible(false);	
-				//}				
-				
-		   		}
-		tab_archivo.setCondicion("ide_prcon!=null");
+		tab_archivo.getColumna("ide_prpac").setVisible(false);
+		tab_archivo.getColumna("ide_prcon").setVisible(false);
+		tab_archivo.getColumna("ide_prcop").setVisible(false);
+		tab_archivo.getColumna("ide_prtra").setVisible(false);
 		tab_archivo.dibujar();
 		PanelTabla pat_panel5= new PanelTabla();
 		pat_panel5.setPanelTabla(tab_archivo);
@@ -145,10 +147,10 @@ public class pre_contratacion extends Pantalla{
 		tab_tabulador.agregarTab("REFORMA MENSUAL",pat_panel3);
 		tab_tabulador.agregarTab("FINANCIAMIENTO", pat_panel4);
 		tab_tabulador.agregarTab("ARCHIVOS",pat_panel5);
-		
+
 
 		//division2
-		
+
 		Division div_division=new Division();
 		div_division.dividir2(pat_poa,tab_tabulador,"50%","H");
 		agregarComponente(div_division);
@@ -161,12 +163,27 @@ public class pre_contratacion extends Pantalla{
 		set_clasificador.setId("set_clasificador");
 		set_clasificador.setTitle("SELECCIONE UNA PARTIDA PRESUPUESTARIA");
 		set_clasificador.setRadio(); //solo selecciona una opcion
-		set_clasificador.setSeleccionTabla("SELECT ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla FROM pre_clasificador where ide_geani=-1" +
-				"ORDER BY codigo_clasificador_prcla", "ide_prcla"); 
+		set_clasificador.setSeleccionTabla(ser_presupuesto.getCatalogoPresupuestario(), "ide_prcla"); 
 		set_clasificador.getTab_seleccion().getColumna("codigo_clasificador_prcla").setFiltroContenido(); //pone filtro
 		set_clasificador.getTab_seleccion().getColumna("descripcion_clasificador_prcla").setFiltroContenido();//pone filtro
 		set_clasificador.getBot_aceptar().setMetodo("aceptarClasificador");
 		agregarComponente(set_clasificador);
+
+		Boton bot_funcionp=new Boton();
+		bot_funcionp.setValue("Agregar Funciòn Programa");
+		bot_funcionp.setMetodo("agregarFuncionPrograma");
+		bar_botones.agregarBoton(bot_funcionp);
+
+		set_funcion.setId("set_funcion");
+		set_funcion.setTitle("SELECCIONE FUNCIÒN PROGRAMA");
+		set_funcion.setRadio(); //solo selecciona una opcion
+		set_funcion.setSeleccionTabla(ser_presupuesto.getFuncionPrograma(), "ide_prfup"); 
+		set_funcion.getTab_seleccion().getColumna("detalle_prfup").setFiltroContenido(); //pone filtro
+		set_funcion.getBot_aceptar().setMetodo("aceptarFuncionPrograma");
+		agregarComponente(set_funcion);
+
+		
+
 	}
 
 	public void agregarClasificador(){
@@ -181,17 +198,13 @@ public class pre_contratacion extends Pantalla{
 			return;
 		}
 		//Filtrar los clasificadores del año seleccionado
-		set_clasificador.getTab_seleccion().setSql("SELECT ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla FROM pre_clasificador where ide_geani=" +com_anio.getValue()+
-				" ORDER BY codigo_clasificador_prcla");
+		set_clasificador.getTab_seleccion().setSql(ser_presupuesto.getCatalogoPresupuestario());
 		set_clasificador.getTab_seleccion().ejecutarSql();
 		set_clasificador.dibujar();
 	}
 
 	public void aceptarClasificador(){
 		if(set_clasificador.getValorSeleccionado()!=null){
-			//Agrega la fila seleccionada al combo 			
-			tab_poa.getColumna("ide_prcla").getListaCombo().add(set_clasificador.getTab_seleccion().getFilaSeleccionada().getCampos());			
-			//Selecciona en el combo el q se selecciono en el dialogo
 			tab_poa.setValor("ide_prcla", set_clasificador.getValorSeleccionado());
 			//Actualiza 
 			utilitario.addUpdate("tab_poa");//actualiza mediante ajax el objeto tab_poa
@@ -201,7 +214,34 @@ public class pre_contratacion extends Pantalla{
 			utilitario.agregarMensajeInfo("Debe seleccionar un Clasificador", "");
 		}
 	}
+	public void agregarFuncionPrograma(){
+		System.out.println(" ingresar al importar");
+		if(com_anio.getValue()==null){
+			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
+			return;
+		}
 
+		set_funcion.getTab_seleccion().setSql(ser_presupuesto.getFuncionPrograma());
+		set_funcion.getTab_seleccion().ejecutarSql();
+		set_funcion.dibujar();
+
+	}
+
+	public  void aceptarFuncionPrograma(){
+		String str_seleccionado = set_funcion.getValorSeleccionado();
+		System.out.println("entra al str  "+str_seleccionado);
+
+		if (str_seleccionado!=null){
+			tab_poa.insertar();
+			tab_poa.setValor("ide_prfup",str_seleccionado);
+			tab_poa.setValor("ide_geani", com_anio.getValue()+"");
+
+			System.out.println("inserta el valor  "+str_seleccionado);
+
+		}
+		set_funcion.cerrar();
+		utilitario.addUpdate("tab_poa");
+	}
 
 	@Override
 	public void insertar() {
@@ -222,7 +262,7 @@ public class pre_contratacion extends Pantalla{
 		}
 		else if (tab_reforma.isFocus()) {
 			tab_reforma.insertar();
-			
+
 		}
 
 		else if (tab_financiamiento.isFocus()){
@@ -239,13 +279,13 @@ public class pre_contratacion extends Pantalla{
 	public void guardar() {
 		// TODO Auto-generated method stub
 		if (tab_poa.guardar()) {
-			
+
 			if (tab_mes.guardar()) {
 				if( tab_financiamiento.guardar()){
 					if(tab_reforma.guardar()){
-					tab_archivo.guardar();	
+						tab_archivo.guardar();	
 					}
-					
+
 				}
 			}
 		}
@@ -327,6 +367,14 @@ public class pre_contratacion extends Pantalla{
 	public void setTab_reforma(Tabla tab_reforma) {
 		this.tab_reforma = tab_reforma;
 	}
-	
+
+	public SeleccionTabla getSet_funcion() {
+		return set_funcion;
+	}
+
+	public void setSet_funcion(SeleccionTabla set_funcion) {
+		this.set_funcion = set_funcion;
+	}
+
 
 }
