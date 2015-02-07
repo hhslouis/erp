@@ -70,7 +70,7 @@ public class ServicioBodega {
 
 public String getResultado(String ide_bomat,String ide_geani){
 	String  resultado;
-	TablaGenerica sql=utilitario.consultar("select inicial-egreso as resultado from (select ingreso_material_boinv,egreso_material_boinv," +
+	TablaGenerica sql=utilitario.consultar("select 1 as codigo, inicial-egreso as resultado from (select ingreso_material_boinv,egreso_material_boinv," +
 			" (CASE WHEN ingreso_material_boinv is null THEN 0 ELSE ingreso_material_boinv end) as inicial," +
 			" (CASE WHEN egreso_material_boinv is null THEN 0 ELSE egreso_material_boinv end)as egreso" +
 			" from bodt_inventario" +
