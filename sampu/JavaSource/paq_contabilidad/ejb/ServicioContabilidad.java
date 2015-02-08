@@ -99,7 +99,17 @@ public String getModuloEstados (String estado,String modulo){
 +"AND activo_gemoe in ("+estado+") AND a.ide_gemod ="+modulo+" order by detalle_coest";
 	return consultaEstados;
 }
-
+/**
+ * Metodo que devuelve los Parametros generales requeridos por modulo
+ * @param estado recibe el o los estados true y false, ejemplo: true o false
+ * @param modulo recibe el codigo del modulo 
+ * @return string SQL gen_modulo
+ */
+public String getModuloParametros (String estado,String modulo){
+	String consultaEstados="select ide_copag,detalle_copag from cont_parametros_general" 
++" where ide_copag in (select ide_copag from cont_parametro_modulo where ide_gemod in ("+modulo+") and activo_copam in ("+estado+") )";
+	return consultaEstados;
+}
 /**
  * Metodo que devuelve los tipos de convenios 
  * @param estado recibe el o los estados true y false, ejemplo: true o false
