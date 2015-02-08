@@ -264,7 +264,7 @@ public class pre_rol extends Pantalla{
 		tab_detalle_rol.getColumna("VALOR_NRDRO").setFormatoNumero(2);
 		tab_detalle_rol.getColumna("ORDEN_CALCULO_NRDRO").setVisible(false);
 		tab_detalle_rol.setCondicion("IDE_GEEDP="+tab_empleado_departamento.getValor("ide_geedp"));		
-
+          System.out.printf(" ide empleado DEPARTAMENTO"+tab_empleado_departamento.getValor("ide_geedp"));
 		//		tab_detalle_rol.setCondicion("IDE_GEEDP="+tab_empleado_departamento.getValor("ide_geedp")+" " +
 //				"HAVING VALOR_NRDRO>0 " +
 //				"GROUP by IDE_NRDRO,ide_nrrol,IDE_GEEDP,IDE_NRDER,VALOR_NRDRO,USUARIO_INGRE,FECHA_INGRE, " +
@@ -1480,6 +1480,7 @@ public class pre_rol extends Pantalla{
 				String fecha_ini_gepro=tab_per_rol.getValor("FECHA_INICIAL_GEPRO");
 				String fecha_fin_gepro=tab_per_rol.getValor("FECHA_FINAL_GEPRO");
 				String str_IDE_NRDER=ser_nomina.getDetalleRubro(tab_rol.getValor(i,"IDE_NRDTN"), aut_rubros.getValor()).getValor("IDE_NRDER");
+			System.out.printf("detalle rubro :"+str_IDE_NRDER);
 				if(str_IDE_NRDER!=null && !str_IDE_NRDER.isEmpty()){
 					if (ser_nomina.getRol(tab_rol.getValor(i, "IDE_NRROL")).getValor("IDE_NRESR").equalsIgnoreCase(utilitario.getVariable("p_nrh_estado_pre_nomina"))){
 
@@ -2068,7 +2069,7 @@ public void aceptarReporte() {
 					System.out.println("IDE_GEEDP...   "+sel_tab_empleados.getSeleccionados());
 					
 					
-					p_parametros.put("titulo", " DETALLE ROL EMPLEADO PERIODO");
+					p_parametros.put("titulo", "  EMPLEADO PERIODO");
 					p_parametros.put("IDE_NRRUB",Integer.parseInt(utilitario.getVariable("p_nrh_rubro_valor_recibir")));
 					
 					System.out.println("IDE_NRRUB...   "+utilitario.getVariable("p_nrh_rubro_valor_recibir"));
