@@ -59,15 +59,21 @@ public class pre_ingreso_material extends Pantalla{
 		tab_bodega.setTabla("bodt_bodega","ide_bobod", 1);	
 		tab_bodega.getColumna("ide_geani").setVisible(false);
 		tab_bodega.getColumna("ide_tepro").setCombo(ser_Bodega.getProveedor("true,false"));
+		tab_bodega.getColumna("ide_tepro").setAutoCompletar();
+		tab_bodega.getColumna("ide_tepro").setLectura(true);
 		tab_bodega.getColumna("ide_bomat").setCombo("select ide_bomat,codigo_bomat,detalle_bomat,iva_bomat from bodt_material order by detalle_bomat");
 		tab_bodega.getColumna("IDE_COEST").setCombo("cont_estado","ide_coest"," detalle_coest","");
 		tab_bodega.getColumna("cantidad_ingreso_bobod").setMetodoChange("calcular");
 		tab_bodega.getColumna("valor_unitario_bobod").setMetodoChange("calcular");
 		tab_bodega.getColumna("valor_total_bobod").setEtiqueta();
 		tab_bodega.getColumna("valor_total_bobod").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
+		tab_bodega.getColumna("recibido_bobod").setValorDefecto("true");
+		tab_bodega.getColumna("recibido_bobod").setLectura(true);
+		tab_bodega.getColumna("activo_bobod").setValorDefecto("true");
+		tab_bodega.getColumna("activo_bobod").setLectura(true);
 		tab_bodega.setCondicion("ide_geani=-1"); 
 		tab_bodega.setTipoFormulario(true);
-		tab_bodega.getGrid().setColumns(4);
+		tab_bodega.getGrid().setColumns(6);
 		tab_bodega.dibujar();
 		PanelTabla pat_bodega=new PanelTabla();
 		pat_bodega.setPanelTabla(tab_bodega);
@@ -155,7 +161,7 @@ public class pre_ingreso_material extends Pantalla{
 
 		lis_activo.setRadio(lista);
 		lis_activo.setVertical();
-		dia_bodega.setId("dia_filtro_activo");
+		dia_bodega.setId("dia_bodega");
 		dia_bodega.setTitle("SELECCIONE AÑADIR AL INVENTARIO / NO AÑADIR AL INVENTARIO ");
 		dia_bodega.getBot_aceptar().setMetodo("aceptaInventario");
 		dia_bodega.setDialogo(lis_activo);
@@ -166,27 +172,49 @@ public class pre_ingreso_material extends Pantalla{
 
 
 	}
-	public void aceptaInventario() {
-		
+	public void aceptaInventario() {		
+		double stock=0;
+		System.out.println("imprimiendo la lsita de activos "+lis_activo.getValue());
 
-		//TablaGenerica material=utilitario.consultar(ser_contabilidad.getInventario(com_anio.getValue().toString(), "0", tab_bodega.getValor("ide_bomat")));
-		//ser_Bodega.getResultado(tab_bodega.getValor("ide_bomat"), com_anio.getValue().toString());
-		
-			//System.out.print("sql.... del material"+sql.getSql());
-		System.out.println("Entre Hola1");
-		System.out.print("tabla bodega"+tab_bodega.getValor("ide_bomat"));
-		System.out.println("salida Hola1");
-
-		System.out.println("Entre Hola");
-		System.out.print("combo año"+com_anio.getValue().toString());
-		System.out.println("salida Hola");
-		System.out.println("resulktado "+ser_Bodega.getResultado(tab_bodega.getValor("ide_bomat"), com_anio.getValue().toString()));
-
-		//String sql="update bodt_inventarios set "
-		utilitario.agregarMensaje("se", "mm");
+		if(lis_activo.getValue() == null){
+			utilitario.agregarMensajeInfo("Inventario / No-Inventario", "Debe Seleccionar una Opción");
+				return;
+		}
+		else {
+			if (lis_activo.getValue().equals("0")){
+				TablaGenerica datos_inventario=utilitario.consultar(ser_Bodega.getDatosInventario(tab_bodega.getValor("ide_bomat"), com_anio.getValue().toString()));
+		        double costo_actual=Double.parseDouble(datos_inventario.getValor("costo_actual_boinv"));
+		        stock=ser_Bodega.getResultadoStock(tab_bodega.getValor("ide_bomat"), com_anio.getValue().toString());
+				// Permite conocer el valor actual de mi stock
+		        double valor_stock_inventario =costo_actual*stock;
+		        //Cantidad actual ingresada a inventarios desde el formulario
+		        double cantidad_actual=Double.parseDouble(tab_bodega.getValor("cantidad_ingreso_bobod"));
+		        //Valor total actual ingresado para inventarios desde el formulario
+		        double valor_actual=Double.parseDouble(tab_bodega.getValor("valor_total_bobod"));
+		        // Permite suma stock existen mas el numero actual de ingreso de materiales;
+		        double total_nueva_existencia=stock+cantidad_actual;
+		        // Permite Sumar Valores para depues determinar mi costo vigente por producto
+		        double valor_nueva_existencia=valor_stock_inventario+valor_actual;
+		        // Determino el valor indivual nuevo del producto
+		        double valor_nuevo_individual=valor_nueva_existencia/total_nueva_existencia;
+		        
+		        System.out.println("nuevo valor "+valor_nuevo_individual);
+		        String sql_actualiza_inventarios="update bodt_inventario set ingreso_material_boinv=ingreso_material_boinv+"+cantidad_actual
+		        		+",costo_anterior_boinv=costo_actual_boinv, costo_actual_boinv="+valor_nuevo_individual+" where ide_bomat="+tab_bodega.getValor("ide_bomat")+" and ide_geani="+com_anio.getValue().toString()+";";
+		        System.out.println("sql actualiza inventarios "+sql_actualiza_inventarios);
+		        String resultado_upadte="";
+		        resultado_upadte=utilitario.getConexion().ejecutarSql(sql_actualiza_inventarios);
+		        if (resultado_upadte.isEmpty()) {
+                    utilitario.agregarMensaje("Se guardo correctamente", "El inventario se registro satisfactoriamente.");
+                 }
+		        
+			}
+			else {
+		    utilitario.agregarMensajeError("jjj", "no agerga inventario");		
+			}
+		}
 	}
 	public void actualizarMaterial(){
-		System.out.println("Entra a actualizar...");
 		if (tab_bodega.getValor("ide_geani")==null){
 			utilitario.agregarMensajeInfo("Debe seleccionar un año ","");
 			return;
@@ -199,11 +227,7 @@ public class pre_ingreso_material extends Pantalla{
 	}	
 
 	public void modificarMaterial(){
-		System.out.println("Entra modificar...");
-
 		String str_materialActualizado=set_actualizamaterial.getValorSeleccionado();
-		System.out.println("Entra a guardar..."+str_materialActualizado);
-
 		TablaGenerica tab_materialModificado = ser_Bodega.getTablaInventario(str_materialActualizado);
 		tab_bodega.setValor("IDE_BOMAT", tab_materialModificado.getValor("IDE_BOMAT"));			
 		tab_bodega.modificar(tab_bodega.getFilaActual());
@@ -217,17 +241,15 @@ public class pre_ingreso_material extends Pantalla{
 
 	}
 	public void guardarActualilzarMaterial(){
-		System.out.println("Entra a guardar...");
+
 		tab_bodega.guardar();
 		con_guardar.cerrar();
 		set_actualizamaterial.cerrar();
-
-
 		guardarPantalla();
 
 	}
 	public void importarMaterial(){
-		System.out.println(" ingresar al importar");
+
 		if(com_anio.getValue()==null){
 			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
 			return;
@@ -241,15 +263,10 @@ public class pre_ingreso_material extends Pantalla{
 
 	public  void aceptarMaterial(){
 		String str_seleccionados = set_material.getSeleccionados();
-		System.out.println("entra al str  "+str_seleccionados);
-
 		if (str_seleccionados!=null){
 			tab_bodega.insertar();
 			tab_bodega.setValor("ide_bomat",str_seleccionados);
 			tab_bodega.setValor("ide_geani", com_anio.getValue()+"");
-
-			System.out.println("inserta el valor  "+str_seleccionados);
-
 		}
 		set_material.cerrar();
 		utilitario.addUpdate("tab_bodega");
@@ -261,18 +278,14 @@ public class pre_ingreso_material extends Pantalla{
 			utilitario.agregarMensajeInfo("Debe seleccionar un año ","");
 			return;
 		}
-		System.out.println("Entra a actualizar1...");
 		set_actualizaproveedor.setSeleccionTabla(ser_Bodega.getProveedor("true"),"");
 		set_actualizaproveedor.getTab_seleccion().ejecutarSql();
 		set_actualizaproveedor.dibujar();	
 	}	
 
 	public void modificarProveedor(){
-		System.out.println("Entra modificar...");
 
 		String str_proveedorActualizado=set_actualizaproveedor.getValorSeleccionado();
-		System.out.println("Entra a guardar..."+str_proveedorActualizado);
-
 		TablaGenerica tab_materialModificado = ser_Bodega.getTablaProveedor(str_proveedorActualizado);
 		tab_bodega.setValor("IDE_TEPRO", tab_materialModificado.getValor("IDE_TEPRO"));			
 		tab_bodega.modificar(tab_bodega.getFilaActual());
@@ -286,17 +299,15 @@ public class pre_ingreso_material extends Pantalla{
 
 	}
 	public void guardarActualilzarProveedor(){
-		System.out.println("Entra a guardar...");
+
 		tab_bodega.guardar();
 		con_guardar.cerrar();
 		set_actualizaproveedor.cerrar();
-
-
 		guardarPantalla();
 
 	}
 	public void importarProveedor(){
-		System.out.println(" ingresar al importar");
+
 		if(com_anio.getValue()==null){
 			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
 			return;
@@ -310,15 +321,10 @@ public class pre_ingreso_material extends Pantalla{
 
 	public  void aceptarProveedor(){
 		String str_seleccionados = set_proveedor.getSeleccionados();
-		System.out.println("entra al str  "+str_seleccionados);
-
 		if (str_seleccionados!=null){
 			tab_bodega.insertar();
 			tab_bodega.setValor("ide_tepro",str_seleccionados);
 			tab_bodega.setValor("ide_geani", com_anio.getValue()+"");
-
-			System.out.println("inserta el valor  "+str_seleccionados);
-
 		}
 		set_proveedor.cerrar();
 		utilitario.addUpdate("tab_bodega");
@@ -394,14 +400,15 @@ public class pre_ingreso_material extends Pantalla{
 	public void guardar() {
 		// TODO Auto-generated method stub
 		if(tab_bodega.getValorSeleccionado().equals("-1")){
-			dia_bodega.dibujar();
-					
-			
+			if(tab_bodega.getValor("ide_tepro")==null){
+				utilitario.agregarMensajeInfo("Requisito Ingreso", "Ingrese el proveedor");
+				return;
+			}
+			else{
+			dia_bodega.dibujar();		
+			}
 		}else{
-		//tab_bodega.setCondicion("ide_bobod=-1"); 
-	
-		tab_bodega.guardar();
-		guardarPantalla();
+		utilitario.agregarMensaje("Ingreso Material Individual", "La presente opción solo le permite realizar el registro de ingreso de materiales, mas no actualizar el registro del ingreso");		
 		}	
 	}
 
