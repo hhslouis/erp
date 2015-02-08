@@ -293,6 +293,10 @@ public class Parametros {
          * */
         
         lis_parametros.add(new Parametro("15", "p_modulo_adquisicion","Indica el modulo que pertenece a adquisiones","9","gen_modulo","ide_gemod","detalle_gemod"));
+        /*
+         * PRESUPUESTO
+         * */
+        lis_parametros.add(new Parametro("16", "p_modulo_presupuesto","Indica el modulo que pertenece a presupuesto","11","gen_modulo","ide_gemod","detalle_gemod"));
 
         return lis_parametros;
         
