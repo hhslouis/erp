@@ -88,7 +88,7 @@ public class pre_anticipos extends Pantalla {
 	private Boton bot_aprobar_anticipo=new Boton();
 	private Boton bot_pre_cancelacion=new Boton();
 	private Boton bot_abonar=new Boton();
-	private Boton bot_agregar_garante_biess=new Boton();
+	private Boton bot_agregar_garante=new Boton();
 
 	private Confirmar con_datos_memo=new Confirmar();
 	private Confirmar con_guardar=new Confirmar();
@@ -168,9 +168,9 @@ public class pre_anticipos extends Pantalla {
 		bot_abonar.setMetodo("abonarAnticipo");
 		bar_botones.agregarBoton(bot_abonar);
 
-		bot_agregar_garante_biess.setValue("Agregar Garante Biess");
-		bot_agregar_garante_biess.setMetodo("agregarGaranteBiess");
-		bar_botones.agregarBoton(bot_agregar_garante_biess);
+		bot_agregar_garante.setValue("Agregar Garante Funcionario");
+		bot_agregar_garante.setMetodo("agregarGarante");
+		bar_botones.agregarBoton(bot_agregar_garante);
 
 
 		Boton bot_anular=new Boton();
@@ -1032,7 +1032,7 @@ System.out.println("variable ide_geedp_activo.... "+ide_geedp_activo);
 		dia_ingreso_memo.cerrar();
 
 	}
-	public void agregarGaranteBiess(){
+	public void agregarGarante(){
 
 
 		if (tab_anticipo.getValor("APROBADO_NRANT") !=null 
