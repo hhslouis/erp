@@ -93,7 +93,8 @@ public class pre_convenios extends Pantalla {
 		tab_tabla2.getColumna("ide_cocon").setCombo("cont_convenio", "ide_cocon", "detalle_contrato_cocon", "");
 		tab_tabla2.getColumna("ide_getip").setCombo("gen_tipo_persona", "ide_getip", "detalle_getip", "");
 		tab_tabla2.getColumna("ide_gecaf").setCombo("gen_cargo_funcional", "ide_gecaf", "detalle_gecaf", "");
-		//tab_tabla2.getColumna("ide_geedp").setCombo("gen_empleados_departamento_par", "ide_geedp", "", "");
+		tab_tabla2.getColumna("ide_geedp").setCombo(ser_general.getTipoPersona("true",par_modulo_convenio));
+		//getTipoPersona("true",par_modulo_convenio),"ide_getip");
 		tab_tabla2.dibujar();
 		PanelTabla pat_panel2 = new PanelTabla();
 		pat_panel2.setPanelTabla(tab_tabla2);
@@ -244,31 +245,26 @@ public class pre_convenios extends Pantalla {
 	}
 
 	public  void aceptarTipoPersona(){
-		String str_seleccionados=set_tipo_persona.getValorSeleccionado();
+		String str_seleccionado=set_tipo_persona.getValorSeleccionado();
 		System.out.println("ACTIVOS :"+set_tipo_persona.getValorSeleccionado());
-		if(str_seleccionados.equals(par_funcionario_convenio)){
-			TablaGenerica tab_empleado = ser_nomina.ideEmpleadoContrato(str_seleccionados);	
+		if(str_seleccionado.equals(par_funcionario_convenio)){
+			TablaGenerica tab_empleado = ser_nomina.ideEmpleadoContrato(str_seleccionado);	
 			set_empleado.setSeleccionTabla(ser_nomina.servicioEmpleadoContrato("true"),"ide_geedp");
 			set_empleado.getTab_seleccion().ejecutarSql();
-
 			inicializaSetEmpleado();
+						
+		}else if( str_seleccionado.equals(par_particular_convenio)){
 			
-			
-			utilitario.agregarMensajeInfo("Hola funcionario","funcionario");
-
-			
-			
-		}else if( str_seleccionados.equals(par_particular_convenio)){
-			
-			TablaGenerica tab_empleado = ser_nomina.ideEmpleadoContrato(str_seleccionados);	
+			TablaGenerica tab_empleado = ser_nomina.ideEmpleadoContrato(str_seleccionado);				System.out.println("ACTIVOS :"+set_tipo_persona.getValorSeleccionado());
 			set_empleado.setSeleccionTabla(ser_nomina.servicioEmpleadoContrato("true"),"ide_geedp");
 			set_empleado.getTab_seleccion().ejecutarSql();
+			set_empleado.cerrar();
+			utilitario.addUpdate("tab_tabla2");
 			inicializaSetEmpleado();
 			utilitario.agregarMensajeInfo("Hola particular","particular");
 
-				}		
-
-		else{
+		}else{
+			
 			utilitario.agregarMensajeInfo("No se puede continuar", "No ha Seleccionado Ningun Registro");
 			return;
 		}
