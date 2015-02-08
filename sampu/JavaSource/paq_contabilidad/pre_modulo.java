@@ -26,7 +26,9 @@ public class pre_modulo extends Pantalla{
 	
 	public pre_modulo() {
 		tab_modulo.setId("tab_modulo");  
-		tab_modulo.setTabla("gen_modulo","ide_gemod", 1);	
+		tab_modulo.setTabla("gen_modulo","ide_gemod", 1);
+		tab_modulo.setCampoPadre("gen_ide_gemod");
+		tab_modulo.setCampoNombre("detalle_gemod");
 		tab_modulo.agregarRelacion(tab_modulo_estado);
 		tab_modulo.agregarRelacion(tab_persona_modulo);
 		tab_modulo.agregarRelacion(tab_modulo_secuencial);
@@ -36,7 +38,6 @@ public class pre_modulo extends Pantalla{
 		PanelTabla pat_modulo=new PanelTabla();
 		pat_modulo.setPanelTabla(tab_modulo);
 		
-		//agregarComponente(pat_modulo);
 		Tabulador tab_Tabulador=new Tabulador();
 		tab_Tabulador.setId("tab_tabulador");
 		
@@ -95,7 +96,6 @@ public class pre_modulo extends Pantalla{
 		// division arbol
 		//arbol
 		arb_modulo.setId("arb_modulo");
-		arb_modulo.setArbol("gen_modulo", "ide_gemod", "detalle_gemod", "gen_ide_gemod");
 		arb_modulo.dibujar();
 		div_modulo =new Division();
 		div_modulo.setId("div_modulo");
