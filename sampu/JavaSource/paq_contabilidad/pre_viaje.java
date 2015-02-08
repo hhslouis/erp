@@ -136,9 +136,6 @@ public class pre_viaje extends Pantalla{
 		
 		set_actualizaViajero.setId("set_actualizaViajero");
 		set_actualizaViajero.setSeleccionTabla(ser_nomina.servicioEmpleadoContrato("true"),"ide_geedp");
-		
-		System.out.println("parametro..set_actualizaViajero .."+set_actualizaViajero);
-		
 		set_actualizaViajero.getTab_seleccion().getColumna("documento_identidad_gtemp").setFiltro(true);
 		set_actualizaViajero.getTab_seleccion().getColumna("nombres_apellidos").setFiltro(true);
 		set_actualizaViajero.setRadio();
