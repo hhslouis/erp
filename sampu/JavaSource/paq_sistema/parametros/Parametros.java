@@ -288,6 +288,11 @@ public class Parametros {
          * */
         lis_parametros.add(new Parametro("14", "p_valor_interes_mora_nd", "Indica  el valor para el calculo de interes de mora en las notas de debito", "9.33"));
         lis_parametros.add(new Parametro("14", "p_dias_calculo_interes_mora_nd", "Indica  el numero de dias vigentes de una factura como pazo para su cancelacion a partir de ese dia se genera una nota de debito", "10"));
+        /*
+         *  CONVENIOS = 15
+         * */
+        
+        lis_parametros.add(new Parametro("15", "p_modulo_adquisicion","Indica el modulo que pertenece a adquisiones","9","gen_modulo","ide_gemod","detalle_gemod"));
 
         return lis_parametros;
         
