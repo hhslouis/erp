@@ -53,6 +53,19 @@ public class ServicioBodega {
 
 
 	}
+	/**
+	 * Este servicio retorna los datos del inventario por material y año 
+	 * @param material = Recibe el ide del material a consultar
+	 * @param anio = Recibe año del inventario del material a conultar.
+	 * @return String 
+	 */
+	public String getDatosInventario (String material,String anio){
+
+		String tab_inventario="select ide_boinv,ide_geani,ingreso_material_boinv,egreso_material_boinv,existencia_inicial_boinv,costo_anterior_boinv,costo_actual_boinv,"
++" fecha_ingr_articulo_boinv,costo_inicial_boinv,ide_bomat from bodt_inventario where ide_geani ="+anio+" and ide_bomat ="+material;
+	    return tab_inventario;
+
+	}
 	public TablaGenerica getTablaProveedor (String ide_tepro){
 		TablaGenerica tab_proveedor=utilitario.consultar("select ide_tepro,nombre_tepro,ruc_tepro " +
 				" from tes_proveedor where ide_tepro in ("+ide_tepro+")" +
@@ -68,19 +81,16 @@ public class ServicioBodega {
 		
 	}
 
-public String getResultado(String ide_bomat,String ide_geani){
-	String  resultado;
-	TablaGenerica sql=utilitario.consultar("select 1 as codigo, inicial-egreso as resultado from (select ingreso_material_boinv,egreso_material_boinv," +
+public double getResultadoStock(String ide_bomat,String ide_geani){
+	double  stock;
+	TablaGenerica sql=utilitario.consultar("select 1 as codigo, inicial-egreso as stock from (select ingreso_material_boinv,egreso_material_boinv," +
 			" (CASE WHEN ingreso_material_boinv is null THEN 0 ELSE ingreso_material_boinv end) as inicial," +
 			" (CASE WHEN egreso_material_boinv is null THEN 0 ELSE egreso_material_boinv end)as egreso" +
 			" from bodt_inventario" +
 			" where ide_bomat in ("+ide_bomat+") and ide_geani in ("+ide_geani+")) a");
 	
-	System.out.print("sql.... del material"+sql.getSql());
- resultado=sql.getValor("resultado").toString();
-	System.out.print("sql del material"+resultado);
-  
-	return resultado;
+	stock=Double.parseDouble(sql.getValor("stock").toString());
+	return stock;
    
 }
 }
