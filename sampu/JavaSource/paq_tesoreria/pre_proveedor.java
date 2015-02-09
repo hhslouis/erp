@@ -39,7 +39,7 @@ public class pre_proveedor extends Pantalla {
 		tab_proveedor.dibujar();
 		PanelTabla pat_proveedor= new PanelTabla();
 		pat_proveedor.setPanelTabla(tab_proveedor);
-
+		
 
 		tab_direccion.setId("tab_direccion");
 		tab_direccion.setHeader("DIRECCIÒN");
@@ -53,7 +53,7 @@ public class pre_proveedor extends Pantalla {
 		tab_telefono.setId("tab_telefono");
 		tab_telefono.setHeader("TELEFONO");
 		tab_telefono.setIdCompleto("tab_tabulador:tab_telefono");
-		tab_telefono.setTabla("tes_telefono","ide_tetel",2);
+		tab_telefono.setTabla("tes_telefono","ide_tetel",3);
 		tab_telefono.setCampoForanea("ide_tepro");
 		tab_telefono.getColumna("ide_reteo").setCombo("rec_telefono_operadora","ide_reteo","detalle_reteo","");
 		tab_telefono.dibujar();
@@ -63,7 +63,7 @@ public class pre_proveedor extends Pantalla {
 		tab_correo.setId("tab_correo");
 		tab_correo.setHeader("CORREO");
 		tab_correo.setIdCompleto("tab_tabulador:tab_correo");
-		tab_correo.setTabla("tes_correo","ide_tecor",2);
+		tab_correo.setTabla("tes_correo","ide_tecor",4);
 		tab_correo.setCampoForanea("ide_tepro");
 		//tab_correo.getColumna("ide_gemes").setCombo("select ide_gemes,detalle_gemes from gen_mes order by ide_gemes");
 		tab_correo.dibujar();
