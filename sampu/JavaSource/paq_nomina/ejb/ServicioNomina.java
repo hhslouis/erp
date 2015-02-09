@@ -310,7 +310,7 @@ public class ServicioNomina {
 
 		utilitario.getConexion().agregarSql("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 				"where FECHA_VENCIMIENTO_NRAMO " +
-				"BETWEEN to_date ('"+fecha_ini_gepro+"','yy-mm-dd') and to_date ('"+fecha_fin_gepro+"','yy-mm-dd') " +
+				"BETWEEN to_date ('"+fecha_ini_gepro+"','yyyy-mm-dd') and to_date ('"+fecha_fin_gepro+"','yyyy-mm-dd') " +
 				"and IDE_NRANI in (select ide_nrani from NRH_ANTICIPO_INTERES " +
 				"where IDE_NRANT in (select ide_nrant from NRH_ANTICIPO " +
 				"where IDE_GTEMP in (select emp.ide_gtemp from GEN_EMPLEADOS_DEPARTAMENTO_PAR edp " +
@@ -379,7 +379,7 @@ public class ServicioNomina {
 		}
 
 		utilitario.getConexion().agregarSqlPantalla("update NRH_AMORTIZACION set ACTIVO_NRAMO=true, " +
-				"fecha_cancelado_nramo=to_date('"+fecha_rol+"','yy-mm-dd') " +
+				"fecha_cancelado_nramo=to_date('"+fecha_rol+"','yyyy-mm-dd') " +
 				"where ide_nrrol in ("+ide_nrrol+") ");
 
 
@@ -759,7 +759,7 @@ public class ServicioNomina {
 		if (IDE_NRTIN.equalsIgnoreCase(utilitario.getVariable("p_nrh_tipo_nomina_liquidacion"))){
 			sql+="AND EDP.LIQUIDACION_GEEDP=1 "+
 					"and (EDP.EJECUTO_LIQUIDACION_GEEDP IS NULL OR EDP.EJECUTO_LIQUIDACION_GEEDP!=1) " +
-					"and EDP.FECHA_LIQUIDACION_GEEDP=to_date('"+fecha_liquidacion+"','yy-mm-dd') ";
+					"and EDP.FECHA_LIQUIDACION_GEEDP=to_date('"+fecha_liquidacion+"','yyyy-mm-dd') ";
 
 		}else{
 			sql+="AND (EDP.LIQUIDACION_GEEDP IS NULL OR EDP.LIQUIDACION_GEEDP!=1) ";
@@ -1763,7 +1763,7 @@ public class ServicioNomina {
 	public TablaGenerica getSriImpuestoRenta(String FECHA_ROL){
 		TablaGenerica tab_imp_renta=new TablaGenerica();
 		tab_imp_renta=utilitario.consultar("select * from SRI_IMPUESTO_RENTA " +
-				"where TO_DATE('"+FECHA_ROL+"', 'yy-mm-dd') " +
+				"where TO_DATE('"+FECHA_ROL+"', 'yyyy-mm-dd') " +
 				"BETWEEN FECHA_INICIO_SRIMR and FECHA_FIN_SRIMR ");
 		return tab_imp_renta;
 	}
@@ -2153,7 +2153,9 @@ public class ServicioNomina {
 				"DROL.IDE_NRDER, " +
 				"DROL.VALOR_NRDRO, " +
 				"EMP.DISCAPACITADO_GTEMP, " +
-				"trunc((to_date((to_char(sysdate,'yyyy')||'-'||to_char(sysdate,'mm')||'-'||to_char(sysdate,'dd')),'yyyy-mm-dd')- to_date ((to_char(fecha_nacimiento_gtemp,'yyyy-mm-dd')),'yyyy-mm-dd')  )/365) as edad "+
+				"FLOOR(((extract(year from now())-extract(year from fecha_nacimiento_gtemp))* 372 + "+
+				"(extract(month from now()) - extract(month from fecha_nacimiento_gtemp))*31 + "+  
+				"(extract (day from now())-extract(day from fecha_nacimiento_gtemp)))/372) as edad "+
 				"from NRH_DETALLE_ROL DROL " +
 				"inner join NRH_DETALLE_RUBRO DRUB on DRUB.IDE_NRDER=DROL.IDE_NRDER " +
 				"inner join NRH_RUBRO RUB on rub.ide_nrrub=drub.ide_nrrub " +
@@ -2341,7 +2343,7 @@ public class ServicioNomina {
 					tab_cab_proy_ing.setValor("IDE_SRIMR", IDE_SRIMR);
 					tab_cab_proy_ing.setValor("IDE_GEEDP", tab_tot_ingresos_empleados.getValor(i,"IDE_GEEDP"));
 					tab_cab_proy_ing.setValor("IDE_GTEMP", tab_tot_ingresos_empleados.getValor(i, "IDE_GTEMP"));
-					tab_cab_proy_ing.setValor("ACTIVO_SRPRI", "1");
+					tab_cab_proy_ing.setValor("ACTIVO_SRPRI", "true");
 					tab_cab_proy_ing.guardar();
 					IDE_SRPRI=tab_cab_proy_ing.getValor("IDE_SRPRI");
 				}else{
@@ -2832,7 +2834,7 @@ public class ServicioNomina {
 
 
 			TablaGenerica tab_per=utilitario.consultar("select * from GEN_PERIDO_ROL where IDE_GEPRO="+ide_gepro+" " +
-					"and to_date('"+fecha_pago_rubro+"','yy-mm-dd') BETWEEN FECHA_INICIAL_GEPRO and FECHA_FINAL_GEPRO");
+					"and to_date('"+fecha_pago_rubro+"','yyyy-mm-dd') BETWEEN FECHA_INICIAL_GEPRO and FECHA_FINAL_GEPRO");
 			if (tab_per.getTotalFilas()>0){
 				str_ide_nrder_decimos+=tab_decimos.getValor(j,"IDE_NRDER")+",";
 			}
@@ -3093,7 +3095,7 @@ public class ServicioNomina {
 
 		utilitario.getConexion().ejecutarSql("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 				"where FECHA_VENCIMIENTO_NRAMO " +
-				"BETWEEN to_date ('"+fecha_ini_gepro+"','yy-mm-dd') and to_date ('"+fecha_fin_gepro+"','yy-mm-dd') " +
+				"BETWEEN to_date ('"+fecha_ini_gepro+"','yyyy-mm-dd') and to_date ('"+fecha_fin_gepro+"','yyyy-mm-dd') " +
 				"and IDE_NRANI in (select ide_nrani from NRH_ANTICIPO_INTERES " +
 				"where IDE_NRANT in (select ide_nrant from NRH_ANTICIPO " +
 				"where IDE_GTEMP in (select emp.ide_gtemp from GEN_EMPLEADOS_DEPARTAMENTO_PAR edp " +
@@ -3298,7 +3300,7 @@ public class ServicioNomina {
 
 		utilitario.getConexion().ejecutarSql("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 				"where FECHA_VENCIMIENTO_NRAMO " +
-				"BETWEEN to_date ('"+fecha_ini_gepro+"','yy-mm-dd') and to_date ('"+fecha_fin_gepro+"','yy-mm-dd') " +
+				"BETWEEN to_date ('"+fecha_ini_gepro+"','yyyy-mm-dd') and to_date ('"+fecha_fin_gepro+"','yyyy-mm-dd') " +
 				"and IDE_NRANI in (select ide_nrani from NRH_ANTICIPO_INTERES " +
 				"where IDE_NRANT in (select ide_nrant from NRH_ANTICIPO " +
 				"where IDE_GTEMP in (select emp.ide_gtemp from GEN_EMPLEADOS_DEPARTAMENTO_PAR edp " +
@@ -3308,22 +3310,17 @@ public class ServicioNomina {
 				"WHERE DTN.IDE_NRDTN IN ("+ide_nrdtn+")) " +
 				"AND ACTIVO_NRANT =true ))");
 
-
-		//		//valida que no existan empleados con contrato inactivo en la nomina
-		//		serv_nomina.validarEmpleadosInvalidos(str_ide_nrrol, ide_nrdtn,fecha_fin_gepro);
-
+System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
+		"where FECHA_VENCIMIENTO_NRAMO " +
+		"BETWEEN to_date ('"+fecha_ini_gepro+"','yyyy-mm-dd') and to_date ('"+fecha_fin_gepro+"','yyyy-mm-dd') " +
+		"and IDE_NRANI in (select ide_nrani from NRH_ANTICIPO_INTERES " +
+		"where IDE_NRANT in (select ide_nrant from NRH_ANTICIPO " +
+		"where IDE_GTEMP in (select emp.ide_gtemp from GEN_EMPLEADOS_DEPARTAMENTO_PAR edp " +
+		"inner join NRH_DETALLE_TIPO_NOMINA dtn on EDP.IDE_GTTEM=DTN.IDE_GTTEM " +
+		"inner join GTH_EMPLEADO emp on EMP.ide_gtemp=EDP.IDE_GTEMP " +
+		"WHERE DTN.IDE_NRDTN IN ("+ide_nrdtn+")) " +
+		"AND ACTIVO_NRANT =true ))");
 		TablaGenerica tab_empleados_departamento=utilitario.consultar(getSqlEmpleadosNomina(str_ide_nrrol));
-
-		//		TablaGenerica tab_empleados_departamento;
-		//
-		//		String ide_nrtin=getDetalleTipoNomina(tab_rol.getValor("IDE_NRDTN")).getValor("IDE_NRTIN");
-		//		if (ide_nrtin.equalsIgnoreCase(utilitario.getVariable("p_nrh_tipo_nomina_liquidacion"))){
-		//			tab_empleados_departamento=utilitario.consultar(getSqlEmpleadosTipoNominaLiquidacion(ide_nrdtn,fecha_fin_gepro));			
-		//		}else{
-		//			tab_empleados_departamento=utilitario.consultar(getSqlEmpleadosTipoNomina(ide_nrdtn,fecha_fin_gepro));
-		//		}
-
-
 
 		String sql="select * from ( ";
 		sql+=tab_empleados_departamento.getSql();
@@ -3590,7 +3587,7 @@ public class ServicioNomina {
 					"where ANT.IDE_GEEDP in ( " +
 					"select IDE_GEEDP from GEN_EMPLEADOS_DEPARTAMENTO_PAR where IDE_GTEMP in ( " +
 					"select IDE_GTEMP from GEN_EMPLEADOS_DEPARTAMENTO_PAR where IDE_GEEDP="+ide_geedp+")) " +
-					"and ACTIVO_NRANT=1 " +
+					"and ACTIVO_NRANT=true " +
 					"");
 
 			for (int i = 0; i < tab_amor.getTotalFilas(); i++) {
@@ -4827,12 +4824,8 @@ System.out.println("sql getSqlEmpleadosRol..."+sql);
 	}
 
 	public TablaGenerica getDetalleTipoNomina(String ide_nrdtn){
-		System.out.println("SN getDetalleTipoNomina VARIABLE... ide_nrdtn...   "+ide_nrdtn);
-		
 		TablaGenerica tab_dtn=utilitario.consultar("SELECT * FROM NRH_DETALLE_TIPO_NOMINA WHERE IDE_NRDTN in ("+ide_nrdtn+") ");
-		System.out.println("Sql SN... tab_dtn..CCC.   "+tab_dtn.getSql());
 		if (tab_dtn.getTotalFilas()>0){			
-			System.out.println("retornoxxxx "+tab_dtn.getColumna("IDE_NRDTN"));
 			return tab_dtn;	
 			
 		}
