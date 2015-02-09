@@ -33,7 +33,7 @@ import framework.componentes.Tabla;
 import framework.componentes.Texto;
 /**
  *
- * @author Diego
+ * 
  */
 public class pre_spi extends Pantalla {
 
@@ -413,7 +413,7 @@ public class pre_spi extends Pantalla {
 				String str_rol=sel_tab_tipo_nomina.getSeleccionados();
 				if(str_rol!=null && !str_rol.isEmpty()){
 					sel_tab_tipo_nomina.cerrar();
-					TablaGenerica tab_importa=utilitario.consultar("select deta.VALOR_NRDRO,APELLIDO_PATERNO_GTEMP || ' ' || APELLIDO_MATERNO_GTEMP || ' ' || PRIMER_NOMBRE_GTEMP || ' ' || SEGUNDO_NOMBRE_GTEMP AS NOMBRES,CODIGO_GTTCB, DOCUMENTO_IDENTIDAD_GTEMP,NUMERO_CUENTA_GTCBE,CODIGO_BANCO_GEINS from NRH_DETALLE_ROL deta inner join NRH_DETALLE_RUBRO dtr on DETA.IDE_NRDER=DTR.IDE_NRDER inner join GEN_EMPLEADOS_DEPARTAMENTO_PAR par on deta.ide_geedp=par.ide_geedp inner join GTH_EMPLEADO emp on par.ide_gtemp=emp.ide_gtemp left join GTH_CUENTA_BANCARIA_EMPLEADO cuenta on cuenta.IDE_GTEMP=emp.IDE_GTEMP  and ACREDITACION_GTCBE=1 left join GEN_INSTITUCION insti on insti.IDE_GEINS=cuenta.IDE_GEINS  left join GTH_TIPO_CUENTA_BANCARIA tipoc on cuenta.IDE_GTTCB=tipoc.IDE_GTTCB where DETA.IDE_NRROL IN (SELECT IDE_NRROL FROM NRH_ROL WHERE IDE_GEPRO = "+str_seleccionados+" AND IDE_NRROL in("+str_rol+"))  and DTR.IDE_NRRUB="+utilitario.getVariable("p_nrh_rubro_valor_recibir")+" and deta.VALOR_NRDRO > 0 order by APELLIDO_PATERNO_GTEMP ");
+					TablaGenerica tab_importa=utilitario.consultar("select deta.VALOR_NRDRO,APELLIDO_PATERNO_GTEMP || ' ' || APELLIDO_MATERNO_GTEMP || ' ' || PRIMER_NOMBRE_GTEMP || ' ' || SEGUNDO_NOMBRE_GTEMP AS NOMBRES,CODIGO_GTTCB, DOCUMENTO_IDENTIDAD_GTEMP,NUMERO_CUENTA_GTCBE,CODIGO_BANCO_GEINS from NRH_DETALLE_ROL deta inner join NRH_DETALLE_RUBRO dtr on DETA.IDE_NRDER=DTR.IDE_NRDER inner join GEN_EMPLEADOS_DEPARTAMENTO_PAR par on deta.ide_geedp=par.ide_geedp inner join GTH_EMPLEADO emp on par.ide_gtemp=emp.ide_gtemp left join GTH_CUENTA_BANCARIA_EMPLEADO cuenta on cuenta.IDE_GTEMP=emp.IDE_GTEMP  and ACREDITACION_GTCBE=true left join GEN_INSTITUCION insti on insti.IDE_GEINS=cuenta.IDE_GEINS  left join GTH_TIPO_CUENTA_BANCARIA tipoc on cuenta.IDE_GTTCB=tipoc.IDE_GTTCB where DETA.IDE_NRROL IN (SELECT IDE_NRROL FROM NRH_ROL WHERE IDE_GEPRO = "+str_seleccionados+" AND IDE_NRROL in("+str_rol+"))  and DTR.IDE_NRRUB="+utilitario.getVariable("p_nrh_rubro_valor_recibir")+" and deta.VALOR_NRDRO > 0 order by APELLIDO_PATERNO_GTEMP ");
 					tab_tabla2.setDibujo(false);			
 					String p_sri_tipo_moneda_spi=utilitario.getVariable("p_sri_tipo_moneda_spi");
 					String p_sri_tipo_pago_spi=utilitario.getVariable("p_sri_tipo_pago_spi");
