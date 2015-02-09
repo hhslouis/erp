@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.ejb.EJB;
 
+import framework.componentes.Boton;
 import framework.componentes.Dialogo;
 import framework.componentes.PanelTabla;
 import framework.componentes.Radio;
@@ -38,6 +39,7 @@ public class pre_solicitud_compra extends Pantalla {
 		// TODO Auto-generated constructor stub
 		tab_solicitud_compra.setId("tab_solicitud_compra");
 		tab_solicitud_compra.setTabla("adq_solicitud_compra", "ide_adsoc", 1);
+		tab_solicitud_compra.getColumna("ide_coest").setCombo("cont_estado","ide_coest", "detalle_coest","");
 		tab_solicitud_compra.getColumna("ide_copag").setCombo("cont_parametros_general","ide_copag", "detalle_copag", "");
 		tab_solicitud_compra.getColumna("ide_copag").setAutoCompletar();
 		tab_solicitud_compra.getColumna("ide_copag").setLectura(true);
@@ -106,6 +108,37 @@ public class pre_solicitud_compra extends Pantalla {
 		set_proveedor.getBot_aceptar().setMetodo("aceptarCompra");
 		set_proveedor.setRadio();
 		agregarComponente(set_proveedor);
+		
+		Boton bot_cotizacion = new Boton();
+		bot_cotizacion.setValue("Agregar Cotizacion");
+		bot_cotizacion.setTitle("COTIZACION");
+		bot_cotizacion.setIcon("ui-icon-person");
+		bot_cotizacion.setMetodo("importarCotizacion");
+		bar_botones.agregarBoton(bot_cotizacion);
+		
+		Boton bot_certificacion = new Boton();
+		bot_certificacion.setValue("Agregar Certificaciòn Presupuestaria");
+		bot_certificacion.setTitle("CERTIFICACION PRESUPUESTARIA");
+		bot_certificacion.setIcon("ui-icon-person");
+		bot_certificacion.setMetodo("importarCertificacion");
+		bar_botones.agregarBoton(bot_certificacion);
+		
+		Boton bot_adjudicado = new Boton();
+		bot_adjudicado.setValue("Agregar Adjudicado");
+		bot_adjudicado.setTitle("ADJUDICADO");
+		bot_adjudicado.setIcon("ui-icon-person");
+		bot_adjudicado.setMetodo("importarAdjudicado");
+		bar_botones.agregarBoton(bot_adjudicado);
+		
+		Boton bot_solicitud = new Boton();
+		bot_solicitud.setValue("Agregar Solicitud");
+		bot_solicitud.setTitle("SOLICITUD PAGO");
+		bot_solicitud.setIcon("ui-icon-person");
+		bot_solicitud.setMetodo("importarSolicitud");
+		bar_botones.agregarBoton(bot_solicitud);
+		
+		
+		
 
 	}
 	
