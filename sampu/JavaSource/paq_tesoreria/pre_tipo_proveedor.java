@@ -10,7 +10,7 @@ public class pre_tipo_proveedor extends Pantalla {
 	
 	public pre_tipo_proveedor(){
 		tab_tipo_proveedor.setId("tab_tipo_proveedor");
-		tab_tipo_proveedor.setTabla("tes_tipo_proveedor", "tetpp", 1);
+		tab_tipo_proveedor.setTabla("tes_tipo_proveedor", "ide_tetpp", 1);
 		tab_tipo_proveedor.dibujar();
 		PanelTabla pat_tipo=new PanelTabla();
 		pat_tipo.setPanelTabla(tab_tipo_proveedor);
