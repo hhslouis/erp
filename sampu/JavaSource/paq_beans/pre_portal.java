@@ -16,7 +16,7 @@ import persistencia.Conexion;
 
 /**
  *
- * @author Diego
+ * 
  */
 @ManagedBean
 @SessionScoped
