@@ -191,7 +191,7 @@ public String servicioCatalogoCuentaAnio (String ide_geani){
 public String getInventario(String ide_geani,String carga,String material){
 	
 	String tab_inventario="SELECT ide_boinv,codigo_bomat,detalle_bomat, detalle_geani,ingreso_material_boinv,egreso_material_boinv,existencia_inicial_boinv,costo_anterior_boinv," +
-			"costo_actual_boinv,fecha_ingr_articulo_boinv,costo_inicial_boinv,activo_boinv,calculo_inicial_boinv,inicial_boinv " +
+			"costo_actual_boinv,fecha_ingr_articulo_boinv,costo_inicial_boinv,activo_boinv " +
 			" FROM bodt_inventario a, gen_anio b ,bodt_material c WHERE a.ide_geani=b.ide_geani " +
 			" AND a.ide_bomat = c.ide_bomat AND a.ide_geani IN ("+ide_geani+") ";
 			if (carga.equals("0")){
