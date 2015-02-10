@@ -26,7 +26,18 @@ public class pre_compras extends Pantalla{
 		tab_compras.getColumna("ide_coest").setCombo("cont_estado","ide_coest", "detalle_coest","");
 		tab_compras.getColumna("ide_copag").setCombo("cont_parametros_general","ide_copag", "detalle_copag", "");
 		tab_compras.getColumna("ide_geedp").setCombo(ser_nomina.servicioEmpleadoContrato("true,false"));
+		tab_compras.getColumna("gen_ide_geedp").setCombo(ser_nomina.servicioEmpleadoContrato("true,false"));
 		tab_compras.getColumna("ide_tepro").setCombo(ser_bodega.getProveedor("true,false"));
+		tab_compras.getColumna("fecha_proforma2_adsoc").setVisible(false);
+		tab_compras.getColumna("valor_proforma2_adsoc").setVisible(false);
+		tab_compras.getColumna("factura_proforma2_adsoc").setVisible(false);
+		tab_compras.getColumna("oferente2_adsoc").setVisible(false);
+		tab_compras.getColumna("fecha_proforma1_adsoc").setVisible(false);
+		tab_compras.getColumna("factura_proforma1_adsoc").setVisible(false);
+		tab_compras.getColumna("valor_proforma1_adsoc").setVisible(false);
+		tab_compras.getColumna("proforma_proveedor_adsoc").setVisible(false);
+		tab_compras.getColumna("fecha_proforma_proveedor_adsoc").setVisible(false);
+		tab_compras.getColumna("oferente1_adsoc").setVisible(false);
 		tab_compras.setTipoFormulario(true);
 		tab_compras.getGrid().setColumns(4);
 		tab_compras.dibujar();
