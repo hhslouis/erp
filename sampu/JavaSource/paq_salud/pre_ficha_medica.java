@@ -117,6 +117,14 @@ public class pre_ficha_medica extends Pantalla {
 		tab_ficha_medica.getColumna("IDE_SUCU").setLectura(true);
 		tab_ficha_medica.getColumna("IDE_GTEMP").setVisible(false);
 		tab_ficha_medica.getColumna("IDE_GEEDP").setVisible(false);
+		tab_ficha_medica.getColumna("apellidos_safim").setVisible(false);
+		tab_ficha_medica.getColumna("nombre_safim").setVisible(false);
+		tab_ficha_medica.getColumna("fecha_nacimiento_safim").setVisible(false);
+		tab_ficha_medica.getColumna("horas_auseincia_safim").setVisible(false);
+		tab_ficha_medica.getColumna("ide_coest").setVisible(false);
+		tab_ficha_medica.getColumna("ide_gtesc").setVisible(false);
+		tab_ficha_medica.getColumna("ide_saapp").setVisible(false);
+		tab_ficha_medica.getColumna("ide_gtgen").setVisible(false);
 
 		tab_ficha_medica.getColumna("PRESUNTIVO_SAFIM").setCheck();
 		tab_ficha_medica.getColumna("PRESUNTIVO_SAFIM").setValorDefecto("false");
