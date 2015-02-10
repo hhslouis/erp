@@ -255,10 +255,10 @@ public class pre_empleado extends Pantalla {
 
 		List lista = new ArrayList();
 		Object fila1[] = {
-				"0", "INACTIVO"
+				"false", "INACTIVO"
 		};
 		Object fila2[] = {
-				"1", "ACTIVO"
+				"true", "ACTIVO"
 		};
 		lista.add(fila1);
 		lista.add(fila2);
