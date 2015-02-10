@@ -62,7 +62,13 @@ public class pre_ingreso_material extends Pantalla{
 		tab_bodega.getColumna("ide_tepro").setAutoCompletar();
 		tab_bodega.getColumna("ide_tepro").setLectura(true);
 		tab_bodega.getColumna("ide_bomat").setCombo("select ide_bomat,codigo_bomat,detalle_bomat,iva_bomat from bodt_material order by detalle_bomat");
-		tab_bodega.getColumna("IDE_COEST").setCombo("cont_estado","ide_coest"," detalle_coest","");
+		tab_bodega.getColumna("ide_bomat").setAutoCompletar();
+		tab_bodega.getColumna("ide_bomat").setLectura(true);
+		tab_bodega.getColumna("ide_coest").setVisible(false);
+		tab_bodega.getColumna("existencia_anterior_bobod").setVisible(false);
+		tab_bodega.getColumna("saldo_bobod").setVisible(false);
+		tab_bodega.getColumna("ide_adsoc").setVisible(false);
+		tab_bodega.getColumna("ide_boinv").setVisible(false);
 		tab_bodega.getColumna("cantidad_ingreso_bobod").setMetodoChange("calcular");
 		tab_bodega.getColumna("valor_unitario_bobod").setMetodoChange("calcular");
 		tab_bodega.getColumna("valor_total_bobod").setEtiqueta();
@@ -121,7 +127,6 @@ public class pre_ingreso_material extends Pantalla{
 		bot_proveedor.setTitle("MATERIAL");
 		bot_proveedor.setIcon("ui-icon-person");
 		bot_proveedor.setMetodo("importarProveedor");
-		bar_botones.agregarBoton(bot_proveedor);
 
 		set_proveedor.setId("set_proveedor");
 		set_proveedor.setSeleccionTabla(ser_Bodega.getProveedor("true"),"");
@@ -129,7 +134,6 @@ public class pre_ingreso_material extends Pantalla{
 		set_proveedor.getTab_seleccion().getColumna("ruc_tepro").setFiltro(true);
 		set_proveedor.getBot_aceptar().setMetodo("aceptarProveedor");
 		set_proveedor.getTab_seleccion().ejecutarSql();
-		agregarComponente(set_proveedor);
 
 		bar_botones.agregarBoton(bot_material);
 		con_guardar.setId("con_guardar");
@@ -137,7 +141,7 @@ public class pre_ingreso_material extends Pantalla{
 
 		Boton bot_actualizarproveedor=new Boton();
 		bot_actualizarproveedor.setIcon("ui-icon-person");
-		bot_actualizarproveedor.setValue("Actualizar Proveedor");
+		bot_actualizarproveedor.setValue("Registrar Proveedor");
 		bot_actualizarproveedor.setMetodo("actualizarProveedor");
 		bar_botones.agregarBoton(bot_actualizarproveedor);	
 
@@ -173,45 +177,30 @@ public class pre_ingreso_material extends Pantalla{
 
 	}
 	public void aceptaInventario() {		
-		double stock=0;
-		System.out.println("imprimiendo la lsita de activos "+lis_activo.getValue());
-
 		if(lis_activo.getValue() == null){
 			utilitario.agregarMensajeInfo("Inventario / No-Inventario", "Debe Seleccionar una Opción");
 				return;
 		}
 		else {
 			if (lis_activo.getValue().equals("0")){
-				TablaGenerica datos_inventario=utilitario.consultar(ser_Bodega.getDatosInventario(tab_bodega.getValor("ide_bomat"), com_anio.getValue().toString()));
-		        double costo_actual=Double.parseDouble(datos_inventario.getValor("costo_actual_boinv"));
-		        stock=ser_Bodega.getResultadoStock(tab_bodega.getValor("ide_bomat"), com_anio.getValue().toString());
-				// Permite conocer el valor actual de mi stock
-		        double valor_stock_inventario =costo_actual*stock;
-		        //Cantidad actual ingresada a inventarios desde el formulario
-		        double cantidad_actual=Double.parseDouble(tab_bodega.getValor("cantidad_ingreso_bobod"));
-		        //Valor total actual ingresado para inventarios desde el formulario
-		        double valor_actual=Double.parseDouble(tab_bodega.getValor("valor_total_bobod"));
-		        // Permite suma stock existen mas el numero actual de ingreso de materiales;
-		        double total_nueva_existencia=stock+cantidad_actual;
-		        // Permite Sumar Valores para depues determinar mi costo vigente por producto
-		        double valor_nueva_existencia=valor_stock_inventario+valor_actual;
-		        // Determino el valor indivual nuevo del producto
-		        double valor_nuevo_individual=valor_nueva_existencia/total_nueva_existencia;
-		        
-		        System.out.println("nuevo valor "+valor_nuevo_individual);
-		        String sql_actualiza_inventarios="update bodt_inventario set ingreso_material_boinv=ingreso_material_boinv+"+cantidad_actual
-		        		+",costo_anterior_boinv=costo_actual_boinv, costo_actual_boinv="+valor_nuevo_individual+" where ide_bomat="+tab_bodega.getValor("ide_bomat")+" and ide_geani="+com_anio.getValue().toString()+";";
-		        System.out.println("sql actualiza inventarios "+sql_actualiza_inventarios);
-		        String resultado_upadte="";
-		        resultado_upadte=utilitario.getConexion().ejecutarSql(sql_actualiza_inventarios);
-		        if (resultado_upadte.isEmpty()) {
+				boolean resultado;
+				resultado =ser_Bodega.registraInventarioIngresos(tab_bodega.getValor("ide_bomat"), com_anio.getValue().toString(), tab_bodega.getValor("cantidad_ingreso_bobod"), tab_bodega.getValor("valor_total_bobod"));
+			    if (resultado) {
                     utilitario.agregarMensaje("Se guardo correctamente", "El inventario se registro satisfactoriamente.");
-                 }
+                    tab_bodega.guardar();
+                    dia_bodega.cerrar();
+			    }
+			    else {
+			    	utilitario.agregarMensaje("Error en el Registro", "El material guardadano no se registro en inventarios");
+			    	return;
+			    }
 		        
 			}
 			else {
-		    utilitario.agregarMensajeError("jjj", "no agerga inventario");		
+				tab_bodega.guardar(); 
+				dia_bodega.cerrar();
 			}
+			guardarPantalla();
 		}
 	}
 	public void actualizarMaterial(){
@@ -288,24 +277,11 @@ public class pre_ingreso_material extends Pantalla{
 		String str_proveedorActualizado=set_actualizaproveedor.getValorSeleccionado();
 		TablaGenerica tab_materialModificado = ser_Bodega.getTablaProveedor(str_proveedorActualizado);
 		tab_bodega.setValor("IDE_TEPRO", tab_materialModificado.getValor("IDE_TEPRO"));			
-		tab_bodega.modificar(tab_bodega.getFilaActual());
 		utilitario.addUpdate("tab_bodega");	
-
-		con_guardar.setMessage("Esta Seguro de Actualizar el Proveedor");
-		con_guardar.setTitle("CONFIRMACION ");
-		con_guardar.getBot_aceptar().setMetodo("guardarActualilzarProveedor");
-		con_guardar.dibujar();
-		utilitario.addUpdate("con_guardar");
-
-	}
-	public void guardarActualilzarProveedor(){
-
-		tab_bodega.guardar();
-		con_guardar.cerrar();
 		set_actualizaproveedor.cerrar();
-		guardarPantalla();
 
 	}
+	
 	public void importarProveedor(){
 
 		if(com_anio.getValue()==null){
@@ -401,7 +377,23 @@ public class pre_ingreso_material extends Pantalla{
 		// TODO Auto-generated method stub
 		if(tab_bodega.getValorSeleccionado().equals("-1")){
 			if(tab_bodega.getValor("ide_tepro")==null){
-				utilitario.agregarMensajeInfo("Requisito Ingreso", "Ingrese el proveedor");
+				utilitario.agregarMensajeInfo("Requisito Ingreso", "Ingrese el Proveedor");
+				return;
+			}
+			if(tab_bodega.getValor("ide_bomat")==null){
+				utilitario.agregarMensajeInfo("Requisito Ingreso", "Seleccione el Material de Bodega");
+				return;
+			}
+			if(tab_bodega.getValor("fecha_ingreso_bobod") ==null || tab_bodega.getValor("fecha_ingreso_bobod").isEmpty()){
+				utilitario.agregarMensajeInfo("Requisito Ingreso", "Ingrese la Fecha Ingreso del Material");
+				return;
+			}
+			if(tab_bodega.getValor("cantidad_ingreso_bobod") ==null || tab_bodega.getValor("cantidad_ingreso_bobod").isEmpty()){
+				utilitario.agregarMensajeInfo("Requisito Ingreso", "Ingrese la Cantidad");
+				return;
+			}
+			if(tab_bodega.getValor("valor_unitario_bobod") == null || tab_bodega.getValor("valor_unitario_bobod").isEmpty()){
+				utilitario.agregarMensajeInfo("Requisito Ingreso", "Ingrese el Valor Unitario");
 				return;
 			}
 			else{
