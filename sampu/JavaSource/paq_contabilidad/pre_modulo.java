@@ -1,10 +1,13 @@
 package paq_contabilidad;
 
+import javax.ejb.EJB;
+
 import framework.componentes.Arbol;
 import framework.componentes.Division;
 import framework.componentes.PanelTabla;
 import framework.componentes.Tabla;
 import framework.componentes.Tabulador;
+import paq_nomina.ejb.ServicioNomina;
 import paq_sistema.aplicacion.Pantalla;
 
 public class pre_modulo extends Pantalla{
@@ -12,14 +15,15 @@ public class pre_modulo extends Pantalla{
 	private Tabla tab_modulo=new Tabla();
 	private Tabla tab_modulo_estado=new Tabla();
 	private Tabla tab_persona_modulo=new Tabla();
+	private Tabla tab_adjudicador=new Tabla();
 	private Tabla tab_modulo_secuencial=new Tabla();
 	private Tabla tab_parametro=new Tabla();
 	private Arbol arb_modulo = new Arbol();
 	private Division div_modulo =new Division();
 	private Division div_division=new Division();
 	
-	
-	
+	@EJB
+	private ServicioNomina ser_nomina = (ServicioNomina ) utilitario.instanciarEJB(ServicioNomina.class);
 	
 	
 	
@@ -33,6 +37,7 @@ public class pre_modulo extends Pantalla{
 		tab_modulo.agregarRelacion(tab_persona_modulo);
 		tab_modulo.agregarRelacion(tab_modulo_secuencial);
 		tab_modulo.agregarRelacion(tab_parametro);
+		tab_modulo.agregarRelacion(tab_adjudicador);
 		tab_modulo.agregarArbol(arb_modulo);
 		tab_modulo.dibujar();
 		PanelTabla pat_modulo=new PanelTabla();
@@ -81,11 +86,23 @@ public class pre_modulo extends Pantalla{
 		PanelTabla pat_panel5=new PanelTabla();
 		pat_panel5.setPanelTabla(tab_parametro);
 		
+		/////modulo Adjudicador
+		tab_adjudicador.setId("tab_adjudicador");
+		tab_adjudicador.setIdCompleto("tab_tabulador:tab_adjudicador");
+		tab_adjudicador.setTabla("gen_modulo_adjudicador", "ide_gemoa", 6);
+		tab_adjudicador.getColumna("ide_geedp").setCombo(ser_nomina.servicioEmpleadoContrato("true,false"));
+		tab_adjudicador.dibujar();
+		PanelTabla pat_panel6 =new PanelTabla();
+		pat_panel6.setPanelTabla(tab_adjudicador);
+	
+		
+		
 		tab_Tabulador.agregarTab("ESTADO POR MODULOS", pat_panel2);
 		tab_Tabulador.agregarTab("PERSONA POR MODULOS", pat_panel3);
 		tab_Tabulador.agregarTab("MODULOS SECUENCIAL", pat_panel4);
 		tab_Tabulador.agregarTab("PARAMETRO MODULOS", pat_panel5);
-		
+		tab_Tabulador.agregarTab("MODULO ADJUDICADOR", pat_panel6);
+	
 	
 		
 		
@@ -131,6 +148,11 @@ public class pre_modulo extends Pantalla{
 				tab_parametro.insertar();
 				
 			}
+	
+	else if (tab_adjudicador.isFocus()) {
+		tab_adjudicador.insertar();
+		
+	}
 	}
 
 	@Override
@@ -140,7 +162,9 @@ public class pre_modulo extends Pantalla{
 			if (tab_modulo_estado.guardar()) {
 				if (tab_persona_modulo.guardar()) {
 					if (tab_modulo_secuencial.guardar()){
-						tab_parametro.guardar();
+						if(tab_parametro.guardar()){
+							tab_adjudicador.guardar();
+						}
 					}
 				}
 				
@@ -204,6 +228,14 @@ public class pre_modulo extends Pantalla{
 
 	public void setTab_parametro(Tabla tab_parametro) {
 		this.tab_parametro = tab_parametro;
+	}
+
+	public Tabla getTab_adjudicador() {
+		return tab_adjudicador;
+	}
+
+	public void setTab_adjudicador(Tabla tab_adjudicador) {
+		this.tab_adjudicador = tab_adjudicador;
 	}
 
 
