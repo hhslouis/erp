@@ -33,6 +33,9 @@ public class pre_suministro extends Pantalla{
 		//tab_suministro.setNumeroTabla(1);
 		tab_suministro.setTabla("cont_suministro", "ide_cosum",1);
 		tab_suministro.getColumna("ide_coseb").setVisible(false);
+		tab_suministro.getColumna("ide_colus").setCombo("cont_lugar_suministro", "ide_colus", "detalle_colus,direccion_colus,telefono_colus", "");
+		tab_suministro.setTipoFormulario(true);
+		tab_suministro.getGrid().setColumns(4);
 		tab_suministro.setCondicion("ide_coseb=-1");
 		tab_suministro.agregarRelacion(tab_servicio_suministrio);
 		tab_suministro.dibujar();
