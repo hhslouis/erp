@@ -284,10 +284,29 @@ public class pre_accion_personal extends Pantalla {
 		tab_partida_vigente.getColumna("IDE_GTEMP").setVisible(false);
 		tab_partida_vigente.getColumna("CONTROL_ASISTENCIA_GEEDP").setCheck();
 		tab_partida_vigente.getColumna("CONTROL_ASISTENCIA_GEEDP").setValorDefecto("false");
-		tab_partida_vigente.getColumna("LIQUIDACION_GEEDP").setCheck();
-		tab_partida_vigente.getColumna("LIQUIDACION_GEEDP").setValorDefecto("false");
-		tab_partida_vigente.getColumna("EJECUTO_LIQUIDACION_GEEDP").setCheck();
-		tab_partida_vigente.getColumna("EJECUTO_LIQUIDACION_GEEDP").setValorDefecto("false");
+		List listaliquidacion = new ArrayList();
+		Object fila3[] = {
+				"0", "SI"
+		};
+		Object fila4[] = {
+				"1", "NO"
+		};
+		listaliquidacion.add(fila3);
+		listaliquidacion.add(fila4);
+		
+		List listaejecutaliqui = new ArrayList();
+		Object fila5[] = {
+				"0", "SI"
+		};
+		Object fila6[] = {
+				"1", "NO"
+		};
+		listaejecutaliqui.add(fila5);
+		listaejecutaliqui.add(fila6);
+		tab_partida_vigente.getColumna("LIQUIDACION_GEEDP").setRadio(listaliquidacion, "0");
+		tab_partida_vigente.getColumna("LIQUIDACION_GEEDP").setRadioVertical(true);		
+		tab_partida_vigente.getColumna("EJECUTO_LIQUIDACION_GEEDP").setRadio(listaejecutaliqui, "0");
+		tab_partida_vigente.getColumna("EJECUTO_LIQUIDACION_GEEDP").setRadioVertical(true);
 		tab_partida_vigente.setCondicion("IDE_GTEMP=-1 AND ACTIVO_GEEDP=true");
 		tab_partida_vigente.setMostrarcampoSucursal(true);
 		tab_partida_vigente.setTipoFormulario(true);
@@ -416,15 +435,13 @@ public class pre_accion_personal extends Pantalla {
 		.setCheck();
 		tab_empleado_departamento.getColumna("IDE_GEPGC").setAutoCompletar();
 		tab_empleado_departamento.getColumna("IDE_GEPGC").setMetodoChange("cambioPartida");
-		tab_empleado_departamento.getColumna("IDE_GTEMP").setVisible(false);
-		tab_empleado_departamento.getColumna("LIQUIDACION_GEEDP").setLectura(true);
-		tab_empleado_departamento.getColumna("LIQUIDACION_GEEDP").setCheck();
+		tab_empleado_departamento.getColumna("IDE_GTEMP").setVisible(false);		
 		tab_empleado_departamento.getColumna("CONTROL_ASISTENCIA_GEEDP").setCheck();
-		tab_empleado_departamento.getColumna("CONTROL_ASISTENCIA_GEEDP").setValorDefecto("false");
-		tab_empleado_departamento.getColumna("LIQUIDACION_GEEDP").setCheck();
-		tab_empleado_departamento.getColumna("LIQUIDACION_GEEDP").setValorDefecto("false");
-		tab_empleado_departamento.getColumna("EJECUTO_LIQUIDACION_GEEDP").setCheck();
-		tab_empleado_departamento.getColumna("EJECUTO_LIQUIDACION_GEEDP").setValorDefecto("false");
+		tab_empleado_departamento.getColumna("CONTROL_ASISTENCIA_GEEDP").setValorDefecto("false");		
+		tab_partida_vigente.getColumna("LIQUIDACION_GEEDP").setRadio(listaliquidacion, "0");
+		tab_partida_vigente.getColumna("LIQUIDACION_GEEDP").setRadioVertical(true);		
+		tab_partida_vigente.getColumna("EJECUTO_LIQUIDACION_GEEDP").setRadio(listaejecutaliqui, "0");
+		tab_partida_vigente.getColumna("EJECUTO_LIQUIDACION_GEEDP").setRadioVertical(true);
 		tab_empleado_departamento.setMostrarcampoSucursal(true);
 		tab_empleado_departamento.setTipoFormulario(true);
 		tab_empleado_departamento.getGrid().setColumns(4);
@@ -1362,7 +1379,7 @@ public void cambiarPartida(){
 			
 			cargarTablaPartida(tab_deta_empleado_depar.getValor("IDE_GEAME"),false);
 			tab_empleado_departamento.setValor("FECHA_LIQUIDACION_GEEDP", utilitario.getFormatoFecha(utilitario.getFecha(utilitario.getFormatoFecha(cal_terminacion.getValue()))));
-			tab_empleado_departamento.setValor("LIQUIDACION_GEEDP", "true");
+			tab_empleado_departamento.setValor("LIQUIDACION_GEEDP", "1");
 			tab_empleado_departamento.setValor("ACTIVO_GEEDP","false");
 			tab_empleado_departamento.getColumna("LIQUIDACION_GEEDP").setLectura(true);
 			tab_empleado_departamento.setValor("IDE_GECAE","1");
