@@ -2,6 +2,7 @@ package paq_bodega;
 
 import javax.ejb.EJB;
 
+import paq_bodega.ejb.ServicioBodega;
 import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_gestion.ejb.ServicioGestion;
 import paq_nomina.ejb.ServicioNomina;
@@ -19,7 +20,8 @@ public class pre_egreso_material extends Pantalla {
 	private Tabla  tab_concepto_egreso=new Tabla();
 	private Tabla  tab_egreso=new Tabla();
 	private Combo com_anio=new Combo();
-	
+	private Etiqueta eti_total= new Etiqueta();
+
 	private SeleccionTabla set_inventario=new SeleccionTabla();
 
 	@EJB
@@ -28,6 +30,8 @@ public class pre_egreso_material extends Pantalla {
 	private ServicioGestion ser_gestion = (ServicioGestion) utilitario.instanciarEJB(ServicioGestion.class);
 	@EJB
 	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
+	@EJB
+	private ServicioBodega ser_Bodega = (ServicioBodega) utilitario.instanciarEJB(ServicioBodega.class);
 
 
 	public pre_egreso_material(){
@@ -40,13 +44,15 @@ public class pre_egreso_material extends Pantalla {
 		tab_concepto_egreso.setId("tab_concepto_egreso");
 		tab_concepto_egreso.setHeader("EGRESO DE MATERIALES");
 		tab_concepto_egreso.setTabla("bodt_concepto_egreso","ide_bocoe", 1);
-		tab_concepto_egreso.getColumna("ide_geani").setVisible(true);
+		tab_concepto_egreso.getColumna("ide_geani").setVisible(false);
+		tab_concepto_egreso.getColumna("ide_adsoc").setVisible(false);
 		tab_concepto_egreso.setCondicion("ide_geani = -1");
-		//tab_concepto_egreso.getColumna("IDE_BOBOD").setCombo("bodt_bodega","ide_bobod","descripcion_bobod","");
 		tab_concepto_egreso.getColumna("IDE_GETIP").setCombo("gen_tipo_persona","ide_getip","detalle_getip","");
 		tab_concepto_egreso.getColumna("IDE_GEARE").setCombo("gen_area","ide_geare", "detalle_geare", "");
 		tab_concepto_egreso.getColumna("IDE_BODES").setCombo("bodt_destino","ide_bodes","detalle_bodes", "");
 		tab_concepto_egreso.getColumna("IDE_GEEDP").setCombo(ser_nomina.servicioEmpleadoContrato("true"));
+		tab_concepto_egreso.getColumna("gen_ide_geedp").setCombo(ser_nomina.servicioEmpleadoContrato("true"));
+		tab_concepto_egreso.getColumna("gen_ide_geedp2").setCombo(ser_nomina.servicioEmpleadoContrato("true"));
 		tab_concepto_egreso.agregarRelacion(tab_egreso);
 		tab_concepto_egreso.setTipoFormulario(true);
 		tab_concepto_egreso.getGrid().setColumns(4);	
@@ -57,22 +63,21 @@ public class pre_egreso_material extends Pantalla {
 
 		tab_egreso.setId("tab_egreso");
 		tab_egreso.setHeader("DETALLE EGRESO DE MATERIALES");
-		tab_egreso.setTabla("bodt_egreso", "ide_boegr", 2);
-		tab_egreso.setCampoForanea("ide_bocoe");
-		//tab_egreso.getColumna("").setCombo("", campo_codigo, campo_nombre, condicion)
-		//tab_egreso.getColumna("ide_bomat").setCombo("select ide_bomat,codigo_bomat,detalle_bomat,iva_bomat from bodt_material order by detalle_bomat");
-		tab_egreso.setTipoFormulario(true);
-		tab_egreso.getGrid().setColumns(4);	
+		tab_egreso.setTabla("bodt_egreso", "ide_boegr", 2);		
+		tab_egreso.getColumna("ide_boinv").setCombo(ser_Bodega.getInventarioMaterial());
+		tab_egreso.getColumna("ide_boinv").setLectura(true);
 		tab_egreso.dibujar();
 		PanelTabla pat_egreso=new PanelTabla();
 		pat_egreso.setPanelTabla(tab_egreso);
+		
+
 
 		Division div_division=new Division();
 		div_division.dividir2(pat_concepto_egreso,pat_egreso, "50%", "h");
 		agregarComponente(div_division);
 
 		Boton bot_inventario = new Boton();
-		bot_inventario.setValue("Agregar Inventario");
+		bot_inventario.setValue("Buscar Inventario");
 		bot_inventario.setTitle("INVENTARIO");
 		bot_inventario.setIcon("ui-icon-person");
 		bot_inventario.setMetodo("importarInventario");
@@ -115,6 +120,8 @@ public class pre_egreso_material extends Pantalla {
 		if (str_seleccionado!=null){
 			tab_egreso.insertar();
 			tab_egreso.setValor("ide_boinv",str_seleccionado);
+			
+			
 		}
 		set_inventario.cerrar();
 		utilitario.addUpdate("tab_egreso");

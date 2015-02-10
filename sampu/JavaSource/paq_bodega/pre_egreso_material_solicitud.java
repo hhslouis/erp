@@ -27,7 +27,6 @@ private AutoCompletar aut_egresos= new AutoCompletar();
 		tab_concepto_egreso.getColumna("ide_getip").setCombo("gen_tipo_persona", "ide_getip", "detalle_getip", "");
 		tab_concepto_egreso.getColumna("ide_bodes").setCombo("bodt_destino", "ide_bodes", "detalle_bodes", "");
 		tab_concepto_egreso.getColumna("ide_geare").setCombo("gen_area", "ide_geare", "detalle_geare", "");
-		tab_concepto_egreso.getColumna("ide_bobod").setCombo("bodt_bodega", "ide_bobod ", "descripcion_bobod", "");
 		
 		
 		tab_concepto_egreso.dibujar();
