@@ -16,6 +16,7 @@ import framework.componentes.Division;
 import framework.componentes.Etiqueta;
 import framework.componentes.PanelTabla;
 import framework.componentes.Tabla;
+import framework.componentes.Tabulador;
 
 /**
  *
@@ -25,6 +26,8 @@ public class pre_certificado_externo extends Pantalla {
 
 	private Tabla tab_tabla1 = new Tabla();
 	private Tabla tab_tabla2 = new Tabla();
+	private Tabla tab_tabla3 = new Tabla();
+	
 	private AutoCompletar aut_empleado =new AutoCompletar();
 	@EJB
 	private ServicioGestion ser_gestion = (ServicioGestion) utilitario.instanciarEJB(ServicioGestion.class);
@@ -53,23 +56,51 @@ public class pre_certificado_externo extends Pantalla {
 		tab_tabla1.getColumna("ACTIVO_SACEE").setCheck();
 		tab_tabla1.getColumna("ACTIVO_SACEE").setValorDefecto("true");
 		tab_tabla1.agregarRelacion(tab_tabla2);
+		tab_tabla1.agregarRelacion(tab_tabla3);
+
 		tab_tabla1.dibujar();
 		PanelTabla pat_panel1 = new PanelTabla();
 		pat_panel1.setPanelTabla(tab_tabla1);
+		
+		Tabulador tab_Tabulador=new Tabulador();
+		tab_Tabulador.setId("tab_tabulador");
+		
+
+		/////tabala 2
 		tab_tabla2.setId("tab_tabla2");
+		tab_tabla2.setIdCompleto("tab_tabulador:tab_tabla2");
 		tab_tabla2.setTabla("SAO_DETALLE_CERT_EXTERNO","IDE_SADCE", 2);
-		tab_tabla1.setCondicion("IDE_SADCE=-1");
+		tab_tabla2.setCondicion("IDE_SADCE=-1");
 		tab_tabla2.getColumna("IDE_SACET").setCombo("SAO_CERTIFCADO_TIPO", "IDE_SACET","DETALLE_SACET", "");
 		tab_tabla2.getColumna("ARCHIVO_SADCE").setUpload("logos");
        	tab_tabla2.getColumna("ARCHIVO_SADCE").setImagen("128", "128");
 		tab_tabla2.getColumna("ACTIVO_SADCE").setCheck();
 		tab_tabla2.getColumna("ACTIVO_SADCE").setValorDefecto("true");
+		tab_tabla2.setTipoFormulario(true);
+		tab_tabla2.getGrid().setColumns(4);
 		tab_tabla2.dibujar();
 		PanelTabla pat_panel2 = new PanelTabla();
 		pat_panel2.setPanelTabla(tab_tabla2);
+		
+		
+		/////tabla3
+		tab_tabla3.setId("tab_tabla3");
+		tab_tabla3.setIdCompleto("tab_tabulador:tab_tabla3");
+		tab_tabla3.setTabla("sao_certificado_externo_sie10", "ide_saces", 3);
+		tab_tabla3.getColumna("ide_sacos").setCombo("sao_codigo_sie10", "ide_sacos", "detalle_sacos", "");
+		tab_tabla3.setCondicion("IDE_SACES=-1");
+		tab_tabla3.dibujar();
+		PanelTabla pat_panel3 = new PanelTabla();
+		pat_panel3.setPanelTabla(tab_tabla3);
+		
+		tab_Tabulador.agregarTab("DETALLE", pat_panel2);
+		tab_Tabulador.agregarTab("CERTIFICADO", pat_panel3);
+		
+	
+		
 		Division div_division = new Division();
 		div_division.setId("div_division");
-		div_division.dividir2(pat_panel1, pat_panel2, "50%", "H");
+		div_division.dividir2(pat_panel1,tab_Tabulador, "50%", "H");
 		agregarComponente(div_division);
 	}
 	String ide_geedp_activo="";
@@ -94,6 +125,10 @@ public class pre_certificado_externo extends Pantalla {
 			if(tab_tabla2.isFocus()){
 				tab_tabla2.insertar();
 			}
+			if(tab_tabla3.isFocus()){
+				tab_tabla3.insertar();
+			}
+			
 		}
 		else {
 			utilitario.agregarMensajeInfo("No se puede insertar", "Debe seleccionar el Empleado que solicita Certificado Externo");
@@ -105,6 +140,7 @@ public class pre_certificado_externo extends Pantalla {
 	public void guardar() {
 		if (tab_tabla1.guardar()) {
 			if (tab_tabla2.guardar()) {
+				tab_tabla3.guardar();
 				guardarPantalla();
 			}
 		}
@@ -113,6 +149,7 @@ public class pre_certificado_externo extends Pantalla {
 		aut_empleado.limpiar();
 		tab_tabla1.limpiar();
 		tab_tabla2.limpiar();
+		tab_tabla3.limpiar();
 		utilitario.addUpdate("aut_empleado,tab_tabla1,tab_tabla2");
 	}
 	@Override
@@ -143,6 +180,14 @@ public class pre_certificado_externo extends Pantalla {
 
 	public void setAut_empleado(AutoCompletar aut_empleado) {
 		this.aut_empleado = aut_empleado;
+	}
+
+	public Tabla getTab_tabla3() {
+		return tab_tabla3;
+	}
+
+	public void setTab_tabla3(Tabla tab_tabla3) {
+		this.tab_tabla3 = tab_tabla3;
 	}
 
 
