@@ -18,6 +18,7 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 
 import paq_anticipos.ejb.ServicioAnticipo;
+import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_gestion.ejb.ServicioEmpleado;
 import paq_gestion.ejb.ServicioGestion;
 import paq_nomina.ejb.ServicioNomina;
@@ -51,6 +52,8 @@ public class pre_ficha_medica extends Pantalla {
 	private Tabla tab_ficha_examenes=new Tabla();
 	private Tabla tab_ficha_motivo_consulta=new Tabla();
 	private Tabla tab_ficha_anamnesis=new Tabla();
+	private Tabla tab_codigo_sie=new Tabla();
+	
 
 	private AutoCompletar aut_empleado = new AutoCompletar();
 	private Confirmar con_guardar=new Confirmar();
@@ -58,6 +61,9 @@ public class pre_ficha_medica extends Pantalla {
 	private ServicioEmpleado ser_empleado=(ServicioEmpleado) utilitario.instanciarEJB(ServicioEmpleado.class);
 	@EJB
 	private ServicioNomina ser_nomina=(ServicioNomina) utilitario.instanciarEJB(ServicioNomina.class);
+	@EJB
+	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
+
 	private Reporte rep_reporte=new Reporte();
 	private SeleccionFormatoReporte sef_reporte=new SeleccionFormatoReporte();
 	private Map p_parametros=new HashMap();	
@@ -99,13 +105,13 @@ public class pre_ficha_medica extends Pantalla {
 		tab_ficha_medica.getColumna("IDE_SAESP").setCombo("SAO_ESPECIALIDAD", "IDE_SAESP", "DETALLE_SAESP", "");
 		tab_ficha_medica.getColumna("IDE_SATIC").setCombo("SAO_TIPO_CONSULTA", "IDE_SATIC", "DETALLE_SATIC", "");
 		tab_ficha_medica.getColumna("IDE_USUA").setCombo("SIS_USUARIO", "IDE_USUA", "NOM_USUA", "");
+		tab_ficha_medica.getColumna("ide_coest").setCombo(ser_contabilidad.getModuloEstados("true", "13"));
 		tab_ficha_medica.getColumna("IDE_USUA").setAutoCompletar();
 		tab_ficha_medica.getColumna("IDE_USUA").setLectura(true);
 		tab_ficha_medica.getColumna("IDE_USUA").setValorDefecto(utilitario.getVariable("ide_usua"));
 		tab_ficha_medica.getColumna("TALLA_SAFIM").setMascara("9.99");
 		tab_ficha_medica.getColumna("TALLA_SAFIM").setMetodoChange("calcularMasaCorporal");
 		tab_ficha_medica.getColumna("PESO_SAFIM").setMetodoChange("calcularMasaCorporal");
-		tab_ficha_medica.getColumna("PESO_SAFIM").setMascara("999.99");
 		tab_ficha_medica.getColumna("TEMPERATURA_SAFIM").setMascara("99");
 		tab_ficha_medica.getColumna("PULSO_SAFIM").setMascara("99");
 		tab_ficha_medica.getColumna("FRE_CARDIACA_SAFIM").setMascara("99");
@@ -120,11 +126,12 @@ public class pre_ficha_medica extends Pantalla {
 		tab_ficha_medica.getColumna("apellidos_safim").setVisible(false);
 		tab_ficha_medica.getColumna("nombre_safim").setVisible(false);
 		tab_ficha_medica.getColumna("fecha_nacimiento_safim").setVisible(false);
-		tab_ficha_medica.getColumna("horas_auseincia_safim").setVisible(false);
-		tab_ficha_medica.getColumna("ide_coest").setVisible(false);
 		tab_ficha_medica.getColumna("ide_gtesc").setVisible(false);
 		tab_ficha_medica.getColumna("ide_saapp").setVisible(false);
 		tab_ficha_medica.getColumna("ide_gtgen").setVisible(false);
+		tab_ficha_medica.getColumna("tipo_empleado_safim").setVisible(false);
+		tab_ficha_medica.getColumna("tipo_empleado_safim").setValorDefecto("0");
+		
 
 		tab_ficha_medica.getColumna("PRESUNTIVO_SAFIM").setCheck();
 		tab_ficha_medica.getColumna("PRESUNTIVO_SAFIM").setValorDefecto("false");
@@ -252,12 +259,26 @@ public class pre_ficha_medica extends Pantalla {
 
 		PanelTabla pat_panel6=new PanelTabla();
 		pat_panel6.setPanelTabla(tab_ficha_anamnesis);
+		
+	   //  RECETA ANAMNESIS (TABULADOR 6)
+
+			tab_codigo_sie.setId("tab_codigo_sie");
+			tab_codigo_sie.setIdCompleto("tab_tabulador:tab_codigo_sie");
+			tab_codigo_sie.setTabla("sao_ficha_sie10", "ide_safis", 7);
+			tab_codigo_sie.getColumna("ide_sacos").setCombo("sao_codigo_sie10", "ide_sacos", "detalle_sacos", "");
+
+			tab_codigo_sie.dibujar();
+
+			PanelTabla pat_panel7=new PanelTabla();
+			pat_panel7.setPanelTabla(tab_codigo_sie);
 
 		tab_tabulador.agregarTab("RECETA MEDICA", pat_panel2);
 		tab_tabulador.agregarTab("DIAGNOSTICO", pat_panel3);
 		tab_tabulador.agregarTab("EXAMENES", pat_panel4);
 		tab_tabulador.agregarTab("MOTIVO CONSULTA", pat_panel5);
 		tab_tabulador.agregarTab("ANAMNESIS", pat_panel6);
+		tab_tabulador.agregarTab("CODIGO SIE 10", pat_panel7);
+
 
 		//  DIVISION DE LA PANTALLA
 		Division div_division=new Division();
@@ -293,6 +314,8 @@ public class pre_ficha_medica extends Pantalla {
 		tab_ficha_examenes.limpiar();
 		tab_ficha_motivo_consulta.limpiar();
 		tab_ficha_anamnesis.limpiar();
+		tab_codigo_sie.limpiar();
+		
 		ide_geedp_activo="";
 		aut_empleado.limpiar();
 		aut_empleado.limpiar();
@@ -374,6 +397,9 @@ public class pre_ficha_medica extends Pantalla {
 				utilitario.agregarMensajeInfo("No se puede insertar", "Debe seleccionar el Empleado");
 			}			
 		}
+		else if (tab_codigo_sie.isFocus()){
+			tab_codigo_sie.insertar();
+		}
 	}
 
 	@Override
@@ -391,7 +417,9 @@ public class pre_ficha_medica extends Pantalla {
 												if (tab_ficha_motivo_consulta.guardar()) {
 													if(validarAnamnesis()){
 														if (tab_ficha_anamnesis.guardar()) {
+															if(tab_codigo_sie.guardar()){
 															guardarPantalla();
+															}
 														}	
 													}
 												}
@@ -876,6 +904,14 @@ public class pre_ficha_medica extends Pantalla {
 				utilitario.addUpdateTabla(tab_ficha_medica, "ANIO_EDAD_SAFIM,MES_EDAD_SAFIM", "");
 			}			
 		}
+	}
+
+	public Tabla getTab_codigo_sie() {
+		return tab_codigo_sie;
+	}
+
+	public void setTab_codigo_sie(Tabla tab_codigo_sie) {
+		this.tab_codigo_sie = tab_codigo_sie;
 	}
 	
 	
