@@ -80,6 +80,16 @@ public class ServicioBodega {
 		return tab_proveedor;
 		
 	}
+	/**
+	 * Metodo que permite obtener el inventario con su descripcion de material  
+	 * @return String SQL, codigo del inventario, nombre del material, codigo del material.
+	 */	
+	public String getInventarioMaterial (){
+		String tab_proveedor="select ide_boinv,codigo_bomat,detalle_bomat from bodt_inventario a, bodt_material b"
++" where a.ide_bomat = b.ide_bomat order by codigo_bomat";
+		return tab_proveedor;
+		
+	}
 
 public double getResultadoStock(String ide_bomat,String ide_geani){
 	double  stock;
@@ -93,4 +103,60 @@ public double getResultadoStock(String ide_bomat,String ide_geani){
 	return stock;
    
 }
+/**
+ * Metodo que permite registrar de forma automatica la cantidad de material ingresados al stock de inventarios  
+ * @param material recibe el codigo del material de bodega
+ * @param anio recibe el anio fiscal en el que esea ingresra al inventario el material. 
+ * @param cantidad_ingreso recibe  la cantidad de material  a ser ingresado a los inventarios. 
+ * @param valor_total recibe el valor total del material  a ser ingresado a los inventarios. 
+ * @return boolean True = si se registro con exito en el inventario False= si existio algun error al actualizar inventarios.
+ */
+public boolean registraInventarioIngresos(String material,String anio,String cantidad_ingreso,String valor_total){
+	boolean confirma=false;
+	double stock=0;
+	TablaGenerica datos_inventario=utilitario.consultar(getDatosInventario(material, anio));
+	double costo_actual=Double.parseDouble(datos_inventario.getValor("costo_actual_boinv"));
+    stock=getResultadoStock(material, anio);
+	// Permite conocer el valor actual de mi stock
+    double valor_stock_inventario =costo_actual*stock;
+    //Cantidad actual ingresada a inventarios desde el formulario
+    double cantidad_actual=Double.parseDouble(cantidad_ingreso);
+    //Valor total actual ingresado para inventarios desde el formulario
+    double valor_actual=Double.parseDouble(valor_total);
+    // Permite suma stock existen mas el numero actual de ingreso de materiales;
+    double total_nueva_existencia=stock+cantidad_actual;
+    // Permite Sumar Valores para depues determinar mi costo vigente por producto
+    double valor_nueva_existencia=valor_stock_inventario+valor_actual;
+    // Determino el valor indivual nuevo del producto
+    double valor_nuevo_individual=valor_nueva_existencia/total_nueva_existencia;
+
+    String sql_actualiza_inventarios="update bodt_inventario set ingreso_material_boinv=ingreso_material_boinv+"+cantidad_actual
+    		+",costo_anterior_boinv=costo_actual_boinv, costo_actual_boinv="+valor_nuevo_individual+" where ide_bomat="+material+" and ide_geani="+anio+";";
+
+    String resultado_upadte="";
+    resultado_upadte=utilitario.getConexion().ejecutarSql(sql_actualiza_inventarios);
+    if (resultado_upadte.isEmpty()) {
+    	confirma=true;
+     }
+	return confirma;
+}
+/**
+ * Metodo que permite registrar de forma automatica la cantidad de material egresado  
+ * @param material recibe el codigo del material de bodega
+ * @param cantidad_egreso recibe  la cantidad de material  a ser egresado a los inventarios. 
+ * @return boolean True = si se registro con exito en el inventario False= si existio algun error al actualizar inventarios.
+ */
+public boolean registraInventarioEgresos(String material,String cantidad_egreso){
+	boolean confirma=false;	
+	//Sql actualiza los egresos en inventarios
+    String sql_actualiza_inventarios="update bodt_inventario set egreso_material_boinv = egreso_material_boinv + "+cantidad_egreso+" where ide_boinv ="+material+";";
+
+    String resultado_upadte="";
+    resultado_upadte=utilitario.getConexion().ejecutarSql(sql_actualiza_inventarios);
+    if (resultado_upadte.isEmpty()) {
+    	confirma=true;
+     }
+	return confirma;
+}
+
 }
