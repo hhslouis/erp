@@ -432,9 +432,10 @@ public class pre_ficha_medica extends Pantalla {
 					}
 				}
 			}
-		}else{
-			utilitario.agregarMensajeInfo("No se puede guardar el Anticipo", "Debe seleccionar un Empleado");
 		}
+		//else{
+		//	utilitario.agregarMensajeInfo("No se puede guardar", "Debe seleccionar un Empleado");
+		//}
 	}
 
 	@Override
@@ -458,9 +459,10 @@ public class pre_ficha_medica extends Pantalla {
 //			else if(tab_ficha_anamnesis.isFocus()){
 //				tab_ficha_anamnesis.eliminar();
 //			}
-		}else{
-			utilitario.agregarMensajeInfo("No se puede guardar el Anticipo", "Debe seleccionar un Empleado");
 		}
+		//else{
+			//utilitario.agregarMensajeInfo("No se puede guardar el Anticipo", "Debe seleccionar un Empleado");
+		//}
 	}
 
 	public AutoCompletar getAut_empleado() {
