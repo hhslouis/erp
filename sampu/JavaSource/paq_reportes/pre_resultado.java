@@ -2,7 +2,7 @@ package paq_reportes;
 
 import org.apache.poi.hssf.record.formula.TblPtg;
 
-import com.sun.org.apache.bcel.internal.generic.TABLESWITCH;
+
 
 import paq_sistema.aplicacion.Pantalla;
 import framework.componentes.PanelTabla;
