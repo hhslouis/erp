@@ -64,7 +64,6 @@ public class pre_contratacion extends Pantalla{
 		tab_poa.getColumna("ide_prcla").setCombo(ser_presupuesto.getCatalogoPresupuestario());
 		//tab_poa.getColumna("ide_prcla").setAutoCompletar();
 		tab_poa.getColumna("ide_prcla").setAncho(50);
-		tab_poa.getColumna("ide_prsua").setCombo("pre_sub_actividad","ide_prsua","codigo_prsua,detalle_prsua","");
 		tab_poa.getColumna("ide_prfup").setCombo(ser_presupuesto.getFuncionPrograma());
 		tab_poa.getColumna("ide_geuna").setCombo("gen_unidad_administrativa","ide_geuna","detalle_geuna","");
 
