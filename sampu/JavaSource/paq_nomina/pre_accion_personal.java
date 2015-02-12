@@ -1326,10 +1326,10 @@ public void cambiarPartida(){
 			return ;
 
 		}	
-		if (utilitario.isFechaMenor(utilitario.getFecha(utilitario.getFormatoFecha(cal_fecha_ingreso_vac.getValue())), utilitario.getFecha(str_fecha_ingreso_asvac))){
-			utilitario.agregarMensajeInfo("La fecha de ingreso de periodo no puede ser menor que la fecha de ingreso ", str_fecha_ingreso_asvac);
-			return ;
-		}
+		//if (utilitario.isFechaMenor(utilitario.getFecha(utilitario.getFormatoFecha(cal_fecha_ingreso_vac.getValue())), utilitario.getFecha(str_fecha_ingreso_asvac))){
+		//	utilitario.agregarMensajeInfo("La fecha de ingreso de periodo no puede ser menor que la fecha de ingreso ", str_fecha_ingreso_asvac);
+		//	return ;
+		//}
 		
 
 		ser_asistencia.crearPeriodoVacacion(aut_empleado.getValor(), utilitario.getFormatoFecha(cal_fecha_ingreso_vac.getValue()));
@@ -1481,22 +1481,22 @@ public void cambiarPartida(){
 			return;
 		}
 
-		if (tab_deta_empleado_depar.getValor("FECHA_INGRESO_GEDED")==null || tab_deta_empleado_depar.getValor("FECHA_INGRESO_GEDED").isEmpty()){
-			utilitario.agregarMensajeInfo("No se puede guardar", "La fecha de ingreso de la accion no puede ser nula o vacia");
-			return;
-		}
+		//if (tab_deta_empleado_depar.getValor("FECHA_INGRESO_GEDED")==null || tab_deta_empleado_depar.getValor("FECHA_INGRESO_GEDED").isEmpty()){
+		//	utilitario.agregarMensajeInfo("No se puede guardar", "La fecha de ingreso de la accion no puede ser nula o vacia");
+		//	return;
+	//	}
 		
-		if (tab_deta_empleado_depar.getTotalFilas()>1){
-		String ide_geedp_activo=utilitario.consultar("select * from GEN_EMPLEADOS_DEPARTAMENTO_PAR where ide_geded in ( select ide_geded from GEN_DETALLE_EMPLEADO_DEPARTAME where IDE_GTEMP="+aut_empleado.getValor()+" and ACTIVO_GEDED=TRUE )").getValor("ide_geedp");
-		String fecha_accion=tab_deta_empleado_depar.getValor("FECHA_INGRESO_GEDED");
+	//	if (tab_deta_empleado_depar.getTotalFilas()>1){
+	//	String ide_geedp_activo=utilitario.consultar("select * from GEN_EMPLEADOS_DEPARTAMENTO_PAR where ide_geded in ( select ide_geded from GEN_DETALLE_EMPLEADO_DEPARTAME where IDE_GTEMP="+aut_empleado.getValor()+" and ACTIVO_GEDED=TRUE )").getValor("ide_geedp");
+	//	String fecha_accion=tab_deta_empleado_depar.getValor("FECHA_INGRESO_GEDED");
 		
-		String str_valida_accion=ser_nomina.validarAccionPersonalPermitida(ide_geedp_activo,fecha_accion);
-		System.out.println("str_valida "+str_valida_accion);
-		if (str_valida_accion.startsWith("No")){
-			utilitario.agregarNotificacionInfo("No se puede guardar", str_valida_accion);
-			return;
-		}
-		}
+	//	String str_valida_accion=ser_nomina.validarAccionPersonalPermitida(ide_geedp_activo,fecha_accion);
+	//	System.out.println("str_valida "+str_valida_accion);
+	//	if (str_valida_accion.startsWith("No")){
+	//		utilitario.agregarNotificacionInfo("No se puede guardar", str_valida_accion);
+	//		return;
+		//}
+	//	}
 		
 		
 		if (tab_deta_empleado_depar.getTotalFilas()>1){
@@ -1504,17 +1504,17 @@ public void cambiarPartida(){
 			TablaGenerica tab_fecha=utilitario.consultar("select ide_gtemp,max (FECHA_INGRESO_GEDED) as fecha_ingreso_accion " +
 					"from GEN_DETALLE_EMPLEADO_DEPARTAME where ide_gtemp="+aut_empleado.getValor()+" group by ide_gtemp");
 
-		if(tab_fecha.getTotalFilas()>0){
-			if(tab_fecha.getValor("fecha_ingreso_accion")!=null && !tab_fecha.getValor("fecha_ingreso_accion").isEmpty() ){
-				if(tab_deta_empleado_depar.getValor("FECHA_INGRESO_GEDED")!=null && !tab_deta_empleado_depar.getValor("FECHA_INGRESO_GEDED").isEmpty()){
-					if(utilitario.isFechaMayor(utilitario.getFecha(tab_fecha.getValor("fecha_ingreso_accion")), utilitario.getFecha(tab_deta_empleado_depar.getValor("FECHA_INGRESO_GEDED")))){
-						utilitario.agregarNotificacionInfo("No se puede Guardar", "La fecha de ingreso de accion no puede ser menor que la ultima fecha de ingreso de accion "+tab_fecha.getValor("fecha_ingreso_accion"));
-						return;
-					}	
-				}
-			}
+		//if(tab_fecha.getTotalFilas()>0){
+		//	if(tab_fecha.getValor("fecha_ingreso_accion")!=null && !tab_fecha.getValor("fecha_ingreso_accion").isEmpty() ){
+		//		if(tab_deta_empleado_depar.getValor("FECHA_INGRESO_GEDED")!=null && !tab_deta_empleado_depar.getValor("FECHA_INGRESO_GEDED").isEmpty()){
+			//		if(utilitario.isFechaMayor(utilitario.getFecha(tab_fecha.getValor("fecha_ingreso_accion")), utilitario.getFecha(tab_deta_empleado_depar.getValor("FECHA_INGRESO_GEDED")))){
+			//			utilitario.agregarNotificacionInfo("No se puede Guardar", "La fecha de ingreso de accion no puede ser menor que la ultima fecha de ingreso de accion "+tab_fecha.getValor("fecha_ingreso_accion"));
+			//			return;
+			//		}	
+			//	}
+		//	}
 		}
-		}
+		//}
 
 		
 		
