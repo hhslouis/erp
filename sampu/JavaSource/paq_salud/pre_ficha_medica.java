@@ -169,7 +169,8 @@ public class pre_ficha_medica extends Pantalla {
 		tab_ficha_medica.agregarRelacion(tab_ficha_diagnostico);
 		tab_ficha_medica.agregarRelacion(tab_ficha_examenes);
 		tab_ficha_medica.agregarRelacion(tab_ficha_motivo_consulta);
-		tab_ficha_medica.agregarRelacion(tab_ficha_anamnesis);		
+		tab_ficha_medica.agregarRelacion(tab_ficha_anamnesis);	
+		tab_ficha_medica.agregarRelacion(tab_codigo_sie);
 		tab_ficha_medica.setCondicion("IDE_GTEMP=-1");		
 		tab_ficha_medica.dibujar();
 
