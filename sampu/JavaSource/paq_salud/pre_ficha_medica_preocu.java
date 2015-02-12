@@ -95,6 +95,7 @@ public class pre_ficha_medica_preocu extends Pantalla {
 		tab_ficha_medica.getColumna("IDE_SAESP").setCombo("SAO_ESPECIALIDAD", "IDE_SAESP", "DETALLE_SAESP", "");
 		tab_ficha_medica.getColumna("IDE_SATIC").setCombo("SAO_TIPO_CONSULTA", "IDE_SATIC", "DETALLE_SATIC", "");
 		tab_ficha_medica.getColumna("IDE_USUA").setCombo("SIS_USUARIO", "IDE_USUA", "NOM_USUA", "");
+		tab_ficha_medica.getColumna("ide_saapp").setCombo("sao_actitud_preocupacional", "ide_saapp", "detalle_saapp", "");
 		tab_ficha_medica.getColumna("ide_coest").setCombo(ser_contabilidad.getModuloEstados("true", "13"));
 		tab_ficha_medica.getColumna("IDE_USUA").setAutoCompletar();
 		tab_ficha_medica.getColumna("IDE_USUA").setLectura(true);
@@ -114,7 +115,7 @@ public class pre_ficha_medica_preocu extends Pantalla {
 		tab_ficha_medica.getColumna("IDE_GTEMP").setVisible(false);
 		tab_ficha_medica.getColumna("IDE_GEEDP").setVisible(false);		
 		tab_ficha_medica.getColumna("ide_gtesc").setCombo("gth_estado_civil", "ide_gtesc", "detalle_gtesc", "");
-		tab_ficha_medica.getColumna("ide_saapp").setVisible(false);
+		tab_ficha_medica.getColumna("ide_saapp").setVisible(true);
 		tab_ficha_medica.getColumna("ide_gtgen").setCombo("gth_genero", "ide_gtgen", "detalle_gtgen", "");
 		tab_ficha_medica.getColumna("tipo_empleado_safim").setVisible(false);
 		tab_ficha_medica.getColumna("tipo_empleado_safim").setValorDefecto("1");
