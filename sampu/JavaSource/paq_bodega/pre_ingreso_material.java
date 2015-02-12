@@ -17,6 +17,8 @@ import framework.componentes.Etiqueta;
 import framework.componentes.ListaSeleccion;
 import framework.componentes.PanelTabla;
 import framework.componentes.Radio;
+import framework.componentes.Reporte;
+import framework.componentes.SeleccionFormatoReporte;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import paq_bodega.ejb.ServicioBodega;
@@ -41,7 +43,10 @@ public class pre_ingreso_material extends Pantalla{
 	double dou_cantidad_ingreso_bobod=0;
 	double dou_valor_unitario_bobod=0;
 	double dou_valor_total_bobod=0;
-
+	private Map p_parametros = new HashMap();
+	private Reporte rep_reporte = new Reporte();
+	private SeleccionFormatoReporte self_reporte = new SeleccionFormatoReporte();
+	private Map map_parametros = new HashMap();
 	@EJB
 	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
 	@EJB
@@ -49,6 +54,13 @@ public class pre_ingreso_material extends Pantalla{
 
 
 	public pre_ingreso_material (){
+		rep_reporte.setId("rep_reporte"); //id
+		rep_reporte.getBot_aceptar().setMetodo("aceptarReporte");//ejecuta el metodo al aceptar reporte
+		agregarComponente(rep_reporte);//agrega el componente a la pantalla
+		bar_botones.agregarReporte();//aparece el boton de reportes en la barra de botones
+		self_reporte.setId("self_reporte"); //id
+		agregarComponente(self_reporte);
+		
 		com_anio.setCombo(ser_contabilidad.getAnioDetalle("true,false","true,false"));
 		com_anio.setMetodo("seleccionaElAnio");
 		bar_botones.agregarComponente(new Etiqueta("Seleccione El Año:"));
@@ -351,7 +363,27 @@ public class pre_ingreso_material extends Pantalla{
 		calcular();
 	}
 
-
+	//reporte
+	   public void abrirListaReportes() {
+	   	// TODO Auto-generated method stub
+	   	rep_reporte.dibujar();
+	   }
+	   public void aceptarReporte(){
+	   	if(rep_reporte.getReporteSelecionado().equals("Registro de Ingresos"));{
+	   		if (rep_reporte.isVisible()){
+	   			p_parametros=new HashMap();		
+	   			rep_reporte.cerrar();	
+	   			p_parametros.put("Titulo","Registro de Ingresos");
+	   			p_parametros.put("ide_usua",Integer.parseInt("7"));
+	   			p_parametros.put("ide_empr",Integer.parseInt("0"));
+	   			p_parametros.put("ide_sucu",Integer.parseInt("1"));
+	   		//p_parametros.put("pide_fafac",Integer.parseInt(tab_cont_viajeros.getValor("ide_fanoc")));
+	   		self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
+	   		self_reporte.dibujar();
+	   		
+	   	}
+	   }
+	   }
 
 	@Override
 	public void insertar() {
@@ -476,6 +508,30 @@ public class pre_ingreso_material extends Pantalla{
 	}
 	public void setSet_actualizaproveedor(SeleccionTabla set_actualizaproveedor) {
 		this.set_actualizaproveedor = set_actualizaproveedor;
+	}
+	public Map getP_parametros() {
+		return p_parametros;
+	}
+	public void setP_parametros(Map p_parametros) {
+		this.p_parametros = p_parametros;
+	}
+	public Reporte getRep_reporte() {
+		return rep_reporte;
+	}
+	public void setRep_reporte(Reporte rep_reporte) {
+		this.rep_reporte = rep_reporte;
+	}
+	public SeleccionFormatoReporte getSelf_reporte() {
+		return self_reporte;
+	}
+	public void setSelf_reporte(SeleccionFormatoReporte self_reporte) {
+		this.self_reporte = self_reporte;
+	}
+	public Map getMap_parametros() {
+		return map_parametros;
+	}
+	public void setMap_parametros(Map map_parametros) {
+		this.map_parametros = map_parametros;
 	}
 
 
