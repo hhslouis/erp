@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_bodega" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cbfb7850-956e-4064-9de4-ccb25f015144">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="ide_sucu" class="java.lang.Integer"/>
+	<parameter name="ide_empr" class="java.lang.Integer"/>
+	<parameter name="ide_usua" class="java.lang.Integer"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="titulo" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select ide_boinv,fecha_ingr_articulo_boinv,ingreso_material_boinv,egreso_material_boinv,existencia_inicial_boinv,
+costo_actual_boinv,costo_inicial_boinv,codigo_bomat,detalle_bomat from bodt_inventario a ,bodt_material b
+where a.ide_bomat=b.ide_bomat]]>
+	</queryString>
+	<field name="ide_boinv" class="java.lang.Long"/>
+	<field name="fecha_ingr_articulo_boinv" class="java.sql.Date">
+		<fieldDescription><![CDATA[fecha_ingr_articulo_boinv]]></fieldDescription>
+	</field>
+	<field name="ingreso_material_boinv" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[ingreso_material_boinv]]></fieldDescription>
+	</field>
+	<field name="egreso_material_boinv" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[egreso_material_boinv]]></fieldDescription>
+	</field>
+	<field name="existencia_inicial_boinv" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[existencia_inicial_boinv]]></fieldDescription>
+	</field>
+	<field name="costo_actual_boinv" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[costo_actual_boinv]]></fieldDescription>
+	</field>
+	<field name="costo_inicial_boinv" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[costo_inicial_boinv]]></fieldDescription>
+	</field>
+	<field name="codigo_bomat" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el codigo del material.]]></fieldDescription>
+	</field>
+	<field name="detalle_bomat" class="java.lang.String">
+		<fieldDescription><![CDATA[Este campo define el nombre del material de acuerdo al grupo de material al cual pertenece.]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="78" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="9e113b2e-f1ec-4eb5-aad0-f23ee0e7c1c8" x="0" y="0" width="572" height="78"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="ide_sucu">
+					<subreportParameterExpression><![CDATA[$P{ide_sucu}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="ide_empr">
+					<subreportParameterExpression><![CDATA[$P{ide_empr}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="ide_usua">
+					<subreportParameterExpression><![CDATA[$P{ide_usua}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="titulo">
+					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="32" splitType="Stretch">
+			<rectangle radius="10">
+				<reportElement uuid="7f9e7f79-ee58-4a59-a193-4fb8afd1aadc" mode="Transparent" x="0" y="3" width="572" height="26"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="e07df68e-87e9-4b8d-8ebf-e3d5db67aa1f" x="5" y="7" width="50" height="20"/>
+				<textElement/>
+				<text><![CDATA[Codigo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a7e90993-bbbd-4fc7-94aa-85e0ec90b773" x="57" y="7" width="108" height="20"/>
+				<textElement/>
+				<text><![CDATA[Detalle]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1d823119-eb39-489d-8f01-2979a0a2b7d8" x="170" y="8" width="69" height="20"/>
+				<textElement/>
+				<text><![CDATA[Fecha.Ingreso]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e1a698c2-c161-4c52-b7a4-49143f3b4438" x="244" y="8" width="63" height="20"/>
+				<textElement/>
+				<text><![CDATA[Existencia.I]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bef75cc3-0e69-4df3-8a32-12e7fe4b6b3f" x="312" y="7" width="41" height="20"/>
+				<textElement/>
+				<text><![CDATA[Costo.I]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="efaee74e-9e16-4d4c-8503-1b96177600b6" x="363" y="7" width="56" height="20"/>
+				<textElement/>
+				<text><![CDATA[Costo.Act]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="7a130ae8-1e14-4591-9818-0c15e98d0f7d" x="55" y="3" width="1" height="25"/>
+			</line>
+			<line>
+				<reportElement uuid="d9fd22a6-7771-468c-ab0f-6c0c69e50418" x="167" y="4" width="1" height="25"/>
+			</line>
+			<line>
+				<reportElement uuid="2a3e99ea-5940-47fa-80a3-5851e970fa9b" x="240" y="3" width="1" height="26"/>
+			</line>
+			<line>
+				<reportElement uuid="54e96a3f-0b2a-42ef-b8a0-f5348b36601d" x="308" y="3" width="1" height="26"/>
+			</line>
+			<line>
+				<reportElement uuid="c6546069-06ed-4156-a6cb-ffae568f272a" x="357" y="3" width="1" height="26"/>
+			</line>
+			<line>
+				<reportElement uuid="fd86131c-d7f1-4ded-87b0-b7650e099588" x="421" y="3" width="1" height="26"/>
+			</line>
+			<staticText>
+				<reportElement uuid="b89e107c-8b4f-4ec9-85b4-6818d4f830ba" x="428" y="7" width="62" height="20"/>
+				<textElement/>
+				<text><![CDATA[Ingreso.Mat]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="05d78cf9-2478-4629-9ee1-649324afdb40" x="494" y="3" width="1" height="25"/>
+			</line>
+			<staticText>
+				<reportElement uuid="22644ba2-26e7-4638-a2bc-737812dc46a5" x="501" y="7" width="54" height="20"/>
+				<textElement/>
+				<text><![CDATA[Egreso.Mat]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement uuid="f714f6ad-173b-443e-94f7-f6212747c276" x="5" y="10" width="52" height="20"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codigo_bomat}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="63b15d71-3c70-4c28-89ea-b758ddc40a00" x="57" y="10" width="110" height="20"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{detalle_bomat}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="6e9662d3-dc2a-4473-860e-1a0425b18733" x="168" y="10" width="69" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_ingr_articulo_boinv}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="5f4e881a-5f1d-427a-a1ab-11540ca3596b" x="244" y="10" width="61" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{existencia_inicial_boinv}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="46380942-6934-48b4-9690-daf2a838f480" x="312" y="10" width="45" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{costo_inicial_boinv}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="78cd6ca0-116d-4389-8e77-9e013a9f6aa3" x="379" y="10" width="40" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{costo_actual_boinv}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="29d66678-0f12-45fe-b48e-843cfee28e61" x="444" y="10" width="40" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ingreso_material_boinv}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="1117f65d-d323-4bec-a1de-9ce9d99d6105" x="510" y="10" width="45" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{egreso_material_boinv}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement uuid="3761f4c5-b127-4555-87ec-7b0a01eea83a" mode="Transparent" x="0" y="10" width="572" height="20"/>
+			</rectangle>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="52" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
