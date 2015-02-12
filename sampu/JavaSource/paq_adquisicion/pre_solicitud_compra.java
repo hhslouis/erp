@@ -48,6 +48,8 @@ public class pre_solicitud_compra extends Pantalla {
 		tab_solicitud_compra.getColumna("ide_geedp").setLectura(true);
 		tab_solicitud_compra.getColumna("ide_tepro").setCombo(ser_bodega.getProveedor("true,false"));
 		tab_solicitud_compra.getColumna("ide_tepro").setAutoCompletar();
+		tab_solicitud_compra.getColumna("ide_tepro").setCombo(ser_bodega.getProveedor("true,false"));
+		tab_solicitud_compra.getColumna("ide_tepro").setAutoCompletar();
 		tab_solicitud_compra.getColumna("ide_tepro").setLectura(true);
 		tab_solicitud_compra.setTipoFormulario(true);
 		tab_solicitud_compra.getGrid().setColumns(4);
