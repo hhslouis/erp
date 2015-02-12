@@ -131,8 +131,6 @@ public class pre_ficha_medica extends Pantalla {
 		tab_ficha_medica.getColumna("ide_gtgen").setVisible(false);
 		tab_ficha_medica.getColumna("tipo_empleado_safim").setVisible(false);
 		tab_ficha_medica.getColumna("tipo_empleado_safim").setValorDefecto("0");
-		
-
 		tab_ficha_medica.getColumna("PRESUNTIVO_SAFIM").setCheck();
 		tab_ficha_medica.getColumna("PRESUNTIVO_SAFIM").setValorDefecto("false");
 		tab_ficha_medica.getColumna("DEFINITIVO_SAFIM").setCheck();
@@ -432,10 +430,9 @@ public class pre_ficha_medica extends Pantalla {
 					}
 				}
 			}
+		}else{
+			utilitario.agregarMensajeInfo("No se puede guardar el Anticipo", "Debe seleccionar un Empleado");
 		}
-		//else{
-		//	utilitario.agregarMensajeInfo("No se puede guardar", "Debe seleccionar un Empleado");
-		//}
 	}
 
 	@Override
@@ -459,10 +456,9 @@ public class pre_ficha_medica extends Pantalla {
 //			else if(tab_ficha_anamnesis.isFocus()){
 //				tab_ficha_anamnesis.eliminar();
 //			}
+		}else{
+			utilitario.agregarMensajeInfo("No se puede guardar el Anticipo", "Debe seleccionar un Empleado");
 		}
-		//else{
-			//utilitario.agregarMensajeInfo("No se puede guardar el Anticipo", "Debe seleccionar un Empleado");
-		//}
 	}
 
 	public AutoCompletar getAut_empleado() {
