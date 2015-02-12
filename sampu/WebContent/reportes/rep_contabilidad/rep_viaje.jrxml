@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_viaje" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="636b3afe-55e5-44bc-9058-2458a3d0c15a">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="408"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="61"/>
 	<parameter name="ide_sucu" class="java.lang.Integer"/>
 	<parameter name="ide_empr" class="java.lang.Integer"/>
 	<parameter name="ide_usua" class="java.lang.Integer"/>
@@ -236,7 +236,7 @@ SELECT EPAR.IDE_GEEDP, EMP.IDE_GTEMP, EMP.DOCUMENTO_IDENTIDAD_GTEMP,
 				</textElement>
 				<text><![CDATA[Descripcion del transporte:]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement uuid="0a4f99c4-9659-408e-8f90-31b7a6340475" x="103" y="35" width="182" height="10"/>
 				<textElement>
 					<font size="7"/>
@@ -250,7 +250,7 @@ SELECT EPAR.IDE_GEEDP, EMP.IDE_GTEMP, EMP.DOCUMENTO_IDENTIDAD_GTEMP,
 				</textElement>
 				<text><![CDATA[Asunto de Viaje:]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement uuid="9294fc33-45cb-4b67-b216-680706f0a171" x="343" y="35" width="263" height="10"/>
 				<textElement>
 					<font size="7"/>
@@ -264,7 +264,7 @@ SELECT EPAR.IDE_GEEDP, EMP.IDE_GTEMP, EMP.DOCUMENTO_IDENTIDAD_GTEMP,
 				</textElement>
 				<text><![CDATA[Empleado:]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement uuid="534778cc-381f-4ef4-9d7f-7b5fdcd91171" x="40" y="24" width="435" height="11"/>
 				<textElement>
 					<font size="7"/>
@@ -278,7 +278,7 @@ SELECT EPAR.IDE_GEEDP, EMP.IDE_GTEMP, EMP.DOCUMENTO_IDENTIDAD_GTEMP,
 				</textElement>
 				<text><![CDATA[Etado del Viaje:]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement uuid="d727f7ee-8e06-4c6b-a746-53df04aedb3b" x="60" y="45" width="202" height="10"/>
 				<textElement>
 					<font size="7"/>
@@ -292,7 +292,7 @@ SELECT EPAR.IDE_GEEDP, EMP.IDE_GTEMP, EMP.DOCUMENTO_IDENTIDAD_GTEMP,
 				</textElement>
 				<text><![CDATA[Lugar de Partida:]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement uuid="54168c20-28b4-4dcb-a84a-5e6e7850c3f4" x="65" y="55" width="159" height="10"/>
 				<textElement>
 					<font size="7"/>
@@ -306,7 +306,7 @@ SELECT EPAR.IDE_GEEDP, EMP.IDE_GTEMP, EMP.DOCUMENTO_IDENTIDAD_GTEMP,
 				</textElement>
 				<text><![CDATA[Lugar de Destino:]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement uuid="e6541ff1-4354-410e-b94c-65ca2673026e" x="295" y="55" width="311" height="10"/>
 				<textElement>
 					<font size="7"/>
@@ -320,7 +320,7 @@ SELECT EPAR.IDE_GEEDP, EMP.IDE_GTEMP, EMP.DOCUMENTO_IDENTIDAD_GTEMP,
 				</textElement>
 				<text><![CDATA[Detalle de viaje:]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement uuid="4b31a113-3eda-4c90-a495-497dc8e9c8fe" x="79" y="74" width="527" height="25"/>
 				<textElement>
 					<font size="7"/>
@@ -334,7 +334,7 @@ SELECT EPAR.IDE_GEEDP, EMP.IDE_GTEMP, EMP.DOCUMENTO_IDENTIDAD_GTEMP,
 				</textElement>
 				<text><![CDATA[Fecha de Partida:]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement uuid="d0097515-9fcc-40e5-b30e-64e45de124ed" x="64" y="64" width="100" height="10"/>
 				<textElement>
 					<font size="7"/>
@@ -348,7 +348,7 @@ SELECT EPAR.IDE_GEEDP, EMP.IDE_GTEMP, EMP.DOCUMENTO_IDENTIDAD_GTEMP,
 				</textElement>
 				<text><![CDATA[Fecha de Retorno:]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement uuid="d57636ec-3286-40e3-bd71-cbe36efef5c9" x="231" y="64" width="100" height="10"/>
 				<textElement>
 					<font size="7"/>
@@ -362,7 +362,7 @@ SELECT EPAR.IDE_GEEDP, EMP.IDE_GTEMP, EMP.DOCUMENTO_IDENTIDAD_GTEMP,
 				</textElement>
 				<text><![CDATA[Número de memo de la autorizacion del viaje:]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement uuid="067707c4-ff65-44e4-934c-8b2674b4e8b8" x="178" y="99" width="344" height="11"/>
 				<textElement>
 					<font size="7"/>
@@ -376,7 +376,7 @@ SELECT EPAR.IDE_GEEDP, EMP.IDE_GTEMP, EMP.DOCUMENTO_IDENTIDAD_GTEMP,
 				</textElement>
 				<text><![CDATA[Memorando del pago realizado por el viaje:]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement uuid="f346feb3-fd1f-45a2-a991-98edba47a62b" x="178" y="110" width="344" height="10"/>
 				<textElement>
 					<font size="7"/>
@@ -390,7 +390,7 @@ SELECT EPAR.IDE_GEEDP, EMP.IDE_GTEMP, EMP.DOCUMENTO_IDENTIDAD_GTEMP,
 				</textElement>
 				<text><![CDATA[Fecha de vencimiento de pago del viaje:]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement uuid="18c87eb2-98c3-4355-a630-5b7a31bb1907" x="178" y="120" width="100" height="11"/>
 				<textElement>
 					<font size="7"/>
@@ -404,7 +404,7 @@ SELECT EPAR.IDE_GEEDP, EMP.IDE_GTEMP, EMP.DOCUMENTO_IDENTIDAD_GTEMP,
 				</textElement>
 				<text><![CDATA[Fecha del pago del viaje:]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement uuid="a1bca73c-a0f2-4e5a-ab77-7e4bac8da4b3" x="456" y="120" width="100" height="11"/>
 				<textElement>
 					<font size="7"/>
@@ -418,7 +418,7 @@ SELECT EPAR.IDE_GEEDP, EMP.IDE_GTEMP, EMP.DOCUMENTO_IDENTIDAD_GTEMP,
 				</textElement>
 				<text><![CDATA[Razon de anulacion del viaje, en caso de cancelar:]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement uuid="245f74bc-c970-4cdf-9dae-14ce3a3315bf" x="188" y="131" width="434" height="11"/>
 				<textElement>
 					<font size="7"/>
@@ -432,7 +432,7 @@ SELECT EPAR.IDE_GEEDP, EMP.IDE_GTEMP, EMP.DOCUMENTO_IDENTIDAD_GTEMP,
 				</textElement>
 				<text><![CDATA[Fecha de anulación del viaje en caso de cancelarlo:]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement uuid="affca899-6318-4dba-b45a-3316ef898847" x="188" y="142" width="100" height="12"/>
 				<textElement>
 					<font size="7"/>
@@ -446,7 +446,7 @@ SELECT EPAR.IDE_GEEDP, EMP.IDE_GTEMP, EMP.DOCUMENTO_IDENTIDAD_GTEMP,
 				</textElement>
 				<text><![CDATA[Define el estado del registro si se encuentra activo o inactivo.]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement uuid="86d89241-e0c2-4cc9-8094-494960a66b53" x="377" y="14" width="100" height="10"/>
 				<textElement>
 					<font size="7"/>
@@ -461,7 +461,7 @@ $F{activo_cotiv}==true?"Activo":"Inactivo"]]></textFieldExpression>
 				</textElement>
 				<text><![CDATA[Define el nombre de la clase del viaje, ejemplo: Clase Turista, Primera Clase:]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement uuid="b22b3e3c-263b-457f-80c6-6a8307e83790" x="285" y="154" width="168" height="11"/>
 				<textElement>
 					<font size="7"/>
@@ -475,7 +475,7 @@ $F{activo_cotiv}==true?"Activo":"Inactivo"]]></textFieldExpression>
 				</textElement>
 				<text><![CDATA[Define el numero de memo de autorizacion del viajero, en caso de ser un solo memo general corresponde al mismo memo de autorizacion de la tabla cont_tiket_viajero:]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement uuid="1f78eafd-2071-4f8b-9ee5-77f3756e6676" x="622" y="165" width="100" height="11"/>
 				<textElement>
 					<font size="7"/>
@@ -489,7 +489,7 @@ $F{activo_cotiv}==true?"Activo":"Inactivo"]]></textFieldExpression>
 				</textElement>
 				<text><![CDATA[Boleto de viaje, como respaldo:]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement uuid="fd8a3893-ce9b-495b-aa3f-f3d1a12ba8c5" x="118" y="176" width="187" height="38"/>
 				<textElement>
 					<font size="7"/>
@@ -503,7 +503,7 @@ $F{activo_cotiv}==true?"Activo":"Inactivo"]]></textFieldExpression>
 				</textElement>
 				<text><![CDATA[Estado del registro si se encuentra activo o inactivo:]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement uuid="1a9933f7-180e-4298-9cd6-e28bff20d4be" x="195" y="214" width="100" height="11"/>
 				<textElement>
 					<font size="7"/>
