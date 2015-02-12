@@ -1,4 +1,7 @@
 package paq_contabilidad;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.ejb.EJB;
 
 import framework.aplicacion.TablaGenerica;
@@ -11,6 +14,8 @@ import framework.componentes.Etiqueta;
 import framework.componentes.Grid;
 import framework.componentes.Imagen;
 import framework.componentes.PanelTabla;
+import framework.componentes.Reporte;
+import framework.componentes.SeleccionFormatoReporte;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import framework.componentes.Texto;
@@ -25,7 +30,10 @@ public class pre_viaje extends Pantalla{
 	
 	private Tabla tab_tiket_viaje = new Tabla();
 	private Tabla tab_cont_viajeros = new Tabla();	
-	
+	private Map p_parametros = new HashMap();
+	private Reporte rep_reporte = new Reporte();
+	private SeleccionFormatoReporte self_reporte = new SeleccionFormatoReporte();
+	private Map map_parametros = new HashMap();
 	private Combo com_tipo_transporte=new Combo();
 	private SeleccionTabla set_empleado =new SeleccionTabla();
 	private SeleccionTabla set_actualizaViajero = new SeleccionTabla();
@@ -39,6 +47,12 @@ public class pre_viaje extends Pantalla{
 	private ServicioNomina ser_nomina = (ServicioNomina) utilitario.instanciarEJB(ServicioNomina.class);
 	
 	public pre_viaje() {
+		rep_reporte.setId("rep_reporte"); //id
+		rep_reporte.getBot_aceptar().setMetodo("aceptarReporte");//ejecuta el metodo al aceptar reporte
+		agregarComponente(rep_reporte);//agrega el componente a la pantalla
+		bar_botones.agregarReporte();//aparece el boton de reportes en la barra de botones
+		self_reporte.setId("self_reporte"); //id
+		agregarComponente(self_reporte);
 		//crear combo transorte
 		com_tipo_transporte.setCombo("select ide_cotit,detalle_cotit from cont_tipo_transporte where activo_cotit = true" +
 				" order by detalle_cotit");
@@ -225,7 +239,28 @@ public void aceptarEmpleado(){
 		utilitario.agregarMensajeInfo("Debe seleccionar almenos un registro", "");
 	}
 }
-	
+	//reporte
+public void abrirListaReportes() {
+	// TODO Auto-generated method stub
+	rep_reporte.dibujar();
+}
+public void aceptarReporte(){
+	if(rep_reporte.getReporteSelecionado().equals("Tikets de Viaje"));{
+		if (rep_reporte.isVisible()){
+			p_parametros=new HashMap();		
+			rep_reporte.cerrar();	
+			p_parametros.put("Titulo","Tikets de Viaje");
+			p_parametros.put("ide_usua",Integer.parseInt("7"));
+			p_parametros.put("ide_empr",Integer.parseInt("0"));
+			p_parametros.put("ide_sucu",Integer.parseInt("1"));
+		//p_parametros.put("pide_fafac",Integer.parseInt(tab_cont_viajeros.getValor("ide_fanoc")));
+		self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
+		self_reporte.dibujar();
+		
+	}
+}
+}
+
 	
 	@Override
 	public void insertar() {
@@ -348,6 +383,38 @@ public void aceptarEmpleado(){
 
 	public void setCon_guardar(Confirmar con_guardar) {
 		this.con_guardar = con_guardar;
+	}
+
+	public Map getP_parametros() {
+		return p_parametros;
+	}
+
+	public void setP_parametros(Map p_parametros) {
+		this.p_parametros = p_parametros;
+	}
+
+	public Reporte getRep_reporte() {
+		return rep_reporte;
+	}
+
+	public void setRep_reporte(Reporte rep_reporte) {
+		this.rep_reporte = rep_reporte;
+	}
+
+	public SeleccionFormatoReporte getSelf_reporte() {
+		return self_reporte;
+	}
+
+	public void setSelf_reporte(SeleccionFormatoReporte self_reporte) {
+		this.self_reporte = self_reporte;
+	}
+
+	public Map getMap_parametros() {
+		return map_parametros;
+	}
+
+	public void setMap_parametros(Map map_parametros) {
+		this.map_parametros = map_parametros;
 	}
 
 
