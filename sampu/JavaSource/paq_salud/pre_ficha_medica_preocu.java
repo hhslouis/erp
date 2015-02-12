@@ -118,8 +118,6 @@ public class pre_ficha_medica_preocu extends Pantalla {
 		tab_ficha_medica.getColumna("ide_gtgen").setCombo("gth_genero", "ide_gtgen", "detalle_gtgen", "");
 		tab_ficha_medica.getColumna("tipo_empleado_safim").setVisible(false);
 		tab_ficha_medica.getColumna("tipo_empleado_safim").setValorDefecto("1");
-		
-
 		tab_ficha_medica.getColumna("PRESUNTIVO_SAFIM").setCheck();
 		tab_ficha_medica.getColumna("PRESUNTIVO_SAFIM").setValorDefecto("false");
 		tab_ficha_medica.getColumna("DEFINITIVO_SAFIM").setCheck();
@@ -130,7 +128,6 @@ public class pre_ficha_medica_preocu extends Pantalla {
 		tab_ficha_medica.getColumna("PRIMERA_SAFIM").setValorDefecto("false");
 		tab_ficha_medica.getColumna("SUBSECUENTE_SAFIM").setCheck();
 		tab_ficha_medica.getColumna("SUBSECUENTE_SAFIM").setValorDefecto("false");
-
 		tab_ficha_medica.getColumna("IDE_SATIC").setRequerida(true);
 		tab_ficha_medica.getColumna("PESO_SAFIM").setRequerida(true);
 		tab_ficha_medica.getColumna("TEMPERATURA_SAFIM").setRequerida(true);
@@ -143,18 +140,21 @@ public class pre_ficha_medica_preocu extends Pantalla {
 		tab_ficha_medica.getColumna("IMC_SAFIM").setRequerida(true);
 		tab_ficha_medica.getColumna("SUPERFICIE_CORPORAL_SAFIM").setRequerida(true);
 		tab_ficha_medica.getColumna("FECHA_CONSULTA_SAFIM").setRequerida(true);		
+		tab_ficha_medica.getColumna("nombre_safim").setRequerida(true);		
+		tab_ficha_medica.getColumna("fecha_nacimiento_safim").setRequerida(true);		
+		tab_ficha_medica.getColumna("apellidos_safim").setRequerida(true);		
 		tab_ficha_medica.getColumna("OBSERVACIONES_SAFIM").setRequerida(true);
 		tab_ficha_medica.getColumna("fecha_desde_cert_safim").setMetodoChange("calcularDias");
 		tab_ficha_medica.getColumna("fecha_hasta_cert_safim").setMetodoChange("calcularDias");
 		tab_ficha_medica.getColumna("nro_dia_cert_safim").setEtiqueta();
-
 		tab_ficha_medica.getGrid().setColumns(6);
 		tab_ficha_medica.setTipoFormulario(true);	
 		tab_ficha_medica.agregarRelacion(tab_receta_medica);
 		tab_ficha_medica.agregarRelacion(tab_ficha_diagnostico);
 		tab_ficha_medica.agregarRelacion(tab_ficha_examenes);
 		tab_ficha_medica.agregarRelacion(tab_ficha_motivo_consulta);
-		tab_ficha_medica.agregarRelacion(tab_ficha_anamnesis);		
+		tab_ficha_medica.agregarRelacion(tab_ficha_anamnesis);	
+		tab_ficha_medica.agregarRelacion(tab_codigo_sie);
 		tab_ficha_medica.setCondicion("IDE_GTEMP=-1");		
 		tab_ficha_medica.dibujar();
 
@@ -249,6 +249,7 @@ public class pre_ficha_medica_preocu extends Pantalla {
 			tab_codigo_sie.setIdCompleto("tab_tabulador:tab_codigo_sie");
 			tab_codigo_sie.setTabla("sao_ficha_sie10", "ide_safis", 7);
 			tab_codigo_sie.getColumna("ide_sacos").setCombo("sao_codigo_sie10", "ide_sacos", "detalle_sacos", "");
+			tab_codigo_sie.getColumna("ACTIVO_SAFIS").setValorDefecto("true");
 
 			tab_codigo_sie.dibujar();
 
@@ -260,7 +261,7 @@ public class pre_ficha_medica_preocu extends Pantalla {
 		tab_tabulador.agregarTab("EXAMENES", pat_panel4);
 		tab_tabulador.agregarTab("MOTIVO CONSULTA", pat_panel5);
 		tab_tabulador.agregarTab("ANAMNESIS", pat_panel6);
-		tab_tabulador.agregarTab("CODIGO SIE 10", pat_panel7);
+		tab_tabulador.agregarTab("FICHA SIE 10", pat_panel7);
 
 
 		//  DIVISION DE LA PANTALLA
@@ -269,12 +270,12 @@ public class pre_ficha_medica_preocu extends Pantalla {
 		agregarComponente(div_division);
 
 		// confirmacion para guardar datos
-		con_guardar.setId("con_guardar");
-		agregarComponente(con_guardar);
+		//con_guardar.setId("con_guardar");
+	//	agregarComponente(con_guardar);
 
 	}
 
-	String ide_geedp_activo="";
+	/*String ide_geedp_activo="";
 	public void filtrarAnticiposEmpleado(SelectEvent evt){
 		aut_empleado.onSelect(evt);
 		ide_geedp_activo=ser_gestion.getIdeContratoActivo(aut_empleado.getValor());
@@ -290,7 +291,7 @@ public class pre_ficha_medica_preocu extends Pantalla {
 	/**
 	 * limpia toda la pantalla incluyendo el autocompletar
 	 */
-	public void limpiar() {
+	/*public void limpiar() {
 		tab_ficha_medica.limpiar();
 		tab_receta_medica.limpiar();
 		tab_ficha_diagnostico.limpiar();
@@ -299,18 +300,21 @@ public class pre_ficha_medica_preocu extends Pantalla {
 		tab_ficha_anamnesis.limpiar();
 		tab_codigo_sie.limpiar();
 		
-		ide_geedp_activo="";
+	/*	ide_geedp_activo="";
 		aut_empleado.limpiar();
 		aut_empleado.limpiar();
 		utilitario.addUpdate("aut_empleado");// limpia y refresca el autocompletar
-	}
+	}*/
 
 
 
 	@Override
 	public void insertar() {
+		utilitario.getTablaisFocus().insertar();
+
+	}
 		// TODO Auto-generated method stub
-		if (tab_ficha_medica.isFocus()){
+		/*if (tab_ficha_medica.isFocus()){
 			
 				
 					tab_ficha_medica.insertar();
@@ -375,12 +379,12 @@ public class pre_ficha_medica_preocu extends Pantalla {
 		else if (tab_codigo_sie.isFocus()){
 			tab_codigo_sie.insertar();
 		}
-	}
+	}*/
 
 	@Override
 	public void guardar() {		
-		if (aut_empleado.getValor()!=null){
-			if(validarFichaMedica()){
+		//if (aut_empleado.getValor()!=null){
+		//	if(validarFichaMedica()){
 				if (tab_ficha_medica.guardar()){	
 					if(validarRecetaMedica()){
 						if(tab_receta_medica.guardar()){					
@@ -407,14 +411,15 @@ public class pre_ficha_medica_preocu extends Pantalla {
 					}
 				}
 			}
-		}else{
-			utilitario.agregarMensajeInfo("No se puede guardar el Anticipo", "Debe seleccionar un Empleado");
-		}
-	}
+		//}
+		//else{
+		//	utilitario.agregarMensajeInfo("No se puede guardar el Anticipo", "Debe seleccionar un Empleado");
+		//}
+	//}
 
 	@Override
 	public void eliminar() {
-		if (aut_empleado.getValor()!=null){
+		//if (aut_empleado.getValor()!=null){
 			utilitario.getTablaisFocus().eliminar();
 //			if (tab_ficha_medica.isFocus()){	
 //				tab_ficha_medica.eliminar();							
@@ -433,10 +438,11 @@ public class pre_ficha_medica_preocu extends Pantalla {
 //			else if(tab_ficha_anamnesis.isFocus()){
 //				tab_ficha_anamnesis.eliminar();
 //			}
-		}else{
-			utilitario.agregarMensajeInfo("No se puede guardar el Anticipo", "Debe seleccionar un Empleado");
 		}
-	}
+		//else{
+		//	utilitario.agregarMensajeInfo("No se puede guardar el Anticipo", "Debe seleccionar un Empleado");
+		//}
+	
 
 	public AutoCompletar getAut_empleado() {
 		return aut_empleado;
@@ -756,7 +762,7 @@ public class pre_ficha_medica_preocu extends Pantalla {
 		return true;		
 	}
 
-	public void edad(){
+/*	public void edad(){
 		int a=Integer.parseInt((tab_ficha_medica.getColumna("ANIO_EDAD_SAFIM").toString()));
 		int  b=	utilitario.getAnio(utilitario.getFechaActual());
 		int anios_totales=a-b;
@@ -764,7 +770,7 @@ public class pre_ficha_medica_preocu extends Pantalla {
 		int  mes_actual=utilitario.getMes(utilitario.getFechaActual());
 		int meses_totales=mes-mes_actual;
 		
-	}
+	}*/
 	
 	public void calcularDias(DateSelectEvent evt){
 		tab_ficha_medica.modificar(evt);
@@ -776,7 +782,7 @@ public class pre_ficha_medica_preocu extends Pantalla {
 			utilitario.agregarMensajeInfo("No se puede guardar", "La fecha hasta no puede ser menor que la fecha desde");
 			return ;
 		}
-		if(aut_empleado.getValor()!=null){
+		//if(aut_empleado.getValor()!=null){
 			try {
 				int nro_dias=0;
 				if (utilitario.isFechaMenor(utilitario.getFecha(tab_ficha_medica.getValor("fecha_hasta_cert_safim")), utilitario.getFecha(tab_ficha_medica.getValor("fecha_desde_cert_safim")))){
@@ -789,29 +795,31 @@ public class pre_ficha_medica_preocu extends Pantalla {
 			} catch (Exception e) {
 				utilitario.agregarMensajeInfo("No se puede calcular el numero de dias", "La fecha hasta no puede ser menor que la fecha desde");
 			}					
-		}else{
-			utilitario.agregarMensajeInfo("No se puede calcular los dias de vacación", "Ingrese un Empleado");
-		}	
-	}
+		}
+	//else{
+			//utilitario.agregarMensajeInfo("No se puede calcular los dias de vacación", "");
+		//}	
+//	}
 
-//	public void calcularDiasVacacion(SelectEvent evt){
-//		tab_ficha_medica.modificar(evt);
-//		if(aut_empleado.getValor()!=null){				
-//			if (utilitario.isFechaMenor(utilitario.getFecha(tab_ficha_medica.getValor("fecha_hasta_cert_safim")), utilitario.getFecha(tab_ficha_medica.getValor("fecha_desde_cert_safim")))){
-//				utilitario.agregarMensajeInfo("No se puede calcular el numero de dias", "La fecha hasta no puede ser menor que la fecha desde");		
-//			}else{				
-//				int nro_dias=0;		
-//				nro_dias=utilitario.getDiferenciasDeFechas(utilitario.getFecha(tab_ficha_medica.getValor("fecha_desde_cert_safim")), utilitario.getFecha(tab_ficha_medica.getValor("fecha_hasta_cert_safim")));
-//				tab_ficha_medica.setValor(tab_ficha_medica.getFilaActual(),"nro_dia_cert_safim",(nro_dias+1)+"");
-//				utilitario.addUpdateTabla(tab_ficha_medica, "nro_dia_cert_safim", "");
-//				System.out.println("numero de dias: "+(nro_dias+1));
-//			}					
-//		}else{
-//			utilitario.agregarMensajeInfo("No se puede calcular los dias de vacación", "Ingrese un Empleado");
-//		}	
-//	}	
+public void calcularDiasVacacion(SelectEvent evt){
+	tab_ficha_medica.modificar(evt);
+		//if(aut_empleado.getValor()!=null){				
+			if (utilitario.isFechaMenor(utilitario.getFecha(tab_ficha_medica.getValor("fecha_hasta_cert_safim")), utilitario.getFecha(tab_ficha_medica.getValor("fecha_desde_cert_safim")))){
+				utilitario.agregarMensajeInfo("No se puede calcular el numero de dias", "La fecha hasta no puede ser menor que la fecha desde");		
+			}else{				
+				int nro_dias=0;		
+				nro_dias=utilitario.getDiferenciasDeFechas(utilitario.getFecha(tab_ficha_medica.getValor("fecha_desde_cert_safim")), utilitario.getFecha(tab_ficha_medica.getValor("fecha_hasta_cert_safim")));
+				tab_ficha_medica.setValor(tab_ficha_medica.getFilaActual(),"nro_dia_cert_safim",(nro_dias+1)+"");
+				utilitario.addUpdateTabla(tab_ficha_medica, "nro_dia_cert_safim", "");
+				System.out.println("numero de dias: "+(nro_dias+1));
+			}					
+		}
+/*else{
+			utilitario.agregarMensajeInfo("No se puede calcular los dias de vacación", "");
+		}	
+	}	*/
 	
-	public String getEdadCompleta(String fecha_nac,boolean en_letras){
+	/*public String getEdadCompleta(String fecha_nac,boolean en_letras){
 		if (fecha_nac!=null && !fecha_nac.isEmpty()) {
 			String fecha_actual=utilitario.getFechaActual();
 			int mes_nac=0,dia_nac=0,anio_nac=0;
@@ -879,7 +887,7 @@ public class pre_ficha_medica_preocu extends Pantalla {
 				utilitario.addUpdateTabla(tab_ficha_medica, "ANIO_EDAD_SAFIM,MES_EDAD_SAFIM", "");
 			}			
 		}
-	}
+	}*/
 
 	public Tabla getTab_codigo_sie() {
 		return tab_codigo_sie;
