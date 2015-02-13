@@ -542,7 +542,7 @@ public class pre_ficha_medica_preocu extends Pantalla {
 	@Override
 	public void aceptarReporte() {	
 		if (rep_reporte.getReporteSelecionado().equals("Ficha Medica Empleado")){		
-			if(aut_empleado.getValor()!=null){
+			
 				if (tab_ficha_medica.getTotalFilas()>0) {			
 					if (rep_reporte.isVisible()){
 						p_parametros=new HashMap();		
@@ -556,13 +556,10 @@ public class pre_ficha_medica_preocu extends Pantalla {
 				}else{
 					utilitario.agregarMensajeInfo("No se puede continuar", "No contiene Ficha Medica");
 				}
-			}
-			else{
-				utilitario.agregarMensajeInfo("No se puede continuar", "Debe seleccionar un Empleado");
-			}
+			
+			
 		}
 		else if (rep_reporte.getReporteSelecionado().equals("Receta Medica")){		
-			if(aut_empleado.getValor()!=null){
 				if (tab_ficha_medica.getTotalFilas()>0) {					
 						if (rep_reporte.isVisible()){
 							p_parametros=new HashMap();		
@@ -576,12 +573,8 @@ public class pre_ficha_medica_preocu extends Pantalla {
 				}else{
 					utilitario.agregarMensajeInfo("No se puede continuar", "No contiene Ficha Medica");
 				}
-			}
-			else{
-				utilitario.agregarMensajeInfo("No se puede continuar", "Debe seleccionar un Empleado");
-			}
+			
 		}else 	if (rep_reporte.getReporteSelecionado().equals("Certificado Medico")){		
-			if(aut_empleado.getValor()!=null){
 				if (tab_ficha_medica.getTotalFilas()>0) {			
 					if (rep_reporte.isVisible()){
 						p_parametros=new HashMap();		
@@ -596,11 +589,9 @@ public class pre_ficha_medica_preocu extends Pantalla {
 					utilitario.agregarMensajeInfo("No se puede continuar", "No contiene Certificado Medico");
 				}
 			}
-			else{
-				utilitario.agregarMensajeInfo("No se puede continuar", "Debe seleccionar un Empleado");
-			}
+			
 		}
-	}
+	
 	public void calcularMasaCorporal(AjaxBehaviorEvent evt){
 		tab_ficha_medica.modificar(evt);
 		double dou_imc=0;
@@ -896,6 +887,14 @@ public void calcularDiasVacacion(SelectEvent evt){
 
 	public void setTab_codigo_sie(Tabla tab_codigo_sie) {
 		this.tab_codigo_sie = tab_codigo_sie;
+	}
+
+	public Map getP_parametros() {
+		return p_parametros;
+	}
+
+	public void setP_parametros(Map p_parametros) {
+		this.p_parametros = p_parametros;
 	}
 	
 	
