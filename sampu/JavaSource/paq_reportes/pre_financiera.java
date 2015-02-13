@@ -42,7 +42,7 @@ public class pre_financiera extends Pantalla {
 	   		if (rep_reporte.isVisible()){
 	   			p_parametros=new HashMap();		
 	   			rep_reporte.cerrar();	
-	   			p_parametros.put("Titulo","Estado de Situaciòn Financiera");
+	   			p_parametros.put("titulo","Estado de Situaciòn Financiera");
 	   			p_parametros.put("ide_usua",Integer.parseInt("7"));
 	   			p_parametros.put("ide_empr",Integer.parseInt("0"));
 	   			p_parametros.put("ide_sucu",Integer.parseInt("1"));
