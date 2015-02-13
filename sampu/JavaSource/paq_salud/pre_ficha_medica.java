@@ -549,7 +549,7 @@ public class pre_ficha_medica extends Pantalla {
 	public void setTab_ficha_anamnesis(Tabla tab_ficha_anamnesis) {
 		this.tab_ficha_anamnesis = tab_ficha_anamnesis;
 	}
-
+	
 	@Override
 	public void abrirListaReportes() {
 		// TODO Auto-generated method stub
@@ -560,7 +560,13 @@ public class pre_ficha_medica extends Pantalla {
 	public void aceptarReporte() {	
 		if (rep_reporte.getReporteSelecionado().equals("Ficha Medica Empleado")){		
 			if(aut_empleado.getValor()!=null){
-				if (tab_ficha_medica.getTotalFilas()>0) {			
+				if (tab_ficha_medica.getValorSeleccionado().toString().equals("-1")){
+					utilitario.agregarMensajeInfo("No se puede Imprimir", "Si desea imprimir guarde el registro actual");
+					return;
+				}
+				if (tab_ficha_medica.getTotalFilas()>0  ) {
+					System.out.println("tabla ficha medica"+tab_ficha_medica.getCampoPadre());
+					System.out.println("tabla ficha"+tab_ficha_medica.getValorSeleccionado());
 					if (rep_reporte.isVisible()){
 						p_parametros=new HashMap();		
 						rep_reporte.cerrar();		
@@ -911,6 +917,14 @@ public class pre_ficha_medica extends Pantalla {
 
 	public void setTab_codigo_sie(Tabla tab_codigo_sie) {
 		this.tab_codigo_sie = tab_codigo_sie;
+	}
+
+	public Map getP_parametros() {
+		return p_parametros;
+	}
+
+	public void setP_parametros(Map p_parametros) {
+		this.p_parametros = p_parametros;
 	}
 	
 	
