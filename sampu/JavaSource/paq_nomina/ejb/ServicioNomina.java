@@ -272,9 +272,6 @@ public class ServicioNomina {
 		"INNER JOIN GEN_MES MES ON MES.IDE_GEMES=PER.IDE_GEMES " + 
 		"INNER JOIN GEN_ANIO ANI ON ANI.IDE_GEANI=PER.IDE_GEANI " + 
 		"WHERE ACTIVO_GEPRO=true ORDER BY mes.IDE_GEMES ASC "; 
-
-
-		System.out.println("imprimiendo combo de periodos "+sql_combo_gepro);
 		return sql_combo_gepro;
 	}
 
@@ -290,7 +287,6 @@ public class ServicioNomina {
 				"INNER JOIN GEN_MES MES ON MES.IDE_GEMES=PER.IDE_GEMES " +
 				"INNER JOIN GEN_ANIO ANI ON ANI.IDE_GEANI=PER.IDE_GEANI WHERE ACTIVO_GEPRO=true "+
 				"ORDER BY mes.IDE_GEMES ASC";
-		System.out.println("SM sql sql_combo_gepro  "+sql_combo_gepro);
 		return sql_combo_gepro;
 	}
 
@@ -394,8 +390,6 @@ public class ServicioNomina {
 
 		String str_cierre=utilitario.getConexion().ejecutarListaSql();
 		if (str_cierre.isEmpty()){
-			System.out.println("cierre de nomina "+ide_nrrol);
-			System.out.println("sql ejecutados "+str_cierre);
 			return true;
 		}
 		return false;
@@ -680,8 +674,6 @@ public class ServicioNomina {
 				"GROUP BY IDE_ASVAC,IDE_GTEMP,DIAS_VACACION  " +
 				")b  " +
 				"on a.ide_gtemp=b.ide_gtemp ";
-
-		System.out.println("empleados agregar nomina recibida "+ide_nrdtn+" sql empleados "+sql);
 		return sql;
 	}
 
@@ -787,8 +779,6 @@ public class ServicioNomina {
 				"GROUP BY IDE_ASVAC,IDE_GTEMP,DIAS_VACACION  " +
 				")b  " +
 				"on a.ide_gtemp=b.ide_gtemp ";
-
-		System.out.println("empleados agregar nomina LIQUIDACION recibida "+ide_nrdtn+" sql empleados "+sql);
 		return sql;
 
 	}
@@ -936,9 +926,6 @@ public class ServicioNomina {
 
 			TablaGenerica tab_det_rub=new TablaGenerica();
 			String str_sql="";
-
-			//			System.out.println("fecha ini "+fecha_ini);
-			//			System.out.println("fecha fin "+fecha_fin);
 			String ide_gepro=getPeriodosRol(fecha_ini, fecha_fin);
 
 			if (ide_gepro!=null){
@@ -962,11 +949,6 @@ public class ServicioNomina {
 
 
 					tab_det_rub=utilitario.consultar(str_sql);
-
-					//					if (IDE_GEEDP.equalsIgnoreCase("458")){
-					//					System.out.println("sql sumatoria "+tab_det_rub.getSql());	
-					//					}
-					//					
 				} catch (Exception e) {
 					// TODO: handle exception
 					System.out.println("error al ejecutar sql "+str_sql);
@@ -1321,12 +1303,9 @@ public class ServicioNomina {
 	}
 
 	public TablaGenerica getTipoEmpleado(String IDE_GTTEM){
-		System.out.println("sn c_parametro IDE_GTTEM...  "+IDE_GTTEM);
 		
 		if (IDE_GTTEM!=null && !IDE_GTTEM.isEmpty()){
 			TablaGenerica tab_tip_emp=utilitario.consultar("SELECT * FROM GTH_TIPO_EMPLEADO WHERE IDE_GTTEM="+IDE_GTTEM);
-			System.out.println("sn sql tab_tip_emp...  "+tab_tip_emp.getSql());
-			
 			return tab_tip_emp;
 		}
 		return null;
@@ -2558,11 +2537,14 @@ public class ServicioNomina {
 	public boolean isAcumulaFondos(String ide_geedp){
 		TablaGenerica tab_emp_dep=getEmpleadoDepartamento(ide_geedp);
 		if (tab_emp_dep.getValor("ACUMULA_FONDOS_GEEDP")!=null && !tab_emp_dep.getValor("ACUMULA_FONDOS_GEEDP").isEmpty()){
-			if (tab_emp_dep.getValor("ACUMULA_FONDOS_GEEDP").equalsIgnoreCase("1")){
+			if (tab_emp_dep.getValor("ACUMULA_FONDOS_GEEDP").equalsIgnoreCase("true")){
 				// si acumula fondos
+				System.out.println(" acumula fondeos de resreva"+tab_emp_dep.getValor("ACUMULA_FONDOS_GEEDP"));
 				return true;
 			}
 		}
+		System.out.println("noooo acumula fondeos de resreva"+tab_emp_dep.getValor("ACUMULA_FONDOS_GEEDP"));
+
 		return false;
 	}
 
@@ -2661,7 +2643,7 @@ public class ServicioNomina {
 				fecha_ajuste=tab_empleados_departamento.getValor(i,"FECHA_AJUSTE_GEEDP");
 				fecha_fin_subrogacion=tab_empleados_departamento.getValor(i,"FECHA_ENCARGO_FIN_GEEDP");
 				dias_pendientes_vacacion=tab_empleados_departamento.getValor(i,"DIAS_VACACION");
-
+				System.out.println(" acumula fonosss acumula_fondos= "+acumula_fondos);	
 				// calculamos el rol del empleado
 				calcularRolIndividual(tab_rubros,ide_gtemp, ide_geedp, ide_nrrol, fecha_ingreso, fecha_contrato,IDE_GEREG,RMU, acumula_fondos, ide_gepro, fecha_inicial_gepro, fecha_final_gepro, fecha_subroga,fecha_fin_subrogacion,RMU_CARGO_SUBROGA,ajuste_sueldo,fecha_ajuste,dias_pendientes_vacacion,ide_inicial,nro_dias_comercial,IDE_NRTIN);
 				ide_inicial=ide_inicial+tab_rubros.getTotalFilas();
@@ -3473,6 +3455,7 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 			// insertarmos todos los rubros del empleado e importamos los valores unicamente de los rubros de forma de calculo (IMPORTADO)
 			actualizarDetallesRolEmpleado(ide_geedp, ide_nrrol, tab_det_rol, boo_tiene_beneficio_guarderia, boo_tiene_anticipos, IDE_GEREG,RMU, acumula_fondos, fecha_ingreso, fecha_contrato, ide_gepro, fecha_inicial_gepro, fecha_final_gepro,fecha_subroga,fecha_fin_subroga,RMU_CARGO_SUBROGA,ajuste_sueldo,fecha_ajuste_sueldo,dias_pend_vacacion,nro_comercial_nrtit,true);
 		}else{
+			System.out.println(" acumulado fondo de reserva 3 "+acumula_fondos);
 			// insertarmos todos los rubros del empleado e importamos los valores unicamente de los rubros de forma de calculo (IMPORTADO)
 			actualizarDetallesRolEmpleado(ide_geedp, ide_nrrol, tab_det_rol, boo_tiene_beneficio_guarderia, boo_tiene_anticipos, IDE_GEREG,RMU, acumula_fondos, fecha_ingreso, fecha_contrato, ide_gepro, fecha_inicial_gepro, fecha_final_gepro,fecha_subroga,fecha_fin_subroga,RMU_CARGO_SUBROGA,ajuste_sueldo,fecha_ajuste_sueldo,dias_pend_vacacion,nro_comercial_nrtit,false);
 		}
@@ -3664,7 +3647,10 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 					|| acumula_fondos.isEmpty()){
 				return "0";
 			}
-			return acumula_fondos;
+			if (acumula_fondos=="true" || acumula_fondos.equals("true")){
+				return "1";
+			}
+			return "0"; // anterior mente retornaba acumula_fondos
 		}
 
 		// importa numero dias ajuste sueldo
@@ -3726,8 +3712,6 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 		// importa numero dias subrogados 
 		else if(ide_nrrub.equals(P_NRH_RUBRO_DIAS_SUBROGADOS)){	 
 			int int_dias_subrogados=0;
-//			System.out.println("fecha ini subrogacion "+fecha_subrogacion);
-//			System.out.println("fecha fin subrogacion "+fecha_fin_subrogacion);
 			if (fecha_subrogacion!=null && !fecha_subrogacion.isEmpty()
 					&& fecha_fin_subrogacion!=null && !fecha_fin_subrogacion.isEmpty()){
 				
@@ -3761,23 +3745,7 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 				
 				
 				
-				
-//				if (utilitario.isFechaMenor(utilitario.getFecha(fecha_fin_subrogacion), utilitario.getFecha(fecha_final_gepro))){
-//
-//					int int_mes_rol=utilitario.getMes(fecha_fin_subrogacion);
-//					int int_mes_subrogacion=utilitario.getMes(fecha_subrogacion);
-//					int int_anio_rol=utilitario.getAnio(fecha_fin_subrogacion);
-//					int int_anio_subrogacion=utilitario.getAnio(fecha_subrogacion);
-//
-//					if (int_mes_rol==int_mes_subrogacion && int_anio_rol==int_anio_subrogacion){
-//						int_dias_subrogados=utilitario.getDiferenciasDeFechas(utilitario.getFecha(fecha_subrogacion), utilitario.getFecha(fecha_fin_subrogacion))+1;
-//						if (int_dias_subrogados>30){
-//							int_dias_subrogados=30;
-//						}
-//					}else{
-//						int_dias_subrogados=NRO_DIAS_COMERCIAL_NRTIT;
-//					}
-//				}
+
 			}
 			return int_dias_subrogados+"";
 		}
@@ -5277,10 +5245,8 @@ System.out.println("sql getSqlEmpleadosRol..."+sql);
 	 * @return TablaGenerica del detalle del rubro
 	 */
 	public TablaGenerica getDetalleRubro(String IDE_NRDTN,String IDE_NRRUB){
-		System.out.println("SN getDetalleRubro C_PARAMETRO  IDE_NRRUB...  "+IDE_NRRUB);
 		TablaGenerica tab_detalle_rubro=utilitario.consultar("select * from NRH_DETALLE_RUBRO " +
 				"WHERE IDE_NRDTN="+IDE_NRDTN+" AND IDE_NRRUB="+IDE_NRRUB);
-		System.out.println("SN SQL getDetalleRubro tab_detalle_rubro...  "+tab_detalle_rubro.getSql());
 		return tab_detalle_rubro;
 
 	}
@@ -5340,39 +5306,19 @@ System.out.println("sql getSqlEmpleadosRol..."+sql);
 	 * @return TablaGenerica del detalle del rubro
 	 */
 	public TablaGenerica getDetalleRubro(String IDE_NRDTN,String IDE_NRRUB,String IDE_GEREG){
-		System.out.println("SN C_PARAMETROS getDetalleRubro IDE_NRDTN..."+IDE_NRDTN);
-		System.out.println("SN C_PARAMETROS getDetalleRubro IDE_NRRUB..."+IDE_NRRUB);
-		System.out.println("SN C_PARAMETROS getDetalleRubro IDE_GEREG..."+IDE_GEREG);
-		
-		
 		if (IDE_NRDTN==null || IDE_NRDTN.isEmpty()){
-			System.out.println("SN C_PARAMETROS getDetalleRubro IDE_NRDTN == A NULL..."+IDE_NRDTN);
-			
 			IDE_NRDTN="-1";
-			System.out.println("SN C_PARAMETROS getDetalleRubro IDE_NRDTN -1..."+IDE_NRDTN);
-			
 		}
 		if (IDE_NRRUB==null || IDE_NRRUB.isEmpty()){
-			System.out.println("SN C_PARAMETROS getDetalleRubro IDE_NRRUB == A NULL..."+IDE_NRRUB);
-			
 			IDE_NRRUB="-1";
-			System.out.println("SN C_PARAMETROS getDetalleRubro IDE_NRRUB -1..."+IDE_NRRUB);
-			
 		}
 		if (IDE_GEREG==null || IDE_GEREG.isEmpty()){
-			System.out.println("SN C_PARAMETROS getDetalleRubro IDE_GEREG == A NULL..."+IDE_GEREG);
-			
 			IDE_GEREG="-1";
-			System.out.println("SN C_PARAMETROS getDetalleRubro IDE_GEREG -1..."+IDE_GEREG);
-			
 		}
 
 
 		TablaGenerica tab_detalle_rubro=utilitario.consultar("select * from NRH_DETALLE_RUBRO " +
 				"WHERE IDE_NRDTN="+IDE_NRDTN+" AND IDE_NRRUB="+IDE_NRRUB+" AND IDE_GEREG="+IDE_GEREG );
-		System.out.println("SN SQL getDetalleRubro tab_detalle_rubro DESPUES DE LOS NULL ..."+tab_detalle_rubro.getSql());
-		
-
 		return tab_detalle_rubro;
 
 
