@@ -4,7 +4,10 @@ package paq_presupuesto;
 
 import javax.ejb.EJB;
 
+import org.primefaces.event.NodeSelectEvent;
+
 import framework.aplicacion.TablaGenerica;
+import framework.componentes.Arbol;
 import framework.componentes.Boton;
 import framework.componentes.Combo;
 import framework.componentes.Confirmar;
@@ -27,6 +30,7 @@ public class pre_contratacion extends Pantalla{
 	private Tabla tab_reforma=new Tabla();
 	private Tabla tab_archivo=new Tabla();
 	private Tabla tab_financiamiento=new Tabla();
+	private Tabla tab_funcion_programa=new Tabla();
 
 	private Combo com_anio=new Combo();
 
@@ -34,7 +38,7 @@ public class pre_contratacion extends Pantalla{
 	private SeleccionTabla set_funcion=new SeleccionTabla();
 	private SeleccionTabla set_actualizarfuncion=new SeleccionTabla();
 	private Confirmar con_guardar=new Confirmar();
-
+	private Arbol arb_arbol = new Arbol();
 	@EJB
 	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
 
@@ -46,26 +50,31 @@ public class pre_contratacion extends Pantalla{
 
 	public pre_contratacion(){
 		com_anio.setCombo("select ide_geani,detalle_geani from gen_anio order by detalle_geani");
-		com_anio.setMetodo("seleccionaElAnio");
+		//com_anio.setMetodo("seleccionaElAnio");
 		bar_botones.agregarComponente(new Etiqueta("Seleccione El Año:"));
 		bar_botones.agregarComponente(com_anio);
 
 
 		Tabulador tab_tabulador = new Tabulador();
 		tab_tabulador.setId("tab_tabulador");
+		
+		
 
 		tab_poa.setId("tab_poa");   
 		tab_poa.setHeader("PLAN OPERATIVO ANUAL (POA)");
-		tab_poa.setTabla("pre_poa","ide_prpoa",1);
+		tab_poa.setTabla("pre_poa","ide_prpoa",2);
 		tab_poa.getColumna("ide_geani").setVisible(false);
 		tab_poa.setCondicion("ide_geani=-1");  
-
+		tab_poa.getColumna("objeto_programa_prpoa").setVisible(false);
+		tab_poa.getColumna("objetivo_proyecto_prpoa").setVisible(false);
+		tab_poa.getColumna("meta_proyecto_prpoa").setVisible(false);
+		
 		tab_poa.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
 		tab_poa.getColumna("ide_prcla").setCombo(ser_presupuesto.getCatalogoPresupuestario());
 		//tab_poa.getColumna("ide_prcla").setAutoCompletar();
 		tab_poa.getColumna("ide_prcla").setAncho(50);
 		tab_poa.getColumna("ide_prfup").setCombo(ser_presupuesto.getFuncionPrograma());
-		tab_poa.getColumna("ide_geuna").setCombo("gen_unidad_administrativa","ide_geuna","detalle_geuna","");
+		tab_poa.getColumna("ide_geare").setCombo("gen_area","ide_geare","detalle_geare","");
 
 		tab_poa.setTipoFormulario(true);
 		tab_poa.getGrid().setColumns(4);
@@ -84,7 +93,7 @@ public class pre_contratacion extends Pantalla{
 		tab_mes.setId("tab_mes");
 		tab_mes.setHeader("EJECUCION MENSUAL (POA)");
 		tab_mes.setIdCompleto("tab_tabulador:tab_mes");
-		tab_mes.setTabla("pre_poa_mes","ide_prpom",2);
+		tab_mes.setTabla("pre_poa_mes","ide_prpom",3);
 		tab_mes.setCampoForanea("ide_prpoa");
 		tab_mes.getColumna("ide_gemes").setCombo("select ide_gemes,detalle_gemes from gen_mes order by ide_gemes");
 		tab_mes.dibujar();
@@ -95,7 +104,7 @@ public class pre_contratacion extends Pantalla{
 		tab_reforma.setId("tab_reforma");
 		tab_reforma.setHeader("REFORMA MENSUAL (POA)");
 		tab_reforma.setIdCompleto("tab_tabulador:tab_reforma");
-		tab_reforma.setTabla("pre_poa_reforma", "ide_prpor",3);
+		tab_reforma.setTabla("pre_poa_reforma", "ide_prpor",4);
 		tab_reforma.setCampoForanea("ide_prpoa");
 		tab_reforma.getColumna("pre_ide_prpoa").setCombo("select ide_prpoa,num_resolucion_prpoa,codigo_clasificador_prcla,descripcion_clasificador_prcla " +	
 				"from pre_poa  a, (select ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla  from pre_clasificador ) b where a.ide_prcla=b.ide_prcla");
@@ -112,7 +121,7 @@ public class pre_contratacion extends Pantalla{
 		tab_financiamiento.setId("tab_financiamiento");
 		tab_financiamiento.setHeader("FUENTES DE FINANCIAMIENTO (POA)");
 		tab_financiamiento.setIdCompleto("tab_tabulador:tab_financiamiento");
-		tab_financiamiento.setTabla("pre_poa_financiamiento","ide_prpof",4);
+		tab_financiamiento.setTabla("pre_poa_financiamiento","ide_prpof",5);
 		tab_financiamiento.setCampoForanea("ide_prpoa");
 		tab_financiamiento.getColumna("ide_prfuf").setCombo("pre_fuente_financiamiento","ide_prfuf","detalle_prfuf","");
 		tab_financiamiento.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
@@ -125,7 +134,7 @@ public class pre_contratacion extends Pantalla{
 		tab_archivo.setHeader("ARCHIVOS ANEXOS (POA)");
 		tab_archivo.setIdCompleto("tab_tabulador:tab_archivo");
 		tab_archivo.setTipoFormulario(true);
-		tab_archivo.setTabla("pre_archivo","ide_prarc",5);
+		tab_archivo.setTabla("pre_archivo","ide_prarc",6);
 		tab_archivo.getColumna("foto_prarc").setUpload("presupuesto");
 		tab_archivo.setCampoForanea("ide_prpoa");
 		tab_archivo.getColumna("ide_prpac").setVisible(false);
@@ -147,13 +156,23 @@ public class pre_contratacion extends Pantalla{
 		tab_tabulador.agregarTab("FINANCIAMIENTO", pat_panel4);
 		tab_tabulador.agregarTab("ARCHIVOS",pat_panel5);
 
-
-		//division2
-
-		Division div_division=new Division();
-		div_division.dividir2(pat_poa,tab_tabulador,"50%","H");
+		// factor_competencia
+		arb_arbol.setId("arb_arbol");
+		arb_arbol.setArbol("pre_funcion_programa", "ide_prfup", "detalle_prfup", "pre_ide_prfup");
+		//arb_arbol.setArbol("CMP_FACTOR_COMPETENCIA", "IDE_CMFAC", "DETALLE_CMFAC", "CMP_IDE_CMFAC");
+		arb_arbol.onSelect("seleccionar_arbol");	
+		arb_arbol.dibujar();
+					
+		
+		Division div3 = new Division(); //UNE OPCION Y DIV 2
+		div3.dividir2(pat_poa, tab_tabulador, "50%", "H");
+		Division div_division = new Division();
+		div_division.setId("div_division");
+		div_division.dividir2(arb_arbol, div3, "40%", "V");  //arbol y div3
 		agregarComponente(div_division);
-
+		
+		
+		
 		Boton bot_agregar=new Boton();
 		bot_agregar.setValue("Agregar Clasificador");
 		bot_agregar.setMetodo("agregarClasificador");
@@ -183,6 +202,15 @@ public class pre_contratacion extends Pantalla{
 
 		
 
+	}
+	public void seleccionar_arbol(NodeSelectEvent evt) {
+		if(com_anio.getValue()==null){
+			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
+			return;
+		}
+		arb_arbol.seleccionarNodo(evt);
+		tab_poa.setCondicion("ide_prfup="+arb_arbol.getValorSeleccionado());
+		tab_poa.ejecutarSql();	
 	}
 
 	public void agregarClasificador(){
@@ -374,6 +402,23 @@ public class pre_contratacion extends Pantalla{
 	public void setSet_funcion(SeleccionTabla set_funcion) {
 		this.set_funcion = set_funcion;
 	}
+
+	public Tabla getTab_funcion_programa() {
+		return tab_funcion_programa;
+	}
+
+	public void setTab_funcion_programa(Tabla tab_funcion_programa) {
+		this.tab_funcion_programa = tab_funcion_programa;
+	}
+
+	public Arbol getArb_arbol() {
+		return arb_arbol;
+	}
+
+	public void setArb_arbol(Arbol arb_arbol) {
+		this.arb_arbol = arb_arbol;
+	}
+
 
 
 }
