@@ -20,6 +20,7 @@ import java.util.Map;
 
 import javax.faces.event.AjaxBehaviorEvent;
 
+import org.apache.poi.hssf.record.formula.Ptg;
 import org.primefaces.component.tabview.Tab;
 import org.primefaces.event.SelectEvent;
 import paq_sistema.aplicacion.Pantalla;
@@ -53,7 +54,9 @@ public class pre_sucursal_area_departamento extends Pantalla {
 		tab_area_dep.setRows(10);
 		tab_area_dep.onSelect("filtrarDepartamentoSucursal");
 		tab_area_dep.dibujar();
-
+		PanelTabla pat_panel2 = new PanelTabla(); 
+		pat_panel2.setPanelTabla(tab_area_dep);
+		
 
 		tab_tabla1.setId("tab_tabla1");
 		tab_tabla1.setGenerarPrimaria(false);
@@ -80,7 +83,7 @@ public class pre_sucursal_area_departamento extends Pantalla {
 
 		Division div_division = new Division();
 		div_division.setId("div_division");
-		div_division.dividir2(tab_area_dep,pat_panel1,"60%","H");
+		div_division.dividir2(pat_panel2,pat_panel1,"60%","H");
 		agregarComponente(div_division);
 
 
