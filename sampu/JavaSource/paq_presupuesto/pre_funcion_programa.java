@@ -51,15 +51,7 @@ public class pre_funcion_programa extends Pantalla {
 		tab_vigente.getColumna("ide_geani").setCombo("gen_anio","ide_geani","detalle_geani","");
 		tab_vigente.getColumna("ide_geani").setUnico(true);
 		tab_vigente.getColumna("ide_prfup").setUnico(true);
-		// ocultar campos de las claves  foraneas
-		TablaGenerica  tab_generica=ser_contabilidad.getTablaVigente("cont_vigente");
-		for(int i=0;i<tab_generica.getTotalFilas();i++){
-		//muestra los ides q quiere mostras.
-		if(!tab_generica.getValor(i, "column_name").equals("ide_geani")){	
-		tab_vigente.getColumna(tab_generica.getValor(i, "column_name")).setVisible(false);	
-		}				
 		
-   		}
 		tab_vigente.dibujar();
 		PanelTabla pat_panel2=new PanelTabla();
 		pat_panel2.setPanelTabla(tab_vigente);
