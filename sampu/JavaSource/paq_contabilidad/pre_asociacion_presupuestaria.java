@@ -58,7 +58,7 @@ public class pre_asociacion_presupuestaria extends Pantalla {
 		tab_vigente.setHeader("AÑO VIGENTE");
 		tab_vigente.setTabla("cont_vigente", "ide_covig", 2);
 		tab_vigente.getColumna("ide_geani").setCombo("gen_anio","ide_geani","detalle_geani","");
-		tab_vigente.setCondicion("ide_prasp=-1");
+		tab_vigente.setCondicion("ide_prasp!=null");
 		tab_vigente.getColumna("ide_geani").setUnico(true);
 		tab_vigente.getColumna("ide_prasp").setUnico(true);
 		tab_vigente.dibujar();
