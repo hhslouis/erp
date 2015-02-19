@@ -17,7 +17,7 @@ public class pre_anual extends Pantalla{
 		tab_anual.getColumna("ide_prcla").setCombo("select ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla from pre_clasificador order by codigo_clasificador_prcla");
 		tab_anual.getColumna("ide_prpro").setCombo("pre_programa", "ide_prpro", "cod_programa_prpro", "");
 		tab_anual.getColumna("ide_geani").setCombo("gen_anio", "ide_geani", "detalle_geani", "");
-		tab_anual.getColumna("ide_prfup").setCombo("pre_funcion_programa", "ide_prfup", "detalle_prfup,", "");
+		//tab_anual.getColumna("ide_prfup").setCombo("pre_funcion_programa", "ide_prfup", "detalle_prfup,", "");
 		tab_anual.setTipoFormulario(true);
 		tab_anual.getGrid().setColumns(4);
 		tab_anual.dibujar();
