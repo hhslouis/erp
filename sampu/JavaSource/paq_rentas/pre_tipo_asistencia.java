@@ -11,7 +11,7 @@ public class pre_tipo_asistencia extends Pantalla {
 		
 
 		tab_tipo_asistencia.setId("tab_tipo_asistencia");  
-		tab_tipo_asistencia.setTabla("rec_tipo_asitencia","ide_retia", 1);	
+		tab_tipo_asistencia.setTabla("rec_tipo_asistencia","ide_retia", 1);	
 		tab_tipo_asistencia.dibujar();
 		PanelTabla pat_tipo_asistencia=new PanelTabla();
 		pat_tipo_asistencia.setPanelTabla(tab_tipo_asistencia);
