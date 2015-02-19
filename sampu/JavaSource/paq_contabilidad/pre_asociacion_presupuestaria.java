@@ -156,6 +156,12 @@ public class pre_asociacion_presupuestaria extends Pantalla {
 			utilitario.agregarMensajeInfo("Debe seleccionar un Catalogo Cuenta", "");
 		}
 	}
+	public void seleccioneElAnio (){
+		
+			tab_vigente.setCondicion("ide_geani="+com_anio.getValue());
+			tab_vigente.ejecutarSql();
+	
+		}
 	@Override
 	public void insertar() {
 		// TODO Auto-generated method stub
@@ -166,10 +172,13 @@ public class pre_asociacion_presupuestaria extends Pantalla {
 		}
 		if (tab_asociacion_presupuestaria.isFocus()) {
 			tab_asociacion_presupuestaria.insertar();
-			tab_asociacion_presupuestaria.setValor("ide_geani", com_anio.getValue()+"");
+			tab_asociacion_presupuestaria.setValor("ide_prcla", set_clasificador.getValorSeleccionado()+"");
+
 
 		}else if (tab_vigente.isFocus()) {
 			tab_vigente.insertar();
+			tab_vigente.setValor("ide_geani", com_anio.getValue()+"");
+
 
 		}
 	}
