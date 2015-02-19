@@ -32,7 +32,7 @@ public class pre_comprobante_pago extends Pantalla{
 		tab_detalle_movimiento.setHeader("DETALLE MOVIMIENTO");
 		tab_detalle_movimiento.setTabla("cont_detalle_movimiento", "ide_codem", 2);
 		//filtra por asiento contable cuando no tiene relacion a tes_comprovante_pago
-		tab_detalle_movimiento.setCondicion("ide_comov="+tab_comprobante.getValor("ide_comov"));
+		tab_detalle_movimiento.setCondicion("ide_comov=-1");
 		tab_detalle_movimiento.dibujar();
 		PanelTabla pat_movimiento=new PanelTabla();
 		pat_movimiento.setPanelTabla(tab_detalle_movimiento);
@@ -40,14 +40,6 @@ public class pre_comprobante_pago extends Pantalla{
 		Division div_division =new Division();
 		div_division.dividir2(pat_comprobante, pat_movimiento, "50%", "H");
 		agregarComponente(div_division);
-		//limpiar
-		Boton bot_limpiar = new Boton();
-		bot_limpiar.setIcon("ui-icon-cancel");
-		bot_limpiar.setMetodo("limpiar");
-		aut_movimiento.setId("aut_factura");
-		aut_movimiento.setAutoCompletar("");
-		aut_movimiento.setMetodoChange("seleccionoAutocompletar"); //ejecuta el metodo seleccionoAutocompletar
-
 		
 			
 		
