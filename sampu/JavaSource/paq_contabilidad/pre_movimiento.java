@@ -28,6 +28,10 @@ public class pre_movimiento extends Pantalla{
 		tab_detalle_movimiento.setId("tab_detalle_movimiento");
 		tab_detalle_movimiento.setHeader("DETALLE DE MOVIMIENTO");
 		tab_detalle_movimiento.setTabla("cont_detalle_movimiento", "ide_codem", 2);
+		tab_detalle_movimiento.getColumna("ide_prcla").setCombo("pre_clasificador", "ide_prcla", "codigo_clasificador_prcla", "");
+		tab_detalle_movimiento.getColumna("ide_prpro").setCombo("pre_programa", "ide_prpro", "cod_programa_prpro", "");
+		tab_detalle_movimiento.getColumna("ide_cocac").setCombo("cont_catalogo_cuenta", "ide_cocac", "cue_codigo_cocac", "");
+
 		tab_detalle_movimiento.setTipoFormulario(true);
 		tab_detalle_movimiento.getGrid().setColumns(4);
 		tab_detalle_movimiento.dibujar();
