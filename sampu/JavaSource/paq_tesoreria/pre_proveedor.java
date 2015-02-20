@@ -29,7 +29,8 @@ public class pre_proveedor extends Pantalla {
 		tab_proveedor.setTabla("tes_proveedor", "ide_tepro", 1);
 		tab_proveedor.setTipoFormulario(true);
 		tab_proveedor.getGrid().setColumns(4);
-		tab_proveedor.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
+		//tab_proveedor.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
+		tab_proveedor.getColumna("ide_coest").setVisible(false);
 		tab_proveedor.getColumna("ide_retic").setCombo("rec_tipo_contribuyente","ide_retic","detalle_retic","");
 		tab_proveedor.getColumna("ide_tetpp").setCombo("tes_tipo_proveedor","ide_tetpp","detalle_tetpp","");
 		//tab_proveedor.getColumna("ide_adfac").setCombo(ser_facturacion.get());
