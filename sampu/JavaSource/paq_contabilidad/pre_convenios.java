@@ -209,8 +209,7 @@ public class pre_convenios extends Pantalla {
 		set_empleado_nuevo.getTab_seleccion().ejecutarSql();
 		set_empleado_nuevo.getBot_aceptar().setMetodo("aceptarPersona");
 		agregarComponente(set_empleado_nuevo);
-		
-		
+				
 	}
 	
 	public void aceptarPersona(){
@@ -221,25 +220,26 @@ public class pre_convenios extends Pantalla {
 		tab_tabla2.setValor("ide_getip", str_seleccionado); ///para que se me despliegue el valor que selecciono en el campo 
 		set_persona.cerrar();
 		set_empleado_nuevo.dibujar();
+		System.out.println("salo del tipo persona");
 	
-	}
-	else if (set_empleado_nuevo.isVisible()){
-		if(str_seleccionado!=null){	
-			tab_tabla2.insertar();
-		String str_seleccionado_empnuevo=set_empleado_nuevo.getValorSeleccionado();
-		TablaGenerica tab_empleado_responsable = ser_nomina.ideEmpleadoContrato(str_seleccionado);		
+	}else if (set_empleado_nuevo.isVisible()){
+		System.out.println("entro al empleado"+set_empleado_nuevo.getValorSeleccionado());
+		String str_seleccionado_emnuevo=set_empleado_nuevo.getValorSeleccionado();
+		if(str_seleccionado_emnuevo!=null){	
+		TablaGenerica tab_empleado_responsable = ser_nomina.ideEmpleadoContrato(str_seleccionado_emnuevo);		
 		tab_tabla2.setValor("IDE_GEEDP", tab_empleado_responsable.getValor("IDE_GEEDP"));			
 		tab_tabla2.setValor("IDE_GTEMP", tab_empleado_responsable.getValor("IDE_GTEMP"));
 	    tab_tabla2.setValor("APELLIDO_PATERNO_corec", tab_empleado_responsable.getValor("APELLIDO_PATERNO_GTEMP"));
-
 		utilitario.addUpdate("tab_tabla2");	
-        set_empleado_nuevo.cerrar();
+		set_empleado_nuevo.cerrar();
+
+	}
+        
+
 	}
 	}
-
-
 	
-	}
+	
 	public void inicializarSetEstados(){
 
 		set_estados.setId("set_estados");
@@ -321,7 +321,6 @@ public class pre_convenios extends Pantalla {
 			utilitario.addUpdate("tab_tabla1");	
 		}
 	}
-
 	public  void aceptarTipoPersona(){
 		String str_seleccionado=set_tipo_persona.getValorSeleccionado();
 		System.out.println("ACTIVOS :"+set_tipo_persona.getValorSeleccionado());
@@ -499,6 +498,14 @@ public class pre_convenios extends Pantalla {
 			set_persona.getTab_seleccion().setSql(ser_general.getTipoPersona("true",par_modulo_convenio));
 			set_persona.getTab_seleccion().ejecutarSql();
 			set_persona.dibujar();
+			
+		}
+		else if (tab_tabla2.isFocus()){
+			
+			set_persona.getTab_seleccion().setSql(ser_general.getTipoPersona("true",par_modulo_convenio));
+			set_persona.getTab_seleccion().ejecutarSql();
+			set_persona.dibujar();
+			
 		}
 		else if (tab_tabla3.isFocus()){
 			tab_tabla3.insertar();
