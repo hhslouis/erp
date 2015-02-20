@@ -53,6 +53,7 @@ public class pre_compras extends Pantalla{
 		tab_compras.getColumna("proforma_proveedor_adsoc").setVisible(false);
 		tab_compras.getColumna("fecha_proforma_proveedor_adsoc").setVisible(false);
 		tab_compras.getColumna("oferente1_adsoc").setVisible(false);
+
 		tab_compras.setTipoFormulario(true);
 		tab_compras.getGrid().setColumns(4);
 		tab_compras.dibujar();
