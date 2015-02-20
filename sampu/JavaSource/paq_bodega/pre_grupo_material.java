@@ -1,5 +1,6 @@
 package paq_bodega;
 
+import framework.componentes.Division;
 import framework.componentes.PanelTabla;
 import framework.componentes.Tabla;
 import paq_sistema.aplicacion.Pantalla;
@@ -7,6 +8,7 @@ import paq_sistema.aplicacion.Pantalla;
 public class pre_grupo_material extends Pantalla{
 	
 private Tabla tab_grupo_material=new Tabla();
+private Tabla tab_cont_asiento=new Tabla();
 	
 	
 	public pre_grupo_material(){
@@ -17,6 +19,27 @@ private Tabla tab_grupo_material=new Tabla();
 		pat_grupo_material.setPanelTabla(tab_grupo_material);
 		
 		agregarComponente(pat_grupo_material);
+		tab_cont_asiento.setId("tab_cont_asiento");
+		tab_cont_asiento.setTabla("cont_tipo_asiento","ide_cotia", 2);
+		tab_cont_asiento.dibujar();
+		PanelTabla pat_material_bod=new PanelTabla();
+		pat_material_bod.setPanelTabla(tab_cont_asiento);
+		
+		Division div_division = new Division();
+		div_division.dividir2(tab_grupo_material,tab_cont_asiento , "50%", "H");
+		agregarComponente(div_division);
+			
+		
+	}
+
+
+	public Tabla getTab_cont_asiento() {
+		return tab_cont_asiento;
+	}
+
+
+	public void setTab_cont_asiento(Tabla tab_cont_asiento) {
+		this.tab_cont_asiento = tab_cont_asiento;
 	}
 
 
