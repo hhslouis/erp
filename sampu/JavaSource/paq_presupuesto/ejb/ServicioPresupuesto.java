@@ -47,4 +47,16 @@ TablaGenerica getTablaGenericaFuncionPro(String ideanio){
 	return tab_funcion_progra;
 	
 }
+public String getTramite (String activo){
+	String tab_tramite="select ide_prtra,numero_oficio_prtra from pre_tramite where activo_prtra in ("+activo+") " +
+			" order by numero_oficio_prtra";
+	return tab_tramite;
+	
+}
+
+public TablaGenerica getTablaGenericaTramite (String ide_prtra ){
+	TablaGenerica tab_tramite=utilitario.consultar("select ide_prtra,numero_oficio_prtra from pre_tramite where ide_prtra in ("+ide_prtra+") " +
+			" order by numero_oficio_prtra");
+	return tab_tramite;
+}
 }
