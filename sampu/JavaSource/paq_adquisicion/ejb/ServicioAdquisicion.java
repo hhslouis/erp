@@ -15,6 +15,35 @@ import paq_sistema.aplicacion.Utilitario;
 public class ServicioAdquisicion{
 	private Utilitario utilitario = new Utilitario();
 	
-	
+	public String getSolicitudCompra (String activo){
+		
+		String tab_solicitud="select a.ide_adsoc,a.ide_tepro,nombre_tepro,detalle_adsoc,nro_solicitud_adsoc,total_adfac,num_factura_adfac" +
+				" from adq_solicitud_compra a,adq_factura b ,tes_proveedor c" +
+				" where  a.ide_adsoc=b.ide_adsoc and a.ide_tepro=c.ide_tepro and activo_adsoc in ("+activo+") order by detalle_adsoc";
+				return tab_solicitud;
+		
+	}
+public String getSolicitud (String ide_adsoc){
+		
+		String tab_solicitud="select a.ide_adsoc,a.ide_tepro,nombre_tepro,detalle_adsoc,nro_solicitud_adsoc,total_adfac,num_factura_adfac" +
+				" from adq_solicitud_compra a,adq_factura b ,tes_proveedor c" +
+				" where  a.ide_adsoc=b.ide_adsoc and a.ide_tepro=c.ide_tepro and a.ide_adsoc in ("+ide_adsoc+") order by detalle_adsoc";
 
+		return tab_solicitud;
+		
+	}
+	public TablaGenerica getTablaGenericaSolicitud(String ide_adsoc){
+		TablaGenerica tab_solicitud =utilitario.consultar("select a.ide_adsoc,a.ide_tepro,nombre_tepro,detalle_adsoc,nro_solicitud_adsoc,total_adfac,num_factura_adfac" +
+				" from adq_solicitud_compra a,adq_factura b ,tes_proveedor c " +
+				" where  a.ide_adsoc=b.ide_adsoc and a.ide_tepro=c.ide_tepro and a.ide_adsoc in ("+ide_adsoc+") order by detalle_adsoc");
+
+		return tab_solicitud;
+		
+	}
+	public  String getCompras(String activo){
+		String tab_compra ="select a.ide_adsoc,a.ide_tepro,nombre_tepro,detalle_adsoc,nro_solicitud_adsoc from adq_solicitud_compra a,tes_proveedor b" +
+				" where a.ide_tepro=b.ide_tepro and activo_adsoc in ("+activo+") order by detalle_adsoc";
+		System.out.println("compras"+tab_compra);
+		return tab_compra;	
+	}
 }
