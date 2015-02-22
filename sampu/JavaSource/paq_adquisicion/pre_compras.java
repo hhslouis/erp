@@ -28,6 +28,12 @@ public class pre_compras extends Pantalla{
 	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
 	@EJB
 	private ServicioNomina ser_nomina = (ServicioNomina ) utilitario.instanciarEJB(ServicioNomina.class);
+	public SeleccionTabla getSet_tipo_compra() {
+		return set_tipo_compra;
+	}
+	public void setSet_tipo_compra(SeleccionTabla set_tipo_compra) {
+		this.set_tipo_compra = set_tipo_compra;
+	}
 	@EJB
 	private ServicioBodega ser_bodega = (ServicioBodega ) utilitario.instanciarEJB(ServicioBodega.class);
 	@EJB
