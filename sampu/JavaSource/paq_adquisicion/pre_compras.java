@@ -8,6 +8,7 @@ import javax.ejb.EJB;
 import framework.componentes.PanelTabla;
 import framework.componentes.Reporte;
 import framework.componentes.SeleccionFormatoReporte;
+import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import paq_bodega.ejb.ServicioBodega;
 import paq_contabilidad.ejb.ServicioContabilidad;
@@ -15,6 +16,9 @@ import paq_nomina.ejb.ServicioNomina;
 import paq_sistema.aplicacion.Pantalla;
 
 public class pre_compras extends Pantalla{
+	
+	public static String par_estado_modulo_compra;
+	private SeleccionTabla set_tipo_compra=new SeleccionTabla();
 
 	private Tabla tab_compras=new Tabla();
 	@EJB
@@ -29,7 +33,7 @@ public class pre_compras extends Pantalla{
 	private Map map_parametros = new HashMap();
 	
 	public pre_compras(){
-		
+		par_estado_modulo_compra =utilitario.getVariable("p_estado_modulo_compra");
 		rep_reporte.setId("rep_reporte"); //id
 		rep_reporte.getBot_aceptar().setMetodo("aceptarReporte");//ejecuta el metodo al aceptar reporte
 		agregarComponente(rep_reporte);//agrega el componente a la pantalla
@@ -39,6 +43,8 @@ public class pre_compras extends Pantalla{
 		tab_compras.setId("tab_compras");
 		tab_compras.setTabla("adq_solicitud_compra", "ide_adsoc", 1);
 		tab_compras.getColumna("ide_coest").setCombo("cont_estado","ide_coest", "detalle_coest","");
+		tab_compras.getColumna("ide_coest").setLectura(true);
+		tab_compras.getColumna("ide_coest").setAutoCompletar();
 		tab_compras.getColumna("ide_copag").setCombo("cont_parametros_general","ide_copag", "detalle_copag", "");
 		tab_compras.getColumna("ide_geedp").setCombo(ser_nomina.servicioEmpleadoContrato("true,false"));
 		tab_compras.getColumna("gen_ide_geedp").setCombo(ser_nomina.servicioEmpleadoContrato("true,false"));
@@ -60,6 +66,7 @@ public class pre_compras extends Pantalla{
 		PanelTabla pat_panel1=new PanelTabla();
 		pat_panel1.setPanelTabla(tab_compras);
 		agregarComponente(pat_panel1);
+		
 		
 	}
 	//reporte
@@ -87,6 +94,8 @@ public class pre_compras extends Pantalla{
 	public void insertar() {
 		// TODO Auto-generated method stub
 		tab_compras.insertar();
+		tab_compras.setValor("ide_coest",par_estado_modulo_compra);
+		utilitario.addUpdate("tab_compras");
 		
 	}
 
