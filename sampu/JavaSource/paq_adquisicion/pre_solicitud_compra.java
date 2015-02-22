@@ -26,6 +26,7 @@ public class pre_solicitud_compra extends Pantalla {
 	private SeleccionTabla set_proveedor=new SeleccionTabla();
 
 	public static String par_modulo_adquisicion;
+	
 
 	@EJB
 	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
@@ -36,6 +37,7 @@ public class pre_solicitud_compra extends Pantalla {
 
 	public pre_solicitud_compra() {
 		par_modulo_adquisicion =utilitario.getVariable("p_modulo_adquisicion");
+		
 		// TODO Auto-generated constructor stub
 		tab_solicitud_compra.setId("tab_solicitud_compra");
 		tab_solicitud_compra.setTabla("adq_solicitud_compra", "ide_adsoc", 1);
@@ -213,6 +215,7 @@ public class pre_solicitud_compra extends Pantalla {
 	public void insertar() {
 		// TODO Auto-generated method stub
 		dia_presupuesto.dibujar();
+		
 	}
 
 	@Override
