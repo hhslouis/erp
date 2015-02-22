@@ -14,10 +14,13 @@ import paq_bodega.ejb.ServicioBodega;
 import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_nomina.ejb.ServicioNomina;
 import paq_sistema.aplicacion.Pantalla;
+import paq_sistema.aplicacion.Utilitario;
 
 public class pre_compras extends Pantalla{
 	
 	public static String par_estado_modulo_compra;
+	public static String par_modulo_adquisicion;
+
 	private SeleccionTabla set_tipo_compra=new SeleccionTabla();
 
 	private Tabla tab_compras=new Tabla();
@@ -27,6 +30,9 @@ public class pre_compras extends Pantalla{
 	private ServicioNomina ser_nomina = (ServicioNomina ) utilitario.instanciarEJB(ServicioNomina.class);
 	@EJB
 	private ServicioBodega ser_bodega = (ServicioBodega ) utilitario.instanciarEJB(ServicioBodega.class);
+	@EJB
+	private ServicioContabilidad ser_estados = (ServicioContabilidad) utilitario.instanciarEJB(ServicioContabilidad.class);
+	
 	private Map p_parametros = new HashMap();
 	private Reporte rep_reporte = new Reporte();
 	private SeleccionFormatoReporte self_reporte = new SeleccionFormatoReporte();
@@ -34,6 +40,8 @@ public class pre_compras extends Pantalla{
 	
 	public pre_compras(){
 		par_estado_modulo_compra =utilitario.getVariable("p_estado_modulo_compra");
+		par_modulo_adquisicion =utilitario.getVariable("p_modulo_adquisicion");
+
 		rep_reporte.setId("rep_reporte"); //id
 		rep_reporte.getBot_aceptar().setMetodo("aceptarReporte");//ejecuta el metodo al aceptar reporte
 		agregarComponente(rep_reporte);//agrega el componente a la pantalla
@@ -67,12 +75,29 @@ public class pre_compras extends Pantalla{
 		pat_panel1.setPanelTabla(tab_compras);
 		agregarComponente(pat_panel1);
 		
+		set_tipo_compra.setId("set_tipo_compra");
+		//set_empleado.setHeader("IMPORTAR EMPLEADO"+ser_nomina.ideEmpleadoContrato(tab_tiket_viaje.getValor("ide_geedp")).getStringColumna("nombres_apellidos"));
 		
-	}
+		set_tipo_compra.setSeleccionTabla(ser_contabilidad.getModuloParametros("true", par_modulo_adquisicion),"ide_copag");
+
+
+		//set_empleado.getTab_seleccion().getColumna("nombre_apellido").setFiltro(true);
+		set_tipo_compra.setTitle("Seleccione el tipo de compra");
+		set_tipo_compra.getBot_aceptar().setMetodo("aceptarCompra");
+		set_tipo_compra.setRadio();
+		agregarComponente(set_tipo_compra);	
+
+		
+			}
 	//reporte
 	   public void abrirListaReportes() {
 	   	// TODO Auto-generated method stub
 	   	rep_reporte.dibujar();
+	   }
+	   public void aceptarCompra(){
+		   tab_compras.setValor("ide_copag", set_tipo_compra.getValorSeleccionado());
+		  utilitario.addUpdate("tab_compras");
+		   
 	   }
 	   public void aceptarReporte(){
 	   	if(rep_reporte.getReporteSelecionado().equals("Solucitud Compra"));{
@@ -94,7 +119,11 @@ public class pre_compras extends Pantalla{
 	public void insertar() {
 		// TODO Auto-generated method stub
 		tab_compras.insertar();
+		
 		tab_compras.setValor("ide_coest",par_estado_modulo_compra);
+		set_tipo_compra.getTab_seleccion().setSql(ser_contabilidad.getModuloParametros("true", par_estado_modulo_compra));
+		set_tipo_compra.getTab_seleccion().ejecutarSql();
+		set_tipo_compra.dibujar();
 		utilitario.addUpdate("tab_compras");
 		
 	}
