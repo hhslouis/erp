@@ -50,6 +50,7 @@ public class pre_contratacion extends Pantalla{
 
 	public pre_contratacion(){
 		com_anio.setCombo("select ide_geani,detalle_geani from gen_anio order by detalle_geani");
+		com_anio.setMetodo("filtrarAnio");
 		//com_anio.setMetodo("seleccionaElAnio");
 		bar_botones.agregarComponente(new Etiqueta("Seleccione El Año:"));
 		bar_botones.agregarComponente(com_anio);
@@ -57,8 +58,8 @@ public class pre_contratacion extends Pantalla{
 
 		Tabulador tab_tabulador = new Tabulador();
 		tab_tabulador.setId("tab_tabulador");
-		
-		
+
+
 
 		tab_poa.setId("tab_poa");   
 		tab_poa.setHeader("PLAN OPERATIVO ANUAL (POA)");
@@ -68,7 +69,7 @@ public class pre_contratacion extends Pantalla{
 		tab_poa.getColumna("objeto_programa_prpoa").setVisible(false);
 		tab_poa.getColumna("objetivo_proyecto_prpoa").setVisible(false);
 		tab_poa.getColumna("meta_proyecto_prpoa").setVisible(false);
-		
+
 		tab_poa.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
 		tab_poa.getColumna("ide_prcla").setCombo(ser_presupuesto.getCatalogoPresupuestario());
 		//tab_poa.getColumna("ide_prcla").setAutoCompletar();
@@ -160,19 +161,20 @@ public class pre_contratacion extends Pantalla{
 		arb_arbol.setId("arb_arbol");
 		arb_arbol.setArbol("pre_funcion_programa", "ide_prfup", "detalle_prfup", "pre_ide_prfup");
 		//arb_arbol.setArbol("CMP_FACTOR_COMPETENCIA", "IDE_CMFAC", "DETALLE_CMFAC", "CMP_IDE_CMFAC");
+		arb_arbol.setCondicion("ide_prfup in (select ide_prfup from cont_vigente where ide_prfup != null and ide_geani=-1 )"); //Carga vacio
 		arb_arbol.onSelect("seleccionar_arbol");	
 		arb_arbol.dibujar();
-					
-		
+
+
 		Division div3 = new Division(); //UNE OPCION Y DIV 2
 		div3.dividir2(pat_poa, tab_tabulador, "50%", "H");
 		Division div_division = new Division();
 		div_division.setId("div_division");
 		div_division.dividir2(arb_arbol, div3, "40%", "V");  //arbol y div3
 		agregarComponente(div_division);
-		
-		
-		
+
+
+
 		Boton bot_agregar=new Boton();
 		bot_agregar.setValue("Agregar Clasificador");
 		bot_agregar.setMetodo("agregarClasificador");
@@ -200,7 +202,7 @@ public class pre_contratacion extends Pantalla{
 		set_funcion.getBot_aceptar().setMetodo("aceptarFuncionPrograma");
 		agregarComponente(set_funcion);
 
-		
+
 
 	}
 	public void seleccionar_arbol(NodeSelectEvent evt) {
@@ -210,7 +212,14 @@ public class pre_contratacion extends Pantalla{
 		}
 		arb_arbol.seleccionarNodo(evt);
 		tab_poa.setCondicion("ide_prfup="+arb_arbol.getValorSeleccionado());
-		tab_poa.ejecutarSql();	
+		tab_poa.ejecutarSql();		
+		tab_poa.getColumna("IDE_PRFUP").setValorDefecto(arb_arbol.getValorSeleccionado());
+		tab_mes.ejecutarValorForanea(tab_poa.getValorSeleccionado());
+		tab_reforma.ejecutarValorForanea(tab_poa.getValorSeleccionado());
+		tab_archivo.ejecutarValorForanea(tab_poa.getValorSeleccionado());
+		tab_financiamiento.ejecutarValorForanea(tab_poa.getValorSeleccionado());
+
+		
 	}
 
 	public void agregarClasificador(){
@@ -326,26 +335,23 @@ public class pre_contratacion extends Pantalla{
 
 	}
 
-	public void seleccionaElAnio (){
+	public void filtrarAnio(){
+
 		if(com_anio.getValue()!=null){
-			tab_poa.setCondicion("ide_geani="+com_anio.getValue());
-			tab_poa.ejecutarSql();
-			tab_mes.ejecutarValorForanea(tab_poa.getValorSeleccionado());
-			tab_reforma.ejecutarValorForanea(tab_poa.getValorSeleccionado());
-			tab_archivo.ejecutarValorForanea(tab_poa.getValorSeleccionado());
-			tab_financiamiento.ejecutarValorForanea(tab_poa.getValorSeleccionado());
+			arb_arbol.setCondicion("ide_prfup in (select ide_prfup from cont_vigente where not ide_prfup is null and ide_geani="+com_anio.getValue()+")");		
+			tab_poa.getColumna("ide_geani").setValorDefecto(com_anio.getValue().toString());
 		}
-		else { 
-			tab_poa.setCondicion("ide_geani=-1");
-			tab_poa.ejecutarSql();
-			tab_mes.ejecutarValorForanea(tab_poa.getValorSeleccionado());
-			tab_reforma.ejecutarValorForanea(tab_poa.getValorSeleccionado());
-			tab_archivo.ejecutarValorForanea(tab_poa.getValorSeleccionado());
-			tab_financiamiento.ejecutarValorForanea(tab_poa.getValorSeleccionado());
+		else{
+			arb_arbol.setCondicion("ide_prfup in (select ide_prfup from cont_vigente where not ide_prfup is null and ide_geani=-1 )");
+		}
+		arb_arbol.ejecutarSql();		
+		
+		utilitario.addUpdate("arb_arbol");
 
 
-		}
 	}
+
+
 
 	public Tabla getTab_poa() {
 		return tab_poa;
