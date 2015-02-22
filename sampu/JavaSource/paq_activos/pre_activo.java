@@ -7,11 +7,16 @@ import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.el.ValueExpression;
+import javax.faces.context.FacesContext;
 import javax.imageio.ImageIO;
 
 import org.primefaces.component.graphicimage.GraphicImage;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
+
+import paq_sistema.aplicacion.Pantalla;
 
 import com.lowagie.text.pdf.Barcode128;
 
@@ -20,7 +25,6 @@ import framework.componentes.PanelTabla;
 import framework.componentes.Reporte;
 import framework.componentes.SeleccionFormatoReporte;
 import framework.componentes.Tabla;
-import paq_sistema.aplicacion.Pantalla;
 
 public class pre_activo extends Pantalla {
 	private Tabla tab_activos_fijos=new Tabla();
@@ -54,6 +58,7 @@ public class pre_activo extends Pantalla {
 		tab_activos_fijos.setTipoFormulario(true);
 		tab_activos_fijos.getGrid().setColumns(4);
 		tab_activos_fijos.agregarRelacion(tab_custodio);
+		tab_activos_fijos.onSelect("seleccionarActivo");
 		tab_activos_fijos.dibujar();
 		PanelTabla pat_activo_fijos=new PanelTabla();
 		pat_activo_fijos.setPanelTabla(tab_activos_fijos);
@@ -68,8 +73,11 @@ public class pre_activo extends Pantalla {
 		pat_custodio.setPanelTabla(tab_custodio);
 
 
-		generarCodigoBarras("123456");		
+		generarCodigoBarras(tab_custodio.getValor("cod_barra_afcus"));		
 		giBarra.setId("giBarra");
+		giBarra.setWidth("300");
+		giBarra.setHeight("120");
+		giBarra.setValueExpression("value", crearValueExpression("pre_index.clase.codBarras"));
 
 		Division div=new Division();
 		div.dividir2(pat_custodio,giBarra , "70%", "V");
@@ -79,7 +87,51 @@ public class pre_activo extends Pantalla {
 
 		agregarComponente(div_division);
 	}
+	
+	public void seleccionarActivo(SelectEvent evt){
+		tab_activos_fijos.seleccionarFila(evt);
+		tab_custodio.ejecutarValorForanea(tab_activos_fijos.getValorSeleccionado());
+		generarCodigoBarras(tab_custodio.getValor("cod_barra_afcus"));
+		
+	}
 
+	@Override
+	public void inicio() {
+		// TODO Auto-generated method stub
+		super.inicio();
+		if(tab_custodio.isFocus()){
+			generarCodigoBarras(tab_custodio.getValor("cod_barra_afcus"));	
+		}
+	}
+	
+	@Override
+	public void siguiente() {
+		// TODO Auto-generated method stub
+		super.siguiente();
+		if(tab_custodio.isFocus()){
+			generarCodigoBarras(tab_custodio.getValor("cod_barra_afcus"));	
+		}
+	}
+	
+	
+	@Override
+	public void atras() {
+		// TODO Auto-generated method stub
+		super.atras();
+		if(tab_custodio.isFocus()){
+			generarCodigoBarras(tab_custodio.getValor("cod_barra_afcus"));	
+		}
+	}
+	
+	@Override
+	public void fin() {
+		// TODO Auto-generated method stub
+		super.fin();
+		if(tab_custodio.isFocus()){
+			generarCodigoBarras(tab_custodio.getValor("cod_barra_afcus"));	
+		}
+	}
+	
 	//reporte
 	public void abrirListaReportes() {
 		// TODO Auto-generated method stub
@@ -105,33 +157,29 @@ public class pre_activo extends Pantalla {
 
 
 	private void generarCodigoBarras(String cod)  {
+		if(cod==null || cod.isEmpty()){
+			codBarras=null;
+			utilitario.addUpdate("giBarra");
+			return;
+		}
 		try{
 			Barcode128 code128 = new Barcode128();
 			code128.setCode(cod);
 			java.awt.Image img = code128.createAwtImage(Color.BLACK, Color.WHITE);			
 			BufferedImage outImage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_RGB);
-			
 			outImage.getGraphics().drawImage(img, 0, 0, null);
-			
 			ByteArrayOutputStream bytesOut = new ByteArrayOutputStream();
-			
 			ImageIO.write(outImage, "jpeg", bytesOut);
-			
 			bytesOut.flush();
-		
 			byte[] jpgImageData = bytesOut.toByteArray();
-		
 			codBarras= new DefaultStreamedContent(new ByteArrayInputStream(jpgImageData), "image/png");
-		
 			giBarra.setValue(codBarras);
+			utilitario.addUpdate("giBarra");
 		}catch(Exception ex){
 			System.out.println(ex.getMessage());
 			ex.printStackTrace();
 		}
 	}
-
-
-
 
 
 	@Override
@@ -221,6 +269,21 @@ public class pre_activo extends Pantalla {
 	public void setMap_parametros(Map map_parametros) {
 		this.map_parametros = map_parametros;
 	}
+
+	public StreamedContent getCodBarras() {
+		return codBarras;
+	}
+
+	public void setCodBarras(StreamedContent codBarras) {
+		this.codBarras = codBarras;
+	}
+	
+	private ValueExpression crearValueExpression(String expresion) {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        return facesContext.getApplication().getExpressionFactory().createValueExpression(
+                facesContext.getELContext(), "#{" + expresion + "}", Object.class);
+    }
+
 
 }
 
