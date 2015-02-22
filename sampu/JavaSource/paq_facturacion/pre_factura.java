@@ -163,7 +163,7 @@ public class pre_factura extends Pantalla{
 		tab_detalle_factura.setCampoForanea("ide_fafac");
 
 		// ide_bomat---setcombo y set autocompletar
-		tab_detalle_factura.getColumna("ide_bomat").setCombo(ser_bodega.getInventario("1","true,false",""));
+		tab_detalle_factura.getColumna("ide_bomat").setCombo(ser_bodega.getInventario("0","true,false","2"));
 		tab_detalle_factura.getColumna("ide_bomat").setAutoCompletar();
 		//definimos el metodo que va a ejecutar cuando el usuario seleccione del Autocompletar
 		tab_detalle_factura.getColumna("ide_bomat").setMetodoChange("seleccionoProducto");
