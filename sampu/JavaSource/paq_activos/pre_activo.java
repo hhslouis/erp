@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.ejb.EJB;
 import javax.el.ValueExpression;
 import javax.faces.context.FacesContext;
 import javax.imageio.ImageIO;
@@ -16,14 +17,20 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
+import paq_bodega.ejb.ServicioBodega;
+import paq_contabilidad.ejb.ServicioContabilidad;
+import paq_nomina.ejb.ServicioNomina;
 import paq_sistema.aplicacion.Pantalla;
 
 import com.lowagie.text.pdf.Barcode128;
 
+import framework.aplicacion.TablaGenerica;
+import framework.componentes.Boton;
 import framework.componentes.Division;
 import framework.componentes.PanelTabla;
 import framework.componentes.Reporte;
 import framework.componentes.SeleccionFormatoReporte;
+import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 
 public class pre_activo extends Pantalla {
@@ -33,8 +40,13 @@ public class pre_activo extends Pantalla {
 	private Reporte rep_reporte = new Reporte();
 	private SeleccionFormatoReporte self_reporte = new SeleccionFormatoReporte();
 	private Map map_parametros = new HashMap();
-
-
+	private SeleccionTabla set_empleado=new SeleccionTabla();
+	@EJB
+	private ServicioNomina ser_nomina = (ServicioNomina) utilitario.instanciarEJB(ServicioNomina.class);
+	@EJB
+	private ServicioBodega ser_bodega = (ServicioBodega ) utilitario.instanciarEJB(ServicioBodega.class);
+	@EJB
+	private ServicioContabilidad ser_Contabilidad= (ServicioContabilidad) utilitario.instanciarEJB(ServicioContabilidad.class); 
 
 	private StreamedContent codBarras;
 	private GraphicImage giBarra=new GraphicImage();
@@ -53,8 +65,13 @@ public class pre_activo extends Pantalla {
 		tab_activos_fijos.getColumna("ide_aftia").setCombo("afi_tipo_activo","ide_aftia","detalle_aftia","");
 		tab_activos_fijos.getColumna("ide_aftip").setCombo("afi_tipo_propiedad","ide_aftip","detalle_aftip","");
 		tab_activos_fijos.getColumna("ide_afseg").setCombo("afi_seguro","ide_afseg","detalle_afseg","");
-
-
+		tab_activos_fijos.getColumna("ide_afnoa").setCombo("afi_nombre_activo", "ide_afnoa", "detalle_afnoa", "");
+		tab_activos_fijos.getColumna("ide_geare").setCombo("gen_area", "ide_geare", "detalle_geare", "");
+		tab_activos_fijos.getColumna("ide_afacd").setCombo("afi_actividad", "ide_afacd", "detalle_afacd", "");
+		tab_activos_fijos.getColumna("ide_coest").setCombo("cont_estado", "ide_coest", "detalle_coest", "");
+		tab_activos_fijos.getColumna("ide_cocac").setCombo(ser_Contabilidad.getCuentaContable("true,false"));
+		tab_activos_fijos.getColumna("ide_tepro").setCombo(ser_bodega.getProveedor("true,false"));
+		tab_activos_fijos.getColumna("ide_tepro").setAutoCompletar();
 		tab_activos_fijos.setTipoFormulario(true);
 		tab_activos_fijos.getGrid().setColumns(4);
 		tab_activos_fijos.agregarRelacion(tab_custodio);
@@ -66,6 +83,12 @@ public class pre_activo extends Pantalla {
 
 		tab_custodio.setId("tab_custodio");
 		tab_custodio.setTabla("afi_custodio","ide_afcus", 2);
+		tab_custodio.getColumna("ide_coest").setCombo("cont_estado", "ide_coest", "detalle_coest", "");
+		tab_custodio.getColumna("ide_geedp").setCombo(ser_nomina.servicioEmpleadoContrato("true,false"));
+		tab_custodio.getColumna("ide_geedp").setLectura(true);
+		tab_custodio.getColumna("ide_geedp").setAutoCompletar();
+		tab_custodio.getColumna("ide_geedp").setUnico(true);
+		tab_custodio.getColumna("ide_afcus").setUnico(true);
 		tab_custodio.setTipoFormulario(true);
 		tab_custodio.getGrid().setColumns(4);
 		tab_custodio.dibujar();
@@ -86,7 +109,57 @@ public class pre_activo extends Pantalla {
 		div_division.dividir2(pat_activo_fijos,div, "50%", "h");
 
 		agregarComponente(div_division);
+		
+		////boton empleado
+		Boton bot_empleado=new Boton();
+		bot_empleado.setIcon("ui-icon-person");
+		bot_empleado.setValue("Agregar Empleado");
+		bot_empleado.setMetodo("importarEmpleado");
+		bar_botones.agregarBoton(bot_empleado);
+
+		///empelado
+	set_empleado.setId("set_empleado");
+	set_empleado.setSeleccionTabla(ser_nomina.servicioEmpleadoContrato("true"),"ide_geedp");
+	set_empleado.setTitle("Seleccione un Empleado");
+	set_empleado.setRadio();
+	set_empleado.getBot_aceptar().setMetodo("aceptarEmpleado");
+	agregarComponente(set_empleado);
+		
 	}
+	
+	public void importarEmpleado(){
+		if (tab_custodio.isEmpty()) {
+			utilitario.agregarMensajeInfo("Debe ingresar un registro en el contrato", "");
+			return;
+			
+		}
+							
+		set_empleado.getTab_seleccion().setSql(ser_nomina.servicioEmpleadoContrato("true"));
+		set_empleado.getTab_seleccion().ejecutarSql();
+		set_empleado.dibujar();
+		}
+	public void aceptarEmpleado(){
+		String str_seleccionados=set_empleado.getSeleccionados();
+		if(str_seleccionados!=null){
+			//Inserto los empleados seleccionados en la tabla de resposable d econtratacion 
+			TablaGenerica tab_empleado_responsable = ser_nomina.ideEmpleadoContrato(str_seleccionados);		
+						
+			System.out.println(" tabla generica"+tab_empleado_responsable.getSql());
+			for(int i=0;i<tab_empleado_responsable.getTotalFilas();i++){
+				tab_custodio.insertar();
+				tab_custodio.setValor("IDE_GEEDP", tab_empleado_responsable.getValor(i, "IDE_GEEDP"));			
+				
+			}
+			set_empleado.cerrar();
+			utilitario.addUpdate("tab_responsable");			
+		}
+		else{
+			utilitario.agregarMensajeInfo("Debe seleccionar almenos un registro", "");
+		}
+	}
+		
+
+
 	
 	public void seleccionarActivo(SelectEvent evt){
 		tab_activos_fijos.seleccionarFila(evt);
@@ -283,6 +356,14 @@ public class pre_activo extends Pantalla {
         return facesContext.getApplication().getExpressionFactory().createValueExpression(
                 facesContext.getELContext(), "#{" + expresion + "}", Object.class);
     }
+
+	public SeleccionTabla getSet_empleado() {
+		return set_empleado;
+	}
+
+	public void setSet_empleado(SeleccionTabla set_empleado) {
+		this.set_empleado = set_empleado;
+	}
 
 
 }
