@@ -2,10 +2,14 @@ package paq_tesoreria;
 
 import javax.ejb.EJB;
 
+import org.apache.poi.hssf.record.formula.Ptg;
+
 import framework.aplicacion.TablaGenerica;
 import framework.componentes.AutoCompletar;
 import framework.componentes.Boton;
 import framework.componentes.Division;
+import framework.componentes.Etiqueta;
+import framework.componentes.Grid;
 import framework.componentes.PanelTabla;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
@@ -26,6 +30,8 @@ public class pre_comprobante_pago extends Pantalla{
 	private AutoCompletar aut_movimiento=new AutoCompletar();
 	private SeleccionTabla set_solicitud=new SeleccionTabla();
 	private SeleccionTabla set_tramite=new SeleccionTabla();
+	
+	
 
 	@EJB
 	private ServicioAdquisicion ser_Adquisicion=(ServicioAdquisicion) utilitario.instanciarEJB(ServicioAdquisicion.class);
@@ -53,47 +59,103 @@ public class pre_comprobante_pago extends Pantalla{
 		tab_comprobante.getColumna("IDE_GEDIP").setCombo(ser_gestion.getSqlDivisionPoliticaCiudad());
 		tab_comprobante.getColumna("IDE_GEEDP").setCombo(ser_nomina.servicioEmpleadoContrato("true"));
 		tab_comprobante.getColumna("IDE_ADSOC").setCombo(ser_Adquisicion.getSolicitudCompra("true"));
+		tab_comprobante.getColumna("ide_tetic").setCombo("tes_tipo_concepto", "ide_tetic", "detalle_tetic,fecha_pago_tetic", "");
+		tab_comprobante.getColumna("ide_comov").setCombo("cont_movimiento", "ide_comov", "nro_comprobante_comov", "");
 		tab_comprobante.setTipoFormulario(true);
 		tab_comprobante.getGrid().setColumns(4);
 		tab_comprobante.agregarRelacion(tab_retencion);
+		
 		tab_comprobante.dibujar();
 		PanelTabla pat_comprobante=new PanelTabla();
 		pat_comprobante.setPanelTabla(tab_comprobante);
-
+		///DETALLE MOVIMIENTO
 		tab_detalle_movimiento.setId("tab_detalle_movimiento");
 		tab_detalle_movimiento.setIdCompleto("tab_tabulador:tab_detalle_movimiento");
 		tab_detalle_movimiento.setHeader("DETALLE MOVIMIENTO");
 		tab_detalle_movimiento.setTabla("cont_detalle_movimiento", "ide_codem", 2);
 		//filtra por asiento contable cuando no tiene relacion a tes_comprovante_pago
-		tab_detalle_movimiento.setCondicion("ide_comov=-1");
+		tab_detalle_movimiento.setCondicion("ide_comov="+tab_comprobante.getValor("ide_comov"));	
+		tab_detalle_movimiento.getColumna("ide_comov").setVisible(false);
+		tab_detalle_movimiento.setTipoFormulario(true);
+		tab_detalle_movimiento.getGrid().setColumns(4);
 		tab_detalle_movimiento.dibujar();
 		PanelTabla pat_movimiento=new PanelTabla();
 		pat_movimiento.setPanelTabla(tab_detalle_movimiento);
-
+		
+		
+		
+		///RETENCION
 		tab_retencion.setId("tab_retencion");
 		tab_retencion.setIdCompleto("tab_tabulador:tab_retencion");
-		tab_retencion.setHeader("RETENCION");
+		//tab_retencion.setHeader("RETENCION");
 		tab_retencion.setTabla("tes_retencion", "ide_teret", 2);
+		tab_retencion.setTipoFormulario(true);
+		tab_retencion.getGrid().setColumns(4);
+		tab_retencion.agregarRelacion(tab_detalle_retencion);
 		tab_retencion.dibujar();
 		PanelTabla pat_retencion =new PanelTabla();
 		pat_retencion.setPanelTabla(tab_retencion);
+		
+		Etiqueta eti_retencion=new Etiqueta(); 
+		eti_retencion.setValue("RETENCION");
+		eti_retencion.setStyle("font-size: 13px;color: red;font-weight: bold");
+		
+		
+		pat_retencion.setHeader(eti_retencion);
+		
 
+		///DETALLE RETENCION
 		tab_detalle_retencion.setId("tab_detalle_retencion");
 		tab_detalle_retencion.setIdCompleto("tab_tabulador:tab_detalle_retencion");
-		tab_detalle_retencion.setHeader("DETALLE RETENCION");
+		//tab_detalle_retencion.setHeader("DETALLE RETENCION");
 		tab_detalle_retencion.setTabla("tes_detalle_retencion", "ide_teder", 3);
+		tab_detalle_retencion.getColumna("ide_teimp").setCombo("tes_impuesto", "ide_teimp", "detalle_teimp,codigo_teimp,porcentaje_teimp", "");
+		tab_detalle_retencion.setTipoFormulario(true);
+		tab_detalle_retencion.getGrid().setColumns(4);
+
 		tab_detalle_retencion.dibujar();
 		PanelTabla pat_detalle_retencion=new PanelTabla();
 		pat_detalle_retencion.setPanelTabla(tab_detalle_retencion);
+		
+		
+		Etiqueta eti_detalle_retencion=new Etiqueta(); 
+		eti_detalle_retencion.setValue("DETALLE RETENCION");
+		eti_detalle_retencion.setStyle("font-size: 13px;color: red;font-weight: bold");
+		
+		pat_detalle_retencion.setHeader(eti_detalle_retencion);
+
+		
+		/*eti_detalle_retencion.setId("eti_detalle_retencion");
+		eti_detalle_retencion.setValue("DETALLE RETENCION: ");
+		//eti_detalle_retencion.setStyle("font-size: 14px;color: red;font-weight: bold");
+
+		
+		Grid gri_detalle=new Grid();
+		gri_detalle.setWidth("100%");
+		gri_detalle.getChildren().add(eti_detalle_retencion);
+
+		pat_detalle_retencion.setHeader(gri_detalle);*/
+		
+		//Division div_retencion=new Division();
+		//div_retencion.dividir2(pat_retencion, pat_detalle_retencion, "50%", "V");
+		Grid gri=new Grid();
+		gri.setColumns(2);
+		gri.getChildren().add(pat_retencion);
+		gri.getChildren().add(pat_detalle_retencion);
+
 
 
 		tab_tabulador.agregarTab("DETALLE MOVIMIENTO", pat_movimiento);//intancia los tabuladores 
-		tab_tabulador.agregarTab("RETENCION", pat_retencion);
-		tab_tabulador.agregarTab("DETALLE RETENCION", pat_detalle_retencion);
+		tab_tabulador.agregarTab("RETENCION", gri);
+		///tab_tabulador.agregarTab("DETALLE RETENCION", pat_detalle_retencion);
 
 		Division div_division =new Division();
+		//div_division.setId("div_division");
 		div_division.dividir2(pat_comprobante, tab_tabulador, "50%", "H");
 		agregarComponente(div_division);
+		
+		
+			
 
 		Boton bot_buscar=new Boton();
 		bot_buscar.setIcon("ui-icon-person");
@@ -164,6 +226,27 @@ public class pre_comprobante_pago extends Pantalla{
 		set_tramite.cerrar();
 		utilitario.addUpdate("tab_comprobante");
 	}
+	
+	
+	/// calcular
+	
+	public void calcular(){
+		//Variables para almacenar y calcular el total del detalle
+				double duo_base_imponible_teder=0;
+				double valor_retenido_teder=0;
+
+				try {
+					//Obtenemos el valor de la cantidad
+					duo_base_imponible_teder=Double.parseDouble(tab_detalle_retencion.getValor("valor_retenido_teder"));
+				} catch (Exception e){
+					
+				}
+				
+				
+				//Calculamos el total
+				duo_base_imponible_teder=duo_base_imponible_teder*12/100;
+
+	}
 
 	@Override
 	public void insertar() {
@@ -174,6 +257,7 @@ public class pre_comprobante_pago extends Pantalla{
 
 		else if (tab_detalle_movimiento.isFocus()){
 			tab_detalle_movimiento.insertar();
+			tab_detalle_movimiento.setValor("ide_comov", tab_comprobante.getValor("ide_comov"));
 
 		}
 		else if (tab_retencion.isFocus()) {
@@ -187,6 +271,47 @@ public class pre_comprobante_pago extends Pantalla{
 	}
 
 	@Override
+	public void inicio() {
+		// TODO Auto-generated method stub
+		if (tab_comprobante.isFocus()){
+			tab_detalle_movimiento.setCondicion("ide_comov="+tab_comprobante.getValor("ide_comov"));
+
+		}
+		super.inicio();
+	}
+	@Override
+	public void siguiente() {
+		// TODO Auto-generated method stub
+		if (tab_comprobante.isFocus()){
+			tab_detalle_movimiento.setCondicion("ide_comov="+tab_comprobante.getValor("ide_comov"));
+
+		}
+
+		super.siguiente();
+	}
+	@Override
+	public void atras() {
+		// TODO Auto-generated method stub
+		if (tab_comprobante.isFocus()){
+			tab_detalle_movimiento.setCondicion("ide_comov="+tab_comprobante.getValor("ide_comov"));
+
+		}
+
+		super.atras();
+	}
+	
+	@Override
+	public void fin() {
+		// TODO Auto-generated method stub
+		if (tab_comprobante.isFocus()){
+			tab_detalle_movimiento.setCondicion("ide_comov="+tab_comprobante.getValor("ide_comov"));
+
+		}
+
+		super.fin();
+	}
+	@Override
+	
 	public void guardar() {
 		// TODO Auto-generated method stub
 		if (tab_comprobante.guardar()) {
