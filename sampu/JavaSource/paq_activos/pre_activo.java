@@ -26,6 +26,7 @@ import com.lowagie.text.pdf.Barcode128;
 
 import framework.aplicacion.TablaGenerica;
 import framework.componentes.Boton;
+import framework.componentes.Confirmar;
 import framework.componentes.Division;
 import framework.componentes.PanelTabla;
 import framework.componentes.Reporte;
@@ -41,6 +42,9 @@ public class pre_activo extends Pantalla {
 	private SeleccionFormatoReporte self_reporte = new SeleccionFormatoReporte();
 	private Map map_parametros = new HashMap();
 	private SeleccionTabla set_empleado=new SeleccionTabla();
+
+	private Confirmar con_guardar= new Confirmar();
+	
 	@EJB
 	private ServicioNomina ser_nomina = (ServicioNomina) utilitario.instanciarEJB(ServicioNomina.class);
 	@EJB
@@ -139,10 +143,10 @@ public class pre_activo extends Pantalla {
 		set_empleado.dibujar();
 		}
 	public void aceptarEmpleado(){
-		String str_seleccionados=set_empleado.getSeleccionados();
-		if(str_seleccionados!=null){
+		String str_seleccionado=set_empleado.getValorSeleccionado();
+		if(str_seleccionado!=null){
 			//Inserto los empleados seleccionados en la tabla de resposable d econtratacion 
-			TablaGenerica tab_empleado_responsable = ser_nomina.ideEmpleadoContrato(str_seleccionados);		
+			TablaGenerica tab_empleado_responsable = ser_nomina.ideEmpleadoContrato(str_seleccionado);		
 						
 			System.out.println(" tabla generica"+tab_empleado_responsable.getSql());
 			for(int i=0;i<tab_empleado_responsable.getTotalFilas();i++){
@@ -156,10 +160,11 @@ public class pre_activo extends Pantalla {
 		else{
 			utilitario.agregarMensajeInfo("Debe seleccionar almenos un registro", "");
 		}
-	}
+	
 		
+	
 
-
+	}
 	
 	public void seleccionarActivo(SelectEvent evt){
 		tab_activos_fijos.seleccionarFila(evt);
