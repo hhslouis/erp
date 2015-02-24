@@ -30,8 +30,8 @@ public class pre_comprobante_pago extends Pantalla{
 	private AutoCompletar aut_movimiento=new AutoCompletar();
 	private SeleccionTabla set_solicitud=new SeleccionTabla();
 	private SeleccionTabla set_tramite=new SeleccionTabla();
-	
-	
+
+
 
 	@EJB
 	private ServicioAdquisicion ser_Adquisicion=(ServicioAdquisicion) utilitario.instanciarEJB(ServicioAdquisicion.class);
@@ -43,7 +43,7 @@ public class pre_comprobante_pago extends Pantalla{
 	private ServicioPresupuesto ser_Presupuesto = (ServicioPresupuesto) utilitario.instanciarEJB(ServicioPresupuesto.class);
 	@EJB
 	private ServicioBodega ser_Bodega = (ServicioBodega) utilitario.instanciarEJB(ServicioBodega.class);
-	
+
 	public pre_comprobante_pago (){
 
 		Tabulador tab_tabulador = new Tabulador();
@@ -64,7 +64,7 @@ public class pre_comprobante_pago extends Pantalla{
 		tab_comprobante.setTipoFormulario(true);
 		tab_comprobante.getGrid().setColumns(4);
 		tab_comprobante.agregarRelacion(tab_retencion);
-		
+
 		tab_comprobante.dibujar();
 		PanelTabla pat_comprobante=new PanelTabla();
 		pat_comprobante.setPanelTabla(tab_comprobante);
@@ -81,9 +81,9 @@ public class pre_comprobante_pago extends Pantalla{
 		tab_detalle_movimiento.dibujar();
 		PanelTabla pat_movimiento=new PanelTabla();
 		pat_movimiento.setPanelTabla(tab_detalle_movimiento);
-		
-		
-		
+
+
+
 		///RETENCION
 		tab_retencion.setId("tab_retencion");
 		tab_retencion.setIdCompleto("tab_tabulador:tab_retencion");
@@ -95,14 +95,14 @@ public class pre_comprobante_pago extends Pantalla{
 		tab_retencion.dibujar();
 		PanelTabla pat_retencion =new PanelTabla();
 		pat_retencion.setPanelTabla(tab_retencion);
-		
+
 		Etiqueta eti_retencion=new Etiqueta(); 
 		eti_retencion.setValue("RETENCION");
 		eti_retencion.setStyle("font-size: 13px;color: red;font-weight: bold");
-		
-		
+
+
 		pat_retencion.setHeader(eti_retencion);
-		
+
 
 		///DETALLE RETENCION
 		tab_detalle_retencion.setId("tab_detalle_retencion");
@@ -110,32 +110,36 @@ public class pre_comprobante_pago extends Pantalla{
 		//tab_detalle_retencion.setHeader("DETALLE RETENCION");
 		tab_detalle_retencion.setTabla("tes_detalle_retencion", "ide_teder", 3);
 		tab_detalle_retencion.getColumna("ide_teimp").setCombo("tes_impuesto", "ide_teimp", "detalle_teimp,codigo_teimp,porcentaje_teimp", "");
+		
+		tab_detalle_retencion.getColumna("base_imponible_teder").setMetodoChange("calcular");
+		tab_detalle_retencion.getColumna("valor_retenido_teder").setEtiqueta();
+		tab_detalle_retencion.getColumna("valor_retenido_teder").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_detalle_retencion.setTipoFormulario(true);
 		tab_detalle_retencion.getGrid().setColumns(4);
 
 		tab_detalle_retencion.dibujar();
 		PanelTabla pat_detalle_retencion=new PanelTabla();
 		pat_detalle_retencion.setPanelTabla(tab_detalle_retencion);
-		
-		
+
+
 		Etiqueta eti_detalle_retencion=new Etiqueta(); 
 		eti_detalle_retencion.setValue("DETALLE RETENCION");
 		eti_detalle_retencion.setStyle("font-size: 13px;color: red;font-weight: bold");
-		
+
 		pat_detalle_retencion.setHeader(eti_detalle_retencion);
 
-		
+
 		/*eti_detalle_retencion.setId("eti_detalle_retencion");
 		eti_detalle_retencion.setValue("DETALLE RETENCION: ");
 		//eti_detalle_retencion.setStyle("font-size: 14px;color: red;font-weight: bold");
 
-		
+
 		Grid gri_detalle=new Grid();
 		gri_detalle.setWidth("100%");
 		gri_detalle.getChildren().add(eti_detalle_retencion);
 
 		pat_detalle_retencion.setHeader(gri_detalle);*/
-		
+
 		//Division div_retencion=new Division();
 		//div_retencion.dividir2(pat_retencion, pat_detalle_retencion, "50%", "V");
 		Grid gri=new Grid();
@@ -153,9 +157,9 @@ public class pre_comprobante_pago extends Pantalla{
 		//div_division.setId("div_division");
 		div_division.dividir2(pat_comprobante, tab_tabulador, "50%", "H");
 		agregarComponente(div_division);
-		
-		
-			
+
+
+
 
 		Boton bot_buscar=new Boton();
 		bot_buscar.setIcon("ui-icon-person");
@@ -169,7 +173,7 @@ public class pre_comprobante_pago extends Pantalla{
 		set_solicitud.getBot_aceptar().setMetodo("aceptarSolicitudCompra");
 		set_solicitud.setRadio();
 		agregarComponente(set_solicitud);
-		
+
 		Boton bot_busca=new Boton();
 		bot_busca.setIcon("ui-icon-person");
 		bot_busca.setValue("Buscar Certificaciòn Presupuestaria ");
@@ -194,7 +198,7 @@ public class pre_comprobante_pago extends Pantalla{
 	}
 
 	public void aceptarSolicitudCompra(){
-		
+
 		String str_seleccionado = set_solicitud.getValorSeleccionado();
 		TablaGenerica tab_solicitud=ser_Adquisicion.getTablaGenericaSolicitud(str_seleccionado);
 		if (str_seleccionado!=null){
@@ -216,7 +220,7 @@ public class pre_comprobante_pago extends Pantalla{
 	}
 
 	public void aceptarCertificacionPresupuestaria(){
-		
+
 		String str_seleccionado = set_tramite.getValorSeleccionado();
 		TablaGenerica tab_tramite=ser_Presupuesto.getTablaGenericaTramite(str_seleccionado);
 		if (str_seleccionado!=null){
@@ -226,25 +230,29 @@ public class pre_comprobante_pago extends Pantalla{
 		set_tramite.cerrar();
 		utilitario.addUpdate("tab_comprobante");
 	}
-	
-	
+
+
 	/// calcular
-	
+
 	public void calcular(){
 		//Variables para almacenar y calcular el total del detalle
-				double duo_base_imponible_teder=0;
-				double valor_retenido_teder=0;
+		double duo_base_imponible_teder=0;
+		double duo_valor_retenido_teder=0;
+		double duo_iva=0.12;
 
-				try {
-					//Obtenemos el valor de la cantidad
-					duo_base_imponible_teder=Double.parseDouble(tab_detalle_retencion.getValor("valor_retenido_teder"));
-				} catch (Exception e){
-					
-				}
-				
-				
-				//Calculamos el total
-				duo_base_imponible_teder=duo_base_imponible_teder*12/100;
+		try {
+			//Obtenemos el valor de la cantidad
+			duo_base_imponible_teder=Double.parseDouble(tab_detalle_retencion.getValor("base_imponible_teder"));
+		} catch (Exception e){
+
+		}
+
+
+		//Calculamos el total
+		duo_valor_retenido_teder=duo_base_imponible_teder*duo_iva;
+		tab_detalle_retencion.setValor("valor_retenido_teder",utilitario.getFormatoNumero(duo_valor_retenido_teder,3));
+		utilitario.addUpdateTabla(tab_detalle_retencion, "valor_retenido_teder","");
+
 
 	}
 
@@ -299,7 +307,7 @@ public class pre_comprobante_pago extends Pantalla{
 
 		super.atras();
 	}
-	
+
 	@Override
 	public void fin() {
 		// TODO Auto-generated method stub
@@ -311,7 +319,7 @@ public class pre_comprobante_pago extends Pantalla{
 		super.fin();
 	}
 	@Override
-	
+
 	public void guardar() {
 		// TODO Auto-generated method stub
 		if (tab_comprobante.guardar()) {
