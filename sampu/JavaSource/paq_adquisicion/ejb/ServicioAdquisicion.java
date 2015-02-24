@@ -46,4 +46,20 @@ public String getSolicitud (String ide_adsoc){
 		System.out.println("compras"+tab_compra);
 		return tab_compra;	
 	}
+	public String getTramite (String activo){
+		String tab_estado="SELECT a.ide_prtra,fecha_tramite_prtra,numero_oficio_prtra,total_compromiso_prtra " +
+				" FROM pre_tramite a, cont_estado b" +
+				" WHERE a.ide_coest=b.ide_coest and activo_prtra in ("+activo+") " +
+				" order by numero_oficio_prtra";
+		return tab_estado;
+		
+	}
+	public TablaGenerica getTablaGenericaTramite (String activo){
+		TablaGenerica tab_estado=utilitario.consultar("SELECT a.ide_prtra,fecha_tramite_prtra,numero_oficio_prtra,total_compromiso_prtra " +
+				" FROM pre_tramite a, cont_estado b" +
+				" WHERE a.ide_coest=b.ide_coest and activo_prtra in ("+activo+") " +
+				" order by numero_oficio_prtra");
+		return tab_estado;
+	
+}
 }
