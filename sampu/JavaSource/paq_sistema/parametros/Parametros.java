@@ -294,6 +294,9 @@ public class Parametros {
         
         lis_parametros.add(new Parametro("15", "p_modulo_adquisicion","Indica el modulo que pertenece a adquisiones","9","gen_modulo","ide_gemod","detalle_gemod"));
         lis_parametros.add(new Parametro("15", "p_estado_modulo_compra","Indica el estado inicial de la solicitud de compra al insertar un nuevo registro","10","cont_estado","ide_coest", "detalle_coest"));
+        lis_parametros.add(new Parametro("15", "p_cotizacion_adquisicion","Indica el estado de la cotizacion ","11","cont_estado","ide_coest", "detalle_coest"));
+        lis_parametros.add(new Parametro("15", "p_certificacion_adquisicion","Indica el estado de la certificacion de  adquisicion ","12","cont_estado","ide_coest", "detalle_coest"));
+        lis_parametros.add(new Parametro("15", "p_solicitud_pago_adquisicion","Indica el estado de la solicitud pago adquisicion  ","13","cont_estado","ide_coest", "detalle_coest"));
 
         /*
          * PRESUPUESTO
@@ -301,6 +304,7 @@ public class Parametros {
         lis_parametros.add(new Parametro("16", "p_modulo_presupuesto","Indica el modulo que pertenece a presupuesto","11","gen_modulo","ide_gemod","detalle_gemod"));
 
         return lis_parametros;
+        
         
 
     }
