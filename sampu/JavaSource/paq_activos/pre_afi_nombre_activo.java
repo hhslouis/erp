@@ -12,6 +12,7 @@ public class pre_afi_nombre_activo extends Pantalla {
 	public pre_afi_nombre_activo(){
 		tab_nombre_activo.setId("tab_nombre_activo");
 		tab_nombre_activo.setTabla("afi_nombre_activo","ide_afnoa", 1);
+		tab_nombre_activo.getColumna("ide_afgra").setCombo("afi_grupo_activo", "ide_afgra", "detalle_afgra,vida_util_afgra", "");
 		tab_nombre_activo.dibujar();
 		PanelTabla pat_nombre_activo=new PanelTabla();
 		pat_nombre_activo.setPanelTabla(tab_nombre_activo);
