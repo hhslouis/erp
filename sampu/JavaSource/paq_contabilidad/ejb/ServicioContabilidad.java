@@ -167,25 +167,37 @@ public String getCuentaContable (String activo){
 			"  WHERE activo_cocac IN ("+activo+")order by cue_codigo_cocac ";
 	return cuentacontable;
 }
-public TablaGenerica getTablaCatalogoCuentaAnio (String ide_geani){
+
+/**
+ * Metodo que devuelve la Cuenta Cantable por los años vigentes
+ * @param estado recibe el o los estados true y false, ejemplo: true o false
+ * @param ide_geani recibe el año de las cuentas contables 
+ * @return TablaGenerica Cuenta Contable 
+ */
+public TablaGenerica getTablaCatalogoCuentaAnio (String estado,String ide_geani){
 	
 	TablaGenerica tab_catalogo_cuenta_anio=utilitario.consultar("select a.ide_cocac,cue_codigo_cocac,cue_descripcion_cocac," +
 			"detalle_geani" +
 			"  from cont_catalogo_cuenta a,cont_vigente b,gen_anio c "+
 			" where a.ide_cocac = b.ide_cocac" +
 			" and b.ide_geani= c.ide_geani and b.ide_geani =("+ide_geani+")" +
-			" order by cue_codigo_cocac");
+			" and activo_coca in ("+estado+")order by cue_codigo_cocac");
 	return tab_catalogo_cuenta_anio;
 	
 	
 }
-public String servicioCatalogoCuentaAnio (String ide_geani){
+/**
+ * Metodo que devuelve la Cuenta Cantable por los años vigentes
+ * @param estado recibe el o los estados true y false, ejemplo: true o false
+ * @param ide_geani recibe el año de las cuentas contables 
+ * @return String SQL Cuenta Contable 
+ */
+public String servicioCatalogoCuentaAnio (String estado, String ide_geani){
 	
 	String catalogo_cuenta_anio="select a.ide_cocac,cue_codigo_cocac,cue_descripcion_cocac,detalle_geani " +
 			" from cont_catalogo_cuenta a,cont_vigente b,gen_anio c where a.ide_cocac = b.ide_cocac" +
 			" and b.ide_geani= c.ide_geani and b.ide_geani ="+ide_geani +
-			" order by cue_codigo_cocac";	
-	System.out.println("consluat "+catalogo_cuenta_anio);
+			" and activo_cocac in ("+estado+")order by cue_codigo_cocac";
 	return catalogo_cuenta_anio;
 }
 public String getInventario(String ide_geani,String carga,String material){
@@ -198,7 +210,6 @@ public String getInventario(String ide_geani,String carga,String material){
 				tab_inventario +=" and a.ide_bomat= "+material;
 			}
 			    tab_inventario += " ORDER by ide_boinv";	
-	System.out.println("pruebabab f  "+tab_inventario);
 
 	return tab_inventario;
 }
