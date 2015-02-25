@@ -116,7 +116,7 @@ public pre_pac(){
 		bar_botones.agregarBoton(bot_importar);
 
 		set_clasificador.setId("set_clasificador");
-		set_clasificador.setSeleccionTabla(ser_presupuesto.getCatalogoPresupuestario(),"ide_prcla");
+		set_clasificador.setSeleccionTabla(ser_presupuesto.getCatalogoPresupuestarioAnio("true", com_anio.getValue().toString()),"ide_prcla");
 		set_clasificador.getTab_seleccion().getColumna("DESCRIPCION_CLASIFICADOR_PRCLA").setFiltro(true);		
 		set_clasificador.setTitle("SELECCION UNA PARTIDA");		
 		set_clasificador.getBot_aceptar().setMetodo("aceptarClasificador");
@@ -145,7 +145,7 @@ public void importarClasificador(){
 	}
 
 	//Filtrar los clasificadores del año seleccionado
-	set_clasificador.getTab_seleccion().setSql(ser_presupuesto.getCatalogoPresupuestario());
+	set_clasificador.getTab_seleccion().setSql(ser_presupuesto.getCatalogoPresupuestarioAnio("true", com_anio.getValue().toString()));
 	set_clasificador.getTab_seleccion().ejecutarSql();
 	set_clasificador.dibujar();
 
