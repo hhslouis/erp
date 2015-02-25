@@ -71,7 +71,7 @@ public class pre_contratacion extends Pantalla{
 		tab_poa.getColumna("meta_proyecto_prpoa").setVisible(false);
 
 		tab_poa.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
-		tab_poa.getColumna("ide_prcla").setCombo(ser_presupuesto.getCatalogoPresupuestario());
+		tab_poa.getColumna("ide_prcla").setCombo(ser_presupuesto.getCatalogoPresupuestario("true,false"));
 		//tab_poa.getColumna("ide_prcla").setAutoCompletar();
 		tab_poa.getColumna("ide_prcla").setAncho(50);
 		tab_poa.getColumna("ide_prfup").setCombo(ser_presupuesto.getFuncionPrograma());
@@ -183,7 +183,7 @@ public class pre_contratacion extends Pantalla{
 		set_clasificador.setId("set_clasificador");
 		set_clasificador.setTitle("SELECCIONE UNA PARTIDA PRESUPUESTARIA");
 		set_clasificador.setRadio(); //solo selecciona una opcion
-		set_clasificador.setSeleccionTabla(ser_presupuesto.getCatalogoPresupuestario(), "ide_prcla"); 
+		set_clasificador.setSeleccionTabla(ser_presupuesto.getCatalogoPresupuestarioAnio("true", "-1"), "ide_prcla"); 
 		set_clasificador.getTab_seleccion().getColumna("codigo_clasificador_prcla").setFiltroContenido(); //pone filtro
 		set_clasificador.getTab_seleccion().getColumna("descripcion_clasificador_prcla").setFiltroContenido();//pone filtro
 		set_clasificador.getBot_aceptar().setMetodo("aceptarClasificador");
@@ -234,7 +234,7 @@ public class pre_contratacion extends Pantalla{
 			return;
 		}
 		//Filtrar los clasificadores del año seleccionado
-		set_clasificador.getTab_seleccion().setSql(ser_presupuesto.getCatalogoPresupuestario());
+		set_clasificador.getTab_seleccion().setSql(ser_presupuesto.getCatalogoPresupuestarioAnio("true",com_anio.getValue().toString()));
 		set_clasificador.getTab_seleccion().ejecutarSql();
 		set_clasificador.dibujar();
 	}
