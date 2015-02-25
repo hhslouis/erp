@@ -14,15 +14,33 @@ import framework.aplicacion.TablaGenerica;
 
 public class ServicioPresupuesto {
 	private Utilitario utilitario= new Utilitario();
-
- public String getCatalogoPresupuestario(){
+	/**
+	 * Metodo que devuelve el Catalogo Presupuestario por los años vigentes
+	 * @param estado recibe el o los estados true y false, ejemplo: true o false
+	 * @param ide_geani recibe el año para filtar el ctalaogo presupuestario 
+	 * @return String SQL Clasificador Presupuestario
+	 */
+ public String getCatalogoPresupuestarioAnio(String estado,String ide_geani){
 	 
-	 String tab_presupesto="SELECT ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla FROM pre_clasificador" +
-	 		
-	 		" ORDER BY codigo_clasificador_prcla";
-
-
+	 String tab_presupesto="SELECT ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla " +
+	 		" FROM pre_clasificador a,cont_vigente b,gen_anio c where a.ide_prcla = b.ide_prcla" +
+			" and b.ide_geani= c.ide_geani and b.ide_geani ="+ide_geani +
+			" and activo_prcla in ("+estado+")order by codigo_clasificador_prcla";
 	 	 return tab_presupesto;
+			 
+ }
+
+	/**
+	 * Metodo que devuelve el Catalogo Presupuestario para de esta manera desplegar en los autocompletar del aplicativo de esta manera no saturamos los combos de consulta
+	 * @param estado recibe el o los estados true y false, ejemplo: true o false
+	 * @return String SQL Clasificador Presupuestario solo para consulta de autompletar
+	 */
+ public String getCatalogoPresupuestario(String activo){
+	 
+	 String tab_presupesto="SELECT ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla " +
+	 		" FROM pre_clasificador where activo_prcla in (" +activo+")"+
+				" ORDER BY codigo_clasificador_prcla";
+	 return tab_presupesto;
 			 
  }
  public TablaGenerica getTablaCatalogoPresupuestario(String ideClasificador){
@@ -33,7 +51,7 @@ public class ServicioPresupuesto {
 	 return tab_presupesto;
 			 
  } 
-public String getFuncionPrograma(){
+ public String getFuncionPrograma(){
 	String tab_funcion="select ide_prfup,detalle_prfup,codigo_prfup  " +
 			"from pre_funcion_programa ";
 	return tab_funcion;
