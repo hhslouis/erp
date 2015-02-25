@@ -5294,7 +5294,7 @@ System.out.println("sql getSqlEmpleadosRol..."+sql);
 		public String servicioEmpleadosActivos(String estado){
 			String sql_empleadosActivos="select ide_gtemp, apellido_paterno_gtemp, " +
 					"apellido_materno_gtemp,primer_nombre_gtemp, segundo_nombre_gtemp, " +
-					"documento_identidad_gtemp from gth_empleado where activo_gtemp in (true,false)  " +
+					"documento_identidad_gtemp from gth_empleado where activo_gtemp in ("+estado+")  " +
 					"order by apellido_paterno_gtemp, apellido_materno_gtemp ";
 			return sql_empleadosActivos;
 		}
