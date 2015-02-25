@@ -33,8 +33,7 @@ public class pre_asociacion_presupuestaria extends Pantalla {
 
 
 	public pre_asociacion_presupuestaria (){
-		com_anio.setCombo("select ide_geani,detalle_geani from gen_anio where activo_geani = true" + 
-				" order by detalle_geani");
+		com_anio.setCombo(ser_contabilidad.getAnio("true,false", "true,false"));
 		com_anio.setMetodo("seleccioneElAnio");
 		bar_botones.agregarComponente(new Etiqueta("Año:"));
 		bar_botones.agregarComponente(com_anio);
@@ -42,13 +41,14 @@ public class pre_asociacion_presupuestaria extends Pantalla {
 		tab_asociacion_presupuestaria.setId("tab_asociacion_presupuestaria");
 		tab_asociacion_presupuestaria.setHeader("ASOCIACION PRESUPUESTARIA");
 		tab_asociacion_presupuestaria.setTabla("pre_asociacion_presupuestaria", "ide_prasp", 1);
-		tab_asociacion_presupuestaria.getColumna("ide_prcla").setCombo("pre_clasificador","ide_prcla","descripcion_clasificador_prcla","");
-		tab_asociacion_presupuestaria.getColumna("ide_cocac").setCombo("cont_catalogo_cuenta","ide_cocac","cue_descripcion_cocac","");
+		tab_asociacion_presupuestaria.getColumna("ide_prcla").setCombo(ser_presupuesto.getCatalogoPresupuestario("true,false"));
+		tab_asociacion_presupuestaria.getColumna("ide_prcla").setAutoCompletar();
+		tab_asociacion_presupuestaria.getColumna("ide_cocac").setCombo(ser_contabilidad.getCuentaContable("true,false"));
+		tab_asociacion_presupuestaria.getColumna("ide_cocac").setAutoCompletar();
 		tab_asociacion_presupuestaria.getColumna("ide_gelua").setCombo("gen_lugar_aplica","ide_gelua","detalle_gelua","");
 		tab_asociacion_presupuestaria.getColumna("ide_prmop").setCombo("pre_movimiento_presupuestario","ide_prmop","detalle_prmop","");
 		tab_asociacion_presupuestaria.agregarRelacion(tab_vigente);
-		tab_asociacion_presupuestaria.setTipoFormulario(true);
-		tab_asociacion_presupuestaria.getGrid().setColumns(4);
+		
 
 		tab_asociacion_presupuestaria.dibujar();
 		PanelTabla pat_asociacion_presupuestaria=new PanelTabla();
@@ -58,7 +58,7 @@ public class pre_asociacion_presupuestaria extends Pantalla {
 		tab_vigente.setHeader("AÑO VIGENTE");
 		tab_vigente.setTabla("cont_vigente", "ide_covig", 2);
 		tab_vigente.getColumna("ide_geani").setCombo("gen_anio","ide_geani","detalle_geani","");
-		tab_vigente.setCondicion("ide_prasp!=null");
+		tab_vigente.setCondicion("not ide_prasp is null");
 		tab_vigente.getColumna("ide_geani").setUnico(true);
 		tab_vigente.getColumna("ide_prasp").setUnico(true);
 		tab_vigente.dibujar();
@@ -78,7 +78,7 @@ public class pre_asociacion_presupuestaria extends Pantalla {
 		set_clasificador.setId("set_clasificador");
 		set_clasificador.setTitle("SELECCIONE UNA PARTIDA PRESUPUESTARIA");
 		set_clasificador.setRadio(); //solo selecciona una opcion
-		set_clasificador.setSeleccionTabla(ser_presupuesto.getCatalogoPresupuestario(), "ide_prcla"); 
+		set_clasificador.setSeleccionTabla(ser_presupuesto.getCatalogoPresupuestario("true"), "ide_prcla"); 
 		set_clasificador.getTab_seleccion().getColumna("codigo_clasificador_prcla").setFiltroContenido(); //pone filtro
 		set_clasificador.getTab_seleccion().getColumna("descripcion_clasificador_prcla").setFiltroContenido();//pone filtro
 		set_clasificador.getBot_aceptar().setMetodo("aceptarClasificador");
@@ -92,9 +92,7 @@ public class pre_asociacion_presupuestaria extends Pantalla {
 		set_catalogo.setId("set_catalogo");
 		set_catalogo.setTitle("SELECCIONE UN CATALOGO DE CUENTA");
 		set_catalogo.setRadio(); //solo selecciona una opcion
-		set_catalogo.setSeleccionTabla(ser_contabilidad.servicioCatalogoCuentaAnio("1"), "ide_cocac"); 
-		//set_catalogo.getTab_seleccion().getColumna("codigo_clasificador_prcla").setFiltroContenido(); //pone filtro
-		//set_catalogo.getTab_seleccion().getColumna("descripcion_clasificador_prcla").setFiltroContenido();//pone filtro
+		set_catalogo.setSeleccionTabla(ser_contabilidad.servicioCatalogoCuentaAnio("true", "-1"), "ide_cocac"); 
 		set_catalogo.getBot_aceptar().setMetodo("aceptarCatalogoCuenta");
 		agregarComponente(set_catalogo);
 
@@ -112,7 +110,7 @@ public class pre_asociacion_presupuestaria extends Pantalla {
 			return;
 		}
 		//Filtrar los clasificadores del año seleccionado
-		set_clasificador.getTab_seleccion().setSql(ser_presupuesto.getCatalogoPresupuestario());
+		set_clasificador.getTab_seleccion().setSql(ser_presupuesto.getCatalogoPresupuestario("true"));
 		set_clasificador.getTab_seleccion().ejecutarSql();
 		set_clasificador.dibujar();
 	}
@@ -140,7 +138,7 @@ public class pre_asociacion_presupuestaria extends Pantalla {
 			return;
 		}
 		//Filtrar los clasificadores del año seleccionado
-		set_catalogo.getTab_seleccion().setSql(ser_contabilidad.servicioCatalogoCuentaAnio("1"));
+		set_catalogo.getTab_seleccion().setSql(ser_contabilidad.servicioCatalogoCuentaAnio("true",com_anio.getValue().toString()));
 		set_catalogo.getTab_seleccion().ejecutarSql();
 		set_catalogo.dibujar();
 	}
