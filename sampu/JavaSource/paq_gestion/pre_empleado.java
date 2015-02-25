@@ -194,7 +194,7 @@ public class pre_empleado extends Pantalla {
 
 	
 		set_cuenta_anticipo.setId("set_cuenta_anticipo");
-		set_cuenta_anticipo.setSeleccionTabla(ser_contabilidad.servicioCatalogoCuentaAnio("1"),"ide_cocac");
+		set_cuenta_anticipo.setSeleccionTabla(ser_contabilidad.servicioCatalogoCuentaAnio("true","-1"),"ide_cocac");
 		set_cuenta_anticipo.getTab_seleccion().getColumna("ide_cocac").setFiltro(true);
 		set_cuenta_anticipo.getBot_aceptar().setMetodo("aceptarCuentaAnticipo");
 		set_cuenta_anticipo.setRadio();
@@ -212,7 +212,7 @@ public class pre_empleado extends Pantalla {
 		agregarComponente(con_guardar_cuenta);
 		
 		set_actualizar_cuenta.setId("set_actualizar_cuenta");
-		set_actualizar_cuenta.setSeleccionTabla(ser_contabilidad.servicioCatalogoCuentaAnio("1"),"ide_cocac");
+		set_actualizar_cuenta.setSeleccionTabla(ser_contabilidad.servicioCatalogoCuentaAnio("true","-1"),"ide_cocac");
 		set_actualizar_cuenta.setRadio();
 		set_actualizar_cuenta.getBot_aceptar().setMetodo("modificarCuentaAnticipo");
 		agregarComponente(set_actualizar_cuenta);
@@ -374,7 +374,7 @@ public class pre_empleado extends Pantalla {
 	public void importarCuentaAnticipo(){
 		if(aut_empleado.getValor()!= null){
 			if(tab_anio.getValor("ide_geani")!=null){
-			set_cuenta_anticipo.getTab_seleccion().setSql(ser_contabilidad.servicioCatalogoCuentaAnio(tab_anio.getValorSeleccionado()));
+			set_cuenta_anticipo.getTab_seleccion().setSql(ser_contabilidad.servicioCatalogoCuentaAnio("true",tab_anio.getValorSeleccionado()));
 			set_cuenta_anticipo.getTab_seleccion().ejecutarSql();
 			set_cuenta_anticipo.dibujar();
 			}
@@ -391,7 +391,7 @@ public class pre_empleado extends Pantalla {
 public void actualizarCuentaAnticipo(){
 		 if(aut_empleado.getValor()!= null){
 			if(tab_cuenta_anticipo.getValor("ide_cocac")!=null){
-				set_actualizar_cuenta.getTab_seleccion().setSql(ser_contabilidad.servicioCatalogoCuentaAnio(tab_anio.getValorSeleccionado()));
+				set_actualizar_cuenta.getTab_seleccion().setSql(ser_contabilidad.servicioCatalogoCuentaAnio("true",tab_anio.getValorSeleccionado()));
 				set_actualizar_cuenta.getTab_seleccion().ejecutarSql();
 				set_actualizar_cuenta.dibujar();
 			}
