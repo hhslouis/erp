@@ -28,6 +28,8 @@ import framework.aplicacion.TablaGenerica;
 import framework.componentes.Boton;
 import framework.componentes.Confirmar;
 import framework.componentes.Division;
+import framework.componentes.Etiqueta;
+import framework.componentes.Grid;
 import framework.componentes.PanelTabla;
 import framework.componentes.Reporte;
 import framework.componentes.SeleccionFormatoReporte;
@@ -42,7 +44,8 @@ public class pre_activo extends Pantalla {
 	private SeleccionFormatoReporte self_reporte = new SeleccionFormatoReporte();
 	private Map map_parametros = new HashMap();
 	private SeleccionTabla set_empleado=new SeleccionTabla();
-
+	private Etiqueta eti_titulo=new Etiqueta();
+	private Etiqueta eti_pie=new Etiqueta();
 	private Confirmar con_guardar= new Confirmar();
 	
 	@EJB
@@ -54,6 +57,7 @@ public class pre_activo extends Pantalla {
 
 	private StreamedContent codBarras;
 	private GraphicImage giBarra=new GraphicImage();
+
 
 
 	public pre_activo(){
@@ -74,8 +78,12 @@ public class pre_activo extends Pantalla {
 		tab_activos_fijos.getColumna("ide_afacd").setCombo("afi_actividad", "ide_afacd", "detalle_afacd", "");
 		tab_activos_fijos.getColumna("ide_coest").setCombo("cont_estado", "ide_coest", "detalle_coest", "");
 		tab_activos_fijos.getColumna("ide_cocac").setCombo(ser_Contabilidad.getCuentaContable("true,false"));
+		tab_activos_fijos.getColumna("ide_afest").setCombo("afi_estado", "ide_afest", "detalle_afest", "");
 		tab_activos_fijos.getColumna("ide_tepro").setCombo(ser_bodega.getProveedor("true,false"));
 		tab_activos_fijos.getColumna("ide_tepro").setAutoCompletar();
+		tab_activos_fijos.getColumna("foto_bien_afact").setUpload("ACTIVOS");
+		tab_activos_fijos.getColumna("foto_bien_afact").setValorDefecto("imagenes/activo_jpg");
+		tab_activos_fijos.getColumna("foto_bien_afact").setImagen("128", "128");
 		tab_activos_fijos.setTipoFormulario(true);
 		tab_activos_fijos.getGrid().setColumns(4);
 		tab_activos_fijos.agregarRelacion(tab_custodio);
@@ -87,27 +95,54 @@ public class pre_activo extends Pantalla {
 
 		tab_custodio.setId("tab_custodio");
 		tab_custodio.setTabla("afi_custodio","ide_afcus", 2);
-		tab_custodio.getColumna("ide_coest").setCombo("cont_estado", "ide_coest", "detalle_coest", "");
+		//tab_custodio.getColumna("ide_coest").setCombo("cont_estado", "ide_coest", "detalle_coest", "");
 		tab_custodio.getColumna("ide_geedp").setCombo(ser_nomina.servicioEmpleadoContrato("true,false"));
 		tab_custodio.getColumna("ide_geedp").setLectura(true);
 		tab_custodio.getColumna("ide_geedp").setAutoCompletar();
 		tab_custodio.getColumna("ide_geedp").setUnico(true);
-		tab_custodio.getColumna("ide_afcus").setUnico(true);
+		tab_custodio.getColumna("ide_afact").setUnico(true);
+		tab_custodio.getColumna("numero_acta_afcus").setUnico(true);
+		tab_custodio.getColumna("afi_ide_afcus").setCombo(ser_nomina.servicioEmpleadoContrato("true,false"));
+		tab_custodio.getColumna("afi_ide_afcus").setLectura(true);
+		tab_custodio.getColumna("afi_ide_afcus").setAutoCompletar();
+		tab_custodio.getColumna("activo_afcus").setValorDefecto("true");
+		tab_custodio.getColumna("activo_afcus").setLectura(true);
 		tab_custodio.setTipoFormulario(true);
 		tab_custodio.getGrid().setColumns(4);
 		tab_custodio.dibujar();
 		PanelTabla pat_custodio=new PanelTabla();
 		pat_custodio.setPanelTabla(tab_custodio);
 
-
+//////////imagen codigo de barra
 		generarCodigoBarras(tab_custodio.getValor("cod_barra_afcus"));		
 		giBarra.setId("giBarra");
 		giBarra.setWidth("300");
 		giBarra.setHeight("120");
+		giBarra.setTitle("EMGIRS-");
 		giBarra.setValueExpression("value", crearValueExpression("pre_index.clase.codBarras"));
 
+		
+	/////	titulo emgirs
+		   Grid grid_titulo = new Grid();
+		   grid_titulo.setColumns(2);
+		   grid_titulo.setStyle("text-align:center;position:absolute;top:5px;left:55px;");
+		   eti_titulo.setStyle("font-size:22px;color:black;font-weight: bold;text-align:center;");
+		   eti_titulo.setValue("EMGIRS");
+		   grid_titulo.getChildren().add(eti_titulo);
+		   
+		   Grid grid_pie = new Grid();
+		   grid_pie.setColumns(2);
+		   grid_pie.setStyle("text-align:center;position:absolute;top:5px;left:55px;");
+		   eti_pie.setId("eti_pie");
+		   eti_pie.setStyle("font-size:22px;color:black;font-weight: bold;text-align:center;");
+		   eti_pie.setValue(tab_custodio.getValor("cod_barra_afcus"));
+		   grid_pie.getChildren().add(eti_pie);
+	     	
+		   Division divx=new Division();
+			divx.dividir3(grid_titulo,giBarra ,grid_pie, "20%","30%", "H");
+
 		Division div=new Division();
-		div.dividir2(pat_custodio,giBarra , "70%", "V");
+		div.dividir2(pat_custodio,divx , "70%", "V");
 
 		Division div_division=new Division();
 		div_division.dividir2(pat_activo_fijos,div, "50%", "h");
@@ -179,6 +214,8 @@ public class pre_activo extends Pantalla {
 		super.inicio();
 		if(tab_custodio.isFocus()){
 			generarCodigoBarras(tab_custodio.getValor("cod_barra_afcus"));	
+			eti_pie.setValue(tab_custodio.getValor("cod_barra_afcus"));
+			utilitario.addUpdate("eti_pie");
 		}
 	}
 	
@@ -188,6 +225,8 @@ public class pre_activo extends Pantalla {
 		super.siguiente();
 		if(tab_custodio.isFocus()){
 			generarCodigoBarras(tab_custodio.getValor("cod_barra_afcus"));	
+			eti_pie.setValue(tab_custodio.getValor("cod_barra_afcus"));
+			utilitario.addUpdate("eti_pie");
 		}
 	}
 	
@@ -197,7 +236,9 @@ public class pre_activo extends Pantalla {
 		// TODO Auto-generated method stub
 		super.atras();
 		if(tab_custodio.isFocus()){
-			generarCodigoBarras(tab_custodio.getValor("cod_barra_afcus"));	
+			generarCodigoBarras(tab_custodio.getValor("cod_barra_afcus"));
+			eti_pie.setValue(tab_custodio.getValor("cod_barra_afcus"));
+			utilitario.addUpdate("eti_pie");
 		}
 	}
 	
@@ -207,6 +248,8 @@ public class pre_activo extends Pantalla {
 		super.fin();
 		if(tab_custodio.isFocus()){
 			generarCodigoBarras(tab_custodio.getValor("cod_barra_afcus"));	
+			eti_pie.setValue(tab_custodio.getValor("cod_barra_afcus"));
+			utilitario.addUpdate("eti_pie");
 		}
 	}
 	
@@ -271,9 +314,19 @@ public class pre_activo extends Pantalla {
 	public void guardar() {
 		// TODO Auto-generated method stub
 		if (tab_activos_fijos.guardar()){
+		
+		if(tab_custodio.isFocus()){
+			generarCodigoBarras(tab_custodio.getValor("cod_barra_afcus"));	
+			
 			tab_custodio.guardar();
+			eti_pie.setValue(tab_custodio.getValor("cod_barra_afcus"));
+			utilitario.addUpdate("eti_pie");
 		}
-		guardarPantalla();
+
+		}
+
+		guardarPantalla();		   
+				
 
 	}
 
