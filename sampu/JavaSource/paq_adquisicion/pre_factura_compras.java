@@ -160,21 +160,27 @@ public class pre_factura_compras extends Pantalla{
 	
 	public void calcularDescuento(){
 		double duo_subtotal=0;
-		double dou_total_adfac=0;
+		double dou_subtotal_adfac=0;
 		double duo_valor_descuento=0;
+		double duo_total_iva=0;
+		double duo_total=0;
+
 		double duo_iva=0.12;
 		
-		tab_adq_factura.getValor("valor_descuento_adfac");
+		//tab_adq_factura.getValor("valor_descuento_adfac");
 		duo_subtotal=Double.parseDouble(tab_adq_factura.getValor("valor_descuento_adfac"));
-		tab_adq_factura.getValor("total_adfac");
-		dou_total_adfac=Double.parseDouble(tab_adq_factura.getValor("total_adfac"));
-		duo_subtotal=dou_total_adfac-duo_valor_descuento;
-		dou_total_adfac=duo_subtotal*duo_iva;
+		//tab_adq_factura.getValor("total_adfac");
+		dou_subtotal_adfac=Double.parseDouble(tab_adq_factura.getValor("subtotal_adfac"));
+		duo_valor_descuento=dou_subtotal_adfac-duo_subtotal;
+		duo_total_iva=duo_valor_descuento*duo_iva;
+		duo_total=duo_valor_descuento+duo_total_iva;
 				
-		tab_adq_factura.setValor("total_adfac",utilitario.getFormatoNumero(dou_total_adfac,3));
-		tab_adq_factura.setValor("subtotal_adfac",utilitario.getFormatoNumero(duo_subtotal,3));
+		tab_adq_factura.setValor("total_adfac",utilitario.getFormatoNumero(duo_total,2));
+		tab_adq_factura.setValor("VALOR_DESCUENTO_ADFAC",utilitario.getFormatoNumero(duo_subtotal,2));
+		tab_adq_factura.setValor("VALOR_IVA_ADFAC",utilitario.getFormatoNumero(duo_total_iva,2));
 
-		utilitario.addUpdateTabla(tab_adq_factura, "total_adfac,subtotal_adfac,valor_descuento_adfac", "");	
+
+		utilitario.addUpdateTabla(tab_adq_factura, "total_adfac,subtotal_adfac,VALOR_IVA_ADFAC", "");	
 
 
 
