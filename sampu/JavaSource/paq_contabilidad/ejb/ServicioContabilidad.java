@@ -108,6 +108,7 @@ public String getModuloEstados (String estado,String modulo){
 public String getModuloParametros (String estado,String modulo){
 	String consultaEstados="select ide_copag,detalle_copag from cont_parametros_general" 
 +" where ide_copag in (select ide_copag from cont_parametro_modulo where ide_gemod in ("+modulo+") and activo_copam in ("+estado+") )";
+	System.out.println("modulo parametro"+consultaEstados);
 	return consultaEstados;
 }
 /**
