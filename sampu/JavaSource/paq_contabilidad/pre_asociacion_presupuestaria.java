@@ -156,7 +156,7 @@ public class pre_asociacion_presupuestaria extends Pantalla {
 	}
 	public void seleccioneElAnio (){
 		
-			tab_vigente.setCondicion("ide_geani="+com_anio.getValue());
+			tab_vigente.setCondicion("not ide_prasp is null and ide_geani="+com_anio.getValue());
 			tab_vigente.ejecutarSql();
 	
 		}
