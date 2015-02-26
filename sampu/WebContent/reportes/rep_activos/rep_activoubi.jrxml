@@ -11,17 +11,24 @@
 	<parameter name="pide_ubicacion" class="java.lang.Integer" isForPrompting="false">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(1)]]></defaultValueExpression>
 	</parameter>
+	<parameter name="titulo" class="java.lang.String"/>
+	<parameter name="ide_usua" class="java.lang.Integer"/>
+	<parameter name="ide_empr" class="java.lang.Integer"/>
+	<parameter name="ide_sucu" class="java.lang.Integer"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[select detalle_bounm as des_medida,secuencial_afact as secuencial,a.ide_afact,detalle_afubi 
+		<![CDATA[select detalle_bounm as des_medida,secuencial_afact as secuencial,a.ide_afact,detalle_afubi
 as des_ubicacion,c.ide_afest as estado,d.ide_aftia,detalle_afseg as des_seguro,cue_descripcion_cocac as cue_descripcion,detalle_afact as des_actividad,
-activo_afact as des_activo,cantidad_afact as cantidad,fecha_alta_afact 
-as fec_alta,fecha_baja_afact as fec_baja,fecha_calculo_afact as fec_calculo,valor_compra_afact 
-as val_compra,val_depresiacion_periodo_afact as val_depreciacion,valor_residual_afact 
-as val_residual,marca_afact as marca,modelo_afact as modelo,serie_afact as serie,vida_util_afact 
+activo_afact as des_activo,cantidad_afact as cantidad,fecha_alta_afact
+as fec_alta,fecha_baja_afact as fec_baja,fecha_calculo_afact as fec_calculo,valor_compra_afact
+as val_compra,val_depresiacion_periodo_afact as val_depreciacion,valor_residual_afact
+as val_residual,marca_afact as marca,modelo_afact as modelo,serie_afact as serie,vida_util_afact
 as vida_util,razon_baja_afact as razon_baja,egreso_bodega_afact as egreso_bodega
 from bodt_unidad_medida j,afi_activo a,afi_ubicacion b,afi_estado c,
 afi_tipo_activo d,afi_seguro f,cont_catalogo_cuenta g,afi_actividad i
-where a.ide_afubi = b.ide_afubi 
+where a.ide_afubi = b.ide_afubi
 and a.ide_aftia = d.ide_aftia
 and a.ide_afest = c.ide_afest
 and a.ide_afseg = f.ide_afseg
@@ -66,6 +73,25 @@ order by d.ide_aftia]]>
 			<line>
 				<reportElement uuid="42d3bfd2-79ae-41a2-b4e0-2f96a6410e33" key="line" x="0" y="3" width="534" height="1"/>
 			</line>
+			<subreport>
+				<reportElement uuid="4fab8324-3cb0-4a47-a52c-65ad6ff3d669" x="0" y="0" width="535" height="51"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="ide_sucu">
+					<subreportParameterExpression><![CDATA[$P{ide_sucu}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="ide_empr">
+					<subreportParameterExpression><![CDATA[$P{ide_empr}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="ide_usua">
+					<subreportParameterExpression><![CDATA[$P{ide_usua}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="titulo">
+					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</title>
 	<pageHeader>
