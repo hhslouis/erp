@@ -76,7 +76,6 @@ public class pre_activo extends Pantalla {
 		tab_activos_fijos.getColumna("ide_afnoa").setCombo("afi_nombre_activo", "ide_afnoa", "detalle_afnoa", "");
 		tab_activos_fijos.getColumna("ide_geare").setCombo("gen_area", "ide_geare", "detalle_geare", "");
 		tab_activos_fijos.getColumna("ide_afacd").setCombo("afi_actividad", "ide_afacd", "detalle_afacd", "");
-		tab_activos_fijos.getColumna("ide_coest").setCombo("cont_estado", "ide_coest", "detalle_coest", "");
 		tab_activos_fijos.getColumna("ide_cocac").setCombo(ser_Contabilidad.getCuentaContable("true,false"));
 		tab_activos_fijos.getColumna("ide_afest").setCombo("afi_estado", "ide_afest", "detalle_afest", "");
 		tab_activos_fijos.getColumna("ide_tepro").setCombo(ser_bodega.getProveedor("true,false"));
@@ -84,6 +83,13 @@ public class pre_activo extends Pantalla {
 		tab_activos_fijos.getColumna("foto_bien_afact").setUpload("ACTIVOS");
 		tab_activos_fijos.getColumna("foto_bien_afact").setValorDefecto("imagenes/activo_jpg");
 		tab_activos_fijos.getColumna("foto_bien_afact").setImagen("128", "128");
+		tab_activos_fijos.getColumna("valor_unitario_afact").setMetodoChange("calcular");
+		tab_activos_fijos.getColumna("valor_neto_afact").setEtiqueta();
+		tab_activos_fijos.getColumna("valor_neto_afact").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
+		tab_activos_fijos.getColumna("valor_neto_afact").setMetodoChange("calcular");
+		tab_activos_fijos.getColumna("valor_compra_afact").setEtiqueta();
+		tab_activos_fijos.getColumna("valor_compra_afact").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
+
 		tab_activos_fijos.setTipoFormulario(true);
 		tab_activos_fijos.getGrid().setColumns(4);
 		tab_activos_fijos.agregarRelacion(tab_custodio);
@@ -95,7 +101,6 @@ public class pre_activo extends Pantalla {
 
 		tab_custodio.setId("tab_custodio");
 		tab_custodio.setTabla("afi_custodio","ide_afcus", 2);
-		//tab_custodio.getColumna("ide_coest").setCombo("cont_estado", "ide_coest", "detalle_coest", "");
 		tab_custodio.getColumna("ide_geedp").setCombo(ser_nomina.servicioEmpleadoContrato("true,false"));
 		tab_custodio.getColumna("ide_geedp").setLectura(true);
 		tab_custodio.getColumna("ide_geedp").setAutoCompletar();
@@ -301,6 +306,45 @@ public class pre_activo extends Pantalla {
 			ex.printStackTrace();
 		}
 	}
+
+	public void calcular(){
+		//Variables para almacenar y calcular el total del detalle
+		double duo_cantidad_afact=0;
+		double duo_valor_unitario_afact=0;
+		double duo_valor_neto_afact=0;
+		double duo_valor_compra_afact=0;
+		double duo_iva=0.12;
+		double duo_total=0;
+
+
+		try {
+			//Obtenemos el valor de la cantidad
+			duo_cantidad_afact=Double.parseDouble(tab_activos_fijos.getValor("cantidad_afact"));
+		} catch (Exception e){
+
+		}
+
+		try {
+			//Obtenemos el valor unitari
+			duo_valor_unitario_afact=Double.parseDouble(tab_activos_fijos.getValor("valor_unitario_afact"));
+		} catch (Exception e){
+
+		}
+
+		//Calculamos el total
+		duo_valor_neto_afact=duo_cantidad_afact*duo_valor_unitario_afact;
+		duo_valor_compra_afact=duo_valor_neto_afact*duo_iva;
+		duo_total=duo_valor_compra_afact+duo_valor_neto_afact;
+		//Asignamos el total a la tabla detalle, con 2 decimales
+		tab_activos_fijos.setValor("valor_neto_afact",utilitario.getFormatoNumero(duo_valor_neto_afact,3));
+		tab_activos_fijos.setValor("valor_compra_afact",utilitario.getFormatoNumero(duo_total,3));
+
+		//Actualizamos el campo de la tabla AJAX
+		utilitario.addUpdateTabla(tab_activos_fijos, "valor_neto_afact,valor_compra_afact","");
+
+
+	}
+	
 
 
 	@Override
