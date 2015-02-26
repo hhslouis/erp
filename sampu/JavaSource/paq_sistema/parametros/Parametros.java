@@ -202,6 +202,57 @@ public class Parametros {
         lis_parametros.add(new Parametro("4", "p_sri_405_impuesto_asumido", "Indica el 405 VALOR DEL IMPUESTO ASUMIDO POR ESTE EMPLEADOR para el SRI", "267","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
         lis_parametros.add(new Parametro("4", "p_sri_407_imp_retenido_trabajador", "Indica el 407 VALOR DEL IMPUESTO RETENIDO AL TRABAJADOR POR ESTE EMPLEADOR para el SRI", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
         
+        lis_parametros.add(new Parametro("4", "p_redep_salario_ingreso", "Indica el VALOR DEL INGRESO DEL SALARIO", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_salario_egreso", "Indica el VALOR DEL EGRESO DEL SALARIO", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_sobresueldo_ing", "Indica el VALOR DEL INGRESO DEL SOBRESUELDO", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_sobresueldo_egr", "Indica el VALOR DEL EGRESO DEL SOBRESUELDO", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_parti_utilidad_ing", "Indica el VALOR DEL INGRESO DEL PARTICIPACION DE UTILIDAD", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_parti_utilidad_egr", "Indica el VALOR DEL EGRESO DEL PARTICIPACION DE UTILIDAD", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_ingr_gravados_ing", "Indica el VALOR DEL INGRESO GRAVADO", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_ingr_gravados_egr", "Indica el VALOR DEL EGRESO GRAVADO ", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_impuesto_empleador_ing", "Indica el VALOR DEL INGRESO DEL IMPUESTO A LA RENTA POR EL EMPLEADOR", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_impuesto_empleador_egr", "Indica el VALOR DEL EGRESO DEL IMPUESTO A LA RENTA POR EL EMPLEADOR ", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_decimo_tercer_sueldo_ing", "Indica el VALOR DEL INGRESO DEL DECIMO TERCER SUELDO", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_decimo_tercer_sueldo_egr", "Indica el VALOR DEL EGRESO DEL DECIMO TERCER SUELDO", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_decimo_cuarto_sueldo_ing", "Indica el VALOR DEL INGRESO DEL DECIMO CUARTO SUELDO", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_decimo_cuarto_sueldo_egr", "Indica el VALOR DEL EGRESO DEL DECIMO CUARTO SUELDO", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_fondo_reserva_ing", "Indica el VALOR DEL INGRESO DEL FONDO DE RESERVA", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_fondo_reserva_egr", "Indica el VALOR DEL EGRESO DEL FONDO DE RESERVA", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_otros_ingrrelaciondep_ing", "Indica el VALOR DEL INGRESO DEL INGRESO EN RELACION DE DEPENDENCIA", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_otros_ingrrelaciondep_egr", "Indica el VALOR DEL EGRESO DEL INGRESO EN RELACION DE DEPENDENCIA", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_ingresos_gravaempleado_ing", "Indica el VALOR DEL INGRESO DEL EGRESO GRAVADO", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_ingresos_gravaempleado_egr", "Indica el VALOR DEL EGRESO DEL EGRESO GRAVADO", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_aporte_personal_iess_ing", "Indica el VALOR DEL INGRESO DEL APORTE PERSONAL IESS", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_aporte_personal_iess_egr", "Indica el VALOR DEL EGRESO DEL APORTE PERSONAL IESS", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_gas_persona_vivienda_ing", "Indica el VALOR DEL INGRESO DE LOS GASTOS PERSONALES POR VIVIENDA", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_gas_persona_vivienda_egr", "Indica el VALOR DEL EGRESO DE LOS GASTOS PERSONALES POR VIVIENDA", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_gas_persona_salud_ing", "Indica el VALOR DEL GASTO PERSONAL POR SALUD", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_gas_persona_salud_egr", "Indica el VALOR DEL GASTO PERSONAL POR SALUD", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_gas_persona_educa_ing", "Indica el VALOR DEL INGRESO DEL  GASTO PERSONAL POR EDUCACION", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_gas_persona_educa_egr", "Indica el VALOR DEL EGRESO DEL GASTO PERSONAL POR EDUCACION", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_gas_persona_alimenta_ing", "Indica el VALOR DEL INGRESO DEL  GASTO PERSONAL POR ALIMENTACION", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_gas_persona_alimenta_egr", "Indica el VALOR DEL EGRESO DEL GASTO PERSONAL POR ALIMENTACION", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_gas_persona_vestimenta_ing", "Indica el VALOR DEL INGRESO DEL  GASTO PERSONAL POR VESTIMENTA", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_gas_persona_vestimenta_egr", "Indica el VALOR DEL EGRESO DEL GASTO PERSONAL POR VESTIMENTA", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_baseimponible_gravada_ing", "Indica el VALOR DEL INGRESO DE LA BASE IMPONIBLE GRABADA", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_baseimponible_gravada_egr", "Indica el VALOR DEL EGRESO DE LA BASE IMPONIBLE GRABADA", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_impuesto_renta_causado_ing", "Indica el VALOR DEL INGRESO DEL IMPUESTO A LA RENTA GRAVADA", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_impuesto_renta_causado_egr", "Indica el VALOR DEL EGRESO DEL IMPUESTO A LA RENTA GRAVADA", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_impuesto_renta_asumidootr_ing", "Indica el VALOR DEL INGRESO DEL IMPUESTO A LA RENTA GRAVADA", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_impuesto_renta_asumidootr_egr", "Indica el VALOR DEL EGRESO DEL IMPUESTO A LA RENTA GRAVADA", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_impuesto_renta_asumidoest_ing", "Indica el VALOR DEL INGRESO DEL IMPUESTO A LA RENTA GRAVADA", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_impuesto_renta_asumidoest_egr", "Indica el VALOR DEL EGRESO DEL IMPUESTO A LA RENTA GRAVADA", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_impue_retenido_ing", "Indica el VALOR DEL INGRESO DEL IMPUESTO A LA RENTA GRAVADA", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_impue_retenido_egr", "Indica el VALOR DEL EGRESO DEL IMPUESTO A LA RENTA GRAVADA", "42","NRH_RUBRO","IDE_NRRUB","DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("4", "p_redep_codigo_establecimiento", "Define el codigo del establecimiento", "001"));
+        lis_parametros.add(new Parametro("4", "p_redep_pais_tipo_residencia", "Define el numero del tipo de residencia", "943"));
+        lis_parametros.add(new Parametro("4", "p_redep_aplica_convenio", "Define el numero del tipo de residencia", "943"));
+        lis_parametros.add(new Parametro("4", "p_redep_pais_residencia", "Define el numero del tipo de residencia", "943"));
+        lis_parametros.add(new Parametro("4", "p_redep_tipo_identi_discap", "Define el numero del tipo de documento de identidad de los discapcitados", "N"));
+        lis_parametros.add(new Parametro("4", "p_redep_nro_docume_discap", "Define el numero del documento de identidad de los discapcitados", "999"));
+        lis_parametros.add(new Parametro("4", "p_redep_tipo_sis_salario_neto", "Define el tipo de sistema de salario neto", "1"));
+       
+
         /*
          * SBS =5
          */
