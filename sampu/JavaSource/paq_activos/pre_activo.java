@@ -77,7 +77,7 @@ public class pre_activo extends Pantalla {
 		tab_activos_fijos.getColumna("ide_geare").setCombo("gen_area", "ide_geare", "detalle_geare", "");
 		tab_activos_fijos.getColumna("ide_afacd").setCombo("afi_actividad", "ide_afacd", "detalle_afacd", "");
 		tab_activos_fijos.getColumna("ide_cocac").setCombo(ser_Contabilidad.getCuentaContable("true,false"));
-		tab_activos_fijos.getColumna("ide_afest").setCombo("afi_estado", "ide_afest", "detalle_afest", "");
+		tab_activos_fijos.getColumna("ide_afest").setCombo("afi_estado", "ide_afest", "detalle_afest,porcentaje_afest", "");
 		tab_activos_fijos.getColumna("ide_tepro").setCombo(ser_bodega.getProveedor("true,false"));
 		tab_activos_fijos.getColumna("ide_tepro").setAutoCompletar();
 		tab_activos_fijos.getColumna("foto_bien_afact").setUpload("ACTIVOS");
@@ -107,9 +107,9 @@ public class pre_activo extends Pantalla {
 		tab_custodio.getColumna("ide_geedp").setUnico(true);
 		tab_custodio.getColumna("ide_afact").setUnico(true);
 		tab_custodio.getColumna("numero_acta_afcus").setUnico(true);
-		tab_custodio.getColumna("afi_ide_afcus").setCombo(ser_nomina.servicioEmpleadoContrato("true,false"));
-		tab_custodio.getColumna("afi_ide_afcus").setLectura(true);
-		tab_custodio.getColumna("afi_ide_afcus").setAutoCompletar();
+		tab_custodio.getColumna("gen_ide_geedp").setCombo(ser_nomina.servicioEmpleadoContrato("true,false"));
+		tab_custodio.getColumna("gen_ide_geedp").setLectura(true);
+		tab_custodio.getColumna("gen_ide_geedp").setAutoCompletar();
 		tab_custodio.getColumna("activo_afcus").setValorDefecto("true");
 		tab_custodio.getColumna("activo_afcus").setLectura(true);
 		tab_custodio.setTipoFormulario(true);
