@@ -12,7 +12,7 @@
 	<parameter name="ide_sucu" class="java.lang.Integer"/>
 	<queryString>
 		<![CDATA[select ide_afact,detalle_afact,serie_afact, cantidad_afact,valor_unitario_afact,egreso_bodega_afact,valor_neto_afact,valor_compra_afact from afi_activo
-where ide_afact =1]]>
+where ide_afact =16]]>
 	</queryString>
 	<field name="ide_afact" class="java.lang.Long">
 		<fieldDescription><![CDATA[Define la clave primaria de la tabla afi_activo.]]></fieldDescription>
@@ -61,7 +61,7 @@ where ide_afact =1]]>
 					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "rep_cabecera.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
