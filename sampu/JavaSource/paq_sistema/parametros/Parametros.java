@@ -60,7 +60,8 @@ public class Parametros {
         lis_parametros.add(new Parametro("1", "p_firma_resp_solicitud_debito_sd", "Permite conocer el cargo de la persona que firma la Solicitud de Anticipo ", "GERENTE ADMINISTRATIVO"));
         lis_parametros.add(new Parametro("1", "p_gen_tipo_institucion_educativa_idiomas", "Indica el tipo de institucion Educativa de Idiomas", "4","GEN_TIPO_INSTITUCION", "IDE_GETII", "DETALLE_GETII"));
         lis_parametros.add(new Parametro("1", "p_gen_responsable_depa_bienestar", "Indica el departamento para poder ver el responsable de la entrevista (Talento Humano)", "135","GEN_DEPARTAMENTO", "IDE_GEDEP", "DETALLE_GEDEP"));
-        
+        lis_parametros.add(new Parametro("1", "p_valor_iva", "Indica el valor aplicado del iva", "0.12"));
+
         /*
          * GESTION DE TALENTO HUMANO MODULO =2
          */
