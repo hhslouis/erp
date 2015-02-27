@@ -275,34 +275,39 @@ public class pre_activo extends Pantalla {
 				//p_parametros.put("pide_fafac",Integer.parseInt(tab_cont_viajeros.getValor("ide_fanoc")));
 				self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
 				self_reporte.dibujar();
-
-			} else if (rep_reporte.getReporteSelecionado().equals("Activo Ubicacion")) {
-				if (rep_reporte.isVisible()) {
-					p_parametros=new HashMap();
-					rep_reporte.cerrar();
-					p_parametros.put("titulo","Activo Ubicacion");
-					p_parametros.put("ide_usua",Integer.parseInt("7"));
-					p_parametros.put("ide_empr",Integer.parseInt("0"));
-					p_parametros.put("ide_sucu",Integer.parseInt("1"));
-					//p_parametros.put("pide_fafac",Integer.parseInt(tab_cont_viajeros.getValor("ide_fanoc")));
-					self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
-					self_reporte.dibujar();
 				}else if (rep_reporte.getReporteSelecionado().equals("Actividad")) {
 					if (rep_reporte.isVisible()) {
 						p_parametros=new HashMap();
 						rep_reporte.cerrar();
 						p_parametros.put("titulo","Actividad");
-						p_parametros.put("ide_usua",Integer.parseInt("7"));
-						p_parametros.put("ide_empr",Integer.parseInt("0"));
-						p_parametros.put("ide_sucu",Integer.parseInt("1"));
-						//p_parametros.put("pide_fafac",Integer.parseInt(tab_cont_viajeros.getValor("ide_fanoc")));
+						p_parametros.put("pide_tipo",Integer.parseInt(tab_activos_fijos.getValor("afi_activo")));
 						self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
 						self_reporte.dibujar();
+					}else if (rep_reporte.getReporteSelecionado().equals("Activo Actividad")) {
+						if (rep_reporte.isVisible()) {
+							p_parametros=new HashMap();
+							rep_reporte.cerrar();
+							p_parametros.put("titulo","Activo Actividad");
+							p_parametros.put("pide_ubicacion",Integer.parseInt(tab_activos_fijos.getValor("ide_afubi")));
+							self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
+							self_reporte.dibujar();
+
+						}else if (rep_reporte.getReporteSelecionado().equals("Codigo de Barra")) {
+							if (rep_reporte.isVisible()) {
+								p_parametros=new HashMap();
+								rep_reporte.cerrar();
+								p_parametros.put("titulo","Codigo de Barra");
+								p_parametros.put("pide_barra",Integer.parseInt(tab_custodio.getValor("ide_afcus")));
+								self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
+								self_reporte.dibujar();
+							}
+						}
 					}
 				}
+
 			}
 		}
-	}
+	
 
 
 
