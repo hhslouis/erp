@@ -22,12 +22,15 @@ public class pre_factura_compras extends Pantalla{
 	private Tabla tab_adq_detalle= new Tabla();
 	private AutoCompletar aut_adq_compra= new AutoCompletar();
 	private SeleccionTabla set_solicitud=new SeleccionTabla();
+	public static double par_iva;
 
 	@EJB
 	private ServicioAdquisicion ser_Adquisicion=(ServicioAdquisicion) utilitario.instanciarEJB(ServicioAdquisicion.class);
 	@EJB
 	private ServicioBodega ser_bodega = (ServicioBodega) utilitario.instanciarEJB(ServicioBodega.class);
 	public pre_factura_compras() {
+
+		par_iva=Double.parseDouble(utilitario.getVariable("p_valor_iva"));
 
 		tab_adq_factura.setId("tab_adq_factura");
 		tab_adq_factura.setTabla("adq_factura", "ide_adfac", 1);
@@ -40,9 +43,14 @@ public class pre_factura_compras extends Pantalla{
 		tab_adq_factura.getColumna("base_iva_adfac").setEtiqueta();
 		tab_adq_factura.getColumna("base_iva_adfac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_adq_factura.getColumna("valor_iva_adfac").setMetodoChange("calcularSolicitud");
+		tab_adq_factura.getColumna("valor_iva_adfac").setEtiqueta();
+		tab_adq_factura.getColumna("porcent_desc_adfac").setMetodoChange("calcularDescuentoPorce");
+		tab_adq_factura.getColumna("valor_iva_adfac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_adq_factura.getColumna("valor_descuento_adfac").setMetodoChange("calcularDescuento");
 		tab_adq_factura.getColumna("total_adfac").setEtiqueta();
 		tab_adq_factura.getColumna("total_adfac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
+		tab_adq_factura.getColumna("activo_adfac").setLectura(true);
+		tab_adq_factura.getColumna("activo_adfac").setValorDefecto("true");
 		tab_adq_factura.dibujar();
 		PanelTabla pat_adq_factura= new PanelTabla();
 		pat_adq_factura.setPanelTabla(tab_adq_factura);
@@ -55,6 +63,9 @@ public class pre_factura_compras extends Pantalla{
 		tab_adq_detalle.getColumna("valor_unitario_addef").setMetodoChange("calcularDetallle");
 		tab_adq_detalle.getColumna("valor_total_addef").setEtiqueta();
 		tab_adq_detalle.getColumna("valor_total_addef").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
+		tab_adq_detalle.getColumna("activo_addef").setLectura(true);
+		tab_adq_detalle.getColumna("activo_addef").setValorDefecto("true");
+
 		tab_adq_detalle.dibujar();
 		PanelTabla pat_adq_detalle=new PanelTabla();
 		pat_adq_detalle.setPanelTabla(tab_adq_detalle);
@@ -124,7 +135,7 @@ public class pre_factura_compras extends Pantalla{
 		tab_adq_detalle.setValor("valor_total_addef",utilitario.getFormatoNumero(dou_valor_total_addef,3));
 
 		//Actualizamos el campo de la tabla AJAX
-		utilitario.addUpdateTabla(tab_adq_detalle, "valor_total_addef", "");
+		utilitario.addUpdateTabla(tab_adq_detalle, "valor_total_addef", "tab_adq_factura");
 		calcularSolicitud();
 
 
@@ -140,7 +151,7 @@ public class pre_factura_compras extends Pantalla{
 	public void calcularSolicitud(){
 
 		double dou_subtotal_adfac= 0;
-		double duo_valor_iva=0.12;
+		double duo_valor_iva=par_iva;
 		double dou_valor_iva_adfac=0;
 		double dou_total_adfac=0;
 		double dou_valor_total_addef=0;
@@ -155,7 +166,9 @@ public class pre_factura_compras extends Pantalla{
 		dou_total_adfac=dou_subtotal_adfac+dou_valor_iva_adfac;
 		tab_adq_factura.setValor("valor_iva_adfac",utilitario.getFormatoNumero(dou_valor_iva_adfac,3));
 		tab_adq_factura.setValor("total_adfac",utilitario.getFormatoNumero(dou_total_adfac,3));
-		utilitario.addUpdateTabla(tab_adq_factura, "valor_iva_adfac,total_adfac,subtotal_adfac,base_iva_adfac", "");	
+		tab_adq_factura.modificar(tab_adq_factura.getFilaActual());//para que haga el update
+
+		utilitario.addUpdateTabla(tab_adq_factura, "valor_iva_adfac,total_adfac,subtotal_adfac,base_iva_adfac", "tab_adq_detalle");	
 	}
 	
 	public void calcularDescuento(){
@@ -164,23 +177,75 @@ public class pre_factura_compras extends Pantalla{
 		double duo_valor_descuento=0;
 		double duo_total_iva=0;
 		double duo_total=0;
+		double  porcentaje_descuento=0;
+		double duo_iva=par_iva;
 
-		double duo_iva=0.12;
-		
+				
 		//tab_adq_factura.getValor("valor_descuento_adfac");
 		duo_subtotal=Double.parseDouble(tab_adq_factura.getValor("valor_descuento_adfac"));
+		
 		//tab_adq_factura.getValor("total_adfac");
 		dou_subtotal_adfac=Double.parseDouble(tab_adq_factura.getValor("subtotal_adfac"));
+		if(duo_subtotal>dou_subtotal_adfac){
+			utilitario.agregarMensajeInfo("Excedido Valor ", "El valor del descuento no puedo superar el valor del subtotal");
+			tab_adq_factura.setValor("valor_descuento_adfac","0");
+			utilitario.addUpdateTabla(tab_adq_factura, "valor_descuento_adfac", "");	
+
+			return;
+			
+		}
+		porcentaje_descuento=(duo_subtotal*100)/dou_subtotal_adfac;
 		duo_valor_descuento=dou_subtotal_adfac-duo_subtotal;
 		duo_total_iva=duo_valor_descuento*duo_iva;
 		duo_total=duo_valor_descuento+duo_total_iva;
-				
+		tab_adq_factura.setValor("porcent_desc_adfac",utilitario.getFormatoNumero(porcentaje_descuento,2));
+		tab_adq_factura.setValor("subtotal_adfac",utilitario.getFormatoNumero(duo_valor_descuento,2));
+		tab_adq_factura.setValor("base_iva_adfac",utilitario.getFormatoNumero(duo_valor_descuento,2));
+
 		tab_adq_factura.setValor("total_adfac",utilitario.getFormatoNumero(duo_total,2));
 		tab_adq_factura.setValor("VALOR_DESCUENTO_ADFAC",utilitario.getFormatoNumero(duo_subtotal,2));
 		tab_adq_factura.setValor("VALOR_IVA_ADFAC",utilitario.getFormatoNumero(duo_total_iva,2));
 
 
-		utilitario.addUpdateTabla(tab_adq_factura, "total_adfac,subtotal_adfac,VALOR_IVA_ADFAC", "");	
+		utilitario.addUpdateTabla(tab_adq_factura, "total_adfac,subtotal_adfac,VALOR_IVA_ADFAC,porcent_desc_adfac", "tab_adq_detalle");	
+
+
+
+	}
+	public void calcularDescuentoPorce(){
+		double duo_subtotal=0;
+		double dou_subtotal_adfac=0;
+		double duo_valor_descuento=0;
+		double duo_total_iva=0;
+		double duo_total=0;
+		double  porcentaje_descuento=0;
+		double duo_iva=par_iva;
+
+				
+		//tab_adq_factura.getValor("valor_descuento_adfac");
+		duo_subtotal=Double.parseDouble(tab_adq_factura.getValor("porcent_desc_adfac"));
+		//tab_adq_factura.getValor("total_adfac");
+		if(duo_subtotal>100){
+			utilitario.agregarMensajeInfo("Excedido Valor ", "El porcentaje de descuento no puede superar el 100%");
+			tab_adq_factura.setValor("porcent_desc_adfac","0");
+			utilitario.addUpdateTabla(tab_adq_factura, "porcent_desc_adfac", "");	
+
+			return;
+		}
+		dou_subtotal_adfac=Double.parseDouble(tab_adq_factura.getValor("subtotal_adfac"));
+		porcentaje_descuento=(duo_subtotal*duo_subtotal)/100;
+		duo_valor_descuento=dou_subtotal_adfac-duo_subtotal;
+		duo_total_iva=duo_valor_descuento*duo_iva;
+		duo_total=duo_valor_descuento+duo_total_iva;
+		tab_adq_factura.setValor("valor_descuento_adfac",utilitario.getFormatoNumero(porcentaje_descuento,2));
+		tab_adq_factura.setValor("subtotal_adfac",utilitario.getFormatoNumero(duo_valor_descuento,2));
+		tab_adq_factura.setValor("base_iva_adfac",utilitario.getFormatoNumero(duo_valor_descuento,2));
+		tab_adq_factura.setValor("total_adfac",utilitario.getFormatoNumero(duo_total,2));
+		tab_adq_factura.setValor("VALOR_DESCUENTO_ADFAC",utilitario.getFormatoNumero(duo_subtotal,2));
+		tab_adq_factura.setValor("VALOR_IVA_ADFAC",utilitario.getFormatoNumero(duo_total_iva,2));
+
+
+		utilitario.addUpdateTabla(tab_adq_factura, "total_adfac,subtotal_adfac,VALOR_IVA_ADFAC,porcent_desc_adfac", "");	
 
 
 
@@ -197,7 +262,9 @@ public class pre_factura_compras extends Pantalla{
 		if(tab_adq_factura.guardar()){
 			if(tab_adq_detalle.guardar()){
 				guardarPantalla();
-			}
+				tab_adq_factura.ejecutarSql();
+				tab_adq_detalle.ejecutarSql();
+						}
 		}
 
 	}
