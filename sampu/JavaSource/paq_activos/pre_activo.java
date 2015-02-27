@@ -296,7 +296,7 @@ public class pre_activo extends Pantalla {
 							if (rep_reporte.isVisible()) {
 								p_parametros=new HashMap();
 								rep_reporte.cerrar();
-								p_parametros.put("titulo","Codigo de Barra");
+								p_parametros.put("titulo","Codigo de Barras");
 								p_parametros.put("pide_barra",Integer.parseInt(tab_custodio.getValor("ide_afcus")));
 								self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
 								self_reporte.dibujar();
