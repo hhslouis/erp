@@ -44,12 +44,6 @@ order by detalle_aftia asc]]>
 	</title>
 	<pageHeader>
 		<band height="137" splitType="Stretch">
-			<rectangle radius="0">
-				<reportElement uuid="231c95c4-da84-4fbf-b24b-d38e371947b5" key="element-1" mode="Opaque" x="0" y="117" width="535" height="17" forecolor="#000000" backcolor="#999999"/>
-				<graphicElement fill="Solid">
-					<pen lineWidth="0.5" lineStyle="Solid"/>
-				</graphicElement>
-			</rectangle>
 			<line direction="BottomUp">
 				<reportElement uuid="26333621-07a1-48d9-b8d0-5c50dfa02ba1" key="element-2" mode="Opaque" x="0" y="115" width="535" height="1" forecolor="#000000" backcolor="#FFFFFF"/>
 				<graphicElement fill="Solid">
@@ -63,7 +57,7 @@ order by detalle_aftia asc]]>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement uuid="011ebcce-715d-49bb-b407-b4144a848d01" key="element-7" mode="Transparent" x="426" y="116" width="70" height="16" forecolor="#FFFFFF" backcolor="#FFFFFF"/>
+				<reportElement uuid="011ebcce-715d-49bb-b407-b4144a848d01" key="element-7" mode="Transparent" x="459" y="116" width="70" height="16" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -71,13 +65,13 @@ order by detalle_aftia asc]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
-					<font fontName="" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1250" isPdfEmbedded="false"/>
+					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1250" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Estado]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="00c685e0-6241-4a4b-a75a-bf0228579ecf" key="element-8" mode="Transparent" x="93" y="117" width="104" height="16" forecolor="#FFFFFF" backcolor="#FFFFFF"/>
+				<reportElement uuid="00c685e0-6241-4a4b-a75a-bf0228579ecf" key="element-8" mode="Transparent" x="93" y="117" width="104" height="16" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -85,13 +79,13 @@ order by detalle_aftia asc]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
-					<font fontName="" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1250" isPdfEmbedded="false"/>
+					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1250" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Nombre del Activo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="7cb6dc5f-157b-4c1b-a6c5-a930909c26fc" key="element-9" mode="Transparent" x="189" y="117" width="80" height="16" forecolor="#FFFFFF" backcolor="#FFFFFF"/>
+				<reportElement uuid="7cb6dc5f-157b-4c1b-a6c5-a930909c26fc" key="element-9" mode="Transparent" x="189" y="117" width="80" height="16" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -99,13 +93,13 @@ order by detalle_aftia asc]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
-					<font fontName="" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1250" isPdfEmbedded="false"/>
+					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1250" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Descripción]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="1d5e57cb-e383-42db-a084-10c9e5a23a62" key="element-11" mode="Transparent" x="42" y="117" width="50" height="16" forecolor="#FFFFFF" backcolor="#FFFFFF"/>
+				<reportElement uuid="1d5e57cb-e383-42db-a084-10c9e5a23a62" key="element-11" mode="Transparent" x="42" y="117" width="50" height="16" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -113,13 +107,13 @@ order by detalle_aftia asc]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
-					<font fontName="" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1250" isPdfEmbedded="false"/>
+					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1250" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Código]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="a5550cd7-176b-495e-862d-2cd66c5b4359" key="element-12" mode="Transparent" x="376" y="117" width="93" height="16" forecolor="#FFFFFF" backcolor="#FFFFFF"/>
+				<reportElement uuid="a5550cd7-176b-495e-862d-2cd66c5b4359" key="element-12" mode="Transparent" x="376" y="117" width="93" height="16" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -127,13 +121,13 @@ order by detalle_aftia asc]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
-					<font fontName="" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1250" isPdfEmbedded="false"/>
+					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1250" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Actividad]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="ac50f3e9-f185-47f8-8376-f2e4588cc83d" key="element-13" mode="Opaque" x="5" y="117" width="23" height="16" forecolor="#000000" backcolor="#000000"/>
+				<reportElement uuid="ac50f3e9-f185-47f8-8376-f2e4588cc83d" key="element-13" mode="Opaque" x="5" y="117" width="23" height="16" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -141,13 +135,13 @@ order by detalle_aftia asc]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
-					<font fontName="" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1250" isPdfEmbedded="false"/>
+					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1250" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Nro.]]></text>
 			</staticText>
 			<subreport>
-				<reportElement uuid="848ef54d-fd8d-4328-a62d-ee8304d4c53a" x="0" y="0" width="535" height="137"/>
+				<reportElement uuid="848ef54d-fd8d-4328-a62d-ee8304d4c53a" x="-1" y="0" width="535" height="94"/>
 				<subreportParameter name="SUBREPORT_DIR">
 					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -163,6 +157,7 @@ order by detalle_aftia asc]]>
 				<subreportParameter name="titulo">
 					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
 				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
@@ -264,20 +259,6 @@ order by detalle_aftia asc]]>
 	</pageFooter>
 	<summary>
 		<band height="45" splitType="Stretch">
-			<staticText>
-				<reportElement uuid="828b2089-00d2-4544-96d8-05e28327d867" key="staticText-7" mode="Transparent" x="103" y="25" width="330" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Top" rotation="None">
-					<font fontName="Times-Roman" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="CP1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<text><![CDATA[UNIDAD DE ACTIVOS FIJOS]]></text>
-			</staticText>
 			<line>
 				<reportElement uuid="9f2c82ab-a03e-4b3b-9f55-60d3120a4589" key="line-1" x="192" y="24" width="160" height="1"/>
 			</line>
