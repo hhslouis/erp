@@ -54,10 +54,10 @@ public String getSolicitud (String ide_adsoc){
 		return tab_estado;
 		
 	}
-	public TablaGenerica getTablaGenericaTramite (String activo){
+	public TablaGenerica getTablaGenericaTramite (String ide_prtra){
 		TablaGenerica tab_estado=utilitario.consultar("SELECT a.ide_prtra,fecha_tramite_prtra,numero_oficio_prtra,total_compromiso_prtra " +
 				" FROM pre_tramite a, cont_estado b" +
-				" WHERE a.ide_coest=b.ide_coest and activo_prtra in ("+activo+") " +
+				" WHERE a.ide_coest=b.ide_coest and a.ide_prtra in ("+ide_prtra+") " +
 				" order by numero_oficio_prtra");
 		return tab_estado;
 	
