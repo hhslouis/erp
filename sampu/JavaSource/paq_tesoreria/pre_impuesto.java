@@ -15,6 +15,7 @@ public class pre_impuesto extends Pantalla {
 		tab_impuesto.setId("tab_impuesto");
 		tab_impuesto.setHeader("IMPUESTO");
 		tab_impuesto.setTabla("tes_impuesto", "ide_teimp", 1);
+		tab_impuesto.getColumna("ide_tetii").setCombo("tes_tipo_impuesto", "ide_tetii", "detalle_tetii", "");
 		tab_impuesto.dibujar();
 		PanelTabla pat_panel =new PanelTabla();
 		pat_panel.setPanelTabla(tab_impuesto);
