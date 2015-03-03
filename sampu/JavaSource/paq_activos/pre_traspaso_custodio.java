@@ -14,6 +14,8 @@ import framework.componentes.Grid;
 import framework.componentes.PanelTabla;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
+import framework.componentes.ItemMenu;
+import framework.componentes.BotonesCombo;
 import paq_activos.ejb.ServicioActivos;
 import paq_gestion.ejb.ServicioGestion;
 import paq_nomina.ejb.ServicioNomina;
