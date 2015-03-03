@@ -4,30 +4,41 @@ import javax.ejb.EJB;
 
 import org.primefaces.event.SelectEvent;
 
+import framework.aplicacion.TablaGenerica;
 import framework.componentes.AutoCompletar;
 import framework.componentes.Boton;
+import framework.componentes.Dialogo;
+import framework.componentes.Division;
 import framework.componentes.Etiqueta;
+import framework.componentes.Grid;
 import framework.componentes.PanelTabla;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
+import paq_activos.ejb.ServicioActivos;
 import paq_gestion.ejb.ServicioGestion;
 import paq_nomina.ejb.ServicioNomina;
 import paq_sistema.aplicacion.Pantalla;
 
 public class pre_traspaso_custodio extends Pantalla {
 	private Tabla tab_traspaso = new Tabla();
+	private Tabla tab_custodio= new Tabla();
+	private Dialogo dia_traspaso_custodio=new Dialogo();
+	private Tabla tab_tarspaso_Custodio=new Tabla();
+
 	private AutoCompletar aut_empleado = new AutoCompletar();
 	private SeleccionTabla set_custodio=new SeleccionTabla();
-	private Tabla tab_custodio= new Tabla();
-
+	private SeleccionTabla set_tabla=new SeleccionTabla();
+	
 	@EJB
 	private ServicioGestion ser_gestion = (ServicioGestion) utilitario.instanciarEJB(ServicioGestion.class);
 	@EJB
 	private ServicioNomina ser_nomina = (ServicioNomina) utilitario.instanciarEJB(ServicioNomina.class);
-	
+	@EJB
+	private ServicioActivos ser_activos=(ServicioActivos) utilitario.instanciarEJB(ServicioActivos.class);
 
 	
 	public pre_traspaso_custodio(){
+		bar_botones.getBot_insertar().setRendered(false);
 		// boton limpiar
 		Boton bot_limpiar = new Boton();
 		bot_limpiar.setIcon("ui-icon-cancel");
@@ -35,7 +46,6 @@ public class pre_traspaso_custodio extends Pantalla {
 
 		// autocompletar empleado
 		aut_empleado.setId("aut_empleado");
-
 		String str_sql_emp=ser_gestion.getSqlEmpleadosAutocompletar();
 		aut_empleado.setAutoCompletar(str_sql_emp);
 		aut_empleado.setMetodoChange("filtrarCustodio");
@@ -46,46 +56,127 @@ public class pre_traspaso_custodio extends Pantalla {
 		bar_botones.agregarComponente(eti_colaborador);
 		bar_botones.agregarComponente(aut_empleado);
 		bar_botones.agregarBoton(bot_limpiar);
-	/////custodio
-		Boton bot_custodio=new Boton();
-		bot_custodio.setIcon("ui-icon-person");
-		bot_custodio.setValue("Traspaso Custodio");
-		bot_custodio.setMetodo("importarCustodio");
-		bar_botones.agregarBoton(bot_custodio);
 		
 		
-		set_custodio.setId("set_custodio");
-		set_custodio.setSeleccionTabla(ser_nomina.servicioEmpleadoContrato("true"),"ide_geedp");
-		set_custodio.setRadio();
-		set_custodio.getBot_aceptar().setMetodo("modificarAdministrador");
-		agregarComponente(set_custodio);	
-
 		tab_traspaso.setId("tab_traspaso");
 		tab_traspaso.setSql("select b.ide_afcus,detalle_afact,serie_afact,modelo_afact,marca_afact,cod_barra_afcus,numero_acta_afcus," +
 				 "fecha_entrega_afcus,apellido_paterno_gtemp,apellido_materno_gtemp,primer_nombre_gtemp,segundo_nombre_gtemp " +
 				 "from afi_activo a,afi_custodio b, gen_empleados_departamento_par c, gth_empleado d where a.ide_afact=b.ide_afact " + 
-				 " and b.ide_geedp=c.ide_geedp and c.ide_gtemp=d.ide_gtemp order by fecha_entrega_afcus desc");
-	tab_traspaso.setCampoPrimaria("ide_afcus");
+				 " and b.ide_geedp=c.ide_geedp and c.ide_geedp=-1 and c.ide_gtemp=d.ide_gtemp order by fecha_entrega_afcus desc");
+		tab_traspaso.setNumeroTabla(1);
+		tab_traspaso.setCampoPrimaria("ide_afcus");
 	tab_traspaso.setLectura(true);
-	tab_traspaso.setCondicion("c.ide_geedp=-1");
-	tab_traspaso.setTipoSeleccion(true);	
+	tab_traspaso.setTipoSeleccion(true);
 	tab_traspaso.dibujar();
 	PanelTabla pat_panel=new PanelTabla();
 	pat_panel.setPanelTabla(tab_traspaso);
-	agregarComponente(pat_panel);
 	
-	//////custodio es una tabla temporal para cuardar los datos 
+/////custodio
+		Boton bot_custodio=new Boton();
+		bot_custodio.setIcon("ui-icon-person");
+		bot_custodio.setValue("Traspaso Custodio");
+		bot_custodio.setMetodo("abrirDialogoCustodio");
+		bar_botones.agregarBoton(bot_custodio);
+	Division div_division=new Division();
+	div_division.dividir1(pat_panel);
+	agregarComponente(div_division);
+	////selecion tabla
+	dia_traspaso_custodio.setId("dia_traspaso_custodio");
+	dia_traspaso_custodio.setTitle("TRASPASO CUSTODIO");
+	dia_traspaso_custodio.setWidth("45%");
+	dia_traspaso_custodio.setHeight("45%");
+	Grid gri_cuerpo=new Grid();
+	tab_tarspaso_Custodio.setId("tab_tarspaso_Custodio");
+	tab_tarspaso_Custodio.setTabla("afi_custodio", "ide_afcus",10);
+	tab_tarspaso_Custodio.setTipoFormulario(true);
+	tab_tarspaso_Custodio.setCondicion("ide_afcus=-1");//para que aparesca vacia
+	tab_tarspaso_Custodio.getGrid().setColumns(2);
+	//oculto todos los campos
+	tab_tarspaso_Custodio.getColumna("ide_afcus").setVisible(false);
+	tab_tarspaso_Custodio.getColumna("ide_afact").setVisible(false);
+	tab_tarspaso_Custodio.getColumna("gen_ide_geedp").setVisible(false);
+	tab_tarspaso_Custodio.getColumna("detalle_afcus").setVisible(false);
+	tab_tarspaso_Custodio.getColumna("cod_barra_afcus").setVisible(false);
+	tab_tarspaso_Custodio.getColumna("nro_secuencial_afcus").setVisible(false);
+	tab_tarspaso_Custodio.getColumna("activo_afcus").setVisible(false);
+	tab_tarspaso_Custodio.getColumna("ide_geedp").setVisible(true);
+	tab_tarspaso_Custodio.getColumna("ide_geedp").setNombreVisual("CUSTODIO ACTUAL");
+	tab_tarspaso_Custodio.getColumna("ide_geedp").setCombo(ser_nomina.servicioEmpleadoContrato("true,false"));
+	tab_tarspaso_Custodio.getColumna("ide_geedp").setAutoCompletar();
+	tab_tarspaso_Custodio.getColumna("fecha_entrega_afcus").setVisible(true);
+	tab_tarspaso_Custodio.getColumna("fecha_entrega_afcus").setNombreVisual("FECHA ENTREGA");
+	tab_tarspaso_Custodio.getColumna("fecha_entrega_afcus").setValorDefecto(utilitario.getFechaActual());
+	tab_tarspaso_Custodio.getColumna("fecha_descargo_afcus").setVisible(true);
+	tab_tarspaso_Custodio.getColumna("fecha_descargo_afcus").setNombreVisual("FECHA DESCARGA");
+	tab_tarspaso_Custodio.getColumna("fecha_descargo_afcus").setValorDefecto(utilitario.getFechaActual());
+	tab_tarspaso_Custodio.getColumna("numero_acta_afcus").setVisible(true);
+	tab_tarspaso_Custodio.getColumna("numero_acta_afcus").setNombreVisual("NUMERO ACTA");
+	tab_tarspaso_Custodio.getColumna("razon_descargo_afcus").setVisible(true);
+	tab_tarspaso_Custodio.getColumna("razon_descargo_afcus").setNombreVisual("RAZON DESCARGA");
+	tab_tarspaso_Custodio.dibujar();
+
+	gri_cuerpo.getChildren().add(tab_tarspaso_Custodio);
 	
-	tab_custodio.setId("tab_custodio");
-	tab_custodio.setTabla("afi_custodio","ide_afcus", 2);
-	tab_custodio.dibujar();
-	
+	dia_traspaso_custodio.getBot_aceptar().setMetodo("aceptarDialogoCustodio");
+
+	dia_traspaso_custodio.setDialogo(gri_cuerpo);
+	agregarComponente(dia_traspaso_custodio);
+
 	
 	}
-	
+	long ide_inicial=0;
+	public void  aceptarDialogoCustodio(){
+		String str_seleccionados=tab_traspaso.getFilasSeleccionadas();
+		TablaGenerica tab_consulta_custodio= ser_activos.getTablaGenericaConsultaCustodio(str_seleccionados);
+		utilitario.getConexion().ejecutarSql("DELETE from SIS_BLOQUEO where upper(TABLA_BLOQ) like 'afi_custodio'");
+		ide_inicial=utilitario.getConexion().getMaximo("afi_custodio", "ide_afcus", 1);
+		for(int i=0;i<tab_consulta_custodio.getTotalFilas();i++){
+			
+					utilitario.getConexion().ejecutarSql("update afi_custodio set fecha_descargo_afcus= '"+tab_tarspaso_Custodio.getValor("fecha_descargo_afcus")+"' ,"
+					+" razon_descargo_afcus= '"+tab_tarspaso_Custodio.getValor("razon_descargo_afcus")+"' ,"
+					+" activo_afcus=false where ide_afcus="+tab_consulta_custodio.getValor(i, "ide_afcus"));
+
+					utilitario.getConexion().ejecutarSql("insert into afi_custodio (ide_afcus,ide_afact,ide_geedp,detalle_afcus,fecha_entrega_afcus,numero_acta_afcus,cod_barra_afcus,nro_secuencial_afcus,activo_afcus,gen_ide_geedp)"
+					+" values ( "+ide_inicial+","+tab_consulta_custodio.getValor(i, "ide_afact")+", "+tab_tarspaso_Custodio.getValor("ide_geedp")+",'"+tab_consulta_custodio.getValor(i, "detalle_afcus")+"','"
+					+tab_tarspaso_Custodio.getValor("fecha_entrega_afcus")+"','"+tab_tarspaso_Custodio.getValor("numero_acta_afcus")+"','"+tab_consulta_custodio.getValor(i, "cod_barra_afcus")+"',"+tab_consulta_custodio.getValor(i, "nro_secuencial_afcus")
+					+",true,"+tab_consulta_custodio.getValor(i,"ide_geedp")+" )");
+			
+			ide_inicial++;
+		}
+		dia_traspaso_custodio.cerrar();
+		tab_traspaso.setSql("select b.ide_afcus,detalle_afact,serie_afact,modelo_afact,marca_afact,cod_barra_afcus,numero_acta_afcus," +
+				 "fecha_entrega_afcus,apellido_paterno_gtemp,apellido_materno_gtemp,primer_nombre_gtemp,segundo_nombre_gtemp " +
+				 "from afi_activo a,afi_custodio b, gen_empleados_departamento_par c, gth_empleado d where a.ide_afact=b.ide_afact " + 
+				 " and b.ide_geedp=c.ide_geedp and c.ide_geedp="+aut_empleado.getValor()+" and c.ide_gtemp=d.ide_gtemp and activo_afcus=true order by fecha_entrega_afcus desc");
+
+		tab_traspaso.ejecutarSql();
+		utilitario.addUpdate("tab_traspaso");
+		utilitario.agregarMensaje("Guardado", "Cambio de custodio realizado con exito");
+		}
+	public void abrirDialogoCustodio(){
+		//Hace aparecer el componente
+		if(aut_empleado.getValor()!=null){
+			tab_tarspaso_Custodio.limpiar();
+			tab_tarspaso_Custodio.insertar();
+			//tab_direccion.limpiar();
+		//	tab_direccion.insertar();
+			dia_traspaso_custodio.dibujar();
+		}
+		else{
+			utilitario.agregarMensaje("Inserte un Custodio", "");
+		}
+
+	}
+
+
+
+
 	public void filtrarCustodio(SelectEvent evt){
-		aut_empleado.onSelect(evt);
-		tab_traspaso.setCondicion("c.ide_geedp="+aut_empleado.getValor());
+		tab_traspaso.setSql("select b.ide_afcus,detalle_afact,serie_afact,modelo_afact,marca_afact,cod_barra_afcus,numero_acta_afcus," +
+				 "fecha_entrega_afcus,apellido_paterno_gtemp,apellido_materno_gtemp,primer_nombre_gtemp,segundo_nombre_gtemp " +
+				 "from afi_activo a,afi_custodio b, gen_empleados_departamento_par c, gth_empleado d where a.ide_afact=b.ide_afact " + 
+				 " and b.ide_geedp=c.ide_geedp and c.ide_geedp="+aut_empleado.getValor()+" and c.ide_gtemp=d.ide_gtemp and activo_afcus=true order by fecha_entrega_afcus desc");
+
 		tab_traspaso.ejecutarSql();
 		utilitario.addUpdate("tab_traspaso");
 
@@ -101,7 +192,6 @@ public class pre_traspaso_custodio extends Pantalla {
 
 
 	}
-	
 	
 	@Override
 	public void insertar() {
@@ -151,6 +241,22 @@ public class pre_traspaso_custodio extends Pantalla {
 
 	public void setTab_custodio(Tabla tab_custodio) {
 		this.tab_custodio = tab_custodio;
+	}
+
+	public Dialogo getDia_traspaso_custodio() {
+		return dia_traspaso_custodio;
+	}
+
+	public void setDia_traspaso_custodio(Dialogo dia_traspaso_custodio) {
+		this.dia_traspaso_custodio = dia_traspaso_custodio;
+	}
+
+	public Tabla getTab_tarspaso_Custodio() {
+		return tab_tarspaso_Custodio;
+	}
+
+	public void setTab_tarspaso_Custodio(Tabla tab_tarspaso_Custodio) {
+		this.tab_tarspaso_Custodio = tab_tarspaso_Custodio;
 	}
 
 }
