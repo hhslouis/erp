@@ -353,7 +353,9 @@ public class Parametros {
         /*
          * PRESUPUESTO
          * */
-        lis_parametros.add(new Parametro("16", "p_modulo_presupuesto","Indica el modulo que pertenece a presupuesto","11","gen_modulo","ide_gemod","detalle_gemod"));
+        lis_parametros.add(new Parametro("16", "p_modulo_presupuesto","Indica el modulo que pertenece a presupuesto","10","gen_modulo","ide_gemod","detalle_gemod"));
+        lis_parametros.add(new Parametro("16", "p_modulo_tramite","Indica el modulo que pertenece el tramite ","11","gen_modulo","ide_gemod","detalle_gemod"));
+        lis_parametros.add(new Parametro("16", "p_modulo_tramite_alterno","Indica el modulo que pertenece el tramite alterno ","15","gen_modulo","ide_gemod","detalle_gemod"));
 
         return lis_parametros;
         
