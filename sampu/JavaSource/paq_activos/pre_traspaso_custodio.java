@@ -58,6 +58,30 @@ public class pre_traspaso_custodio extends Pantalla {
 		bar_botones.agregarBoton(bot_limpiar);
 		
 		
+      /**DFJ**/
+    BotonesCombo boc_seleccion_inversa = new BotonesCombo();
+    ItemMenu itm_todas = new ItemMenu();
+    ItemMenu itm_niguna = new ItemMenu();
+
+
+    boc_seleccion_inversa.setValue("Selección Inversa");
+        boc_seleccion_inversa.setIcon("ui-icon-circle-check");
+        boc_seleccion_inversa.setMetodo("seleccinarInversa");
+        boc_seleccion_inversa.setUpdate("tab_traspaso");
+        itm_todas.setValue("Seleccionar Todo");
+        itm_todas.setIcon("ui-icon-check");
+        itm_todas.setMetodo("seleccionarTodas");
+        itm_todas.setUpdate("tab_traspaso");
+        boc_seleccion_inversa.agregarBoton(itm_todas);
+        itm_niguna.setValue("Seleccionar Ninguna");
+        itm_niguna.setIcon("ui-icon-minus");
+        itm_niguna.setMetodo( "seleccionarNinguna");
+        itm_niguna.setUpdate("tab_traspaso");
+        boc_seleccion_inversa.agregarBoton(itm_niguna);
+
+
+      
+      
 		tab_traspaso.setId("tab_traspaso");
 		tab_traspaso.setSql("select b.ide_afcus,detalle_afact,serie_afact,modelo_afact,marca_afact,cod_barra_afcus,numero_acta_afcus," +
 				 "fecha_entrega_afcus,apellido_paterno_gtemp,apellido_materno_gtemp,primer_nombre_gtemp,segundo_nombre_gtemp " +
@@ -69,6 +93,8 @@ public class pre_traspaso_custodio extends Pantalla {
 	tab_traspaso.setTipoSeleccion(true);
 	tab_traspaso.dibujar();
 	PanelTabla pat_panel=new PanelTabla();
+   pat_panel.getChildren().add(boc_seleccion_inversa);
+
 	pat_panel.setPanelTabla(tab_traspaso);
 	
 /////custodio
@@ -167,6 +193,47 @@ public class pre_traspaso_custodio extends Pantalla {
 		}
 
 	}
+
+/**DFJ**/
+public void seleccionarTodas() {
+        tab_traspaso.setSeleccionados(null);
+        Fila seleccionados[] = new Fila[tab_traspaso.getTotalFilas()];
+        for (int i = 0; i < tab_traspaso.getFilas().size(); i++) {
+            seleccionados[i] = tab_traspaso.getFilas().get(i);
+        }
+        tab_traspaso.setSeleccionados(seleccionados);
+}
+
+/**DFJ**/
+public void seleccinarInversa() {
+        if (tab_traspaso.getSeleccionados() == null) {
+            seleccionarTodas();
+        } else if (tab_traspaso.getSeleccionados().length == tab_traspaso.getTotalFilas()) {
+            seleccionarNinguna();
+        } else {
+            Fila seleccionados[] = new Fila[tab_traspaso.getTotalFilas() - tab_traspaso.getSeleccionados().length];
+            int cont = 0;
+            for (int i = 0; i < tab_traspaso.getFilas().size(); i++) {
+                boolean boo_selecionado = false;
+                for (int j = 0; j < tab_traspaso.getSeleccionados().length; j++) {
+                    if (tab_traspaso.getSeleccionados()[j].equals(tab_traspaso.getFilas().get(i))) {
+                        boo_selecionado = true;
+                        break;
+                    }
+                }
+                if (boo_selecionado == false) {
+                    seleccionados[cont] = tab_traspaso.getFilas().get(i);
+                    cont++;
+                }
+            }
+            tab_traspaso.setSeleccionados(seleccionados);
+        }
+    }
+
+/**DFJ**/
+public void seleccionarNinguna() {
+        tab_traspaso.setSeleccionados(null);
+    }
 
 
 
