@@ -2,6 +2,7 @@ package paq_tesoreria;
 
 import javax.ejb.EJB;
 
+import org.apache.commons.collections.SetUtils;
 import org.apache.poi.hssf.record.formula.Ptg;
 
 import framework.aplicacion.TablaGenerica;
@@ -21,6 +22,7 @@ import paq_gestion.ejb.ServicioGestion;
 import paq_nomina.ejb.ServicioNomina;
 import paq_presupuesto.ejb.ServicioPresupuesto;
 import paq_sistema.aplicacion.Pantalla;
+import paq_tesoreria.ejb.ServicioTesoreria;
 
 public class pre_comprobante_pago extends Pantalla{
 	private Tabla tab_comprobante = new Tabla();
@@ -30,6 +32,8 @@ public class pre_comprobante_pago extends Pantalla{
 	private AutoCompletar aut_movimiento=new AutoCompletar();
 	private SeleccionTabla set_solicitud=new SeleccionTabla();
 	private SeleccionTabla set_tramite=new SeleccionTabla();
+	private SeleccionTabla set_impuesto=new SeleccionTabla();
+	private SeleccionTabla set_retencion=new SeleccionTabla();
 
 
 
@@ -43,7 +47,10 @@ public class pre_comprobante_pago extends Pantalla{
 	private ServicioPresupuesto ser_Presupuesto = (ServicioPresupuesto) utilitario.instanciarEJB(ServicioPresupuesto.class);
 	@EJB
 	private ServicioBodega ser_Bodega = (ServicioBodega) utilitario.instanciarEJB(ServicioBodega.class);
+	@EJB
+	private ServicioTesoreria ser_Tesoreria = (ServicioTesoreria) utilitario.instanciarEJB(ServicioTesoreria.class);
 
+	
 	public pre_comprobante_pago (){
 
 		Tabulador tab_tabulador = new Tabulador();
@@ -88,7 +95,7 @@ public class pre_comprobante_pago extends Pantalla{
 		tab_retencion.setId("tab_retencion");
 		tab_retencion.setIdCompleto("tab_tabulador:tab_retencion");
 		//tab_retencion.setHeader("RETENCION");
-		tab_retencion.setTabla("tes_retencion", "ide_teret", 2);
+		tab_retencion.setTabla("tes_retencion", "ide_teret", 3);
 		tab_retencion.setTipoFormulario(true);
 		tab_retencion.getGrid().setColumns(4);
 		tab_retencion.agregarRelacion(tab_detalle_retencion);
@@ -102,26 +109,26 @@ public class pre_comprobante_pago extends Pantalla{
 
 
 		pat_retencion.setHeader(eti_retencion);
-
-
+	
 		///DETALLE RETENCION
 		tab_detalle_retencion.setId("tab_detalle_retencion");
 		tab_detalle_retencion.setIdCompleto("tab_tabulador:tab_detalle_retencion");
 		//tab_detalle_retencion.setHeader("DETALLE RETENCION");
-		tab_detalle_retencion.setTabla("tes_detalle_retencion", "ide_teder", 3);
-		tab_detalle_retencion.getColumna("ide_teimp").setCombo("tes_impuesto", "ide_teimp", "detalle_teimp,codigo_teimp,porcentaje_teimp", "");
-		
+		tab_detalle_retencion.setTabla("tes_detalle_retencion", "ide_teder", 4);
+
+		tab_detalle_retencion.getColumna("ide_teimp").setLectura(true);
+		tab_detalle_retencion.getColumna("ide_teimp").setAutoCompletar();
 		tab_detalle_retencion.getColumna("base_imponible_teder").setMetodoChange("calcular");
 		tab_detalle_retencion.getColumna("valor_retenido_teder").setEtiqueta();
 		tab_detalle_retencion.getColumna("valor_retenido_teder").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_detalle_retencion.setTipoFormulario(true);
-		tab_detalle_retencion.getGrid().setColumns(4);
+		tab_detalle_retencion.getGrid().setColumns(2);
 
 		tab_detalle_retencion.dibujar();
 		PanelTabla pat_detalle_retencion=new PanelTabla();
 		pat_detalle_retencion.setPanelTabla(tab_detalle_retencion);
 
-
+		////para obteber las dos ventanas retencion y detalla retención
 		Etiqueta eti_detalle_retencion=new Etiqueta(); 
 		eti_detalle_retencion.setValue("DETALLE RETENCION");
 		eti_detalle_retencion.setStyle("font-size: 13px;color: red;font-weight: bold");
@@ -129,19 +136,6 @@ public class pre_comprobante_pago extends Pantalla{
 		pat_detalle_retencion.setHeader(eti_detalle_retencion);
 
 
-		/*eti_detalle_retencion.setId("eti_detalle_retencion");
-		eti_detalle_retencion.setValue("DETALLE RETENCION: ");
-		//eti_detalle_retencion.setStyle("font-size: 14px;color: red;font-weight: bold");
-
-
-		Grid gri_detalle=new Grid();
-		gri_detalle.setWidth("100%");
-		gri_detalle.getChildren().add(eti_detalle_retencion);
-
-		pat_detalle_retencion.setHeader(gri_detalle);*/
-
-		//Division div_retencion=new Division();
-		//div_retencion.dividir2(pat_retencion, pat_detalle_retencion, "50%", "V");
 		Grid gri=new Grid();
 		gri.setColumns(2);
 		gri.getChildren().add(pat_retencion);
@@ -158,9 +152,34 @@ public class pre_comprobante_pago extends Pantalla{
 		div_division.dividir2(pat_comprobante, tab_tabulador, "50%", "H");
 		agregarComponente(div_division);
 
+		
+		///boton tipo impuesto
+		Boton bot_impuesto=new Boton();
+		bot_impuesto.setIcon("ui-icon-person");
+		bot_impuesto.setValue("Generar Retencion");
+		bot_impuesto.setMetodo("importarImpuesto");
+		bar_botones.agregarBoton(bot_impuesto);
+		
+		set_impuesto.setId("set_impuesto");
+		set_impuesto.setSeleccionTabla("tes_tipo_impuesto", "ide_tetii", "detalle_tetii");
+		set_impuesto.setTitle("SELECCIONE UN IMPUESTO");		
+		set_impuesto.getBot_aceptar().setMetodo("aceptarImpuesto");
+		set_impuesto.setRadio();
+		agregarComponente(set_impuesto);
+		// retencion
+		set_retencion.setId("set_retencion");
+		set_retencion.setSeleccionTabla(ser_Tesoreria.getImpuesto("true","1","0"),"ide_teimp");
+		set_retencion.setTitle("SELECCIONE UNA RETENCIÓN");		
+		set_retencion.getBot_aceptar().setMetodo("aceptarImpuesto");
+		set_retencion.setRadio();
+		agregarComponente(set_retencion);
+		
+		
 
 
 
+
+		////boton solicitud compra
 		Boton bot_buscar=new Boton();
 		bot_buscar.setIcon("ui-icon-person");
 		bot_buscar.setValue("Buscar Solicitud Compra ");
@@ -173,7 +192,7 @@ public class pre_comprobante_pago extends Pantalla{
 		set_solicitud.getBot_aceptar().setMetodo("aceptarSolicitudCompra");
 		set_solicitud.setRadio();
 		agregarComponente(set_solicitud);
-
+		///certificacion presupuestaria
 		Boton bot_busca=new Boton();
 		bot_busca.setIcon("ui-icon-person");
 		bot_busca.setValue("Buscar Certificaciòn Presupuestaria ");
@@ -229,6 +248,47 @@ public class pre_comprobante_pago extends Pantalla{
 		}
 		set_tramite.cerrar();
 		utilitario.addUpdate("tab_comprobante");
+	}
+	
+	////boton impuesto
+	public void importarImpuesto(){
+
+		set_impuesto.getTab_seleccion().setSql("select ide_tetii,detalle_tetii from tes_tipo_impuesto order by ide_tetii");
+		set_impuesto.getTab_seleccion().ejecutarSql();
+		set_impuesto.dibujar();
+		
+	}
+	String str_seleccionado="";
+	public void aceptarImpuesto(){
+		if(set_impuesto.isVisible()){
+			if (set_impuesto.getValorSeleccionado()!=null){
+			 str_seleccionado= set_impuesto.getValorSeleccionado();
+			System.out.println("probando que valor me llega"+str_seleccionado);
+			set_retencion.getTab_seleccion().setSql(ser_Tesoreria.getImpuesto("true","0",str_seleccionado));
+			set_retencion.getTab_seleccion().ejecutarSql();
+			set_retencion.dibujar();
+			set_impuesto.cerrar();
+			}
+			else {
+				utilitario.agregarMensajeInfo("SELECCIONE OPCION", "Seleccione un registro");
+			}
+				
+		}
+	
+		else if (set_retencion.isVisible()){
+			str_seleccionado= set_retencion.getValorSeleccionado();
+			
+			if (set_retencion.getValorSeleccionado()!=null){
+				tab_detalle_retencion.insertar();
+				tab_detalle_retencion.setValor("ide_teimp",str_seleccionado);
+								
+			}
+
+			set_retencion.cerrar();
+			utilitario.addUpdate("tab_detalle_retencion");
+		}
+	
+	
 	}
 
 
@@ -393,6 +453,18 @@ public class pre_comprobante_pago extends Pantalla{
 	}
 	public void setSet_tramite(SeleccionTabla set_tramite) {
 		this.set_tramite = set_tramite;
+	}
+	public SeleccionTabla getSet_impuesto() {
+		return set_impuesto;
+	}
+	public void setSet_impuesto(SeleccionTabla set_impuesto) {
+		this.set_impuesto = set_impuesto;
+	}
+	public SeleccionTabla getSet_retencion() {
+		return set_retencion;
+	}
+	public void setSet_retencion(SeleccionTabla set_retencion) {
+		this.set_retencion = set_retencion;
 	}
 
 
