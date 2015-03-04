@@ -159,5 +159,10 @@ public boolean registraInventarioEgresos(String material,String cantidad_egreso)
      }
 	return confirma;
 }
-
+public String getSolicitud(String activo){
+	String tab_solicitud="select ide_adsoc,detalle_adsoc,nro_solicitud_adsoc,valor_adsoc,nombre_tepro,ruc_tepro " +
+			" from adq_solicitud_compra a , tes_proveedor b" +
+			" where a.ide_tepro=b.ide_tepro and activo_adsoc in("+activo+") order by nro_solicitud_adsoc";
+	return tab_solicitud;
+}
 }
