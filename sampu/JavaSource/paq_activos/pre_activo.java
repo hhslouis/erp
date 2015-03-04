@@ -84,12 +84,14 @@ public class pre_activo extends Pantalla {
 		tab_activos_fijos.getColumna("foto_bien_afact").setValorDefecto("imagenes/activo_jpg");
 		tab_activos_fijos.getColumna("foto_bien_afact").setImagen("128", "128");
 		tab_activos_fijos.getColumna("valor_unitario_afact").setMetodoChange("calcular");
+		tab_activos_fijos.getColumna("cantidad_afact").setMetodoChange("calcular");
 		tab_activos_fijos.getColumna("valor_neto_afact").setEtiqueta();
 		tab_activos_fijos.getColumna("valor_neto_afact").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
 		tab_activos_fijos.getColumna("valor_neto_afact").setMetodoChange("calcular");
 		tab_activos_fijos.getColumna("valor_compra_afact").setEtiqueta();
 		tab_activos_fijos.getColumna("valor_compra_afact").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
-
+		tab_activos_fijos.getColumna("secuencial_afact").setEtiqueta();
+		tab_activos_fijos.getColumna("secuencial_afact").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
 		tab_activos_fijos.setTipoFormulario(true);
 		tab_activos_fijos.getGrid().setColumns(4);
 		tab_activos_fijos.agregarRelacion(tab_custodio);
@@ -112,6 +114,7 @@ public class pre_activo extends Pantalla {
 		tab_custodio.getColumna("gen_ide_geedp").setAutoCompletar();
 		tab_custodio.getColumna("activo_afcus").setValorDefecto("true");
 		tab_custodio.getColumna("activo_afcus").setLectura(true);
+		tab_custodio.setCampoOrden("activo_afcus desc");
 		tab_custodio.setTipoFormulario(true);
 		tab_custodio.getGrid().setColumns(4);
 		tab_custodio.dibujar();
@@ -157,13 +160,16 @@ public class pre_activo extends Pantalla {
 		////boton empleado
 		Boton bot_empleado=new Boton();
 		bot_empleado.setIcon("ui-icon-person");
-		bot_empleado.setValue("Agregar Empleado");
+		bot_empleado.setValue("Agregar Custodio");
 		bot_empleado.setMetodo("importarEmpleado");
 		bar_botones.agregarBoton(bot_empleado);
 
 		///empelado
 		set_empleado.setId("set_empleado");
 		set_empleado.setSeleccionTabla(ser_nomina.servicioEmpleadoContrato("true"),"ide_geedp");
+		set_empleado.getTab_seleccion().getColumna("documento_identidad_gtemp").setFiltro(true);
+		set_empleado.getTab_seleccion().getColumna("nombres_apellidos").setFiltro(true);
+		
 		set_empleado.setTitle("Seleccione un Empleado");
 		set_empleado.setRadio();
 		set_empleado.getBot_aceptar().setMetodo("aceptarEmpleado");
@@ -172,11 +178,11 @@ public class pre_activo extends Pantalla {
 	}
 
 	public void importarEmpleado(){
-		if (tab_custodio.isEmpty()) {
+		/*if (tab_custodio.isEmpty()) {
 			utilitario.agregarMensajeInfo("Debe ingresar un registro en el contrato", "");
 			return;
 
-		}
+		}*/
 
 		set_empleado.getTab_seleccion().setSql(ser_nomina.servicioEmpleadoContrato("true"));
 		set_empleado.getTab_seleccion().ejecutarSql();
@@ -191,14 +197,15 @@ public class pre_activo extends Pantalla {
 			System.out.println(" tabla generica"+tab_empleado_responsable.getSql());
 			for(int i=0;i<tab_empleado_responsable.getTotalFilas();i++){
 				tab_custodio.insertar();
-				tab_custodio.setValor("IDE_GEEDP", tab_empleado_responsable.getValor(i, "IDE_GEEDP"));			
+				tab_custodio.setValor("IDE_GEEDP", tab_empleado_responsable.getValor(i, "IDE_GEEDP"));	
+				
 
 			}
 			set_empleado.cerrar();
-			utilitario.addUpdate("tab_responsable");			
+			utilitario.addUpdate("tab_custodio");			
 		}
 		else{
-			utilitario.agregarMensajeInfo("Debe seleccionar almenos un registro", "");
+			utilitario.agregarMensajeInfo("Debe agregar un Custodio", "");
 		}
 
 
@@ -345,7 +352,7 @@ public class pre_activo extends Pantalla {
 		double duo_iva=0.12;
 		double duo_total=0;
 
-
+        tab_activos_fijos.setValor("secuencial_afact", tab_activos_fijos.getValor("cantidad_afact")); 
 		try {
 			//Obtenemos el valor de la cantidad
 			duo_cantidad_afact=Double.parseDouble(tab_activos_fijos.getValor("cantidad_afact"));
@@ -369,7 +376,7 @@ public class pre_activo extends Pantalla {
 		tab_activos_fijos.setValor("valor_compra_afact",utilitario.getFormatoNumero(duo_total,3));
 
 		//Actualizamos el campo de la tabla AJAX
-		utilitario.addUpdateTabla(tab_activos_fijos, "valor_neto_afact,valor_compra_afact","");
+		utilitario.addUpdateTabla(tab_activos_fijos, "valor_neto_afact,valor_compra_afact,secuencial_afact","");
 
 
 	}
