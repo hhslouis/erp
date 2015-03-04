@@ -303,7 +303,7 @@ public class pre_rep_gerencial extends Pantalla {
 		
 		barchart.addClientBehavior("itemSelect", evt);
 
-		Etiqueta eti = new Etiqueta("GRÁFICOS ESTADÍSTICOS BIESS");
+		Etiqueta eti = new Etiqueta("GRÁFICOS ESTADÍSTICOS");
 		eti.setStyle("font-size:18px;");
 		grid_grafico.getChildren().clear();
 		grid_grafico.setHeader(eti);
@@ -817,7 +817,7 @@ public class pre_rep_gerencial extends Pantalla {
 
 		grid_grafico.getChildren().clear();
 
-		Etiqueta eti = new Etiqueta("GRÁFICOS ESTADÍSTICOS BIESS");
+		Etiqueta eti = new Etiqueta("GRÁFICOS ESTADÍSTICOS");
 		eti.setStyle("font-size:18px;");
 		grid_grafico.setHeader(eti);
 		grid_grafico.setId("grid_grafico");
@@ -1141,58 +1141,6 @@ public class pre_rep_gerencial extends Pantalla {
 			}
 		}
 
-
-		//		if (set_tipo_nomina.getSeleccionados()!=null && !set_tipo_nomina.getSeleccionados().isEmpty()){
-		//			if (sec_rango_fechas.getFecha1String()!=null && !sec_rango_fechas.getFecha1String().isEmpty()
-		//					&& sec_rango_fechas.getFecha2String()!=null && !sec_rango_fechas.getFecha2String().isEmpty()){
-		//
-		//				String ide_gepro=ser_nomina.getPeriodosRol(sec_rango_fechas.getFecha1String(), sec_rango_fechas.getFecha2String());
-		//				if (ide_gepro==null){
-		//					ide_gepro="-1";
-		//				}
-		//
-		//
-		//				str_value_rad_sad="0";
-		//
-		//
-		//				String titulo = "TOTAL SALARIOS POR SUCURSAL";
-		//
-		//				tab_rep_pantalla=utilitario.consultar("select detatipono.ide_nrdtn as ide_label, " +
-		//						"TIPOEMP.detalle_gttem as detalle_label, " +
-		//						"sucu.ide_sucu as ide_col_ejeX, " +
-		//						"sucu.nom_sucu as nom_col_ejeX, " +
-		//						"SUM(VALOR_NRDRO) as MONTO " +
-		//						"FROM NRH_DETALLE_ROL DETA LEFT JOIN NRH_ROL ROL ON ROL.IDE_NRROL=DETA.IDE_NRROL " +
-		//						"LEFT JOIN NRH_DETALLE_TIPO_NOMINA DETATIPONO ON ROL.IDE_NRDTN =DETATIPONO.IDE_NRDTN " +
-		//						"LEFT JOIN GEN_EMPLEADOS_DEPARTAMENTO_PAR PAR ON PAR.IDE_GEEDP=DETA.IDE_GEEDP " +
-		//						"LEFT JOIN GTH_TIPO_CONTRATO CONTRATO ON CONTRATO.IDE_GTTCO=PAR.IDE_GTTCO " +
-		//						"INNER JOIN GTH_TIPO_EMPLEADO TIPOEMP ON TIPOEMP.IDE_GTTEM=PAR.IDE_GTTEM AND TIPOEMP.IDE_GTTEM=DETATIPONO.IDE_GTTEM " +
-		//						"LEFT JOIN SIS_SUCURSAL SUCU ON SUCU.IDE_SUCU=PAR.IDE_SUCU " +
-		//						"LEFT JOIN NRH_DETALLE_RUBRO DERUBRO ON DERUBRO.IDE_NRDER=DETA.IDE_NRDER " +
-		//						"LEFT JOIN GEN_DEPARTAMENTO DEP ON DEP.IDE_GEDEP=PAR.IDE_GEDEP " +
-		//						"LEFT JOIN GEN_GRUPO_OCUPACIONAL OCUPACIONAL ON OCUPACIONAL.IDE_GEGRO=PAR.IDE_GEGRO " +
-		//						"LEFT JOIN GEN_CARGO_FUNCIONAL FUNCIONAL ON FUNCIONAL.IDE_GECAF=PAR.IDE_GECAF " +
-		//						"LEFT JOIN GTH_EMPLEADO EMP ON EMP.IDE_GTEMP=PAR.IDE_GTEMP " +
-		//						"LEFT JOIN GEN_AREA AREA ON AREA.IDE_GEARE=PAR.IDE_GEARE " +
-		//						"LEFT JOIN NRH_RUBRO RUB ON DERUBRO.IDE_NRRUB=RUB.IDE_NRRUB " +
-		//						"LEFT JOIN NRH_TIPO_RUBRO TIPORUBRO ON TIPORUBRO.IDE_NRTIR=RUB.IDE_NRTIR " +
-		//						"LEFT JOIN GEN_PERIDO_ROL PERIODO ON PERIODO.IDE_GEPRO=ROL.IDE_GEPRO " +
-		//						"LEFT JOIN GEN_MES MES ON MES.IDE_GEMES=PERIODO.IDE_GEMES " +
-		//						"LEFT JOIN GEN_ANIO ANIO ON ANIO.IDE_GEANI=PERIODO.IDE_GEANI " +
-		//						"WHERE detatipono.ide_nrdtn IN ("+set_tipo_nomina.getSeleccionados()+") " +
-		//						"AND ROL.IDE_GEPRO IN ("+ide_gepro+") " +
-		//						"AND RUB.IDE_NRRUB IN ("+utilitario.getVariable("p_nrh_rubro_valor_recibir")+") " +
-		//						"GROUP BY sucu.ide_sucu,sucu.nom_sucu,detatipono.ide_nrdtn,TIPOEMP.detalle_gttem " +
-		//						"HAVING sum (DETA.VALOR_NRDRO)>0 " +
-		//						"order by ide_label,ide_col_ejeX");
-		//
-		//				construirGrafico(tab_rep_pantalla,titulo);
-		//			}
-		//		}
-		//
-		//
-
-
 	}
 
 
@@ -1271,7 +1219,7 @@ public class pre_rep_gerencial extends Pantalla {
 	public void dibujarTabla(){
 
 
-		Etiqueta eti = new Etiqueta("GRÁFICOS ESTADÍSTICOS BIESS");
+		Etiqueta eti = new Etiqueta("GRÁFICOS ESTADÍSTICOS");
 		eti.setStyle("font-size:18px;");
 		Etiqueta eti1 = new Etiqueta("PARÁMETROS RUBROS");
 		eti1.setStyle("font-size:10px; aling:left;");
