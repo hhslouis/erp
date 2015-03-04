@@ -13,13 +13,22 @@ import framework.componentes.Tabla;
 import framework.componentes.Tabulador;
 import paq_bodega.ejb.ServicioBodega;
 import paq_contabilidad.ejb.ServicioContabilidad;
+import paq_nomina.ejb.ServicioNomina;
 import paq_presupuesto.ejb.ServicioPresupuesto;
 import paq_sistema.aplicacion.Pantalla;
+import paq_sistema.ejb.ServicioSeguridad;
 
 public class pre_tramite extends Pantalla   {
 
 	public static String par_tramite;
 	public static String par_tramite_alterno;
+
+	public static String par_empleado;
+	public static String par_no_adjudicado;
+	public static String par_proveedor;
+	public static String par_estado;
+
+
 
 	private Tabla tab_tramite=new Tabla();
 	private Tabla tab_poa_tramite=new Tabla();
@@ -29,19 +38,35 @@ public class pre_tramite extends Pantalla   {
 	private SeleccionTabla set_tramite=new SeleccionTabla();
 	private SeleccionTabla set_poa=new SeleccionTabla();
 	private SeleccionTabla set_tramite_alterno=new SeleccionTabla();
+	private SeleccionTabla set_empleado=new SeleccionTabla();
+	private SeleccionTabla set_proveedor=new SeleccionTabla();
+	private SeleccionTabla set_peticionario=new SeleccionTabla();
+	private SeleccionTabla set_responsable=new SeleccionTabla();
 
 
+	private String empleado;
 
 	@EJB
 	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
 	@EJB
-	private ServicioBodega ser_Bodega=(ServicioBodega) utilitario.instanciarEJB(ServicioBodega.class);
+	private ServicioBodega ser_bodega = (ServicioBodega ) utilitario.instanciarEJB(ServicioBodega.class);
 	@EJB
 	private ServicioPresupuesto ser_presupuesto=(ServicioPresupuesto)utilitario.instanciarEJB(ServicioPresupuesto.class);
+	@EJB
+	private ServicioNomina ser_nomina = (ServicioNomina ) utilitario.instanciarEJB(ServicioNomina.class);
+	@EJB
+	private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanciarEJB(ServicioSeguridad.class);
 	public pre_tramite(){
+
+		empleado=ser_seguridad.getUsuario(utilitario.getVariable("ide_usua")).getValor("ide_gtemp");
 
 		par_tramite=utilitario.getVariable("p_modulo_tramite");
 		par_tramite_alterno=utilitario.getVariable("p_modulo_tramite_alterno");
+		par_empleado=utilitario.getVariable("p_modulo_empleado");
+		par_no_adjudicado=utilitario.getVariable("p_modulo_no_adjudicado");
+		par_proveedor=utilitario.getVariable("p_modulo_proveedor");
+		par_estado=utilitario.getVariable("p_modulo_estado_comprometido");
+
 
 
 		com_anio.setCombo(ser_contabilidad.getAnioDetalle("true,false","true,false"));
@@ -52,10 +77,25 @@ public class pre_tramite extends Pantalla   {
 		tab_tramite.setId("tab_tramite");
 		tab_tramite.setHeader("TRAMITE");
 		tab_tramite.setTabla("pre_tramite","ide_prtra", 1);
+		tab_tramite.getColumna("ide_geedp").setCombo(ser_nomina.servicioEmpleadoContrato("true,false"));
+		tab_tramite.getColumna("ide_geedp").setLectura(true);
+		tab_tramite.getColumna("ide_geedp").setAutoCompletar();
 		tab_tramite.getColumna("ide_coest").setCombo("cont_estado", "ide_coest", "detalle_coest", "");
-		tab_tramite.getColumna("ide_tepro").setCombo(ser_Bodega.getProveedor("true,false"));
+		tab_tramite.getColumna("ide_coest").setLectura(true);
+		tab_tramite.getColumna("ide_coest").setAutoCompletar();
+		tab_tramite.getColumna("ide_tepro").setCombo(ser_bodega.getProveedor("true,false"));
+		tab_tramite.getColumna("ide_tepro").setLectura(true);
+		tab_tramite.getColumna("ide_tepro").setAutoCompletar();
 		tab_tramite.getColumna("ide_copag").setCombo("cont_parametros_general", "ide_copag", "detalle_copag", "");
+		tab_tramite.getColumna("ide_copag").setLectura(true);
+		tab_tramite.getColumna("ide_copag").setAutoCompletar();
+		tab_tramite.getColumna("con_ide_copag").setCombo("cont_parametros_general", "ide_copag", "detalle_copag", "");
+		tab_tramite.getColumna("con_ide_copag").setLectura(true);
+		tab_tramite.getColumna("con_ide_copag").setAutoCompletar();
 		tab_tramite.getColumna("ide_geani").setCombo(ser_contabilidad.getAnio("true,false","true,false"));
+		tab_tramite.getColumna("ide_geani").setVisible(false);
+		tab_tramite.getColumna("fecha_tramite_prtra").setValorDefecto(utilitario.getFechaActual());
+		tab_tramite.setCondicion("ide_geani=-1"); 
 		tab_tramite.getColumna("total_compromiso_prtra").setEtiqueta();
 		tab_tramite.getColumna("total_compromiso_prtra").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 
@@ -129,6 +169,24 @@ public class pre_tramite extends Pantalla   {
 		set_tramite_alterno.setRadio();
 		agregarComponente(set_tramite_alterno);
 
+		set_empleado.setId("set_empleado");
+		set_empleado.setTitle("SELECCIONE EL EMPLEADO");
+		set_empleado.setSeleccionTabla(ser_nomina.servicioEmpleadoContrato("true"),"ide_geedp");
+		set_empleado.getTab_seleccion().getColumna("DOCUMENTO_IDENTIDAD_GTEMP").setFiltro(true);
+		set_empleado.getTab_seleccion().getColumna("NOMBRES_APELLIDOS").setFiltro(true);
+		set_empleado.getBot_aceptar().setMetodo("aceptarTramite");
+		set_empleado.setRadio();
+		agregarComponente(set_empleado);
+
+		set_proveedor.setId("set_proveedor");
+		set_proveedor.setTitle("SELECCIONE EL PROVEEDOR");
+		set_proveedor.setSeleccionTabla(ser_bodega.getProveedor("true"),"ide_tepro");
+		set_proveedor.getTab_seleccion().getColumna("nombre_tepro").setFiltro(true);
+		set_proveedor.getTab_seleccion().getColumna("ruc_tepro").setFiltro(true);
+		set_proveedor.getBot_aceptar().setMetodo("aceptarTramite");
+		set_proveedor.setRadio();
+		agregarComponente(set_proveedor);
+
 		Boton bot_buscar=new Boton();
 		bot_buscar.setIcon("ui-icon-person");
 		bot_buscar.setValue("Buscar POA");
@@ -140,9 +198,83 @@ public class pre_tramite extends Pantalla   {
 		set_poa.setTitle("Seleccione Poa");
 		set_poa.getBot_aceptar().setMetodo("aceptarPoa");
 		agregarComponente(set_poa);
+		
+		Boton bot_peticionario=new Boton();
+		bot_peticionario.setIcon("ui-icon-person");
+		bot_peticionario.setValue("Agregar Peticionario");
+		bot_peticionario.setMetodo("importarPeticionario");
+		bar_botones.agregarBoton(bot_peticionario);
 
+		set_peticionario.setId("set_peticionario");
+		set_peticionario.setTitle("SELECCIONE EL PETICIONARIO");
+		set_peticionario.setSeleccionTabla(ser_nomina.servicioEmpleadoContrato("true"),"ide_geedp");
+		set_peticionario.getTab_seleccion().getColumna("DOCUMENTO_IDENTIDAD_GTEMP").setFiltro(true);
+		set_peticionario.getTab_seleccion().getColumna("NOMBRES_APELLIDOS").setFiltro(true);
+		set_peticionario.getBot_aceptar().setMetodo("aceptarPeticionario");
+		set_peticionario.setRadio();
+		agregarComponente(set_peticionario);
+		
+		Boton bot_responsable=new Boton();
+		bot_responsable.setIcon("ui-icon-person");
+		bot_responsable.setValue("Agregar Responsable");
+		bot_responsable.setMetodo("importarResponsable");
+		bar_botones.agregarBoton(bot_responsable);
+		
+		set_responsable.setId("set_responsable");
+		set_responsable.setTitle("SELECCIONE EL RESPONSABLE");
+		set_responsable.setSeleccionTabla(ser_nomina.servicioEmpleadoContrato("true"),"ide_geedp");
+		set_responsable.getTab_seleccion().getColumna("DOCUMENTO_IDENTIDAD_GTEMP").setFiltro(true);
+		set_responsable.getTab_seleccion().getColumna("NOMBRES_APELLIDOS").setFiltro(true);
+		set_responsable.getBot_aceptar().setMetodo("aceptarResponsable");
+		set_responsable.setRadio();
+		agregarComponente(set_responsable);
 
 	}
+public void importarPeticionario(){
+		
+	set_peticionario.getTab_seleccion().setSql(ser_nomina.servicioEmpleadoContrato("true"));
+	set_peticionario.getTab_seleccion().ejecutarSql();
+	set_peticionario.dibujar();
+	tab_tramite.setValor("gen_ide_geedp2",set_peticionario.getValorSeleccionado()); 
+		utilitario.addUpdate("tab_tramite");
+
+	}
+	public void aceptarPeticionario(){
+
+		String str_seleccionado = set_peticionario.getValorSeleccionado();
+		TablaGenerica tab_empleado=ser_nomina.ideEmpleadoContrato(str_seleccionado);
+		if (str_seleccionado!=null){
+			tab_tramite.setValor("gen_ide_geedp2",str_seleccionado);
+			tab_tramite.modificar(tab_tramite.getFilaActual());
+			
+				
+		}
+		set_peticionario.cerrar();
+		utilitario.addUpdate("tab_tramite");
+	}
+	public void importarResponsable(){
+		
+		set_responsable.getTab_seleccion().setSql(ser_nomina.servicioEmpleadoContrato("true"));
+		set_responsable.getTab_seleccion().ejecutarSql();
+		set_responsable.dibujar();
+		tab_tramite.setValor("gen_ide_geedp",set_responsable.getValorSeleccionado()); 
+			utilitario.addUpdate("tab_tramite");
+
+		}
+		public void aceptarResponsable(){
+
+			String str_seleccionado = set_responsable.getValorSeleccionado();
+			TablaGenerica tab_empleado=ser_nomina.ideEmpleadoContrato(str_seleccionado);
+			if (str_seleccionado!=null){
+				tab_tramite.setValor("gen_ide_geedp",str_seleccionado);
+				tab_tramite.modificar(tab_tramite.getFilaActual());
+				tab_tramite.guardar(); 
+				
+						
+			}
+			set_responsable.cerrar();
+			utilitario.addUpdate("tab_tramite");
+		}
 	public void importarPoa(){
 		System.out.println(" ingresar al importar");
 		if(com_anio.getValue()==null){
@@ -181,11 +313,48 @@ public class pre_tramite extends Pantalla   {
 		}else if(set_tramite_alterno.isVisible()){
 			if (set_tramite_alterno.getValorSeleccionado()!=null){
 				tab_tramite.setValor("ide_copag", set_tramite_alterno.getValorSeleccionado());
-				utilitario.addUpdate("tab_tramite");
 				set_tramite_alterno.cerrar();
-				utilitario.agregarMensajeInfo("Tramite Alterno ", "ingreso al tramite alterno");
+				if(set_tramite_alterno.getValorSeleccionado().equals(par_empleado)){
+
+					set_empleado.getTab_seleccion().setSql(ser_nomina.servicioEmpleadoContrato("true"));
+					set_empleado.getTab_seleccion().ejecutarSql();
+					set_empleado.dibujar();	
+					set_tramite_alterno.cerrar();
+
+
+				}else if (set_tramite_alterno.getValorSeleccionado().equals(par_proveedor)){
+					
+					set_proveedor.getTab_seleccion().setSql(ser_bodega.getProveedor("true"));
+					set_proveedor.getTab_seleccion().ejecutarSql();
+					set_proveedor.dibujar();	
+					set_tramite_alterno.cerrar();					
+					
+					
+				}
+				else if(set_tramite_alterno.getValorSeleccionado().equals(par_no_adjudicado)){
+					tab_tramite.setValor("observaciones_prtra", "No adjudicado");
+					//utilitario.agregarMensajeInfo("Seleciono ", "El no adjudicado");
+				}				
+
 			}
 		}
+		else if(set_proveedor.isVisible()){
+			if(set_proveedor.getValorSeleccionado()!=null){
+			tab_tramite.setValor("ide_tepro",set_proveedor.getValorSeleccionado());
+			set_proveedor.cerrar();
+			}
+		   else {
+			utilitario.agregarMensajeInfo("SELECCIONE OPCION", "Seleccione un registro");
+		    }
+		}else if(set_empleado.isVisible()){
+			if(set_empleado.getValorSeleccionado()!=null){
+				tab_tramite.setValor("ide_geedp",set_empleado.getValorSeleccionado());
+				set_empleado.cerrar();
+			}
+		}
+		
+		utilitario.addUpdateTabla(tab_tramite, "ide_tepro,ide_geedp,observaciones_prtra", "");
+
 	}
 	public void seleccionaElAnio (){
 		if(com_anio.getValue()!=null){
@@ -208,7 +377,16 @@ public class pre_tramite extends Pantalla   {
 	@Override
 	public void insertar() {
 		// TODO Auto-generated method stub
+		if(com_anio.getValue()==null){
+			utilitario.agregarMensaje("No se puede insertar", "Debe Seleccionar un año");
+			return;
+		
+		}
+		String ide_gtempxx=ser_seguridad.getUsuario(utilitario.getVariable("ide_usua")).getValor("ide_gtemp");
+		tab_tramite.setValor("ide_gtemp",ide_gtempxx );
 		utilitario.getTablaisFocus().insertar();
+		tab_tramite.setValor("ide_coest", par_estado);
+		tab_tramite.setValor("ide_geani", com_anio.getValue()+"");
 		set_tramite.getTab_seleccion().setSql(ser_contabilidad.getModuloParametros("true", par_tramite));
 		set_tramite.getTab_seleccion().ejecutarSql();
 		set_tramite.dibujar();
@@ -302,6 +480,30 @@ public class pre_tramite extends Pantalla   {
 	}
 	public void setSet_tramite_alterno(SeleccionTabla set_tramite_alterno) {
 		this.set_tramite_alterno = set_tramite_alterno;
+	}
+	public SeleccionTabla getSet_empleado() {
+		return set_empleado;
+	}
+	public void setSet_empleado(SeleccionTabla set_empleado) {
+		this.set_empleado = set_empleado;
+	}
+	public SeleccionTabla getSet_proveedor() {
+		return set_proveedor;
+	}
+	public void setSet_proveedor(SeleccionTabla set_proveedor) {
+		this.set_proveedor = set_proveedor;
+	}
+	public SeleccionTabla getSet_peticionario() {
+		return set_peticionario;
+	}
+	public void setSet_peticionario(SeleccionTabla set_peticionario) {
+		this.set_peticionario = set_peticionario;
+	}
+	public SeleccionTabla getSet_responsable() {
+		return set_responsable;
+	}
+	public void setSet_responsable(SeleccionTabla set_responsable) {
+		this.set_responsable = set_responsable;
 	}
 
 
