@@ -20,7 +20,6 @@ public class pre_cargo_funcional extends Pantalla {
         tab_tabla.getColumna("ACTIVO_GECAF").setValorDefecto("true");
         tab_tabla.getColumna("DETALLE_GECAF").setRequerida(true);
         tab_tabla.getColumna("SIGLAS_GECAF").setRequerida(false);
-        tab_tabla.getColumna("IDE_SBCAR").setCombo("SBS_CARGO","IDE_SBCAR","DETALLE_SBCAR", "");
         tab_tabla.getColumna("PRINCIPAL_SECUNDARIO_gecaf").setCheck();
         tab_tabla.getColumna("PRINCIPAL_SECUNDARIO_GECAF").setValorDefecto("false");
         tab_tabla.dibujar();
