@@ -227,7 +227,7 @@ public class cls_graficas extends BarChart {
 		String str_sql="";
 		str_sql=str_sql.concat("select * FROM ( ");
 		str_sql=str_sql.concat(tab_rep.getSql());
-		str_sql=str_sql.concat(") ORDER by monto DESC");
+		str_sql=str_sql.concat(") a ORDER by monto DESC");
 		TablaGenerica tab_val_max=utilitario.consultar(str_sql);
 		double dou_val_max=0;
 		try {
