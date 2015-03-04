@@ -4,6 +4,7 @@ import javax.ejb.EJB;
 
 import org.primefaces.event.SelectEvent;
 
+import framework.aplicacion.Fila;
 import framework.aplicacion.TablaGenerica;
 import framework.componentes.AutoCompletar;
 import framework.componentes.Boton;
@@ -66,7 +67,7 @@ public class pre_traspaso_custodio extends Pantalla {
     ItemMenu itm_niguna = new ItemMenu();
 
 
-    boc_seleccion_inversa.setValue("SelecciÃ³n Inversa");
+    boc_seleccion_inversa.setValue("Selección Inversa");
         boc_seleccion_inversa.setIcon("ui-icon-circle-check");
         boc_seleccion_inversa.setMetodo("seleccinarInversa");
         boc_seleccion_inversa.setUpdate("tab_traspaso");
