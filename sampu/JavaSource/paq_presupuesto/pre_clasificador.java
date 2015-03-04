@@ -56,6 +56,7 @@ public class pre_clasificador extends Pantalla {
 		arb_clasificador.setId("arb_clasificador");
     //DJ  Crea metodo al seleccionar el arbol
 		arb_clasificador.onSelect("seleccionoClasificador");  
+		arb_clasificador.setDynamic(true);
 		arb_clasificador.dibujar();
 		
 		// tabla deaños vigente
