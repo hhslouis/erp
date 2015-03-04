@@ -94,6 +94,9 @@ public class pre_tramite extends Pantalla   {
 		tab_tramite.getColumna("con_ide_copag").setAutoCompletar();
 		tab_tramite.getColumna("ide_geani").setCombo(ser_contabilidad.getAnio("true,false","true,false"));
 		tab_tramite.getColumna("ide_geani").setVisible(false);
+		tab_tramite.getColumna("ide_gtemp").setCombo(ser_nomina.servicioEmpleadosActivos("true,false"));
+		tab_tramite.getColumna("ide_gtemp").setLectura(true);
+		tab_tramite.getColumna("ide_gtemp").setAutoCompletar();
 		tab_tramite.getColumna("fecha_tramite_prtra").setValorDefecto(utilitario.getFechaActual());
 		tab_tramite.setCondicion("ide_geani=-1"); 
 		tab_tramite.getColumna("total_compromiso_prtra").setEtiqueta();
@@ -383,10 +386,10 @@ public void importarPeticionario(){
 		
 		}
 		String ide_gtempxx=ser_seguridad.getUsuario(utilitario.getVariable("ide_usua")).getValor("ide_gtemp");
-		tab_tramite.setValor("ide_gtemp",ide_gtempxx );
 		utilitario.getTablaisFocus().insertar();
 		tab_tramite.setValor("ide_coest", par_estado);
 		tab_tramite.setValor("ide_geani", com_anio.getValue()+"");
+		tab_tramite.setValor("ide_gtemp",ide_gtempxx );
 		set_tramite.getTab_seleccion().setSql(ser_contabilidad.getModuloParametros("true", par_tramite));
 		set_tramite.getTab_seleccion().ejecutarSql();
 		set_tramite.dibujar();
