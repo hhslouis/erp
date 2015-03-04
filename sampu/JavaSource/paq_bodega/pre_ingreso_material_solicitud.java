@@ -29,16 +29,7 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 
 	public pre_ingreso_material_solicitud() {
 
-		tab_ingreso_material.setId("tab_ingreso_material");
-		//MODIFICAR TABLA
-		tab_ingreso_material.setTabla("adq_solicitud_compra", "ide_adsoc", 1);
-		tab_ingreso_material.setTipoFormulario(true);
-		tab_ingreso_material.getGrid().setColumns(4);
-		tab_ingreso_material.dibujar();
 
-
-		PanelTabla pat_ingreso= new PanelTabla();
-		pat_ingreso.setPanelTabla(tab_ingreso_material);
 
 		BotonesCombo boc_seleccion_inversa = new BotonesCombo();
 		ItemMenu itm_todas = new ItemMenu();
@@ -62,19 +53,21 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 		tab_solicitud.setId("tab_solicitud");
 		tab_solicitud.setSql("select b.ide_addef,detalle_adsoc,num_factura_adfac,valor_adsoc,nro_solicitud_adsoc,valor_total_addef,valor_unitario_addef,cantidad_addef," +
 				" codigo_bomat,detalle_bomat from adq_solicitud_compra a,adq_detalle_factura b,adq_factura c , bodt_material d" +
-				" where a.ide_adsoc=c.ide_adsoc and b.ide_adfac=c.ide_adfac  and d.ide_bomat=b.ide_bomat order by codigo_bomat");
+				" where a.ide_adsoc=c.ide_adsoc and b.ide_adfac=c.ide_adfac  and d.ide_bomat=b.ide_bomat and a.ide_adsoc=-1 order by codigo_bomat");
 		tab_solicitud.setNumeroTabla(2);
 		tab_solicitud.setCampoPrimaria("ide_addef");
+		
 		tab_solicitud.setLectura(true);
 		tab_solicitud.setTipoSeleccion(true);
 		tab_solicitud.dibujar();
 		PanelTabla pat_panel=new PanelTabla();
-		pat_panel.setPanelTabla(tab_solicitud);
 		pat_panel.getChildren().add(boc_seleccion_inversa);
-		agregarComponente(tab_solicitud);
+		pat_panel.setPanelTabla(tab_solicitud);
 
-
-
+		Division div_division=new Division();
+		div_division.dividir1(pat_panel);
+		agregarComponente(div_division);
+		
 		Boton bot_material = new Boton();
 		bot_material.setValue("Buscar Solicitud Compra");
 		bot_material.setTitle("Solicitud Compra");
@@ -103,13 +96,13 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 	}
 
 	public  void aceptarSolicitud(){
-		String str_seleccionado = set_solicitud.getValorSeleccionado();
-		if (str_seleccionado!=null){
-			tab_ingreso_material.insertar();
-			tab_ingreso_material.setValor("ide_adsoc",str_seleccionado);
-		}
+		
+		tab_solicitud.setSql("select b.ide_addef,detalle_adsoc,num_factura_adfac,valor_adsoc,nro_solicitud_adsoc,valor_total_addef,valor_unitario_addef,cantidad_addef," +
+				" codigo_bomat,detalle_bomat from adq_solicitud_compra a,adq_detalle_factura b,adq_factura c , bodt_material d" +
+				" where a.ide_adsoc=c.ide_adsoc and b.ide_adfac=c.ide_adfac  and d.ide_bomat=b.ide_bomat and a.ide_adsoc="+set_solicitud.getValorSeleccionado().toString()+" order by codigo_bomat");
+		tab_solicitud.ejecutarSql();
+		utilitario.addUpdate("tab_solicitud");
 		set_solicitud.cerrar();
-		utilitario.addUpdate("tab_ingreso_material");
 	}
 
 	public void seleccionarTodas() {
