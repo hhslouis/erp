@@ -30,8 +30,6 @@ public class pre_tipo_contrato extends Pantalla {
 		tab_tabla1.getColumna("GARANTE_GTTCO").setCheck();
 		tab_tabla1.getColumna("GARANTE_GTTCO").setValorDefecto("false");
 
-		tab_tabla1.getColumna("IDE_SBREL").setCombo("SBS_RELACION_LABORAL", "IDE_SBREL","DETALLE_SBREL","");
-		tab_tabla1.getColumna("IDE_GECAE").setCombo("GEN_CATEGORIA_ESTATUS", "IDE_GECAE", "DETALLE_GECAE", "");
 		tab_tabla1.dibujar();
 		PanelTabla pat_panel = new PanelTabla();
 		pat_panel.setPanelTabla(tab_tabla1);
