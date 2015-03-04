@@ -15,7 +15,7 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 	private AutoCompletar aut_ing_material= new AutoCompletar();
 
 	public pre_ingreso_material_solicitud() {
-		tab_ingreso_material.setId("tab_solicitud_compra");
+		tab_ingreso_material.setId("tab_ingreso_material");
 		//MODIFICAR TABLA
 		tab_ingreso_material.setTabla("adq_solicitud_compra", "ide_adsoc", 1);
 		tab_ingreso_material.setTipoFormulario(true);
