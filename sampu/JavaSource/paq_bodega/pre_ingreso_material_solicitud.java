@@ -1,20 +1,34 @@
 package paq_bodega;
 
+import javax.ejb.EJB;
+
 import org.primefaces.event.SelectEvent;
 
+import framework.aplicacion.Fila;
 import framework.componentes.AutoCompletar;
 import framework.componentes.Boton;
+import framework.componentes.BotonesCombo;
+import framework.componentes.Division;
 import framework.componentes.Etiqueta;
+import framework.componentes.ItemMenu;
 import framework.componentes.PanelTabla;
+import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
+import paq_bodega.ejb.ServicioBodega;
 import paq_sistema.aplicacion.Pantalla;
 
 public class pre_ingreso_material_solicitud extends Pantalla{
 
 	private Tabla tab_ingreso_material= new Tabla();
+	private Tabla tab_solicitud=new Tabla();
 	private AutoCompletar aut_ing_material= new AutoCompletar();
+	private SeleccionTabla set_solicitud = new SeleccionTabla();
+
+	@EJB
+	private ServicioBodega ser_bodega = (ServicioBodega) utilitario.instanciarEJB(ServicioBodega.class);
 
 	public pre_ingreso_material_solicitud() {
+
 		tab_ingreso_material.setId("tab_ingreso_material");
 		//MODIFICAR TABLA
 		tab_ingreso_material.setTabla("adq_solicitud_compra", "ide_adsoc", 1);
@@ -22,37 +36,122 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 		tab_ingreso_material.getGrid().setColumns(4);
 		tab_ingreso_material.dibujar();
 
-		//BOTON LIMPIAR
-		Boton bot_limpiar = new Boton();
-		bot_limpiar.setIcon("ui-icon-cancel");
-		bot_limpiar.setMetodo("limpiar");
-		//AUTOCOMPLETAR
-		aut_ing_material.setId("aut_ing_material");
-		//MODIFICAR CONSULTA
-		aut_ing_material.setAutoCompletar("SELECT ide_bobod,descripcion_bobod,tipo_ingreso_bobod,marca_bobod FROM bodt_bodega WHERE tipo_ingreso_bobod is not null order by descripcion_bobod");
-		aut_ing_material.setMetodoChange("seleccionoAutocompletar");
-		bar_botones.agregarComponente(new Etiqueta("Seleccione"));
-		bar_botones.agregarComponente(aut_ing_material);
-		bar_botones.agregarBoton(bot_limpiar);
 
 		PanelTabla pat_ingreso= new PanelTabla();
 		pat_ingreso.setPanelTabla(tab_ingreso_material);
-		agregarComponente(tab_ingreso_material);
+
+		BotonesCombo boc_seleccion_inversa = new BotonesCombo();
+		ItemMenu itm_todas = new ItemMenu();
+		ItemMenu itm_niguna = new ItemMenu();
+
+		boc_seleccion_inversa.setValue("Selección Inversa");
+		boc_seleccion_inversa.setIcon("ui-icon-circle-check");
+		boc_seleccion_inversa.setMetodo("seleccinarInversa");
+		boc_seleccion_inversa.setUpdate("tab_solicitud");
+		itm_todas.setValue("Seleccionar Todo");
+		itm_todas.setIcon("ui-icon-check");
+		itm_todas.setMetodo("seleccionarTodas");
+		itm_todas.setUpdate("tab_solicitud");
+		boc_seleccion_inversa.agregarBoton(itm_todas);
+		itm_niguna.setValue("Seleccionar Ninguna");
+		itm_niguna.setIcon("ui-icon-minus");
+		itm_niguna.setMetodo( "seleccionarNinguna");
+		itm_niguna.setUpdate("tab_solicitud");
+		boc_seleccion_inversa.agregarBoton(itm_niguna);
+
+		tab_solicitud.setId("tab_solicitud");
+		tab_solicitud.setSql("select b.ide_addef,detalle_adsoc,num_factura_adfac,valor_adsoc,nro_solicitud_adsoc,valor_total_addef,valor_unitario_addef,cantidad_addef," +
+				" codigo_bomat,detalle_bomat from adq_solicitud_compra a,adq_detalle_factura b,adq_factura c , bodt_material d" +
+				" where a.ide_adsoc=c.ide_adsoc and b.ide_adfac=c.ide_adfac  and d.ide_bomat=b.ide_bomat order by codigo_bomat");
+		tab_solicitud.setNumeroTabla(2);
+		tab_solicitud.setCampoPrimaria("ide_addef");
+		tab_solicitud.setLectura(true);
+		tab_solicitud.setTipoSeleccion(true);
+		tab_solicitud.dibujar();
+		PanelTabla pat_panel=new PanelTabla();
+		pat_panel.setPanelTabla(tab_solicitud);
+		pat_panel.getChildren().add(boc_seleccion_inversa);
+		agregarComponente(tab_solicitud);
+
+
+
+		Boton bot_material = new Boton();
+		bot_material.setValue("Buscar Solicitud Compra");
+		bot_material.setTitle("Solicitud Compra");
+		bot_material.setIcon("ui-icon-person");
+		bot_material.setMetodo("importarSolicitud");
+		bar_botones.agregarBoton(bot_material);
+
+		set_solicitud.setId("set_solicitud");
+		set_solicitud.setSeleccionTabla(ser_bodega.getSolicitud("true,false"),"ide_adsoc");
+		set_solicitud.getTab_seleccion().getColumna("detalle_adsoc").setFiltro(true);
+		set_solicitud.getTab_seleccion().getColumna("nro_solicitud_adsoc").setFiltro(true);
+		set_solicitud.getTab_seleccion().getColumna("nombre_tepro").setFiltro(true);
+		set_solicitud.getTab_seleccion().getColumna("ruc_tepro").setFiltro(true);
+		set_solicitud.getTab_seleccion().getColumna("valor_adsoc").setFiltro(true);
+		set_solicitud.getBot_aceptar().setMetodo("aceptarSolicitud");
+		set_solicitud.getTab_seleccion().ejecutarSql();
+		set_solicitud.setRadio();
+		agregarComponente(set_solicitud);
 	}
-	//METDO AUTOCOMPLETAR
-	public void seleccionoAutocompletar(SelectEvent evt){
-		//Cuando selecciona una opcion del autocompletar siempre debe hacerse el onSelect(evt)
-		aut_ing_material.onSelect(evt);
-		tab_ingreso_material.setCondicion("ide_bobod="+aut_ing_material.getValor());
-		tab_ingreso_material.ejecutarSql();
-		//tab_ingreso_material.ejecutarValorForanea(tab_ingreso_material.getValorSeleccionado());
+	public void importarSolicitud(){
+
+		set_solicitud.getTab_seleccion().setSql(ser_bodega.getSolicitud("true,false"));
+		set_solicitud.getTab_seleccion().ejecutarSql();
+		set_solicitud.dibujar();
 
 	}
-	public void limpiar(){
-		aut_ing_material.limpiar();
-		tab_ingreso_material.limpiar();
-		utilitario.addUpdate("aut_ing_material");
+
+	public  void aceptarSolicitud(){
+		String str_seleccionado = set_solicitud.getValorSeleccionado();
+		if (str_seleccionado!=null){
+			tab_ingreso_material.insertar();
+			tab_ingreso_material.setValor("ide_adsoc",str_seleccionado);
+		}
+		set_solicitud.cerrar();
+		utilitario.addUpdate("tab_ingreso_material");
 	}
+
+	public void seleccionarTodas() {
+		tab_solicitud.setSeleccionados(null);
+        Fila seleccionados[] = new Fila[tab_solicitud.getTotalFilas()];
+        for (int i = 0; i < tab_solicitud.getFilas().size(); i++) {
+            seleccionados[i] = tab_solicitud.getFilas().get(i);
+        }
+        tab_solicitud.setSeleccionados(seleccionados);
+}
+
+/**DFJ**/
+public void seleccinarInversa() {
+        if (tab_solicitud.getSeleccionados() == null) {
+            seleccionarTodas();
+        } else if (tab_solicitud.getSeleccionados().length == tab_solicitud.getTotalFilas()) {
+            seleccionarNinguna();
+        } else {
+            Fila seleccionados[] = new Fila[tab_solicitud.getTotalFilas() - tab_solicitud.getSeleccionados().length];
+            int cont = 0;
+            for (int i = 0; i < tab_solicitud.getFilas().size(); i++) {
+                boolean boo_selecionado = false;
+                for (int j = 0; j < tab_solicitud.getSeleccionados().length; j++) {
+                    if (tab_solicitud.getSeleccionados()[j].equals(tab_solicitud.getFilas().get(i))) {
+                        boo_selecionado = true;
+                        break;
+                    }
+                }
+                if (boo_selecionado == false) {
+                    seleccionados[cont] = tab_solicitud.getFilas().get(i);
+                    cont++;
+                }
+            }
+            tab_solicitud.setSeleccionados(seleccionados);
+        }
+    }
+
+/**DFJ**/
+public void seleccionarNinguna() {
+	tab_solicitud.setSeleccionados(null);
+    }
+
 
 	@Override
 	public void insertar() {
@@ -61,7 +160,7 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 				tab_ingreso_material.getColumna("ide_bobod").setValorDefecto(aut_ing_material.getValor());
 				tab_ingreso_material.insertar();
 			}
-			
+
 		}
 		else{
 			utilitario.agregarMensajeError("Debe seleccionar los datos de material","");
@@ -93,6 +192,18 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 	}
 	public void setAut_ing_material(AutoCompletar aut_ing_material) {
 		this.aut_ing_material = aut_ing_material;
+	}
+	public SeleccionTabla getSet_solicitud() {
+		return set_solicitud;
+	}
+	public void setSet_solicitud(SeleccionTabla set_solicitud) {
+		this.set_solicitud = set_solicitud;
+	}
+	public Tabla getTab_solicitud() {
+		return tab_solicitud;
+	}
+	public void setTab_solicitud(Tabla tab_solicitud) {
+		this.tab_solicitud = tab_solicitud;
 	}
 
 }
