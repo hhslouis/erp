@@ -33,7 +33,22 @@ public class pre_depreciacion_activo extends Pantalla {
 		
 		
 		
-   
+		tab_depreciacion.setId("tab_depreciacion");
+		tab_depreciacion.setSql("select a.ide_afact,detalle_afact,marca_afact,serie_afact,modelo_afact,fecha_alta_afact,valor_compra_afact,vida_util_afact,"
+				+" fecha_calculo_afact,valor_depre_mes_afact,val_depreciacion_periodo_afact,valor_depreciacion_afact"
+				+" from afi_activo a"
+				+" where not fecha_alta_afact is null and a.ide_afact=-1"
+				+" order by fecha_alta_afact desc");
+		tab_depreciacion.setNumeroTabla(1);
+		tab_depreciacion.setCampoPrimaria("ide_afact");
+		tab_depreciacion.setLectura(true);
+		tab_depreciacion.dibujar();
+	PanelTabla pat_panel=new PanelTabla();
+
+	pat_panel.setPanelTabla(tab_depreciacion);
+	Division div_division=new Division();
+	div_division.dividir1(pat_panel);
+	agregarComponente(div_division);
       
       
 	
@@ -118,142 +133,19 @@ public class pre_depreciacion_activo extends Pantalla {
 				utilitario.agregarMensaje("Valoración", "Se ejecuto la valoracion con éxito");
 				//utilitario.getConexion().consultar("select avalactivos('"+fecha+"')");
 				dia_fecha.cerrar();
-				//utilitario.addUpdateTabla(tab_activos_fijos, "vida_util_afact,fecha_calculo_afact,valor_depre_mes_afact,val_depreciacion_periodo_afact,valor_depreciacion_afact,valor_residual_afact", "");
-				
+				tab_depreciacion.setSql("select a.ide_afact,detalle_afact,marca_afact,serie_afact,modelo_afact,fecha_alta_afact,valor_compra_afact,vida_util_afact,"
+						+" fecha_calculo_afact,valor_depre_mes_afact,val_depreciacion_periodo_afact,valor_depreciacion_afact"
+						+" from afi_activo a"
+						+" where not fecha_alta_afact is null "
+						+" order by fecha_alta_afact desc");
+
+				tab_depreciacion.ejecutarSql();
+				utilitario.addUpdate("tab_depreciacion");
+				utilitario.agregarMensaje("Guardado", "Proceso de Valoración realizado con exito");				
 			}
 
 	
 
-	
-	
-	/*long ide_inicial=0;
-	public void  aceptarDialogoCustodio(){
-		String str_seleccionados=tab_depreciacion.getFilasSeleccionadas();
-		TablaGenerica tab_consulta_custodio= ser_activos.getTablaGenericaConsultaCustodio(str_seleccionados);
-		utilitario.getConexion().ejecutarSql("DELETE from SIS_BLOQUEO where upper(TABLA_BLOQ) like 'afi_custodio'");
-		ide_inicial=utilitario.getConexion().getMaximo("afi_custodio", "ide_afcus", 1);
-		for(int i=0;i<tab_consulta_custodio.getTotalFilas();i++){
-			
-					utilitario.getConexion().ejecutarSql("update afi_custodio set fecha_descargo_afcus= '"+tab_tarspaso_Custodio.getValor("fecha_descargo_afcus")+"' ,"
-					+" razon_descargo_afcus= '"+tab_tarspaso_Custodio.getValor("razon_descargo_afcus")+"' ,"
-					+" activo_afcus=false where ide_afcus="+tab_consulta_custodio.getValor(i, "ide_afcus"));
-
-					utilitario.getConexion().ejecutarSql("insert into afi_custodio (ide_afcus,ide_afact,ide_geedp,detalle_afcus,fecha_entrega_afcus,numero_acta_afcus,cod_barra_afcus,nro_secuencial_afcus,activo_afcus,gen_ide_geedp)"
-					+" values ( "+ide_inicial+","+tab_consulta_custodio.getValor(i, "ide_afact")+", "+tab_tarspaso_Custodio.getValor("ide_geedp")+",'"+tab_consulta_custodio.getValor(i, "detalle_afcus")+"','"
-					+tab_tarspaso_Custodio.getValor("fecha_entrega_afcus")+"','"+tab_tarspaso_Custodio.getValor("numero_acta_afcus")+"','"+tab_consulta_custodio.getValor(i, "cod_barra_afcus")+"',"+tab_consulta_custodio.getValor(i, "nro_secuencial_afcus")
-					+",true,"+tab_consulta_custodio.getValor(i,"ide_geedp")+" )");
-			
-			ide_inicial++;
-		}
-		dia_fecha.cerrar();
-		tab_depreciacion.setSql("update afi_activo" +
-						" set  vida_util_afact = 5" +
-						" where vida_util_afact <=0;" +
-						" update afi_activo" +
-						" set fecha_calculo_afact ='"+fecha+"'" +
-						" where fecha_calculo_afact is null;" +
-						" update afi_activo" +
-						" set fecha_calculo_afact = '"+fecha+"';" +
-						" update afi_activo" +
-						" set valor_depre_mes_afact = valor_compra_afact/(vida_util_afact*12);" +
-						" update afi_activo" +
-						" set val_depreciacion_periodo_afact = (valor_compra_afact/vida_util_afact) * EXTRACT( MONTH FROM fecha_calculo_afact)" +
-						" where EXTRACT( year FROM fecha_calculo_afact) > EXTRACT( year FROM fecha_alta_afact);" +
-						" update afi_activo" +
-						" set val_depreciacion_periodo_afact = (valor_compra_afact/vida_util_afact) *  EXTRACT( MONTH FROM age(fecha_calculo_afact,fecha_alta_afact))" +
-						" where EXTRACT( year FROM fecha_calculo_afact) = EXTRACT( year FROM fecha_alta_afact);" +
-						" update afi_activo" +
-						" set valor_depreciacion_afact = (valor_compra_afact/vida_util_afact)* (EXTRACT( year FROM age(fecha_calculo_afact,fecha_alta_afact))*12 + EXTRACT( MONTH FROM age(fecha_calculo_afact,fecha_alta_afact)));" +
-						" update afi_activo" +
-						" set valor_depreciacion_afact  = valor_compra_afact *0.9" +
-						" where valor_depreciacion_afact >= valor_compra_afact;" +
-						" update afi_activo" +
-						" set valor_residual_afact = valor_compra_afact - valor_depreciacion_afact;");
-				
-		tab_depreciacion.ejecutarSql();
-		utilitario.addUpdate("tab_traspaso");
-		utilitario.agregarMensaje("Guardado", "Cambio de custodio realizado con exito");
-		}
-/*	public void abrirDialogoCustodio(){
-		//Hace aparecer el componente
-		if(aut_empleado.getValor()!=null){
-			tab_tarspaso_Custodio.limpiar();
-			tab_tarspaso_Custodio.insertar();
-			//tab_direccion.limpiar();
-		//	tab_direccion.insertar();
-			dia_traspaso_custodio.dibujar();
-		}
-		else{
-			utilitario.agregarMensaje("Inserte un Custodio", "");
-		}
-
-	}
-
-/**DFJ**/
-/*public void seleccionarTodas() {
-        tab_depreciacion.setSeleccionados(null);
-        Fila seleccionados[] = new Fila[tab_depreciacion.getTotalFilas()];
-        for (int i = 0; i < tab_depreciacion.getFilas().size(); i++) {
-            seleccionados[i] = tab_depreciacion.getFilas().get(i);
-        }
-        tab_depreciacion.setSeleccionados(seleccionados);
-}
-
-/**DFJ**/
-/*public void seleccinarInversa() {
-        if (tab_depreciacion.getSeleccionados() == null) {
-            seleccionarTodas();
-        } else if (tab_depreciacion.getSeleccionados().length == tab_depreciacion.getTotalFilas()) {
-            seleccionarNinguna();
-        } else {
-            Fila seleccionados[] = new Fila[tab_depreciacion.getTotalFilas() - tab_depreciacion.getSeleccionados().length];
-            int cont = 0;
-            for (int i = 0; i < tab_depreciacion.getFilas().size(); i++) {
-                boolean boo_selecionado = false;
-                for (int j = 0; j < tab_depreciacion.getSeleccionados().length; j++) {
-                    if (tab_depreciacion.getSeleccionados()[j].equals(tab_depreciacion.getFilas().get(i))) {
-                        boo_selecionado = true;
-                        break;
-                    }
-                }
-                if (boo_selecionado == false) {
-                    seleccionados[cont] = tab_depreciacion.getFilas().get(i);
-                    cont++;
-                }
-            }
-            tab_depreciacion.setSeleccionados(seleccionados);
-        }
-    }
-
-/**DFJ**/
-/*public void seleccionarNinguna() {
-	tab_depreciacion.setSeleccionados(null);
-    }
-
-
-
-
-	public void filtrarCustodio(SelectEvent evt){
-		tab_depreciacion.setSql("select b.ide_afcus,detalle_afact,serie_afact,modelo_afact,marca_afact,cod_barra_afcus,numero_acta_afcus," +
-				 "fecha_entrega_afcus,apellido_paterno_gtemp,apellido_materno_gtemp,primer_nombre_gtemp,segundo_nombre_gtemp " +
-				 "from afi_activo a,afi_custodio b, gen_empleados_departamento_par c, gth_empleado d where a.ide_afact=b.ide_afact " + 
-				 " and b.ide_geedp=c.ide_geedp and c.ide_geedp="+aut_empleado.getValor()+" and c.ide_gtemp=d.ide_gtemp and activo_afcus=true order by fecha_entrega_afcus desc");
-
-		tab_depreciacion.ejecutarSql();
-		utilitario.addUpdate("tab_traspaso");
-
-		
-
-	}
-	/**
-	 * limpia toda la pantalla incluyendo el autocompletar
-	 */
-	/*public void limpiar() {
-		aut_empleado.limpiar();
-		utilitario.addUpdate("aut_empleado");// limpia y refresca el autocompletar
-
-
-	}*/
 	
 	@Override
 	public void insertar() {
