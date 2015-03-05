@@ -1,20 +1,27 @@
 package paq_bodega;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ejb.EJB;
 
 import org.primefaces.event.SelectEvent;
 
 import framework.aplicacion.Fila;
+import framework.aplicacion.TablaGenerica;
 import framework.componentes.AutoCompletar;
 import framework.componentes.Boton;
 import framework.componentes.BotonesCombo;
+import framework.componentes.Dialogo;
 import framework.componentes.Division;
 import framework.componentes.Etiqueta;
+import framework.componentes.Grid;
 import framework.componentes.ItemMenu;
 import framework.componentes.PanelTabla;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import paq_bodega.ejb.ServicioBodega;
+import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_sistema.aplicacion.Pantalla;
 
 public class pre_ingreso_material_solicitud extends Pantalla{
@@ -23,13 +30,28 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 	private Tabla tab_solicitud=new Tabla();
 	private AutoCompletar aut_ing_material= new AutoCompletar();
 	private SeleccionTabla set_solicitud = new SeleccionTabla();
+	private Dialogo dia_recibir_solicitud=new Dialogo();
+
 
 	@EJB
 	private ServicioBodega ser_bodega = (ServicioBodega) utilitario.instanciarEJB(ServicioBodega.class);
-
+	@EJB
+	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
+	
 	public pre_ingreso_material_solicitud() {
 
-
+		Boton bot_material = new Boton();
+		bot_material.setValue("Buscar Solicitud Compra");
+		bot_material.setTitle("Solicitud Compra");
+		bot_material.setIcon("ui-icon-person");
+		bot_material.setMetodo("importarSolicitud");
+		bar_botones.agregarBoton(bot_material);
+		
+		Boton bot_solicitud=new Boton();
+		bot_solicitud.setIcon("ui-icon-person");
+		bot_solicitud.setValue("Recibir Solicitud");
+		bot_solicitud.setMetodo("abrirRecibirSolicitud");
+		bar_botones.agregarBoton(bot_solicitud);
 
 		BotonesCombo boc_seleccion_inversa = new BotonesCombo();
 		ItemMenu itm_todas = new ItemMenu();
@@ -68,13 +90,7 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 		div_division.dividir1(pat_panel);
 		agregarComponente(div_division);
 		
-		Boton bot_material = new Boton();
-		bot_material.setValue("Buscar Solicitud Compra");
-		bot_material.setTitle("Solicitud Compra");
-		bot_material.setIcon("ui-icon-person");
-		bot_material.setMetodo("importarSolicitud");
-		bar_botones.agregarBoton(bot_material);
-
+	
 		set_solicitud.setId("set_solicitud");
 		set_solicitud.setSeleccionTabla(ser_bodega.getSolicitud("true,false"),"ide_adsoc");
 		set_solicitud.getTab_seleccion().getColumna("detalle_adsoc").setFiltro(true);
@@ -86,7 +102,66 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 		set_solicitud.getTab_seleccion().ejecutarSql();
 		set_solicitud.setRadio();
 		agregarComponente(set_solicitud);
+		
+		dia_recibir_solicitud.setId("dia_recibir_solicitud");
+		dia_recibir_solicitud.setTitle("RECIBIR SOLICITUD");
+		dia_recibir_solicitud.setWidth("70%");
+		dia_recibir_solicitud.setHeight("50%");
+		Grid gri_cuerpo=new Grid();
+		
+		tab_ingreso_material.setId("tab_ingreso_material");
+		tab_ingreso_material.setTabla("bodt_bodega", "ide_bobod",2);
+		tab_ingreso_material.setTipoFormulario(true);
+		tab_ingreso_material.setCondicion("ide_bobod=-1");//para que aparesca vacia
+		tab_ingreso_material.getGrid().setColumns(4);
+		tab_ingreso_material.getColumna("ide_bomat").setVisible(false);
+		tab_ingreso_material.getColumna("ide_tepro").setVisible(false);
+		tab_ingreso_material.getColumna("ide_coest").setVisible(false);
+		tab_ingreso_material.getColumna("fecha_compra_bobod").setVisible(false);
+		tab_ingreso_material.getColumna("cantidad_ingreso_bobod").setVisible(false);
+		tab_ingreso_material.getColumna("recibido_bobod").setVisible(false);
+		tab_ingreso_material.getColumna("modelo_bobod").setVisible(false);
+		tab_ingreso_material.getColumna("marca_bobod").setVisible(false);
+		tab_ingreso_material.getColumna("num_factura_bobod").setVisible(false);
+		tab_ingreso_material.getColumna("serie_bobod").setVisible(false);
+		tab_ingreso_material.getColumna("valor_unitario_bobod").setVisible(false);
+		tab_ingreso_material.getColumna("color_bobod").setVisible(false);
+		tab_ingreso_material.getColumna("saldo_bobod").setVisible(false);
+		tab_ingreso_material.getColumna("ide_adsoc").setVisible(false);
+		tab_ingreso_material.getColumna("activo_bobod").setVisible(false);
+		tab_ingreso_material.getColumna("valor_total_bobod").setVisible(false);
+		tab_ingreso_material.getColumna("ide_comov").setVisible(false);
+		tab_ingreso_material.getColumna("ide_boinv").setVisible(false);
+		tab_ingreso_material.getColumna("ide_bobod").setVisible(false);
+		tab_ingreso_material.getColumna("ide_geani").setNombreVisual("AÑO");
+		tab_ingreso_material.getColumna("num_doc_bobod").setNombreVisual("NUMERO DE DOCUMENTO");
+		tab_ingreso_material.getColumna("descripcion_bobod").setNombreVisual("DESCRIPCION");
+		tab_ingreso_material.getColumna("tipo_ingreso_bobod").setNombreVisual("TIPO DE INGRESO");
+		tab_ingreso_material.getColumna("fecha_ingreso_bobod").setNombreVisual("FECHA DE INGRESO");
+		tab_ingreso_material.getColumna("numero_ingreso_bobod").setNombreVisual("NUMERO DE INGRESO");
+		tab_ingreso_material.getColumna("existencia_anterior_bobod").setVisible(false);
+		tab_ingreso_material.getColumna("ide_geani").setCombo(ser_contabilidad.getAnio("true,false","true,false"));
+		   List lista = new ArrayList();
+	       Object fila1[] = {
+	           "1", "CONSUMO INTERNO"
+	       };
+	       Object fila2[] = {
+	           "0", "CONSUMO EXTERNO"
+	       };
+	       
+	       lista.add(fila1);
+	       lista.add(fila2);
+	       tab_ingreso_material.getColumna("tipo_ingreso_bobod").setRadio(lista, "1");
+	       tab_ingreso_material.getColumna("tipo_ingreso_bobod").setRadioVertical(true);
+		tab_ingreso_material.dibujar();
+		gri_cuerpo.getChildren().add(tab_ingreso_material);
+		dia_recibir_solicitud.getBot_aceptar().setMetodo("aceptarDialogoSolicitud");
+		dia_recibir_solicitud.setDialogo(gri_cuerpo);
+		agregarComponente(dia_recibir_solicitud);
+		
+		
 	}
+	
 	public void importarSolicitud(){
 
 		set_solicitud.getTab_seleccion().setSql(ser_bodega.getSolicitud("true,false"));
@@ -144,7 +219,35 @@ public void seleccinarInversa() {
 public void seleccionarNinguna() {
 	tab_solicitud.setSeleccionados(null);
     }
+public void abrirRecibirSolicitud(){
+	//Hace aparecer el componente
+	tab_ingreso_material.limpiar();
+	tab_ingreso_material.insertar();
+	//tab_direccion.limpiar();
+	//	tab_direccion.insertar();
+	dia_recibir_solicitud.dibujar();
 
+}
+long ide_inicial=0;
+
+public void  aceptarDialogoSolicitud(){
+	
+	String str_seleccionados=tab_ingreso_material.getFilasSeleccionadas();
+	TablaGenerica tab_consulta_solicitud= ser_bodega.getTablaGenericaSolicitudCompra(str_seleccionados);
+	utilitario.getConexion().ejecutarSql("DELETE from SIS_BLOQUEO where upper(TABLA_BLOQ) like 'bodt_bodega'");
+	ide_inicial=utilitario.getConexion().getMaximo("bodt_bodega", "ide_bobod", 1);
+	for(int i=0;i<tab_consulta_solicitud.getTotalFilas();i++){
+		
+		utilitario.getConexion().ejecutarSql("update adq_detalle_factura set recibido_addef= false where ide_addef='"+tab_consulta_solicitud.getValor(i,"ide_addef"));
+		
+		utilitario.getConexion().ejecutarSql("INSERT INTO bodt_bodega(ide_bobod, ide_geani, ide_bomat, ide_tepro, fecha_ingreso_bobod, fecha_compra_bobod, recibido_bobod, " +
+				" cantidad_ingreso_bobod, numero_ingreso_bobod, " +
+				" num_factura_bobod, num_doc_bobod, descripcion_bobod, tipo_ingreso_bobod, " +
+				" valor_unitario_bobod, valor_total_bobod,activo_bobod, ide_adsoc) VALUES( )");
+		}
+
+		
+	}
 
 	@Override
 	public void insertar() {
