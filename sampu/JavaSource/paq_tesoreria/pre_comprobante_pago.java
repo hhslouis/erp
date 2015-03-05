@@ -4,6 +4,7 @@ import javax.ejb.EJB;
 
 import org.apache.commons.collections.SetUtils;
 import org.apache.poi.hssf.record.formula.Ptg;
+import org.hsqldb.SetFunction;
 
 import framework.aplicacion.TablaGenerica;
 import framework.componentes.AutoCompletar;
@@ -115,7 +116,7 @@ public class pre_comprobante_pago extends Pantalla{
 		tab_detalle_retencion.setIdCompleto("tab_tabulador:tab_detalle_retencion");
 		//tab_detalle_retencion.setHeader("DETALLE RETENCION");
 		tab_detalle_retencion.setTabla("tes_detalle_retencion", "ide_teder", 4);
-
+		tab_detalle_retencion.getColumna("ide_teimp").setCombo(ser_Tesoreria.getImpuesto("true", "0", "ide_teimp"));
 		tab_detalle_retencion.getColumna("ide_teimp").setLectura(true);
 		tab_detalle_retencion.getColumna("ide_teimp").setAutoCompletar();
 		tab_detalle_retencion.getColumna("base_imponible_teder").setMetodoChange("calcular");
@@ -171,6 +172,8 @@ public class pre_comprobante_pago extends Pantalla{
 		set_retencion.setSeleccionTabla(ser_Tesoreria.getImpuesto("true","1","0"),"ide_teimp");
 		set_retencion.setTitle("SELECCIONE UNA RETENCIÓN");		
 		set_retencion.getBot_aceptar().setMetodo("aceptarImpuesto");
+		set_retencion.getTab_seleccion().getColumna("CODIGO_TEIMP").setFiltro(true);
+		set_retencion.getTab_seleccion().getColumna("DETALLE_TEIMP").setFiltro(true);
 		set_retencion.setRadio();
 		agregarComponente(set_retencion);
 		
