@@ -26,7 +26,7 @@ public class ServicioTesoreria {
 	}
 public String getImpuesto (String activo,String grupo,String tipo_impuesto){
 		
-		String tab_impuesto="select a.ide_teimp,detalle_teimp,codigo_teimp,porcentaje_teimp,detalle_tetii " +
+		String tab_impuesto="select a.ide_teimp,codigo_teimp,porcentaje_teimp,detalle_teimp,detalle_tetii " +
 				" from tes_impuesto a,tes_tipo_impuesto b where a.ide_tetii= b.ide_tetii" +
 				" and activo_teimp in ("+activo+") ";
 				if(grupo.equals("0")){
