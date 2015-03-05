@@ -19,6 +19,7 @@ private ServicioContabilidad ser_contabilidad = (ServicioContabilidad) utilitari
 	
 	public pre_grupo_material(){
 		tab_grupo_material.setId("tab_grupo_material");
+		tab_grupo_material.setHeader("GRUPO MATERIAL");
 		tab_grupo_material.setTabla("bodt_grupo_material","ide_bogrm", 1);
 		tab_grupo_material.agregarRelacion(tab_cont_asiento);
 		tab_grupo_material.dibujar();
@@ -27,6 +28,7 @@ private ServicioContabilidad ser_contabilidad = (ServicioContabilidad) utilitari
 		
 		agregarComponente(pat_grupo_material);
 		tab_cont_asiento.setId("tab_cont_asiento");
+		tab_cont_asiento.setHeader("ASIENTO CONTABLE");
 		tab_cont_asiento.setTabla("cont_asiento_tipo","ide_coast", 2);
 		tab_cont_asiento.getColumna("ide_gemod").setCombo("gen_modulo","ide_gemod","detalle_gemod","");
 		tab_cont_asiento.getColumna("ide_cocac").setCombo(ser_contabilidad.getCuentaContable("true"));
