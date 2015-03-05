@@ -99,6 +99,9 @@ public class pre_traspaso_custodio extends Pantalla {
    pat_panel.getChildren().add(boc_seleccion_inversa);
 
 	pat_panel.setPanelTabla(tab_traspaso);
+	Division div_division=new Division();
+	div_division.dividir1(pat_panel);
+	agregarComponente(div_division);
 	
 /////custodio
 		Boton bot_custodio=new Boton();
@@ -106,9 +109,7 @@ public class pre_traspaso_custodio extends Pantalla {
 		bot_custodio.setValue("Traspaso Custodio");
 		bot_custodio.setMetodo("abrirDialogoCustodio");
 		bar_botones.agregarBoton(bot_custodio);
-	Division div_division=new Division();
-	div_division.dividir1(pat_panel);
-	agregarComponente(div_division);
+	
 	////selecion tabla
 	dia_traspaso_custodio.setId("dia_traspaso_custodio");
 	dia_traspaso_custodio.setTitle("TRASPASO CUSTODIO");
