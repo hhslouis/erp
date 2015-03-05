@@ -163,7 +163,7 @@ public class pre_activo extends Pantalla {
 
 		////boton empleado
 		Boton bot_empleado=new Boton();
-		bot_empleado.setIcon("ui-icon-person");
+		bot_empleado.setIcon("ui-calendario");
 		bot_empleado.setValue("Agregar Custodio");
 		bot_empleado.setMetodo("importarEmpleado");
 		bar_botones.agregarBoton(bot_empleado);
