@@ -89,6 +89,20 @@ public class pre_ingreso_material extends Pantalla{
 		tab_bodega.getColumna("recibido_bobod").setLectura(true);
 		tab_bodega.getColumna("activo_bobod").setValorDefecto("true");
 		tab_bodega.getColumna("activo_bobod").setLectura(true);
+		 List listax = new ArrayList();
+	       Object fila6[] = {
+	           "0", "CONSUMO INTERNO"
+	       };
+	       Object fila7[] = {
+	           "1", "CONSUMO EXTERNO"
+	       };
+	       
+	       listax.add(fila6);
+	       listax.add(fila7);
+	    tab_bodega.getColumna("tipo_ingreso_bobod").setRadio(listax, "1");
+	    tab_bodega.getColumna("tipo_ingreso_bobod").setRadioVertical(true);
+		
+		
 		tab_bodega.setCondicion("ide_geani=-1"); 
 		tab_bodega.setTipoFormulario(true);
 		tab_bodega.getGrid().setColumns(6);
@@ -194,6 +208,7 @@ public class pre_ingreso_material extends Pantalla{
 				return;
 		}
 		else {
+			tab_bodega.setValor("tipo_ingreso_bobod", lis_activo.getValue().toString());
 			if (lis_activo.getValue().equals("0")){
 				boolean resultado;
 				resultado =ser_Bodega.registraInventarioIngresos(tab_bodega.getValor("ide_bomat"), com_anio.getValue().toString(), tab_bodega.getValor("cantidad_ingreso_bobod"), tab_bodega.getValor("valor_total_bobod"));
