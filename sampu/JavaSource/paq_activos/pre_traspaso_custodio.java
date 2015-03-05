@@ -53,7 +53,7 @@ public class pre_traspaso_custodio extends Pantalla {
 		aut_empleado.setAutoCompletar(str_sql_emp);
 		aut_empleado.setMetodoChange("filtrarCustodio");
 
-		Etiqueta eti_colaborador=new Etiqueta("CUSTODIO:");
+		Etiqueta eti_colaborador=new Etiqueta("CUSTODIO ACTUAL:");
 
 
 		bar_botones.agregarComponente(eti_colaborador);
@@ -86,15 +86,18 @@ public class pre_traspaso_custodio extends Pantalla {
       
       
 		tab_traspaso.setId("tab_traspaso");
-		tab_traspaso.setSql("select b.ide_afcus,detalle_afact,serie_afact,modelo_afact,marca_afact,cod_barra_afcus,numero_acta_afcus," +
+		tab_traspaso.setSql("select detalle_afact,b.ide_afcus,serie_afact,modelo_afact,marca_afact,cod_barra_afcus,numero_acta_afcus," +
 				 "fecha_entrega_afcus,apellido_paterno_gtemp,apellido_materno_gtemp,primer_nombre_gtemp,segundo_nombre_gtemp " +
 				 "from afi_activo a,afi_custodio b, gen_empleados_departamento_par c, gth_empleado d where a.ide_afact=b.ide_afact " + 
 				 " and b.ide_geedp=c.ide_geedp and c.ide_geedp=-1 and c.ide_gtemp=d.ide_gtemp order by fecha_entrega_afcus desc");
 		tab_traspaso.setNumeroTabla(1);
 		tab_traspaso.setCampoPrimaria("ide_afcus");
+		
 	tab_traspaso.setLectura(true);
 	tab_traspaso.setTipoSeleccion(true);
+	
 	tab_traspaso.dibujar();
+	tab_traspaso.imprimirSql();
 	PanelTabla pat_panel=new PanelTabla();
    pat_panel.getChildren().add(boc_seleccion_inversa);
 
@@ -130,7 +133,7 @@ public class pre_traspaso_custodio extends Pantalla {
 	tab_tarspaso_Custodio.getColumna("nro_secuencial_afcus").setVisible(false);
 	tab_tarspaso_Custodio.getColumna("activo_afcus").setVisible(false);
 	tab_tarspaso_Custodio.getColumna("ide_geedp").setVisible(true);
-	tab_tarspaso_Custodio.getColumna("ide_geedp").setNombreVisual("CUSTODIO ACTUAL");
+	tab_tarspaso_Custodio.getColumna("ide_geedp").setNombreVisual("CUSTODIO NUEVO");
 	tab_tarspaso_Custodio.getColumna("ide_geedp").setCombo(ser_nomina.servicioEmpleadoContrato("true,false"));
 	tab_tarspaso_Custodio.getColumna("ide_geedp").setAutoCompletar();
 	tab_tarspaso_Custodio.getColumna("fecha_entrega_afcus").setVisible(true);
@@ -174,7 +177,7 @@ public class pre_traspaso_custodio extends Pantalla {
 			ide_inicial++;
 		}
 		dia_traspaso_custodio.cerrar();
-		tab_traspaso.setSql("select b.ide_afcus,detalle_afact,serie_afact,modelo_afact,marca_afact,cod_barra_afcus,numero_acta_afcus," +
+		tab_traspaso.setSql("select detalle_afact,b.ide_afcus,serie_afact,modelo_afact,marca_afact,cod_barra_afcus,numero_acta_afcus," +
 				 "fecha_entrega_afcus,apellido_paterno_gtemp,apellido_materno_gtemp,primer_nombre_gtemp,segundo_nombre_gtemp " +
 				 "from afi_activo a,afi_custodio b, gen_empleados_departamento_par c, gth_empleado d where a.ide_afact=b.ide_afact " + 
 				 " and b.ide_geedp=c.ide_geedp and c.ide_geedp="+aut_empleado.getValor()+" and c.ide_gtemp=d.ide_gtemp and activo_afcus=true order by fecha_entrega_afcus desc");
@@ -243,11 +246,11 @@ public void seleccionarNinguna() {
 
 
 	public void filtrarCustodio(SelectEvent evt){
-		tab_traspaso.setSql("select b.ide_afcus,detalle_afact,serie_afact,modelo_afact,marca_afact,cod_barra_afcus,numero_acta_afcus," +
+		tab_traspaso.setSql("select detalle_afact,b.ide_afcus,serie_afact,modelo_afact,marca_afact,cod_barra_afcus,numero_acta_afcus," +
 				 "fecha_entrega_afcus,apellido_paterno_gtemp,apellido_materno_gtemp,primer_nombre_gtemp,segundo_nombre_gtemp " +
 				 "from afi_activo a,afi_custodio b, gen_empleados_departamento_par c, gth_empleado d where a.ide_afact=b.ide_afact " + 
 				 " and b.ide_geedp=c.ide_geedp and c.ide_geedp="+aut_empleado.getValor()+" and c.ide_gtemp=d.ide_gtemp and activo_afcus=true order by fecha_entrega_afcus desc");
-
+        tab_traspaso.imprimirSql();
 		tab_traspaso.ejecutarSql();
 		utilitario.addUpdate("tab_traspaso");
 
