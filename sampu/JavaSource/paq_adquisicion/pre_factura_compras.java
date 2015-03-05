@@ -65,6 +65,9 @@ public class pre_factura_compras extends Pantalla{
 		tab_adq_detalle.getColumna("valor_total_addef").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_adq_detalle.getColumna("activo_addef").setLectura(true);
 		tab_adq_detalle.getColumna("activo_addef").setValorDefecto("true");
+		tab_adq_detalle.getColumna("recibido_addef").setValorDefecto("true");
+		tab_adq_detalle.getColumna("recibido_addef").setLectura(true);
+
 
 		tab_adq_detalle.dibujar();
 		PanelTabla pat_adq_detalle=new PanelTabla();
