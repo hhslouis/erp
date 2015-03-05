@@ -21,6 +21,7 @@ import paq_bodega.ejb.ServicioBodega;
 import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_nomina.ejb.ServicioNomina;
 import paq_sistema.aplicacion.Pantalla;
+import portal.entidades.SisTabla;
 
 import com.lowagie.text.pdf.Barcode128;
 
@@ -256,11 +257,12 @@ public class pre_activo extends Pantalla {
 				" where valor_depreciacion_afact >= valor_compra_afact;" +
 				" update afi_activo" +
 				" set valor_residual_afact = valor_compra_afact - valor_depreciacion_afact;");
-		utilitario.addUpdate("tab_activos_fijos");			
-
-		utilitario.agregarMensaje("VAloración", "Se ejecuto la valoracion con éxito");
+		
+		utilitario.agregarMensaje("Valoración", "Se ejecuto la valoracion con éxito");
 		//utilitario.getConexion().consultar("select avalactivos('"+fecha+"')");
 		dia_fecha.cerrar();
+		//utilitario.addUpdateTabla(tab_activos_fijos, "vida_util_afact,fecha_calculo_afact,valor_depre_mes_afact,val_depreciacion_periodo_afact,valor_depreciacion_afact,valor_residual_afact", "");
+		tab_activos_fijos.ejecutarSql();
 		
 	}
 
