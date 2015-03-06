@@ -53,10 +53,28 @@ public class pre_anual_egresos extends Pantalla {
 		tab_anual.getColumna("ide_geani").setCombo(ser_contabilidad.getAnio("true,false","true,false"));
 		tab_anual.getColumna("ide_geani").setVisible(false);
 		tab_anual.setCondicion("ide_geani=-1");
-		tab_anual.getColumna("valor_reformado_h_pranu").setMetodoChange("calcular");
-		tab_anual.getColumna("valor_reformado_d_pranu").setMetodoChange("calcular");
+		tab_anual.getColumna("valor_reformado_h_pranu").setEtiqueta();
+		tab_anual.getColumna("valor_reformado_h_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
+		tab_anual.getColumna("valor_reformado_d_pranu").setEtiqueta();
+		tab_anual.getColumna("valor_reformado_d_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		//tab_anual.getColumna("ide_geani").setValorDefecto(com_anio.getValue().toString());
 		//tab_anual.getColumna("ide_prfup").setCombo("pre_funcion_programa", "ide_prfup", "detalle_prfup,", "");
+		tab_anual.getColumna("valor_reformado_pranu").setEtiqueta();
+		tab_anual.getColumna("valor_reformado_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
+		tab_anual.getColumna("valor_inicial_pranu").setEtiqueta();
+		tab_anual.getColumna("valor_inicial_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
+		tab_anual.getColumna("valor_codificado_pranu").setEtiqueta();
+		tab_anual.getColumna("valor_codificado_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
+		tab_anual.getColumna("valor_devengado_pranu").setEtiqueta();
+		tab_anual.getColumna("valor_devengado_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
+		tab_anual.getColumna("valor_precomprometido_pranu").setEtiqueta();
+		tab_anual.getColumna("valor_precomprometido_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
+		tab_anual.getColumna("valor_eje_comprometido_pranu").setEtiqueta();
+		tab_anual.getColumna("valor_eje_comprometido_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
+		tab_anual.getColumna("valor_recaudado_pranu").setEtiqueta();
+		tab_anual.getColumna("valor_recaudado_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
+		tab_anual.getColumna("valor_recaudado_efectivo_pranu").setEtiqueta();
+		tab_anual.getColumna("valor_recaudado_efectivo_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_anual.setTipoFormulario(true);
 		tab_anual.getGrid().setColumns(4);
 		tab_anual.agregarRelacion(tab_mensual);
@@ -89,6 +107,9 @@ public class pre_anual_egresos extends Pantalla {
 		tab_reforma.setIdCompleto("tab_tabulador:tab_reforma");
 		tab_reforma.setTabla("pre_reforma_mes", "ide_prrem", 3);
 		tab_reforma.getColumna("ide_gemes").setCombo("gen_mes", "ide_gemes", "detalle_gemes", "");
+		tab_reforma.getColumna("val_reforma_h_prrem").setMetodoChange("calcularDetallle");
+		tab_reforma.getColumna("val_reforma_d_prrem").setMetodoChange("calcularDetallle");
+
 		tab_reforma.dibujar();
 		PanelTabla pat_panel3=new PanelTabla();
 		pat_panel3.setPanelTabla(tab_reforma);
@@ -120,16 +141,21 @@ public class pre_anual_egresos extends Pantalla {
 		
 	}
 	public void  Calcular(){
+		double dou_total=0;
+		double dou_subtotal=0;
 		
 		String sub_tot=tab_reforma.getSumaColumna("val_reforma_h_prrem")+"";
 		tab_anual.setValor("valor_reformado_h_pranu",sub_tot );
 		
 		String sub_total=tab_reforma.getSumaColumna("val_reforma_d_prrem")+"";
 		tab_anual.setValor("valor_reformado_d_pranu",sub_total );
-		
+		dou_total=Double.parseDouble(sub_tot);
+		dou_subtotal=Double.parseDouble(sub_total);
 		tab_anual.setValor("valor_reformado_h_pranu",utilitario.getFormatoNumero(sub_tot,3));
 		tab_anual.setValor("valor_reformado_d_pranu",utilitario.getFormatoNumero(sub_total,3));
-		utilitario.addUpdateTabla(tab_anual, "val_reforma_h_prrem,val_reforma_d_prrem", "tab_reforma");	
+		tab_anual.modificar(tab_anual.getFilaActual());//para que haga el update
+
+		utilitario.addUpdateTabla(tab_anual, "valor_reformado_h_pranu,valor_reformado_d_pranu", "tab_reforma");	
 	
 	}
 	public void calcularDetallle(AjaxBehaviorEvent evt) {
