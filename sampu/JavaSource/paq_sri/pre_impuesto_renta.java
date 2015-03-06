@@ -131,6 +131,7 @@ public class pre_impuesto_renta extends Pantalla {
 				}
 				else if(set_empleado.isVisible()){
 					String str_seleccionados=set_empleado.getSeleccionados();
+					System.out.printf("Esto me selecciona:"+str_seleccionados);
 					if(str_seleccionados==null || str_seleccionados.isEmpty()){
 						utilitario.agregarMensajeInfo("Debe seleccionar almenos un empleado", "");
 					}
