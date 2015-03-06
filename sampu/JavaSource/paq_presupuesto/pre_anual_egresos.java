@@ -1,11 +1,18 @@
 package paq_presupuesto;
 
+import javax.ejb.EJB;
+import javax.faces.event.AjaxBehaviorEvent;
+
+import framework.aplicacion.TablaGenerica;
+import framework.componentes.Boton;
 import framework.componentes.Combo;
 import framework.componentes.Division;
 import framework.componentes.Etiqueta;
 import framework.componentes.PanelTabla;
+import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import framework.componentes.Tabulador;
+import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_presupuesto.ejb.ServicioPresupuesto;
 import paq_sistema.aplicacion.Pantalla;
 
@@ -15,8 +22,12 @@ public class pre_anual_egresos extends Pantalla {
 	private Tabla tab_mensual= new Tabla();
 	private Tabla tab_reforma= new Tabla();
 	private Combo com_anio =new Combo();
+	private SeleccionTabla set_programa = new SeleccionTabla();
 
+	@EJB
 	private ServicioPresupuesto ser_presupuesto=(ServicioPresupuesto) utilitario.instanciarEJB(ServicioPresupuesto.class);
+	@EJB
+	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
 	
 	public pre_anual_egresos(){
 		
@@ -36,7 +47,14 @@ public class pre_anual_egresos extends Pantalla {
 		tab_anual.getColumna("ide_prcla").setCombo("select ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla from pre_clasificador order by codigo_clasificador_prcla");
 		tab_anual.getColumna("ide_prcla").setVisible(false);
 		tab_anual.setCondicion("ide_prpro!=null");
-		tab_anual.getColumna("ide_prpro").setCombo("pre_programa", "ide_prpro", "cod_programa_prpro", "");
+		tab_anual.getColumna("ide_prpro").setCombo(ser_presupuesto.getPrograma("true,false"));
+		tab_anual.getColumna("ide_prpro").setAutoCompletar();
+		tab_anual.getColumna("ide_prpro").setLectura(true);
+		tab_anual.getColumna("ide_geani").setCombo(ser_contabilidad.getAnio("true,false","true,false"));
+		tab_anual.getColumna("ide_geani").setVisible(false);
+		tab_anual.setCondicion("ide_geani=-1");
+		tab_anual.getColumna("valor_reformado_h_pranu").setMetodoChange("calcular");
+		tab_anual.getColumna("valor_reformado_d_pranu").setMetodoChange("calcular");
 		//tab_anual.getColumna("ide_geani").setValorDefecto(com_anio.getValue().toString());
 		//tab_anual.getColumna("ide_prfup").setCombo("pre_funcion_programa", "ide_prfup", "detalle_prfup,", "");
 		tab_anual.setTipoFormulario(true);
@@ -84,8 +102,72 @@ public class pre_anual_egresos extends Pantalla {
 		Division div_division =new Division ();
 		div_division.dividir2(pat_panel1, tab_tabulador, "50%", "h");
 		agregarComponente(div_division);
+		
+		Boton bot_material = new Boton();
+		bot_material.setValue("Agregar Programa");
+		bot_material.setTitle("Solicitud Programa");
+		bot_material.setIcon("ui-icon-person");
+		bot_material.setMetodo("importarPrograma");
+		bar_botones.agregarBoton(bot_material);
+
+		set_programa.setId("set_programa");
+		set_programa.setSeleccionTabla(ser_presupuesto.getPrograma("true,false"),"IDE_PRPRO");
+		set_programa.getBot_aceptar().setMetodo("aceptarPrograma");
+		set_programa.getTab_seleccion().ejecutarSql();
+		set_programa.setRadio();
+		agregarComponente(set_programa);
 
 		
+	}
+	public void  Calcular(){
+		
+		String sub_tot=tab_reforma.getSumaColumna("val_reforma_h_prrem")+"";
+		tab_anual.setValor("valor_reformado_h_pranu",sub_tot );
+		
+		String sub_total=tab_reforma.getSumaColumna("val_reforma_d_prrem")+"";
+		tab_anual.setValor("valor_reformado_d_pranu",sub_total );
+		
+		tab_anual.setValor("valor_reformado_h_pranu",utilitario.getFormatoNumero(sub_tot,3));
+		tab_anual.setValor("valor_reformado_d_pranu",utilitario.getFormatoNumero(sub_total,3));
+		utilitario.addUpdateTabla(tab_anual, "val_reforma_h_prrem,val_reforma_d_prrem", "tab_reforma");	
+	
+	}
+	public void calcularDetallle(AjaxBehaviorEvent evt) {
+		tab_reforma.modificar(evt); //Siempre es la primera linea
+		Calcular();
+
+	}
+	public void importarPrograma(){
+		
+		if(com_anio.getValue()==null){
+			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
+			return;
+		}
+	
+		//Filtrar los clasificadores del año seleccionado
+		set_programa.getTab_seleccion().setSql(ser_presupuesto.getPrograma("true,false"));
+		set_programa.getTab_seleccion().ejecutarSql();
+		set_programa.dibujar();
+
+	}
+
+	public void aceptarPrograma(){
+		String str_seleccionado=set_programa.getValorSeleccionado();
+		if(str_seleccionado!=null){
+			//Inserto los empleados seleccionados en la tabla de participantes 
+			TablaGenerica tab_programa=ser_presupuesto.getTablaGenericaPrograma(str_seleccionado);
+			System.out.println(" tabla generica"+tab_programa.getSql());
+			for(int i=0;i<tab_programa.getTotalFilas();i++){
+				tab_anual.insertar();
+				tab_anual.setValor("ide_prpro", tab_programa.getValor(i, "ide_prpro"));
+				
+			}
+			set_programa.cerrar();
+			utilitario.addUpdate("tab_anual");			
+		}
+		else{
+			utilitario.agregarMensajeInfo("Debe seleccionar almenos un registro", "");
+		}
 	}
 
 
@@ -95,10 +177,20 @@ public class pre_anual_egresos extends Pantalla {
 		if(com_anio.getValue()==null){
 			utilitario.agregarMensaje("No se puede insertar", "Debe Seleccionar un Año");
 			return;
-
 		}
-
-		utilitario.getTablaisFocus().insertar();
+			if(tab_anual.isFocus()){
+				tab_anual.insertar();
+				tab_anual.setValor("ide_geani",com_anio.getValue()+"");
+				}
+			else if(tab_mensual.isFocus()){
+				tab_mensual.insertar();
+			}
+				else if(tab_reforma.isFocus()){
+					tab_reforma.insertar();
+					
+				}
+				
+		
 		
 	}
 
@@ -149,6 +241,16 @@ public class pre_anual_egresos extends Pantalla {
 
 	public void setTab_reforma(Tabla tab_reforma) {
 		this.tab_reforma = tab_reforma;
+	}
+
+
+	public SeleccionTabla getSet_programa() {
+		return set_programa;
+	}
+
+
+	public void setSet_programa(SeleccionTabla set_programa) {
+		this.set_programa = set_programa;
 	}
 
 }
