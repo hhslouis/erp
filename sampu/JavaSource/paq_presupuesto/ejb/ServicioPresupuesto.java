@@ -90,4 +90,15 @@ public TablaGenerica getTablaGenericaPoa(String ide_prpoa) {
 	return tab_poa;
 	
 }
+public String getPrograma (String activo){
+	String tab_programa=("select  ide_prpro,cod_programa_prpro from pre_programa" +
+			" where activo_prpro in ("+activo+") order by cod_programa_prpro");
+	return tab_programa;
+	
+}
+public TablaGenerica getTablaGenericaPrograma(String ide_prpro){
+	TablaGenerica tab_programa=utilitario.consultar("select  ide_prpro,cod_programa_prpro from pre_programa where ide_prpro in ("+ide_prpro+")" +
+			" order by cod_programa_prpro");
+	return tab_programa;
+}
 }
