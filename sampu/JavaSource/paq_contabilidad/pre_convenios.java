@@ -52,6 +52,7 @@ public class pre_convenios extends Pantalla {
 	private SeleccionTabla set_estados = new SeleccionTabla();
 	@EJB
 	private ServicioGeneral ser_general = (ServicioGeneral ) utilitario.instanciarEJB(ServicioGeneral.class);
+	@EJB
 	private ServicioNomina ser_nomina = (ServicioNomina) utilitario.instanciarEJB(ServicioNomina.class);
 
 	@EJB
@@ -103,8 +104,10 @@ public class pre_convenios extends Pantalla {
 		tab_tabla2.getColumna("IDE_GEEDP").setLectura(true);
 		tab_tabla2.getColumna("IDE_GEEDP").setUnico(true);
 		tab_tabla2.getColumna("ide_corec").setUnico(true);
-		//tab_tabla2.setCampoForanea("ide_cocon");
+		tab_tabla2.getColumna("apellido_paterno_corec").setAutoCompletar();
 		
+		//tab_tabla2.setCampoForanea("ide_cocon");
+
 		//getTipoPersona("true",par_modulo_convenio),"ide_getip");
 		tab_tabla2.dibujar();
 		PanelTabla pat_panel2 = new PanelTabla();
@@ -120,10 +123,10 @@ public class pre_convenios extends Pantalla {
 		tab_tabla3.dibujar();
 		PanelTabla pat_panel3 = new PanelTabla();
 		pat_panel3.setPanelTabla(tab_tabla3);
-		
 
-	
-		
+
+
+
 
 
 
@@ -137,17 +140,18 @@ public class pre_convenios extends Pantalla {
 		div_division.setId("div_division");
 		div_division.dividir2(arb_arbol, div3, "21%", "V");  //arbol y div3
 		agregarComponente(div_division);
-
+		/*
 		Boton bot_agregar = new Boton();
 		bot_agregar.setValue("Agregar Tipo Persona");
 		bot_agregar.setMetodo("importarTipoPersona");
 		bar_botones.agregarBoton(bot_agregar);
+		 */
 		par_modulo_convenio=utilitario.getVariable("p_modulo_convenio");
 		par_funcionario_convenio=utilitario.getVariable("p_funcionario_convenio");
 		par_particular_convenio=utilitario.getVariable("p_particular_convenio");
-		
-		
-		
+
+
+
 		inicializarSetEstados();
 		inicializaSetTipopersona();  
 		inicializaSetEmpleado();
@@ -155,11 +159,11 @@ public class pre_convenios extends Pantalla {
 		inicializarSetInstitucion();
 		inicializaInsertaSetTipopersona();
 		inicializaInsertaSetEmpeado();
-		
+
 
 
 	}
-	
+
 	public void inicializaSetEmpleado(){
 		set_empleado.setId("set_empleado");
 		set_empleado.setTitle("Seleccione un Empleado");
@@ -170,10 +174,10 @@ public class pre_convenios extends Pantalla {
 		set_empleado.getTab_seleccion().ejecutarSql();
 		set_empleado.getBot_aceptar().setMetodo("aceptarEmpleado");
 		agregarComponente(set_empleado);
-		
+
 	}
 	public void insertarRegistro(){
-		
+
 	}
 	public void inicializaSetTipopersona(){
 
@@ -186,7 +190,7 @@ public class pre_convenios extends Pantalla {
 		agregarComponente(set_tipo_persona);   
 	}
 	///////inserat d0cumento nuevo
-	
+
 	public void inicializaInsertaSetTipopersona(){
 
 		set_persona.setId("set_persona");
@@ -196,9 +200,9 @@ public class pre_convenios extends Pantalla {
 		set_persona.getTab_seleccion().ejecutarSql();
 		set_persona.getBot_aceptar().setMetodo("aceptarPersona");        
 		agregarComponente(set_persona); 
-			
+
 	}
-	
+
 	public void inicializaInsertaSetEmpeado(){
 		set_empleado_nuevo.setId("set_empleado_nuevo");
 		set_empleado_nuevo.setTitle("Seleccione un Empleado");
@@ -209,37 +213,40 @@ public class pre_convenios extends Pantalla {
 		set_empleado_nuevo.getTab_seleccion().ejecutarSql();
 		set_empleado_nuevo.getBot_aceptar().setMetodo("aceptarPersona");
 		agregarComponente(set_empleado_nuevo);
-				
+
 	}
-	
+
 	public void aceptarPersona(){
-	if(set_persona.isVisible());
-	tab_tabla2.insertar();	
-	String str_seleccionado=set_persona.getValorSeleccionado();
-	if(str_seleccionado.equals(par_funcionario_convenio)){
-		tab_tabla2.setValor("ide_getip", str_seleccionado); ///para que se me despliegue el valor que selecciono en el campo 
-		set_persona.cerrar();
-		set_empleado_nuevo.dibujar();
-		System.out.println("salo del tipo persona");
-	
-	}else if (set_empleado_nuevo.isVisible()){
-		System.out.println("entro al empleado"+set_empleado_nuevo.getValorSeleccionado());
-		String str_seleccionado_emnuevo=set_empleado_nuevo.getValorSeleccionado();
-		if(str_seleccionado_emnuevo!=null){	
-		TablaGenerica tab_empleado_responsable = ser_nomina.ideEmpleadoContrato(str_seleccionado_emnuevo);		
-		tab_tabla2.setValor("IDE_GEEDP", tab_empleado_responsable.getValor("IDE_GEEDP"));			
-		tab_tabla2.setValor("IDE_GTEMP", tab_empleado_responsable.getValor("IDE_GTEMP"));
-	    tab_tabla2.setValor("APELLIDO_PATERNO_corec", tab_empleado_responsable.getValor("APELLIDO_PATERNO_GTEMP"));
-		utilitario.addUpdate("tab_tabla2");	
-		set_empleado_nuevo.cerrar();
+		if(set_persona.isVisible()){
+		tab_tabla2.insertar();	
+		String str_seleccionado=set_persona.getValorSeleccionado();
+		if(str_seleccionado.equals(par_funcionario_convenio)){
+			tab_tabla2.setValor("ide_getip", str_seleccionado); ///para que se me despliegue el valor que selecciono en el campo 
+			System.out.println(" tipo persona"+str_seleccionado);
+			set_persona.cerrar();
+			set_empleado_nuevo.dibujar();
+			System.out.println("salo del tipo persona");
+		}
+		
+		}else if (set_empleado_nuevo.isVisible()){
+			if (set_empleado_nuevo.getValorSeleccionado()!=null){
+			  String str_seleccionado_emnuevo=set_empleado_nuevo.getValorSeleccionado();
+				System.out.println("entro al empleado"+set_empleado_nuevo.getValorSeleccionado());
+				TablaGenerica tab_empleado_responsable = ser_nomina.ideEmpleadoContrato(str_seleccionado_emnuevo);	
+				
+				tab_tabla2.setValor("IDE_GEEDP", tab_empleado_responsable.getValor("IDE_GEEDP"));			
+				tab_tabla2.setValor("IDE_GTEMP", tab_empleado_responsable.getValor("IDE_GTEMP"));
+				tab_tabla2.setValor("APELLIDO_PATERNO_corec", tab_empleado_responsable.getValor("APELLIDO_PATERNO_GTEMP"));
+				utilitario.addUpdate("tab_tabla2");	
+				set_empleado_nuevo.cerrar();
+			}
+			
+		}
 
+		
 	}
-        
 
-	}
-	}
-	
-	
+
 	public void inicializarSetEstados(){
 
 		set_estados.setId("set_estados");
@@ -321,30 +328,29 @@ public class pre_convenios extends Pantalla {
 			utilitario.addUpdate("tab_tabla1");	
 		}
 	}
-	public  void aceptarTipoPersona(){
+	/*public  void aceptarTipoPersona(){
 		String str_seleccionado=set_tipo_persona.getValorSeleccionado();
 		System.out.println("ACTIVOS :"+set_tipo_persona.getValorSeleccionado());
 		if(str_seleccionado.equals(par_funcionario_convenio)){
-
+System.out.println("if del aceptar persona"+str_seleccionado.toString());
 			tab_tabla2.setValor("ide_getip", str_seleccionado); ///para que se me despliegue el valor que selecciono en el campo 
 			tab_tabla2.modificar(tab_tabla2.getFilaActual());//para que haga el update
-			tab_tabla2.guardar();
-			utilitario.addUpdate("tab_tabla2");
-
-
 			TablaGenerica tab_empleado = ser_nomina.ideEmpleadoContrato(str_seleccionado);	
 			set_empleado.setSeleccionTabla(ser_nomina.servicioEmpleadoContrato("true,false"),"ide_geedp");
 			set_empleado.getTab_seleccion().getColumna("documento_identidad_gtemp").setFiltro(true);
 			set_empleado.getTab_seleccion().getColumna("nombres_apellidos").setFiltro(true);
 			set_empleado.getTab_seleccion().ejecutarSql();
-
+			tab_tabla2.insertar();
+			tab_tabla2.guardar();
+			utilitario.addUpdate("tab_tabla2");
 			set_tipo_persona.cerrar();			
 			set_empleado.dibujar();
 
-			
-						
+			System.out.println("salir del if tipo persona"+tab_empleado.getValorSeleccionado());
+
+
 		}else if( str_seleccionado.equals(par_particular_convenio)){
-			
+
 			TablaGenerica tab_empleado = ser_nomina.ideEmpleadoContrato(str_seleccionado);				System.out.println("ACTIVOS :"+set_tipo_persona.getValorSeleccionado());
 			set_empleado.setSeleccionTabla(ser_nomina.servicioEmpleadoContrato("true,false"),"ide_geedp");
 			set_empleado.getTab_seleccion().ejecutarSql();
@@ -354,36 +360,36 @@ public class pre_convenios extends Pantalla {
 			utilitario.agregarMensajeInfo("Hola particular","particular");
 
 		}else{
-			
+
 			utilitario.agregarMensajeInfo("No se puede continuar", "No ha Seleccionado Ningun Registro");
 			return;
 		}
 	}
-	
+	 */
 	public void aceptarEmpleado(){
 		String str_seleccionado=set_empleado.getValorSeleccionado();
 		if(str_seleccionado!=null){
 			//Inserto los empleados seleccionados en la tabla de resposable d econtratacion 
 			TablaGenerica tab_empleado_responsable = ser_nomina.ideEmpleadoContrato(str_seleccionado);		
-						
+
 			System.out.println(" tabla generica"+tab_empleado_responsable.getSql());
 			//for(int i=0;i<tab_empleado_responsable.getTotalFilas();i++){
-		        //tab_tabla2.insertar();
-				tab_tabla2.setValor("IDE_GEEDP", tab_empleado_responsable.getValor("IDE_GEEDP"));			
-				tab_tabla2.setValor("IDE_GTEMP", tab_empleado_responsable.getValor("IDE_GTEMP"));
-				tab_tabla2.modificar(tab_tabla2.getFilaActual());//para que haga el update
-				tab_tabla2.guardar();
+			//tab_tabla2.insertar();
+			tab_tabla2.setValor("IDE_GEEDP", tab_empleado_responsable.getValor("IDE_GEEDP"));			
+			tab_tabla2.setValor("IDE_GTEMP", tab_empleado_responsable.getValor("IDE_GTEMP"));
+			tab_tabla2.modificar(tab_tabla2.getFilaActual());//para que haga el update
+			tab_tabla2.guardar();
 
-				utilitario.addUpdate("tab_tabla2");	
+			utilitario.addUpdate("tab_tabla2");	
 
-			}
-			set_empleado.cerrar();
 		}
-		//else{
-		///	utilitario.agregarMensajeInfo("Debe seleccionar almenos un registro", "");
+		set_empleado.cerrar();
+	}
+	//else{
+	///	utilitario.agregarMensajeInfo("Debe seleccionar almenos un registro", "");
 	//	}
-//	}
-	
+	//	}
+
 
 	public  void aceptarTipoConvenio(){
 		String str_seleccionados=set_tipo_convenio.getSeleccionados();
@@ -494,23 +500,23 @@ public class pre_convenios extends Pantalla {
 			tab_tabla1.insertar();
 		}
 		else if (tab_tabla2.isFocus()){
-		
+
 			set_persona.getTab_seleccion().setSql(ser_general.getTipoPersona("true",par_modulo_convenio));
 			set_persona.getTab_seleccion().ejecutarSql();
 			set_persona.dibujar();
-			
+
 		}
 		else if (tab_tabla2.isFocus()){
-			
+
 			set_persona.getTab_seleccion().setSql(ser_general.getTipoPersona("true",par_modulo_convenio));
 			set_persona.getTab_seleccion().ejecutarSql();
 			set_persona.dibujar();
-			
+
 		}
 		else if (tab_tabla3.isFocus()){
 			tab_tabla3.insertar();
 		}
-		
+
 	}
 
 	public Arbol getArb_arbol() {
