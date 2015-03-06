@@ -171,4 +171,11 @@ public TablaGenerica getTablaGenericaSolicitudCompra(String ide_addef){
 				" where a.ide_adsoc=c.ide_adsoc and b.ide_adfac=c.ide_adfac  and d.ide_bomat=b.ide_bomat  b.ide_addef in ("+ide_addef+") order by codigo_bomat");
 	return tab_solicitud_comp;
 }
+
+public String getEgresoSolicitud(){
+	String tab_solicitud="select ide_adsoc,detalle_adsoc,nro_solicitud_adsoc,valor_adsoc,nombre_tepro,ruc_tepro " +
+			" from adq_solicitud_compra a , tes_proveedor b" +
+			" where a.ide_tepro=b.ide_tepro and ide_adsoc in (select ide_adsoc from bodt_bodega where activo_bobod =true  group by ide_adsoc) order by nro_solicitud_adsoc";
+	return tab_solicitud;
+}
 }
