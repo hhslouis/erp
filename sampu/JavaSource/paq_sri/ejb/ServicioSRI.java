@@ -36,13 +36,13 @@ public class ServicioSRI {
 				"from ( " +
 				"select a.ide_gtemp,c.ide_geedp,apellido_paterno_gtemp||' '||apellido_materno_gtemp||' '||primer_nombre_gtemp||' '||segundo_nombre_gtemp as empleado " +
 				",documento_identidad_gtemp,a.ide_gttdi,a.ide_gedip,detalle_gttdi,codigo_sri_gttdi as codigo_documento_identidad, " +
-				"(case when discapacitado_gtemp is null then 0 else discapacitado_gtemp end) as discapacidad " +
+				"(case when discapacitado_gtemp is null then true else discapacitado_gtemp end) as discapacidad " +
 				"from gth_empleado a, gth_tipo_documento_identidad b,gen_empleados_departamento_par c " +
 				"where a.ide_gttdi = b.ide_gttdi and a.ide_gtemp = c.ide_gtemp ) a " +
 				"left join ( " +
-				"select ide_gtemp,detalle_gtdir,ide_gtdir from gth_direccion where  activo_gtdir=1  group by ide_gtemp ,detalle_gtdir,ide_gtdir " +
+				"select ide_gtemp,detalle_gtdir,ide_gtdir from gth_direccion where  activo_gtdir=true  group by ide_gtemp ,detalle_gtdir,ide_gtdir " +
 				"having ide_gtdir in ( " +
-				"select max(ide_gtdir) as ev from gth_direccion where  activo_gtdir=1  group by ide_gtemp " +
+				"select max(ide_gtdir) as ev from gth_direccion where  activo_gtdir=true  group by ide_gtemp " +
 				") ) b on a.ide_gtemp = b.ide_gtemp " +
 				"left join ( " +
 				"select distinct ide_geedp from ( " +
@@ -64,8 +64,8 @@ public class ServicioSRI {
 				") b on a.gen_ide_gedip = b.ide_gedip order by a.detalle_gedip ) d on a.ide_gedip = d.ide_gedip " +
 				"left join ( select ide_gtemp,detalle_gttds,detalle_gtgrd from gth_discapacidad_empleado a, " +
 				"gth_grado_discapacidad b, gth_tipo_discapacidad c " +
-				"where a.ide_gtgrd= b.ide_gtgrd and a.ide_gttds = c.ide_gttds and activo_gtdie=1 " +
-				"and ide_gtdie in ( select max(ide_gtdie) from gth_discapacidad_empleado where activo_gtdie=1 group by ide_gtemp ) " +
+				"where a.ide_gtgrd= b.ide_gtgrd and a.ide_gttds = c.ide_gttds and activo_gtdie=true " +
+				"and ide_gtdie in ( select max(ide_gtdie) from gth_discapacidad_empleado where activo_gtdie=true group by ide_gtemp ) " +
 				") e  on a.ide_gtemp = e.ide_gtemp order by  empleado"); 
 
 
