@@ -50,6 +50,8 @@ public class pre_comprobante_pago extends Pantalla{
 	private ServicioBodega ser_Bodega = (ServicioBodega) utilitario.instanciarEJB(ServicioBodega.class);
 	@EJB
 	private ServicioTesoreria ser_Tesoreria = (ServicioTesoreria) utilitario.instanciarEJB(ServicioTesoreria.class);
+	@EJB
+	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad) utilitario.instanciarEJB(ServicioContabilidad.class);
 
 	
 	public pre_comprobante_pago (){
@@ -62,8 +64,10 @@ public class pre_comprobante_pago extends Pantalla{
 		tab_comprobante.setTabla("tes_comprobante_pago", "ide_tecpo", 1);
 		tab_comprobante.getColumna("IDE_COEST").setCombo("cont_estado","ide_coest","detalle_coest","");
 		tab_comprobante.getColumna("IDE_PRTRA").setCombo(ser_Presupuesto.getTramite("true"));
+		tab_comprobante.getColumna("IDE_PRTRA").setAutoCompletar();
 		tab_comprobante.getColumna("IDE_COEST").setCombo("cont_estado","ide_coest","detalle_coest","");
 		tab_comprobante.getColumna("IDE_TEPRO").setCombo(ser_Bodega.getProveedor("true,false"));
+		tab_comprobante.getColumna("IDE_TEPRO").setAutoCompletar();
 		tab_comprobante.getColumna("IDE_GEDIP").setCombo(ser_gestion.getSqlDivisionPoliticaCiudad());
 		tab_comprobante.getColumna("IDE_GEEDP").setCombo(ser_nomina.servicioEmpleadoContrato("true"));
 		tab_comprobante.getColumna("IDE_ADSOC").setCombo(ser_Adquisicion.getSolicitudCompra("true"));
@@ -84,8 +88,8 @@ public class pre_comprobante_pago extends Pantalla{
 		//filtra por asiento contable cuando no tiene relacion a tes_comprovante_pago
 		tab_detalle_movimiento.setCondicion("ide_comov="+tab_comprobante.getValor("ide_comov"));	
 		tab_detalle_movimiento.getColumna("ide_comov").setVisible(false);
-		tab_detalle_movimiento.setTipoFormulario(true);
-		tab_detalle_movimiento.getGrid().setColumns(4);
+		tab_detalle_movimiento.getColumna("detalle_codem").setVisible(false);
+		tab_detalle_movimiento.getColumna("ide_cocac").setCombo(ser_contabilidad.servicioCatalogoCuentasTransaccion());
 		tab_detalle_movimiento.dibujar();
 		PanelTabla pat_movimiento=new PanelTabla();
 		pat_movimiento.setPanelTabla(tab_detalle_movimiento);
