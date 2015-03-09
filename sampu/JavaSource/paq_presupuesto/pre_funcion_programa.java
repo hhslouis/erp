@@ -28,20 +28,18 @@ public class pre_funcion_programa extends Pantalla {
 		tab_funcion_programa.setHeader("FUNCION PROGRAMA");
 		//tab_funcion_programa.setNumeroTabla(1);
 		tab_funcion_programa.setTabla("pre_funcion_programa", "ide_prfup", 1);
-		//tab_funcion_programa.getColumna("pre_ide_prfup").setCombo("select ide_prfup,codigo_prfup,detalle_prfup from pre_funcion_programa order by codigo_prfup");
 		tab_funcion_programa.getColumna("ide_prnfp").setCombo("pre_nivel_funcion_programa", "ide_prnfp", "detalle_prnfp","");
 		tab_funcion_programa.agregarRelacion(tab_vigente);
 		tab_funcion_programa.setCampoPadre( "pre_ide_prfup");
 		tab_funcion_programa.setCampoNombre("(select codigo_prfup||' '||detalle_prfup as detalle_prfup from pre_funcion_programa b where b. ide_prfup=pre_funcion_programa.ide_prfup)");
 		tab_funcion_programa.agregarArbol(arb_funcion_programa);
-		//tab_funcion_programa.getColumna("pre_ide_prfup").setCombo("select ide_prfup, detalle_prfup from pre_funcion_programa order by detalle_prfup");
 		tab_funcion_programa.dibujar();
 		PanelTabla pat_funcion_programa=new PanelTabla();
 		pat_funcion_programa.setPanelTabla(tab_funcion_programa);
 		agregarComponente(pat_funcion_programa);
 		
 		arb_funcion_programa.setId("arb_funcion_programa");
-		arb_funcion_programa.onSelect("seleccionoFunciónPrograma");
+		arb_funcion_programa.onSelect("seleccionoClasificador");
 		arb_funcion_programa.dibujar();
 
 		// tabla deaÃ±os vigente
