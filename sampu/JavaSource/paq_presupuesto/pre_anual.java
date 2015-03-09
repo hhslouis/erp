@@ -39,7 +39,7 @@ public class pre_anual extends Pantalla{
 		bar_botones.agregarComponente(com_anio);
 
 		tab_anual.setId("tab_anual");
-		tab_anual.setHeader("ANUAL");
+		tab_anual.setHeader("PRESUPUESTO ANUAL DE INGRESOS");
 		tab_anual.setTabla("pre_anual", "ide_pranu", 1);
 		tab_anual.getColumna("ide_prcla").setCombo(ser_presupuesto.getCatalogoPresupuestario("true,false"));
 		tab_anual.getColumna("ide_prcla").setLectura(true);
@@ -48,23 +48,36 @@ public class pre_anual extends Pantalla{
 		tab_anual.getColumna("ide_geani").setVisible(false);	
 		tab_anual.setCondicion("ide_geani=-1"); 
 		tab_anual.getColumna("valor_reformado_pranu").setEtiqueta();
-		tab_anual.getColumna("valor_reformado_pranu").setEstilo("font-size:15px;font-weight: bold;color:black");
+		tab_anual.getColumna("valor_reformado_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
+		tab_anual.getColumna("valor_reformado_pranu").setValorDefecto("0.00");
+		tab_anual.getColumna("valor_reformado_pranu").setMetodoChange("calcularValor");
 		tab_anual.getColumna("valor_codificado_pranu").setEtiqueta();
-		tab_anual.getColumna("valor_codificado_pranu").setEstilo("font-size:15px;font-weight: bold;color:black");
+		tab_anual.getColumna("valor_codificado_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
+		tab_anual.getColumna("valor_codificado_pranu").setValorDefecto("0.00");
+		tab_anual.getColumna("valor_codificado_pranu").setMetodoChange("calcularValor");
 		tab_anual.getColumna("valor_reformado_h_pranu").setEtiqueta();
-		tab_anual.getColumna("valor_reformado_h_pranu").setEstilo("font-size:15px;font-weight: bold;color:black");
+		tab_anual.getColumna("valor_reformado_h_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
+		tab_anual.getColumna("valor_reformado_h_pranu").setValorDefecto("0.00");
 		tab_anual.getColumna("valor_reformado_d_pranu").setEtiqueta();
-		tab_anual.getColumna("valor_reformado_d_pranu").setEstilo("font-size:15px;font-weight: bold;color:black");
+		tab_anual.getColumna("valor_reformado_d_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
+		tab_anual.getColumna("valor_reformado_d_pranu").setValorDefecto("0.00");
 		tab_anual.getColumna("valor_devengado_pranu").setEtiqueta();
-		tab_anual.getColumna("valor_devengado_pranu").setEstilo("font-size:15px;font-weight: bold;color:black");
+		tab_anual.getColumna("valor_devengado_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
+		tab_anual.getColumna("valor_devengado_pranu").setValorDefecto("0.00");
 		tab_anual.getColumna("valor_precomprometido_pranu").setEtiqueta();
-		tab_anual.getColumna("valor_precomprometido_pranu").setEstilo("font-size:15px;font-weight: bold;color:black");
+		tab_anual.getColumna("valor_precomprometido_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
+		tab_anual.getColumna("valor_precomprometido_pranu").setValorDefecto("0.00");
 		tab_anual.getColumna("valor_recaudado_pranu").setEtiqueta();
-		tab_anual.getColumna("valor_recaudado_pranu").setEstilo("font-size:15px;font-weight: bold;color:black");
+		tab_anual.getColumna("valor_recaudado_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
+		tab_anual.getColumna("valor_recaudado_pranu").setValorDefecto("0.00");
 		tab_anual.getColumna("valor_recaudado_efectivo_pranu").setEtiqueta();
-		tab_anual.getColumna("valor_recaudado_efectivo_pranu").setEstilo("font-size:15px;font-weight: bold;color:black");
+		tab_anual.getColumna("valor_recaudado_efectivo_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
+		tab_anual.getColumna("valor_recaudado_efectivo_pranu").setValorDefecto("0.00");
 		tab_anual.getColumna("valor_eje_comprometido_pranu").setEtiqueta();
-		tab_anual.getColumna("valor_eje_comprometido_pranu").setEstilo("font-size:15px;font-weight: bold;color:black");
+		tab_anual.getColumna("valor_eje_comprometido_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
+		tab_anual.getColumna("valor_eje_comprometido_pranu").setValorDefecto("0.00");
+		tab_anual.getColumna("valor_inicial_pranu").setMetodoChange("calcularValor");
+		tab_anual.getColumna("activo_pranu").setValorDefecto("true");
 		tab_anual.agregarRelacion(tab_mensual);
 		tab_anual.agregarRelacion(tab_reforma);
 		tab_anual.setTipoFormulario(true);
@@ -78,15 +91,14 @@ public class pre_anual extends Pantalla{
 		///// mensual
 
 		tab_mensual.setId("tab_mensual");
-		tab_mensual.setHeader("EJECUCION MENSUAL");
+		tab_mensual.setHeader("EJECUCION PRESUPUESTARIA MENSUAL");
 		tab_mensual.setIdCompleto("tab_tabulador:tab_mensual");
 		tab_mensual.setTabla("pre_mensual", "ide_prmen", 2);
 		tab_mensual.getColumna("ide_prtra").setLectura(true);
 		tab_mensual.getColumna("ide_comov").setLectura(true);
-		//tab_mensual.setCondicion("ide_prpro!=null");
 		tab_mensual.getColumna("ide_gemes").setCombo("gen_mes", "ide_gemes", "detalle_gemes", "");
 		tab_mensual.getColumna("ide_codem").setLectura(true);
-		//tab_anual.getColumna("ide_prfup").setCombo("pre_funcion_programa", "ide_prfup", "detalle_prfup,", "");
+		tab_mensual.getColumna("activo_prmen").setValorDefecto("true");
 		tab_mensual.setTipoFormulario(true);
 		tab_mensual.getGrid().setColumns(6);
 		tab_mensual.dibujar();
@@ -95,12 +107,13 @@ public class pre_anual extends Pantalla{
 		
 ////////REFORMA MES
 		tab_reforma.setId("tab_reforma");
-		tab_reforma.setHeader("REFORMA PRESUPUESTARIA");
+		tab_reforma.setHeader("REFORMA PRESUPUESTARIA MENSUAL");
 		tab_reforma.setIdCompleto("tab_tabulador:tab_reforma");
 		tab_reforma.setTabla("pre_reforma_mes", "ide_prrem", 3);
 		tab_reforma.getColumna("ide_gemes").setCombo("gen_mes", "ide_gemes", "detalle_gemes", "");
 		tab_reforma.getColumna("val_reforma_h_prrem").setMetodoChange("calcular");
 		tab_reforma.getColumna("val_reforma_d_prrem").setMetodoChange("calcular");
+		tab_reforma.getColumna("activo_prrem").setValorDefecto("true");
 		tab_reforma.dibujar();
 		PanelTabla pat_panel3=new PanelTabla();
 		pat_panel3.setPanelTabla(tab_reforma);
@@ -177,20 +190,34 @@ public class pre_anual extends Pantalla{
 	public void  calcularValor(){
 		double dou_valor_h=0;
 		double dou_valor_d=0;
+		double dou_valor_reformado_debito=0;
+		double dou_valor_codificado=0;
+		double dou_valor_inicial=0;
+		
+		try {
+			//Obtenemos el valor de la cantidad
+			dou_valor_inicial=Double.parseDouble(tab_anual.getValor("valor_inicial_pranu"));
+		} catch (Exception e) {
+		}
 		
 		String valor1=tab_reforma.getSumaColumna("val_reforma_h_prrem")+"";
-		tab_anual.setValor("valor_reformado_h_pranu",valor1 );
 		dou_valor_h=Double.parseDouble(valor1);
 
 		String valor2=tab_reforma.getSumaColumna("val_reforma_d_prrem")+"";
-		tab_anual.setValor("valor_reformado_d_pranu",valor2 );	
 		dou_valor_d=Double.parseDouble(valor2);
+		dou_valor_reformado_debito=dou_valor_d-dou_valor_h;
+		dou_valor_codificado=dou_valor_inicial+dou_valor_reformado_debito;
+
 		
+		//Asignamos el total a la tabla detalle, con 2 decimales
 		tab_anual.setValor("valor_reformado_h_pranu",utilitario.getFormatoNumero(valor1,3));
 		tab_anual.setValor("valor_reformado_d_pranu",utilitario.getFormatoNumero(valor2,3));
+		tab_anual.setValor("valor_reformado_pranu",utilitario.getFormatoNumero(dou_valor_reformado_debito,3));
+		tab_anual.setValor("valor_codificado_pranu",utilitario.getFormatoNumero(dou_valor_codificado,3));
+		
 		tab_anual.modificar(tab_anual.getFilaActual());//para que haga el update
 
-		utilitario.addUpdateTabla(tab_anual, "valor_reformado_h_pranu,valor_reformado_d_pranu", "tab_reforma");	
+		utilitario.addUpdateTabla(tab_anual, "valor_reformado_h_pranu,valor_reformado_d_pranu,valor_reformado_pranu,valor_codificado_pranu", "tab_reforma");	
 	
 	}
 /// 
