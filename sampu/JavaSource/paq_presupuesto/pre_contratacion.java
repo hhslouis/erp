@@ -69,12 +69,13 @@ public class pre_contratacion extends Pantalla{
 		tab_poa.getColumna("objeto_programa_prpoa").setVisible(false);
 		tab_poa.getColumna("objetivo_proyecto_prpoa").setVisible(false);
 		tab_poa.getColumna("meta_proyecto_prpoa").setVisible(false);
-
+		tab_poa.getColumna("ide_prsua").setCombo("select ide_prsua,codigo_prsua,detalle_prsua from pre_sub_actividad order by codigo_prsua,detalle_prsua");
 		tab_poa.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
 		tab_poa.getColumna("ide_prcla").setCombo(ser_presupuesto.getCatalogoPresupuestario("true,false"));
 		//tab_poa.getColumna("ide_prcla").setAutoCompletar();
-		tab_poa.getColumna("ide_prcla").setAncho(50);
-		tab_poa.getColumna("ide_prfup").setCombo(ser_presupuesto.getFuncionPrograma());
+		tab_poa.getColumna("ide_prcla").setAncho(25);
+		tab_poa.getColumna("activo_prpoa").setLectura(true);
+		tab_poa.getColumna("activo_prpoa").setValorDefecto("true");
 		tab_poa.getColumna("ide_geare").setCombo("gen_area","ide_geare","detalle_geare","");
 
 		tab_poa.setTipoFormulario(true);
@@ -157,7 +158,7 @@ public class pre_contratacion extends Pantalla{
 
 		// factor_competencia
 		arb_arbol.setId("arb_arbol");
-		arb_arbol.setArbol("pre_funcion_programa", "ide_prfup", "detalle_prfup", "pre_ide_prfup");
+		arb_arbol.setArbol("pre_funcion_programa", "ide_prfup", "codigo_prfup ||' '||detalle_prfup", "pre_ide_prfup");
 		//arb_arbol.setArbol("CMP_FACTOR_COMPETENCIA", "IDE_CMFAC", "DETALLE_CMFAC", "CMP_IDE_CMFAC");
 		arb_arbol.setCondicion("ide_prfup in (select ide_prfup from cont_vigente where ide_prfup != null and ide_geani=-1 )"); //Carga vacio
 		arb_arbol.onSelect("seleccionar_arbol");	
