@@ -16,6 +16,8 @@ public class pre_proveedor extends Pantalla {
 	private Tabla tab_direccion= new Tabla();
 	private Tabla tab_telefono= new Tabla();
 	private Tabla tab_correo= new Tabla();
+	private Tabla tab_cuenta_bancaria= new Tabla();
+
 	@EJB
 	private ServicioFacturacion ser_facturacion = (ServicioFacturacion ) utilitario.instanciarEJB(ServicioFacturacion.class);
 
@@ -33,47 +35,64 @@ public class pre_proveedor extends Pantalla {
 		tab_proveedor.getColumna("ide_coest").setVisible(false);
 		tab_proveedor.getColumna("ide_retic").setCombo("rec_tipo_contribuyente","ide_retic","detalle_retic","");
 		tab_proveedor.getColumna("ide_tetpp").setCombo("tes_tipo_proveedor","ide_tetpp","detalle_tetpp","");
-		//tab_proveedor.getColumna("ide_adfac").setCombo(ser_facturacion.get());
+		tab_proveedor.getColumna("activo_tepro").setValorDefecto("true");
 		tab_proveedor.agregarRelacion(tab_direccion);//agraga relacion para los tabuladores
 		tab_proveedor.agregarRelacion(tab_telefono);
 		tab_proveedor.agregarRelacion(tab_correo);
+		tab_proveedor.agregarRelacion(tab_cuenta_bancaria);
 		tab_proveedor.dibujar();
 		PanelTabla pat_proveedor= new PanelTabla();
 		pat_proveedor.setPanelTabla(tab_proveedor);
 		
-
+///direccion 
 		tab_direccion.setId("tab_direccion");
 		tab_direccion.setHeader("DIRECCIÒN");
 		tab_direccion.setIdCompleto("tab_tabulador:tab_direccion");
 		tab_direccion.setTabla("tes_direccion","ide_tedir",2);
+		tab_direccion.getColumna("activo_tedir").setValorDefecto("true");
 		tab_direccion.setCampoForanea("ide_tepro");
 		tab_direccion.dibujar();
 		PanelTabla pat_direccion = new PanelTabla();
 		pat_direccion.setPanelTabla(tab_direccion);
-
+// telefono
 		tab_telefono.setId("tab_telefono");
 		tab_telefono.setHeader("TELEFONO");
 		tab_telefono.setIdCompleto("tab_tabulador:tab_telefono");
 		tab_telefono.setTabla("tes_telefono","ide_tetel",3);
 		tab_telefono.setCampoForanea("ide_tepro");
 		tab_telefono.getColumna("ide_reteo").setCombo("rec_telefono_operadora","ide_reteo","detalle_reteo","");
+		tab_telefono.getColumna("activo_tetel").setValorDefecto("true");
 		tab_telefono.dibujar();
 		PanelTabla pat_telefono = new PanelTabla();
 		pat_telefono.setPanelTabla(tab_telefono);
-
+//correo
 		tab_correo.setId("tab_correo");
 		tab_correo.setHeader("CORREO");
 		tab_correo.setIdCompleto("tab_tabulador:tab_correo");
 		tab_correo.setTabla("tes_correo","ide_tecor",4);
 		tab_correo.setCampoForanea("ide_tepro");
-		//tab_correo.getColumna("ide_gemes").setCombo("select ide_gemes,detalle_gemes from gen_mes order by ide_gemes");
+		tab_correo.getColumna("activo_tecor").setValorDefecto("true");
 		tab_correo.dibujar();
 		PanelTabla pat_correo = new PanelTabla();
 		pat_correo.setPanelTabla(tab_correo);
+// cuenta bancaria	
+		tab_cuenta_bancaria.setId("tab_cuenta_bancaria");
+		tab_cuenta_bancaria.setHeader("CUENTA BANCARIA");
+		tab_cuenta_bancaria.setIdCompleto("tab_tabulador:tab_cuenta_bancaria");
+		tab_cuenta_bancaria.setTabla("tes_proveedor_cuenta_bancaria","ide_tepcb",5);
+		tab_cuenta_bancaria.setCampoForanea("ide_tepro");
+		tab_cuenta_bancaria.getColumna("IDE_GEINS").setCombo("GEN_INSTITUCION", "IDE_GEINS", "DETALLE_GEINS", "GEN_IDE_GEINS IS NOT NULL and IDE_GETII="+utilitario.getVariable("p_gen_tipo_institucion_financiera"));		
+		tab_cuenta_bancaria.getColumna("IDE_GTTCB").setCombo("GTH_TIPO_CUENTA_BANCARIA", "IDE_GTTCB", "DETALLE_GTTCB", "");
+		tab_cuenta_bancaria.getColumna("activo_tepcb").setValorDefecto("true");
+		tab_cuenta_bancaria.dibujar();
+		PanelTabla pat_cuenta = new PanelTabla();
+		pat_cuenta.setPanelTabla(tab_cuenta_bancaria);
+		
 
-		tab_tabulador.agregarTab("DIRECCIÒN", pat_direccion);//intancia los tabuladores 
+		tab_tabulador.agregarTab("DIRECCION", pat_direccion);//intancia los tabuladores 
 		tab_tabulador.agregarTab("TELEFONO",pat_telefono);
 		tab_tabulador.agregarTab("CORREO", pat_correo);
+		tab_tabulador.agregarTab("CUENTA BANCARIA", pat_cuenta);
 
 		//division2
 
@@ -104,6 +123,9 @@ public class pre_proveedor extends Pantalla {
 			tab_correo.insertar();
 
 		}
+		else if (tab_cuenta_bancaria.isFocus()){
+			tab_cuenta_bancaria.insertar();
+		}
 
 	}
 
@@ -114,6 +136,9 @@ public class pre_proveedor extends Pantalla {
 			if (tab_direccion.guardar()) {
 				if( tab_telefono.guardar()){
 					if(tab_correo.guardar()){
+						if(tab_cuenta_bancaria.guardar()){
+							
+						}
 
 					}
 				}
@@ -174,6 +199,18 @@ guardarPantalla();
 
 	public void setTab_correo(Tabla tab_correo) {
 		this.tab_correo = tab_correo;
+	}
+
+
+
+	public Tabla getTab_cuenta_bancaria() {
+		return tab_cuenta_bancaria;
+	}
+
+
+
+	public void setTab_cuenta_bancaria(Tabla tab_cuenta_bancaria) {
+		this.tab_cuenta_bancaria = tab_cuenta_bancaria;
 	}
 
 
