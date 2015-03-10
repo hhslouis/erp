@@ -31,7 +31,7 @@ public class pre_funcion_programa extends Pantalla {
 		tab_funcion_programa.getColumna("ide_prnfp").setCombo("pre_nivel_funcion_programa", "ide_prnfp", "detalle_prnfp","");
 		tab_funcion_programa.agregarRelacion(tab_vigente);
 		tab_funcion_programa.setCampoPadre( "pre_ide_prfup");
-		tab_funcion_programa.setCampoNombre("(select codigo_prfup||' '||detalle_prfup from pre_funcion_programa b where b. ide_prfup=pre_funcion_programa.ide_prfup)");
+		tab_funcion_programa.setCampoNombre("codigo_prfup||detalle_prfup");
 		tab_funcion_programa.agregarArbol(arb_funcion_programa);
 		tab_funcion_programa.dibujar();
 		PanelTabla pat_funcion_programa=new PanelTabla();
