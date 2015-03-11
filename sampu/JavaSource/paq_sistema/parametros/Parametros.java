@@ -362,6 +362,11 @@ public class Parametros {
         lis_parametros.add(new Parametro("16", "p_modulo_no_adjudicado","Indica el modulo que pertenece al no adjudicado ","10","cont_parametros_general","ide_copag","detalle_copag"));
         lis_parametros.add(new Parametro("16", "p_modulo_proveedor","Indica el modulo que pertenece el proveedor ","9","cont_parametros_general","ide_copag","detalle_copag"));
         lis_parametros.add(new Parametro("16", "p_modulo_estado_comprometido","Indica el modulo que pertenece el comprometido ","21","cont_estado","ide_coest","detalle_coest"));
+        /*
+         * TESORERIA=18
+         * */
+        lis_parametros.add(new Parametro("18", "p_tes_impuesto_renta","Indica el tipo impuesto impuesto a la renta","1","tes_tipo_impuesto","ide_tetii","detalle_tetii"));
+        lis_parametros.add(new Parametro("18", "p_tes_impuesto_iva","Indica el tipo impuesto impuesto iva","2","tes_tipo_impuesto","ide_tetii","detalle_tetii"));
 
         return lis_parametros;
         
