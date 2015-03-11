@@ -335,6 +335,8 @@ public class Parametros {
          *  bodega = 13
          * */
         lis_parametros.add(new Parametro("13", "p_grupo_material","Permite mostras el catalogo de matarieales de cuardo al grupo","1","bodt_tipo_producto","ide_botip","detalle_botip"));
+        lis_parametros.add(new Parametro("13", "p_modulo_sec_bod_ingresos","Permite seleccionar el modulo de bodega ingreso de inventarios para generar el numero secuencial en ingresos","17","gen_modulo","ide_gemod","detalle_gemod"));
+
         /*
          *  facturacion = 14
          * */
