@@ -1,6 +1,7 @@
 package paq_bodega;
 
 import javax.ejb.EJB;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import paq_bodega.ejb.ServicioBodega;
 import paq_contabilidad.ejb.ServicioContabilidad;
@@ -46,6 +47,18 @@ public class pre_inventario extends Pantalla{
 		tab_inventario.getColumna("ide_geani").setVisible(false);
 		tab_inventario.getColumna("gen_ide_geani").setVisible(false);
 		tab_inventario.getColumna("IDE_GEARE").setVisible(false);
+		tab_inventario.getColumna("ingreso_material_boinv").setValorDefecto("0.0");
+		tab_inventario.getColumna("egreso_material_boinv").setValorDefecto("0.0");
+		tab_inventario.getColumna("existencia_inicial_boinv").setValorDefecto("0.0");
+		tab_inventario.getColumna("costo_anterior_boinv").setValorDefecto("0.0");
+		tab_inventario.getColumna("costo_actual_boinv").setValorDefecto("0.0");
+		tab_inventario.getColumna("costo_inicial_boinv").setValorDefecto("0.0");
+		tab_inventario.getColumna("activo_boinv").setValorDefecto("true");
+
+		tab_inventario.getColumna("ingreso_material_boinv").setMetodoChange("validarIngreso");
+		tab_inventario.getColumna("egreso_material_boinv").setMetodoChange("validarIngreso");
+		tab_inventario.getColumna("existencia_inicial_boinv").setMetodoChange("validarIngreso");
+
 	
 
 		tab_inventario.setCondicion("ide_geani=-1"); 
@@ -180,7 +193,50 @@ public class pre_inventario extends Pantalla{
 			tab_inventario.ejecutarSql();
 		}
 	}
+public void validarIngreso(AjaxBehaviorEvent evt){
+	tab_inventario.modificar(evt); //Siempre es la primera linea
 
+	double ingreso_material=0;
+	double egreso_material=0;
+	double existencia_inicial=0;
+	double costo_inicial=0;
+	double costo_anterior=0;
+	double costo_actual=0;
+	
+	try {
+	ingreso_material=Double.parseDouble(tab_inventario.getValor("ingreso_material_boinv"));
+	} catch (Exception e) {
+	}
+	try {
+	egreso_material = Double.parseDouble(tab_inventario.getValor("egreso_material_boinv"));
+	} catch (Exception e) {
+	}
+	try {
+	existencia_inicial = Double.parseDouble(tab_inventario.getValor("existencia_inicial_boinv"));
+	} catch (Exception e) {
+	}
+	try {
+	costo_anterior = Double.parseDouble(tab_inventario.getValor("costo_anterior_boinv"));
+	} catch (Exception e) {
+	}
+	try {
+	costo_actual = Double.parseDouble(tab_inventario.getValor("costo_actual_boinv"));
+	} catch (Exception e) {
+	}
+	try {
+	costo_inicial = Double.parseDouble(tab_inventario.getValor("costo_inicial_boinv"));
+	} catch (Exception e) {
+	}
+	double total_ingreso=existencia_inicial+ingreso_material;
+	if(egreso_material > total_ingreso)
+	{
+		tab_inventario.setValor("egreso_material_boinv", "0");
+		utilitario.addUpdate("tab_inventario");
+		utilitario.agregarMensajeError("Error Ingreso", "La cantidad de Egreso de Material supera el Total existente del material");
+       return;
+	}	
+	
+}
 
 	@Override
 	public void insertar() {
@@ -209,7 +265,8 @@ public class pre_inventario extends Pantalla{
 	@Override
 	public void guardar() {
 		// TODO Auto-generated method stub
-		tab_inventario.guardar();
+		
+				tab_inventario.guardar();
 		guardarPantalla();
 
 	}
