@@ -167,8 +167,8 @@ public String getSolicitud(String activo){
 }
 public TablaGenerica getTablaGenericaSolicitudCompra(String ide_addef){
 	TablaGenerica tab_solicitud_comp=utilitario.consultar("select b.ide_addef,a.ide_tepro, a.ide_adsoc,detalle_adsoc,num_factura_adfac,valor_adsoc,nro_solicitud_adsoc,valor_total_addef,valor_unitario_addef,cantidad_addef," +
-				" codigo_bomat,detalle_bomat,d.ide_bomat from adq_solicitud_compra a,adq_detalle_factura b,adq_factura c , bodt_material d" +
-				" where a.ide_adsoc=c.ide_adsoc and b.ide_adfac=c.ide_adfac  and d.ide_bomat=b.ide_bomat  b.ide_addef in ("+ide_addef+") order by codigo_bomat");
+				" codigo_bomat,detalle_bomat,d.ide_bomat,fecha_factura_adfac from adq_solicitud_compra a,adq_detalle_factura b,adq_factura c , bodt_material d" +
+				" where a.ide_adsoc=c.ide_adsoc and b.ide_adfac=c.ide_adfac  and d.ide_bomat=b.ide_bomat and  b.ide_addef in ("+ide_addef+") order by codigo_bomat");
 	return tab_solicitud_comp;
 }
 
