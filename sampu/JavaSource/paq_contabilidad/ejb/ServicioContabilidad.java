@@ -227,7 +227,34 @@ public String servicioCatalogoCuentasTransaccion(){
 +" order by cue_codigo_cocac";
 	return catalogo_cuenta_anio;
 }
+/**
+ * Metodo que devuelve el ide maximo de una tabla
+ * @return String SQL Codigo maximo de los ide primarios de de las tablas
+ */
+public String servicioCodigoMaximo(String tabla,String ide_primario){
+	
+	String maximo="Select (case when max("+ide_primario+") is null then 0 else max("+ide_primario+") end) + 1 as codigo from "+tabla;
+	return maximo;
+}
+/**
+ * Metodo que devuelve el numero secuencial, por modulo
+ * @param modulo recibe el modulo al cual pertenece el secuencial
+ * @return String nro secuencial por modulo
+ */
+public String numeroSecuencial(String modulo){
+	String resultado="1";
+	
+	TablaGenerica valor_resultado=utilitario.consultar("select ide_gemod,numero_secuencial_gemos from gen_modulo_secuencial where ide_gemod="+modulo);
+	Integer nuevo_valor=Integer.parseInt(valor_resultado.getValor("numero_secuencial_gemos"))+1;
+	resultado =	nuevo_valor+"";
+	return resultado;
+}
 
-
+public String guardaSecuencial(String secuencial_vigente,String modulo){
+	String mensaje="Actualizado Secuencial";
+	double nuevo_valor=Double.parseDouble(secuencial_vigente);
+	utilitario.getConexion().ejecutarSql("update gen_modulo_secuencial set numero_secuencial_gemos="+nuevo_valor+" where ide_gemod="+modulo);
+	return mensaje;
+}
 }
 
