@@ -30,6 +30,7 @@ public class pre_ingreso_material extends Pantalla{
 	private Tabla tab_anio=new Tabla();
 	private Combo com_anio=new Combo();
 	public static String par_grupo_material;
+	public static String par_secuencial_modulo;
 
 	private SeleccionTabla set_material=new SeleccionTabla();
 	private SeleccionTabla set_proveedor=new SeleccionTabla();
@@ -54,6 +55,8 @@ public class pre_ingreso_material extends Pantalla{
 
 
 	public pre_ingreso_material (){
+		par_secuencial_modulo=utilitario.getVariable("p_modulo_sec_bod_ingresos");
+
 		rep_reporte.setId("rep_reporte"); //id
 		rep_reporte.getBot_aceptar().setMetodo("aceptarReporte");//ejecuta el metodo al aceptar reporte
 		agregarComponente(rep_reporte);//agrega el componente a la pantalla
@@ -85,6 +88,7 @@ public class pre_ingreso_material extends Pantalla{
 		tab_bodega.getColumna("valor_unitario_bobod").setMetodoChange("calcular");
 		tab_bodega.getColumna("valor_total_bobod").setEtiqueta();
 		tab_bodega.getColumna("valor_total_bobod").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
+		tab_bodega.getColumna("numero_ingreso_bobod").setValorDefecto(ser_contabilidad.numeroSecuencial(par_secuencial_modulo));
 		tab_bodega.getColumna("recibido_bobod").setValorDefecto("true");
 		tab_bodega.getColumna("recibido_bobod").setLectura(true);
 		tab_bodega.getColumna("activo_bobod").setValorDefecto("true");
@@ -214,6 +218,8 @@ public class pre_ingreso_material extends Pantalla{
 				resultado =ser_Bodega.registraInventarioIngresos(tab_bodega.getValor("ide_bomat"), com_anio.getValue().toString(), tab_bodega.getValor("cantidad_ingreso_bobod"), tab_bodega.getValor("valor_total_bobod"));
 			    if (resultado) {
                     utilitario.agregarMensaje("Se guardo correctamente", "El inventario se registro satisfactoriamente.");
+    				ser_contabilidad.guardaSecuencial(tab_bodega.getValor("numero_ingreso_bobod"), par_secuencial_modulo);
+
                     tab_bodega.guardar();
                     dia_bodega.cerrar();
 			    }
@@ -224,6 +230,8 @@ public class pre_ingreso_material extends Pantalla{
 		        
 			}
 			else {
+				ser_contabilidad.guardaSecuencial(tab_bodega.getValor("numero_ingreso_bobod"), par_secuencial_modulo);
+
 				tab_bodega.guardar(); 
 				dia_bodega.cerrar();
 			}
@@ -281,11 +289,12 @@ public class pre_ingreso_material extends Pantalla{
 		String str_seleccionados = set_material.getSeleccionados();
 		if (str_seleccionados!=null){
 			tab_bodega.insertar();
+			tab_bodega.setValor("numero_ingreso_bobod", ser_contabilidad.numeroSecuencial(par_secuencial_modulo));
 			tab_bodega.setValor("ide_bomat",str_seleccionados);
 			tab_bodega.setValor("ide_geani", com_anio.getValue()+"");
 		}
 		set_material.cerrar();
-		utilitario.addUpdate("tab_bodega");
+		utilitario.addUpdateTabla(tab_bodega, "numero_ingreso_bobod", "");
 	}
 	////// BOTONES PROVEEDOR
 	public void actualizarProveedor(){
@@ -294,7 +303,7 @@ public class pre_ingreso_material extends Pantalla{
 			utilitario.agregarMensajeInfo("Debe seleccionar un año ","");
 			return;
 		}
-		set_actualizaproveedor.setSeleccionTabla(ser_Bodega.getProveedor("true"),"");
+		set_actualizaproveedor.getTab_seleccion().setSql(ser_Bodega.getProveedor("true"));
 		set_actualizaproveedor.getTab_seleccion().ejecutarSql();
 		set_actualizaproveedor.dibujar();	
 	}	
@@ -413,6 +422,7 @@ public class pre_ingreso_material extends Pantalla{
 		}else{
 			tab_bodega.isFocus(); 
 			tab_bodega.insertar();
+			tab_bodega.setValor("numero_ingreso_bobod",ser_contabilidad.numeroSecuencial(par_secuencial_modulo));
 			tab_bodega.setValor("ide_geani", com_anio.getValue()+"");
 
 		}
