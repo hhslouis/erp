@@ -34,6 +34,8 @@ public class pre_comprobante_pago extends Pantalla{
     private SeleccionTabla set_tramite=new SeleccionTabla();
     private SeleccionTabla set_impuesto=new SeleccionTabla();
     private SeleccionTabla set_retencion=new SeleccionTabla();
+	public static String par_impuesto_renta;
+	public static String par_impuesto_iva;
 
 
 
@@ -54,6 +56,8 @@ public class pre_comprobante_pago extends Pantalla{
 
     
     public pre_comprobante_pago (){
+		par_impuesto_iva=utilitario.getVariable("p_tes_impuesto_iva");
+		par_impuesto_renta=utilitario.getVariable("p_tes_impuesto_renta");
 
         Tabulador tab_tabulador = new Tabulador();
         tab_tabulador.setId("tab_tabulador");
@@ -268,12 +272,22 @@ public class pre_comprobante_pago extends Pantalla{
     public void aceptarImpuesto(){
         if(set_impuesto.isVisible()){
             if (set_impuesto.getValorSeleccionado()!=null){
+                tab_detalle_retencion.insertar();
+
+            	if(set_impuesto.getValorSeleccionado().equals(par_impuesto_iva)){
+            		tab_detalle_retencion.setValor("base_imponible_teder", tab_comprobante.getValor("valor_iva_tecpo"));
+            	}
+            	else if(set_impuesto.getValorSeleccionado().equals(par_impuesto_renta)){
+            		tab_detalle_retencion.setValor("base_imponible_teder", tab_comprobante.getValor("valor_compra_tecpo"));
+            	}
              str_seleccionado= set_impuesto.getValorSeleccionado();
             System.out.println("probando que valor me llega"+str_seleccionado);
             set_retencion.getTab_seleccion().setSql(ser_Tesoreria.getImpuesto("true","0",str_seleccionado));
             set_retencion.getTab_seleccion().ejecutarSql();
             set_retencion.dibujar();
             set_impuesto.cerrar();
+            
+            
             }
             else {
                 utilitario.agregarMensajeInfo("SELECCIONE OPCION", "Seleccione un registro");
@@ -283,15 +297,22 @@ public class pre_comprobante_pago extends Pantalla{
     
         else if (set_retencion.isVisible()){
             str_seleccionado= set_retencion.getValorSeleccionado();
-            
+            TablaGenerica tab_rentas= utilitario.consultar(ser_Tesoreria.getImpuestoCalculo(str_seleccionado));
+           double dou_valor_impuesto=0;
+           double dou_porcentaje_calculo=0;
+           double dou_valor_resultado=0;
+
+           dou_porcentaje_calculo=Double.parseDouble(tab_rentas.getValor("porcentaje_teimp"));
+           dou_valor_impuesto=Double.parseDouble(tab_detalle_retencion.getValor("base_imponible_teder"));
+           dou_valor_resultado=(dou_porcentaje_calculo*dou_valor_impuesto)/100;
             if (set_retencion.getValorSeleccionado()!=null){
-                tab_detalle_retencion.insertar();
+            	
                 tab_detalle_retencion.setValor("ide_teimp",str_seleccionado);
-                                
+                tab_detalle_retencion.setValor("valor_retenido_teder", dou_valor_resultado+"");              
             }
 
             set_retencion.cerrar();
-            utilitario.addUpdate("tab_detalle_retencion");
+            utilitario.addUpdateTabla(tab_detalle_retencion, "valor_retenido_teder,base_imponible_teder,ide_teimp","");
         }
     
     

@@ -37,5 +37,14 @@ public String getImpuesto (String activo,String grupo,String tipo_impuesto){
 		return tab_impuesto;
 		
 	}
+public String getImpuestoCalculo (String codigo){
+	
+	String tab_impuesto="select a.ide_teimp,codigo_teimp,porcentaje_teimp,detalle_teimp,detalle_tetii " +
+			" from tes_impuesto a,tes_tipo_impuesto b where a.ide_tetii= b.ide_tetii" +
+			" and  a.ide_teimp in ("+codigo+")  order by codigo_teimp";
+
+	return tab_impuesto;
+	
+}
 }
 
