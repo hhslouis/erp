@@ -1,6 +1,7 @@
 package paq_tesoreria;
 
 import javax.ejb.EJB;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import org.apache.commons.collections.SetUtils;
 import org.apache.poi.hssf.record.formula.Ptg;
@@ -126,9 +127,11 @@ public class pre_comprobante_pago extends Pantalla{
         tab_detalle_retencion.getColumna("ide_teimp").setCombo("tes_impuesto", "ide_teimp", "codigo_teimp,porcentaje_teimp,detalle_teimp", "");
         tab_detalle_retencion.getColumna("ide_teimp").setLectura(true);
         tab_detalle_retencion.getColumna("ide_teimp").setAutoCompletar();
-        tab_detalle_retencion.getColumna("base_imponible_teder").setMetodoChange("calcular");
+        //tab_detalle_retencion.getColumna("base_imponible_teder").setMetodoChange("calcular");
         tab_detalle_retencion.getColumna("valor_retenido_teder").setEtiqueta();
         tab_detalle_retencion.getColumna("valor_retenido_teder").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
+        tab_detalle_retencion.getColumna("valor_retenido_teder").setMetodoChange("calcularDetallle");
+
         tab_detalle_retencion.setTipoFormulario(true);
         tab_detalle_retencion.getGrid().setColumns(2);
 
@@ -323,25 +326,29 @@ public class pre_comprobante_pago extends Pantalla{
 
     public void calcular(){
         //Variables para almacenar y calcular el total del detalle
-        double duo_base_imponible_teder=0;
-        double duo_valor_retenido_teder=0;
-        double duo_iva=0.12;
+    	double dou_total=0;
+		double dou_subtotal=0;
+		
+		String sub_tot=tab_detalle_retencion.getSumaColumna("valor_retenido_teder")+"";
+		tab_retencion.setValor("total_ret_teret",sub_tot );
+		
+		//String sub_total=tab_reforma.getSumaColumna("val_reforma_d_prrem")+"";
+		//tab_anual.setValor("valor_reformado_d_pranu",sub_total );
+		dou_total=Double.parseDouble(sub_tot);
+		//dou_subtotal=Double.parseDouble(sub_total);
+		tab_retencion.setValor("total_ret_teret",utilitario.getFormatoNumero(sub_tot,3));
+		//tab_anual.setValor("valor_reformado_d_pranu",utilitario.getFormatoNumero(sub_total,3));
+		tab_retencion.modificar(tab_retencion.getFilaActual());//para que haga el update
 
-        try {
-            //Obtenemos el valor de la cantidad
-            duo_base_imponible_teder=Double.parseDouble(tab_detalle_retencion.getValor("base_imponible_teder"));
-        } catch (Exception e){
+		utilitario.addUpdateTabla(tab_retencion, "total_ret_teret,", "tab_detalle_retencion");	
+	
+	}
+	public void calcularDetallle(AjaxBehaviorEvent evt) {
+		tab_detalle_retencion.modificar(evt); //Siempre es la primera linea
+		calcular();
 
-        }
+	}
 
-
-        //Calculamos el total
-        duo_valor_retenido_teder=duo_base_imponible_teder*duo_iva;
-        tab_detalle_retencion.setValor("valor_retenido_teder",utilitario.getFormatoNumero(duo_valor_retenido_teder,3));
-        utilitario.addUpdateTabla(tab_detalle_retencion, "valor_retenido_teder","");
-
-
-    }
 
     @Override
     public void insertar() {
