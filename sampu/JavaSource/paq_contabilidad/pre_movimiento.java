@@ -17,6 +17,11 @@ public class pre_movimiento extends Pantalla{
 		tab_movimiento.getColumna("ide_cotim").setCombo("cont_tipo_movimiento", "ide_cotim", "detalle_cotim", "");
 		tab_movimiento.getColumna("ide_cotia").setCombo("cont_tipo_asiento", "ide_cotia", "detalle_cotia", "");
 		tab_movimiento.getColumna("ide_geare").setCombo("gen_area", "ide_geare", "detalle_geare", "");
+		tab_movimiento.getColumna("ide_gemes").setCombo("gen_mes", "ide_gemes", "detalle_gemes", "");
+		tab_movimiento.getColumna("ide_tecpo").setLectura(true);
+		tab_movimiento.getColumna("activo_comov").setValorDefecto("true");
+		tab_movimiento.getColumna("activo_comov").setLectura(true);
+		
 		tab_movimiento.setTipoFormulario(true);
 		tab_movimiento.getGrid().setColumns(4);
 		tab_movimiento.agregarRelacion(tab_detalle_movimiento);
@@ -31,8 +36,9 @@ public class pre_movimiento extends Pantalla{
 		tab_detalle_movimiento.getColumna("ide_prcla").setCombo("pre_clasificador", "ide_prcla", "codigo_clasificador_prcla", "");
 		tab_detalle_movimiento.getColumna("ide_prpro").setCombo("pre_programa", "ide_prpro", "cod_programa_prpro", "");
 		tab_detalle_movimiento.getColumna("ide_cocac").setCombo("cont_catalogo_cuenta", "ide_cocac", "cue_codigo_cocac", "");
+		tab_detalle_movimiento.getColumna("activo_codem").setLectura(true);
+		tab_detalle_movimiento.getColumna("activo_codem").setValorDefecto("true");
 
-		tab_detalle_movimiento.setTipoFormulario(true);
 		tab_detalle_movimiento.getGrid().setColumns(4);
 		tab_detalle_movimiento.dibujar();
 		PanelTabla pat_detalle_movimiento=new PanelTabla();
