@@ -898,14 +898,23 @@ public class pre_vacaciones extends Pantalla {
 	}
 
 	public void anularVacacion(){
+		System.out.println("entre al metodo");
 		if(aut_empleado.getValue()!=null && !aut_empleado.getValor().toString().isEmpty()){
+			System.out.println("entre al primer if");
+
 			if(tab_permisos.getTotalFilas()>0){
+				System.out.println("entre al segundo if");
+
 				if(tab_permisos.getValor("ACTIVO_ASPVH").equalsIgnoreCase("false") || tab_permisos.getValor("IDE_GEEST").equalsIgnoreCase(utilitario.getVariable("p_gen_estado_inactivo"))){
 					utilitario.agregarMensajeInfo("No se puede anular", "El registro se encuentra Inactivo o Anulado");
+
 				}else{
+					System.out.println("entre al primer else");
+
 					TablaGenerica tab_anula_vacacion=utilitario.consultar("SELECT * FROM (" +
-							"SELECT * FROM asi_permisos_vacacion_hext where activo_aspvh=1 and ide_geest=1 order by ide_aspvh desc ) " +
-							"where ROWNUM  = 1");
+							"SELECT * FROM asi_permisos_vacacion_hext where activo_aspvh=true and ide_geest=1 order by ide_aspvh desc ) " +
+							"limit 1");
+					System.out.println("tabla generica "+tab_anula_vacacion.getSql());
 					if (tab_anula_vacacion.getTotalFilas()==1) {					
 						dia_anulacion_vacacion.dibujar();
 					}else{						
