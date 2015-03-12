@@ -1,7 +1,12 @@
 package paq_contabilidad;
 
+import javax.ejb.EJB;
+
+import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_sistema.aplicacion.Pantalla;
+import framework.componentes.Combo;
 import framework.componentes.Division;
+import framework.componentes.Etiqueta;
 import framework.componentes.PanelTabla;
 import framework.componentes.Tabla;
 
@@ -9,8 +14,17 @@ public class pre_movimiento extends Pantalla{
 	
 	private Tabla tab_movimiento=new Tabla();
 	private Tabla tab_detalle_movimiento=new Tabla();
+	private Combo com_anio=new Combo();
+	@EJB
+	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
+	
 	
 	public pre_movimiento (){
+		com_anio.setCombo(ser_contabilidad.getAnioDetalle("true,false","true,false"));
+		com_anio.setMetodo("seleccionaElAnio");
+		bar_botones.agregarComponente(new Etiqueta("Seleccione El Año:"));
+		bar_botones.agregarComponente(com_anio);
+
 		tab_movimiento.setId("tab_movimiento");
 		tab_movimiento.setHeader("MOVIMIENTOS");
 		tab_movimiento.setTabla("cont_movimiento", "ide_comov", 1);
@@ -55,7 +69,21 @@ public class pre_movimiento extends Pantalla{
 	@Override
 	public void insertar() {
 		// TODO Auto-generated method stub
-		utilitario.getTablaisFocus().insertar();
+		if(com_anio.getValue()==null){
+			utilitario.agregarMensaje("No se puede insertar", "Debe Seleccionar un Año");
+			return;
+		}
+		else if (tab_movimiento.isFocus()) {
+			tab_movimiento.insertar();
+			tab_movimiento.setValor("ide_geani", com_anio.getValue()+"");
+            utilitario.addUpdateTabla(tab_movimiento, "ide_geani", "");
+
+
+		}
+		else if (tab_detalle_movimiento.isFocus()) {
+			tab_detalle_movimiento.insertar();
+			
+		}
 		
 		
 	}
