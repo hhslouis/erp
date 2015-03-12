@@ -1271,7 +1271,6 @@ public void cambiarPartida(){
 					dia_calendario.getBot_aceptar().setMetodo("aceptarCrearPeriodoVacacion");
 					dia_calendario.dibujar();
 					utilitario.addUpdate("dia_calendario");
-					return;
 				}
 			}else {
 				// PARA FINIQUITOS
