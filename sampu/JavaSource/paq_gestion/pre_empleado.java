@@ -2327,13 +2327,17 @@ public void modificarCuentaAnticipo(){
 			//tab_documentacion.getColumna("IDE_GEINS").setAutoCompletar();
 			//tab_documentacion.getColumna("IDE_GTTCB").setCombo("GTH_TIPO_CUENTA_BANCARIA", "IDE_GTTCB", "DETALLE_GTTCB", "");
 			tab_documentacion.getColumna("IDE_GTTLC").setCombo("GTH_TIPO_LICENCIA_CONDUCIR", "IDE_GTTLC", "DETALLE_GTTLC", "");
+			tab_documentacion.getColumna("IDE_GTTLC").setVisible(false);
 			tab_documentacion.getColumna("IDE_GECAE").setCombo("GEN_CATEGORIA_ESTATUS", "IDE_GECAE", "DETALLE_GECAE", "");
 			tab_documentacion.getColumna("ACTIVO_GTDCE").setCheck();
 			tab_documentacion.getColumna("IDE_GTEMP").setVisible(false);
 			tab_documentacion.getColumna("IDE_GECAE").setVisible(false);
 			tab_documentacion.getColumna("NRO_CASILLA_GTDCE").setVisible(false);
 			tab_documentacion.getColumna("PASAPORTE_GTDCE").setVisible(false);
-			tab_documentacion.getColumna("NRO_CUENTA_GTDCE").setVisible(false);			
+			tab_documentacion.getColumna("fecha_afiliacion_gtdce").setVisible(false);
+			tab_documentacion.getColumna("fecha_caducidad_gtdce").setVisible(false);
+			tab_documentacion.getColumna("nro_iess_gtdce").setVisible(false);
+			tab_documentacion.getColumna("NRO_CUENTA_GTDCE").setVisible(false);	
 			tab_documentacion.getColumna("IDE_GTEMP").setValorDefecto(aut_empleado.getValor());
 			tab_documentacion.setCondicion("IDE_GTEMP=" + aut_empleado.getValor());
 			tab_documentacion.setTipoFormulario(true);
@@ -3444,6 +3448,7 @@ public void modificarCuentaAnticipo(){
 			tab_cuenta_bancaria.getColumna("ACREDITACION_GTCBE").setCheck();
 			tab_cuenta_bancaria.getColumna("ACREDITACION_GTCBE").setMetodoChange("cambiaEstadoAcreditacion");
 			tab_cuenta_bancaria.getColumna("SALDO_PROMEDIO_GTCBE").setDecimales(3);
+			tab_cuenta_bancaria.getColumna("individual_conjunta_gtcbe").setVisible(false);
 			tab_cuenta_bancaria.getColumna("ACTIVO_GTCBE").setCheck();
 			tab_cuenta_bancaria.getColumna("ACTIVO_GTCBE").setMetodoChange("cambiaEstadoCuentaBancaria");
 			tab_cuenta_bancaria.setCondicion("IDE_GTEMP =" + aut_empleado.getValor());			
