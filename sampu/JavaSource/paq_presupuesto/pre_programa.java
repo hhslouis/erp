@@ -39,6 +39,10 @@ public class pre_programa extends Pantalla {
 		tab_programa.setId("tab_programa");
 		tab_programa.setHeader("PROGRAMA");
 		tab_programa.setTabla("pre_programa", "ide_prpro", 1);
+		tab_programa.getColumna("ide_prfup").setVisible(false);
+		tab_programa.getColumna("ide_prcla").setAutoCompletar();
+		tab_programa.getColumna("ide_prcla").setCombo(ser_presupuesto.getCatalogoPresupuestario("true,false"));
+		tab_programa.getColumna("ide_prcla").setLectura(true);
 		tab_programa.getColumna("activo_prpro").setValorDefecto("true");
 		tab_programa.agregarRelacion(tab_vigente);
 		tab_programa.dibujar();
@@ -49,9 +53,14 @@ public class pre_programa extends Pantalla {
 		tab_vigente.setId("tab_vigente");
 		tab_vigente.setHeader("VIGENTE");
 		tab_vigente.setTabla("cont_vigente", "ide_covig", 2);
+		tab_vigente.getColumna("ide_prcla").setVisible(false);
+		tab_vigente.getColumna("ide_prasp").setVisible(false);
+		tab_vigente.getColumna("ide_cocac").setVisible(false);
+		tab_vigente.getColumna("ide_prfup").setVisible(false);
+		tab_vigente.getColumna("ide_geani").setAutoCompletar();
+		tab_vigente.getColumna("ide_geani").setCombo(ser_contabilidad.getAnio("true,false", "false,true"));
+		tab_vigente.getColumna("ide_geani").setLectura(true);
 		tab_vigente.getColumna("activo_covig").setValorDefecto("true");
-		tab_vigente.setTipoFormulario(true);
-		tab_vigente.getGrid().setColumns(4);
 		tab_vigente.dibujar();
 		PanelTabla pat_vigente=new PanelTabla();
 		pat_vigente.setPanelTabla(tab_vigente);
@@ -65,7 +74,7 @@ public class pre_programa extends Pantalla {
 
 
 				Division div3 = new Division(); //UNE OPCION Y DIV 2
-				div3.dividir2(pat_progama, tab_vigente, "50%", "H");
+				div3.dividir2(pat_progama, pat_vigente, "50%", "H");
 				Division div_division = new Division();
 				div_division.setId("div_division");
 				div_division.dividir2(arb_arbol, div3, "40%", "V");  //arbol y div3
@@ -136,8 +145,21 @@ public class pre_programa extends Pantalla {
 	@Override
 	public void insertar() {
 		// TODO Auto-generated method stub
-		utilitario.getTablaisFocus().insertar();
-		
+		if(com_anio.getValue()==null){
+			utilitario.agregarMensaje("No se puede insertar", "Debe Seleccionar un Año");
+			return;
+		}
+		else if (tab_programa.isFocus()) {
+			tab_programa.insertar();
+
+		}
+		else if (tab_vigente.isFocus()) {
+			tab_vigente.insertar();
+			tab_vigente.setValor("ide_geani", com_anio.getValue()+"");
+            utilitario.addUpdateTabla(tab_vigente, "ide_geani", "");
+
+		}
+
 	}
 
 	@Override
