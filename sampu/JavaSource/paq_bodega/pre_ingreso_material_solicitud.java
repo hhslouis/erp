@@ -140,7 +140,7 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 		tab_ingreso_material.getColumna("fecha_ingreso_bobod").setNombreVisual("FECHA DE INGRESO");
 		tab_ingreso_material.getColumna("numero_ingreso_bobod").setNombreVisual("NUMERO DE INGRESO");
 		tab_ingreso_material.getColumna("existencia_anterior_bobod").setVisible(false);
-		tab_ingreso_material.getColumna("ide_geani").setCombo(ser_contabilidad.getAnio("true,false","true,false"));
+		tab_ingreso_material.getColumna("ide_geani").setCombo(ser_contabilidad.getAnioDetalle("true,false","true,false"));
 		   List lista = new ArrayList();
 	       Object fila1[] = {
 	           "1", "CONSUMO INTERNO"
@@ -232,20 +232,36 @@ long ide_inicial=0;
 
 public void  aceptarDialogoSolicitud(){
 	
-	String str_seleccionados=tab_ingreso_material.getFilasSeleccionadas();
+	String str_seleccionados=tab_solicitud.getFilasSeleccionadas();
+	System.out.println(" probando el str_Selccionado "+str_seleccionados);
+	if(str_seleccionados!=null || !str_seleccionados.isEmpty()){
+		
 	TablaGenerica tab_consulta_solicitud= ser_bodega.getTablaGenericaSolicitudCompra(str_seleccionados);
 	utilitario.getConexion().ejecutarSql("DELETE from SIS_BLOQUEO where upper(TABLA_BLOQ) like 'bodt_bodega'");
-	ide_inicial=utilitario.getConexion().getMaximo("bodt_bodega", "ide_bobod", 1);
+	String valor=utilitario.getConexion().ejecutarSql(ser_contabilidad.servicioCodigoMaximo("bodt_bodega", "ide_bobod"));
+	ide_inicial=Long.parseLong(valor);
+	
+	System.out.println(" probando el inicial "+ide_inicial);
+
 	for(int i=0;i<tab_consulta_solicitud.getTotalFilas();i++){
 		
-		utilitario.getConexion().ejecutarSql("update adq_detalle_factura set recibido_addef= false where ide_addef='"+tab_consulta_solicitud.getValor(i,"ide_addef"));
+		utilitario.getConexion().ejecutarSql("update adq_detalle_factura set recibido_addef= false where ide_addef="+tab_consulta_solicitud.getValor(i,"ide_addef"));
 		
 		utilitario.getConexion().ejecutarSql("INSERT INTO bodt_bodega(ide_bobod, ide_geani, ide_bomat, ide_tepro, fecha_ingreso_bobod, fecha_compra_bobod, recibido_bobod, " +
-				" cantidad_ingreso_bobod, numero_ingreso_bobod, " +
-				" num_factura_bobod, num_doc_bobod, descripcion_bobod, tipo_ingreso_bobod, " +
-				" valor_unitario_bobod, valor_total_bobod,activo_bobod, ide_adsoc) VALUES( )");
-		}
-
+				" cantidad_ingreso_bobod, numero_ingreso_bobod, num_factura_bobod, num_doc_bobod, descripcion_bobod, tipo_ingreso_bobod, " +
+				" valor_unitario_bobod, valor_total_bobod,activo_bobod, ide_adsoc) VALUES("+ide_inicial+", "+tab_ingreso_material.getValor("ide_geani")+","+tab_consulta_solicitud.getValor(i,"ide_bomat")+"," 
+				+ tab_consulta_solicitud.getValor(i,"ide_tepro")+",'"+tab_ingreso_material.getValor("fecha_ingreso_bobod")+"','"+tab_consulta_solicitud.getValor(i,"fecha_factura_adfac")+"',true,"
+				+ tab_consulta_solicitud.getValor(i,"cantidad_addef")+",'"+tab_ingreso_material.getValor("numero_ingreso_bobod")+"','"+tab_consulta_solicitud.getValor(i,"num_factura_adfac")+
+				"','"+tab_ingreso_material.getValor("num_doc_bobod")+"','"+tab_ingreso_material.getValor("descripcion_bobod")+"','"+tab_ingreso_material.getValor("tipo_ingreso_bobod")+
+				"',"+tab_consulta_solicitud.getValor(i,"valor_unitario_addef")+","+tab_consulta_solicitud.getValor(i,"valor_total_addef")+",true,"+tab_consulta_solicitud.getValor(i,"ide_adsoc")+")");
+		ide_inicial++;	
+	}
+	}
+	else {
+		utilitario.agregarMensajeInfo("Debe seleccionar almenos un registro", "");
+		return;
+		
+	}
 		
 	}
 
