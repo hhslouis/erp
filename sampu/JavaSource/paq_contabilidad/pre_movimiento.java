@@ -32,6 +32,7 @@ public class pre_movimiento extends Pantalla{
 		tab_movimiento.getColumna("ide_cotia").setCombo("cont_tipo_asiento", "ide_cotia", "detalle_cotia", "");
 		tab_movimiento.getColumna("ide_geare").setCombo("gen_area", "ide_geare", "detalle_geare", "");
 		tab_movimiento.getColumna("ide_gemes").setCombo("gen_mes", "ide_gemes", "detalle_gemes", "");
+		tab_movimiento.getColumna("ide_geani").setVisible(false);
 		tab_movimiento.getColumna("ide_tecpo").setLectura(true);
 		tab_movimiento.getColumna("activo_comov").setValorDefecto("true");
 		tab_movimiento.getColumna("activo_comov").setLectura(true);
@@ -52,6 +53,8 @@ public class pre_movimiento extends Pantalla{
 		tab_detalle_movimiento.getColumna("ide_cocac").setCombo("cont_catalogo_cuenta", "ide_cocac", "cue_codigo_cocac", "");
 		tab_detalle_movimiento.getColumna("activo_codem").setLectura(true);
 		tab_detalle_movimiento.getColumna("activo_codem").setValorDefecto("true");
+		tab_detalle_movimiento.setColumnaSuma("haber_codem");			
+		tab_detalle_movimiento.setColumnaSuma("debe_codem");			
 
 		tab_detalle_movimiento.getGrid().setColumns(4);
 		tab_detalle_movimiento.dibujar();
@@ -93,8 +96,13 @@ public class pre_movimiento extends Pantalla{
 		// TODO Auto-generated method stub
 		if (tab_movimiento.guardar()){
 			tab_detalle_movimiento.guardar();
+
 		}
+		utilitario.addUpdate("tab_detalle_movimiento");
+
 		guardarPantalla();
+		utilitario.addUpdate("tab_detalle_movimiento");
+
 	}
 
 	@Override
