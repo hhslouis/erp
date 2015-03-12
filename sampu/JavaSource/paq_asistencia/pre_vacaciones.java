@@ -927,6 +927,7 @@ public class pre_vacaciones extends Pantalla {
 			if (validarSolicitudVacaciones()){	
 				
 				if (tab_permisos.guardar()){
+					
 					insertarDatosDetalleVacacion();
 					System.out.println("guardar pantalla "+utilitario.getConexion().getSqlPantalla());
 					guardarPantalla();					
