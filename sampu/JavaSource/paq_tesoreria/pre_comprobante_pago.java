@@ -105,6 +105,10 @@ public class pre_comprobante_pago extends Pantalla{
         tab_retencion.setIdCompleto("tab_tabulador:tab_retencion");
         //tab_retencion.setHeader("RETENCION");
         tab_retencion.setTabla("tes_retencion", "ide_teret", 3);
+       
+        tab_retencion.getColumna("total_ret_teret").setEtiqueta();
+        tab_retencion.getColumna("total_ret_teret").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
+        tab_retencion.getColumna("total_ret_teret").setValorDefecto("0.00");
         tab_retencion.setTipoFormulario(true);
         tab_retencion.getGrid().setColumns(4);
         tab_retencion.agregarRelacion(tab_detalle_retencion);
@@ -127,10 +131,9 @@ public class pre_comprobante_pago extends Pantalla{
         tab_detalle_retencion.getColumna("ide_teimp").setCombo("tes_impuesto", "ide_teimp", "codigo_teimp,porcentaje_teimp,detalle_teimp", "");
         tab_detalle_retencion.getColumna("ide_teimp").setLectura(true);
         tab_detalle_retencion.getColumna("ide_teimp").setAutoCompletar();
-        //tab_detalle_retencion.getColumna("base_imponible_teder").setMetodoChange("calcular");
         tab_detalle_retencion.getColumna("valor_retenido_teder").setEtiqueta();
         tab_detalle_retencion.getColumna("valor_retenido_teder").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
-        tab_detalle_retencion.getColumna("valor_retenido_teder").setMetodoChange("calcularDetallle");
+        tab_detalle_retencion.getColumna("valor_retenido_teder").setValorDefecto("0.00");
 
         tab_detalle_retencion.setTipoFormulario(true);
         tab_detalle_retencion.getGrid().setColumns(2);
@@ -301,54 +304,35 @@ public class pre_comprobante_pago extends Pantalla{
         else if (set_retencion.isVisible()){
             str_seleccionado= set_retencion.getValorSeleccionado();
             TablaGenerica tab_rentas= utilitario.consultar(ser_Tesoreria.getImpuestoCalculo(str_seleccionado));
-           double dou_valor_impuesto=0;
+
+            double dou_valor_impuesto=0;
            double dou_porcentaje_calculo=0;
            double dou_valor_resultado=0;
 
            dou_porcentaje_calculo=Double.parseDouble(tab_rentas.getValor("porcentaje_teimp"));
            dou_valor_impuesto=Double.parseDouble(tab_detalle_retencion.getValor("base_imponible_teder"));
            dou_valor_resultado=(dou_porcentaje_calculo*dou_valor_impuesto)/100;
-            if (set_retencion.getValorSeleccionado()!=null){
-            	
+ 
+           if (set_retencion.getValorSeleccionado()!=null){
+
                 tab_detalle_retencion.setValor("ide_teimp",str_seleccionado);
-                tab_detalle_retencion.setValor("valor_retenido_teder", dou_valor_resultado+"");              
-            }
+                tab_detalle_retencion.setValor("valor_retenido_teder", dou_valor_resultado+"");   
+                String valorx=tab_detalle_retencion.getSumaColumna("valor_retenido_teder")+"";
+               tab_retencion.setValor("total_ret_teret", valorx);       
+           }
 
             set_retencion.cerrar();
-            utilitario.addUpdateTabla(tab_detalle_retencion, "valor_retenido_teder,base_imponible_teder,ide_teimp","");
+             utilitario.addUpdateTabla(tab_detalle_retencion, "valor_retenido_teder,base_imponible_teder,ide_teimp","");
+             utilitario.addUpdateTabla(tab_retencion, "total_ret_teret","");
+
         }
-    
-    
+
+
     }
 
 
-    /// calcular
 
-    public void calcular(){
-        //Variables para almacenar y calcular el total del detalle
-    	double dou_total=0;
-		double dou_subtotal=0;
-		
-		String sub_tot=tab_detalle_retencion.getSumaColumna("valor_retenido_teder")+"";
-		tab_retencion.setValor("total_ret_teret",sub_tot );
-		
-		//String sub_total=tab_reforma.getSumaColumna("val_reforma_d_prrem")+"";
-		//tab_anual.setValor("valor_reformado_d_pranu",sub_total );
-		dou_total=Double.parseDouble(sub_tot);
-		//dou_subtotal=Double.parseDouble(sub_total);
-		tab_retencion.setValor("total_ret_teret",utilitario.getFormatoNumero(sub_tot,3));
-		//tab_anual.setValor("valor_reformado_d_pranu",utilitario.getFormatoNumero(sub_total,3));
-		tab_retencion.modificar(tab_retencion.getFilaActual());//para que haga el update
-
-		utilitario.addUpdateTabla(tab_retencion, "total_ret_teret,", "tab_detalle_retencion");	
-	
-	}
-	public void calcularDetallle(AjaxBehaviorEvent evt) {
-		tab_detalle_retencion.modificar(evt); //Siempre es la primera linea
-		calcular();
-
-	}
-
+   
 
     @Override
     public void insertar() {
