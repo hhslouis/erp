@@ -30,6 +30,14 @@ public class pre_clasificador extends Pantalla {
 		tab_presupuesto.getGrid().setColumns(4);	
 		tab_presupuesto.setHeader("CATALOGO PRESUPUESTARIO");
 		tab_presupuesto.setTabla("pre_clasificador","ide_prcla", 1);
+		tab_presupuesto.getColumna("ide_prcla").setNombreVisual("CODIGO");
+		tab_presupuesto.getColumna("codigo_clasificador_prcla").setNombreVisual("CODIGO CLASIFICADOR");
+		tab_presupuesto.getColumna("descripcion_clasificador_prcla").setNombreVisual("NOMBRE CLASIFICADOR");
+		tab_presupuesto.getColumna("tipo_prcla").setNombreVisual("TIPO CLASIFICADOR");
+		tab_presupuesto.getColumna("nivel_prcla").setNombreVisual("NIVEL");
+		tab_presupuesto.getColumna("grupo_prcla").setNombreVisual("TIPO CUENTA");
+		tab_presupuesto.getColumna("sigefc_prcla").setNombreVisual("SIGEF");
+		tab_presupuesto.getColumna("ide_prgre").setNombreVisual("GRUPO");
 		tab_presupuesto.getColumna("pre_ide_prcla").setCombo("select ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla from pre_clasificador order by codigo_clasificador_prcla");
 		tab_presupuesto.getColumna("grupo_prcla").setCombo(utilitario.getListaGrupoCuentaPresupuesto());
 		tab_presupuesto.getColumna("ide_prgre").setCombo("pre_grupo_economico","ide_prgre","detalle_prgre","");
@@ -66,6 +74,11 @@ public class pre_clasificador extends Pantalla {
 		tab_vigente.getColumna("ide_geani").setCombo("gen_anio","ide_geani","detalle_geani","");
 		tab_vigente.getColumna("ide_geani").setUnico(true);
 		tab_vigente.getColumna("ide_prcla").setUnico(true);
+		tab_vigente.getColumna("ide_prasp").setVisible(false);
+		tab_vigente.getColumna("ide_cocac").setVisible(false);
+		tab_vigente.getColumna("ide_prfup").setVisible(false);
+		tab_vigente.getColumna("ide_prpro").setVisible(false);
+
 		 //ocultar campos de las claves  foraneas
 		TablaGenerica  tab_generica=ser_contabilidad.getTablaVigente("cont_vigente");
 	//	for(int i=0;i<tab_generica.getTotalFilas();i++){
