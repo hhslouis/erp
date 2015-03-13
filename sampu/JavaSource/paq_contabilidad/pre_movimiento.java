@@ -1,8 +1,10 @@
 package paq_contabilidad;
 
 import javax.ejb.EJB;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import paq_contabilidad.ejb.ServicioContabilidad;
+import paq_presupuesto.ejb.ServicioPresupuesto;
 import paq_sistema.aplicacion.Pantalla;
 import framework.componentes.Combo;
 import framework.componentes.Division;
@@ -17,6 +19,8 @@ public class pre_movimiento extends Pantalla{
 	private Combo com_anio=new Combo();
 	@EJB
 	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
+	@EJB
+	private ServicioPresupuesto ser_Presupuesto = (ServicioPresupuesto ) utilitario.instanciarEJB(ServicioPresupuesto.class);
 	
 	
 	public pre_movimiento (){
@@ -33,10 +37,10 @@ public class pre_movimiento extends Pantalla{
 		tab_movimiento.getColumna("ide_geare").setCombo("gen_area", "ide_geare", "detalle_geare", "");
 		tab_movimiento.getColumna("ide_gemes").setCombo("gen_mes", "ide_gemes", "detalle_gemes", "");
 		tab_movimiento.getColumna("ide_geani").setVisible(false);
+		tab_movimiento.setCondicion("ide_geani=-1"); 
 		tab_movimiento.getColumna("ide_tecpo").setLectura(true);
 		tab_movimiento.getColumna("activo_comov").setValorDefecto("true");
 		tab_movimiento.getColumna("activo_comov").setLectura(true);
-		
 		tab_movimiento.setTipoFormulario(true);
 		tab_movimiento.getGrid().setColumns(4);
 		tab_movimiento.agregarRelacion(tab_detalle_movimiento);
@@ -48,13 +52,16 @@ public class pre_movimiento extends Pantalla{
 		tab_detalle_movimiento.setId("tab_detalle_movimiento");
 		tab_detalle_movimiento.setHeader("DETALLE DE MOVIMIENTO");
 		tab_detalle_movimiento.setTabla("cont_detalle_movimiento", "ide_codem", 2);
-		tab_detalle_movimiento.getColumna("ide_prcla").setCombo("pre_clasificador", "ide_prcla", "codigo_clasificador_prcla", "");
-		tab_detalle_movimiento.getColumna("ide_prpro").setCombo("pre_programa", "ide_prpro", "cod_programa_prpro", "");
-		tab_detalle_movimiento.getColumna("ide_cocac").setCombo("cont_catalogo_cuenta", "ide_cocac", "cue_codigo_cocac", "");
+		//tab_detalle_movimiento.getColumna("ide_prcla").setCombo(ser_Presupuesto.getCatalogoPresupuestario("true,false"));
+		tab_detalle_movimiento.getColumna("ide_prcla").setAutoCompletar();
+		//tab_detalle_movimiento.getColumna("ide_prpro").setCombo("pre_programa", "ide_prpro", "cod_programa_prpro", "");
+		//tab_detalle_movimiento.getColumna("ide_cocac").setCombo(ser_contabilidad.servicioCatalogoCuentasTransaccion());
 		tab_detalle_movimiento.getColumna("activo_codem").setLectura(true);
 		tab_detalle_movimiento.getColumna("activo_codem").setValorDefecto("true");
-		tab_detalle_movimiento.setColumnaSuma("haber_codem");			
-		tab_detalle_movimiento.setColumnaSuma("debe_codem");			
+		tab_detalle_movimiento.getColumna("haber_codem").setMetodoChange("calcularTotal");			
+		tab_detalle_movimiento.setColumnaSuma("haber_codem,debe_codem");			
+		tab_detalle_movimiento.getColumna("debe_codem").setMetodoChange("calcularTotal");			
+				
 
 		tab_detalle_movimiento.getGrid().setColumns(4);
 		tab_detalle_movimiento.dibujar();
@@ -66,8 +73,30 @@ public class pre_movimiento extends Pantalla{
 		agregarComponente(div_division);
 		
 		
-		
 	}
+	////metodo año
+	public void seleccionaElAnio (){
+		if(com_anio.getValue()!=null){
+			tab_movimiento.setCondicion("ide_geani="+com_anio.getValue());
+			tab_movimiento.ejecutarSql();
+			tab_detalle_movimiento.ejecutarValorForanea(tab_movimiento.getValorSeleccionado());
+
+
+		}
+		else{
+			tab_movimiento.setCondicion("ide_geani=-1");
+			tab_movimiento.ejecutarSql();
+		}
+	}
+	
+	///sacar valores
+	
+	public void calcularTotal(AjaxBehaviorEvent evt){
+		tab_detalle_movimiento.modificar(evt);
+		tab_detalle_movimiento.sumarColumnas();
+		utilitario.addUpdate("tab_detalle_movimiento");
+	}
+
 
 	@Override
 	public void insertar() {
@@ -98,10 +127,9 @@ public class pre_movimiento extends Pantalla{
 			tab_detalle_movimiento.guardar();
 
 		}
-		utilitario.addUpdate("tab_detalle_movimiento");
-
+		//tab_detalle_movimiento.sumarColumnas();
+		//utilitario.addUpdate("tab_detalle_movimiento");
 		guardarPantalla();
-		utilitario.addUpdate("tab_detalle_movimiento");
 
 	}
 
