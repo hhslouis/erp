@@ -4,6 +4,7 @@ import javax.ejb.EJB;
 
 import org.primefaces.event.NodeSelectEvent;
 
+import framework.aplicacion.TablaGenerica;
 import framework.componentes.Arbol;
 import framework.componentes.Boton;
 import framework.componentes.Combo;
@@ -165,8 +166,11 @@ public class pre_programa extends Pantalla {
 	@Override
 	public void guardar() {
 		// TODO Auto-generated method stub
+		String funcion=tab_vigente.getValor("ide_prfup");
+		TablaGenerica consultaFuncion=utilitario.consultar("select ide_prfup from pre_funcion_programa where ide_prfup="+funcion);
 		if(tab_programa.guardar()){
 			if(tab_vigente.guardar()){
+				
 				guardarPantalla();
 			}
 		}
