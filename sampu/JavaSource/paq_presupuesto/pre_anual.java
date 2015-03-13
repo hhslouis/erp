@@ -45,6 +45,7 @@ public class pre_anual extends Pantalla{
 		tab_anual.getColumna("ide_prcla").setLectura(true);
 		tab_anual.getColumna("ide_prcla").setAutoCompletar();
 		tab_anual.getColumna("ide_prpro").setVisible(false);
+		tab_anual.getColumna("ide_geani").setCombo(ser_contabilidad.getAnio("true,false","true,false"));
 		tab_anual.getColumna("ide_geani").setVisible(false);	
 		tab_anual.setCondicion("ide_geani=-1"); 
 		tab_anual.getColumna("valor_reformado_pranu").setEtiqueta();
@@ -234,8 +235,17 @@ public class pre_anual extends Pantalla{
 			return;
 
 		}
-
-		utilitario.getTablaisFocus().insertar();
+		if(tab_anual.isFocus()){
+			tab_anual.insertar();
+			tab_anual.setValor("ide_geani",com_anio.getValue()+"");
+			}
+		else if(tab_mensual.isFocus()){
+			tab_mensual.insertar();
+		}
+			else if(tab_reforma.isFocus()){
+				tab_reforma.insertar();
+				
+			}
 		
 	}
 
