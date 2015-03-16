@@ -41,6 +41,7 @@ public class pre_anual extends Pantalla{
 		tab_anual.setId("tab_anual");
 		tab_anual.setHeader("PRESUPUESTO ANUAL DE INGRESOS");
 		tab_anual.setTabla("pre_anual", "ide_pranu", 1);
+		tab_anual.setCondicion("ide_prcla!=null");
 		tab_anual.getColumna("ide_prcla").setCombo(ser_presupuesto.getCatalogoPresupuestario("true,false"));
 		tab_anual.getColumna("ide_prcla").setLectura(true);
 		tab_anual.getColumna("ide_prcla").setAutoCompletar();
