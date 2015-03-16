@@ -11,6 +11,25 @@ import paq_sistema.aplicacion.Utilitario;
 public class ServicioGestion {
 
 	private Utilitario utilitario=new Utilitario();
+	/**
+	 * metodo que retorna el sql para cargar los combos de division politica con los campos ide_gedip- pais- provincia -ciudad -parroquia , ide_gedip de la ciudad
+	 */
+	public String getSqlDivisionPoliticaCiudadParroquia(){
+		String str_sql="select a.ide_gedip,pais,provincia,ciudad,a.detalle_gedip as parroquia" +
+				" from (select * from gen_division_politica where ide_getdp=5 ) a" +
+				" left join (select a.ide_gedip,c.detalle_gedip ||' ' as pais,provincia||' ' as provincia,a.detalle_gedip as ciudad" +
+				" from( select * from gen_division_politica where ide_getdp=2 ) a" +
+				" left join (select a.ide_gedip,a.detalle_gedip as canton,b.ide_gedip as codigo_provincia,b.detalle_gedip as provincia," +
+				" b.gen_ide_gedip as codigo_pais from (select * from gen_division_politica where ide_getdp=3) a left join" +
+				" (select * from gen_division_politica where ide_getdp=1) b on a.gen_ide_gedip = b.ide_gedip) b on a.gen_ide_gedip = b.ide_gedip" +
+				" left join gen_division_politica c on b.codigo_pais=c.ide_gedip" +
+				" where not c.detalle_gedip is null order by provincia,a.detalle_gedip) " +
+				" b on a.gen_ide_gedip= b.ide_gedip	where not pais is null" +
+				" order by pais, provincia,ciudad,detalle_gedip";	
+		return str_sql;
+	}
+
+	
 
 	/**
 	 * metodo que retorna el sql para cargar los combos de division politica con los campos ide_gedip- pais- provincia -ciudad , ide_gedip de la ciudad
