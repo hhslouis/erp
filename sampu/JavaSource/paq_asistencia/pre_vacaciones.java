@@ -436,11 +436,6 @@ public class pre_vacaciones extends Pantalla {
 		dia_anulacion_vacacion.getBot_aceptar().setMetodo("aceptarAnularVacacion");
 		agregarComponente(dia_anulacion_vacacion);
 		
-		//SELECT * FROM (
-		//SELECT * FROM asi_permisos_vacacion_hext where activo_aspvh=1  order by ide_aspvh desc )
-		//where ROWNUM  = 1
-		
-		//filtros para reporte de dias de vacaciones pendientes
 		
 		sel_tab_sucursal.setId("sel_tab_sucursal");
 		sel_tab_sucursal.setTitle("SELECCION DE SUCURSAL");
@@ -488,8 +483,8 @@ public class pre_vacaciones extends Pantalla {
 					tab_permisos.setValor("fecha_anula_aspvh", cal_fecha_anula.getFecha());
 					tab_permisos.modificar(tab_permisos.getFilaActual());
 					tab_permisos.guardar();
-					utilitario.getConexion().agregarSqlPantalla("update asi_detalle_vacacion set activo_asdev=false, anulado_asdev=1 where ide_aspvh="+tab_permisos.getValorSeleccionado());
-					utilitario.getConexion().agregarSqlPantalla("update asi_permisos_vacacion_hext set activo_aspvh=0, ide_geest="+utilitario.getVariable("p_gen_estado_inactivo")+" where ide_aspvh="+tab_permisos.getValorSeleccionado());
+					utilitario.getConexion().agregarSqlPantalla("update asi_detalle_vacacion set activo_asdev=false, anulado_asdev=true where ide_aspvh="+tab_permisos.getValorSeleccionado());
+					utilitario.getConexion().agregarSqlPantalla("update asi_permisos_vacacion_hext set activo_aspvh=false,anulado_aspvh=true, ide_geest="+utilitario.getVariable("p_gen_estado_inactivo")+" where ide_aspvh="+tab_permisos.getValorSeleccionado());
 					tab_permisos.imprimirSql();
 					guardarPantalla();
 					dia_anulacion_vacacion.cerrar();
@@ -898,23 +893,15 @@ public class pre_vacaciones extends Pantalla {
 	}
 
 	public void anularVacacion(){
-		System.out.println("entre al metodo");
 		if(aut_empleado.getValue()!=null && !aut_empleado.getValor().toString().isEmpty()){
-			System.out.println("entre al primer if");
-
 			if(tab_permisos.getTotalFilas()>0){
-				System.out.println("entre al segundo if");
-
 				if(tab_permisos.getValor("ACTIVO_ASPVH").equalsIgnoreCase("false") || tab_permisos.getValor("IDE_GEEST").equalsIgnoreCase(utilitario.getVariable("p_gen_estado_inactivo"))){
 					utilitario.agregarMensajeInfo("No se puede anular", "El registro se encuentra Inactivo o Anulado");
 
 				}else{
-					System.out.println("entre al primer else");
-
 					TablaGenerica tab_anula_vacacion=utilitario.consultar("SELECT * FROM (" +
-							"SELECT * FROM asi_permisos_vacacion_hext where activo_aspvh=true and ide_geest=1 order by ide_aspvh desc ) " +
+							"SELECT * FROM asi_permisos_vacacion_hext where activo_aspvh=true and ide_geest=1 order by ide_aspvh desc ) a " +
 							"limit 1");
-					System.out.println("tabla generica "+tab_anula_vacacion.getSql());
 					if (tab_anula_vacacion.getTotalFilas()==1) {					
 						dia_anulacion_vacacion.dibujar();
 					}else{						
@@ -1041,8 +1028,8 @@ public class pre_vacaciones extends Pantalla {
 				rep_reporte.cerrar();		
 
 				p_parametros.put("IDE_GTEMP",aut_empleado.getValor());
-				p_parametros.put("ACTIVO_ASPVH","0,1");
-				p_parametros.put("titulo", " BIESS GERENCIA ADMINISTRATIVA DEPARTAMENTO DE TALENTO HUMANO PERMISOS CONCEDIDAS Y NO CONCEDIDAS");
+				p_parametros.put("ACTIVO_ASPVH","false,true");
+				p_parametros.put("titulo", " GERENCIA ADMINISTRATIVA DEPARTAMENTO DE TALENTO HUMANO PERMISOS CONCEDIDAS Y NO CONCEDIDAS");
 				sef_reporte.setSeleccionFormatoReporte(p_parametros, rep_reporte.getPath());						
 
 				sef_reporte.dibujar();
