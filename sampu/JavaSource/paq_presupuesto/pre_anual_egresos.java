@@ -63,8 +63,10 @@ public class pre_anual_egresos extends Pantalla {
 		//tab_anual.getColumna("ide_prfup").setCombo("pre_funcion_programa", "ide_prfup", "detalle_prfup,", "");
 		tab_anual.getColumna("valor_reformado_pranu").setEtiqueta();
 		tab_anual.getColumna("valor_reformado_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
+		tab_anual.getColumna("valor_reformado_pranu").setValorDefecto("0.00");
 		tab_anual.getColumna("valor_codificado_pranu").setEtiqueta();
 		tab_anual.getColumna("valor_codificado_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
+		tab_anual.getColumna("valor_codificado_pranu").setValorDefecto("0.00");
 		tab_anual.getColumna("valor_devengado_pranu").setEtiqueta();
 		tab_anual.getColumna("valor_devengado_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_anual.getColumna("valor_devengado_pranu").setValorDefecto("0.00");
@@ -81,6 +83,7 @@ public class pre_anual_egresos extends Pantalla {
 		tab_anual.getColumna("valor_recaudado_efectivo_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_anual.getColumna("valor_recaudado_efectivo_pranu").setValorDefecto("0.00");
 		tab_anual.getColumna("valor_inicial_pranu").setMetodoChange("calcularValor");
+		tab_anual.getColumna("valor_inicial_pranu").setRequerida(true);
 		tab_anual.getColumna("activo_pranu").setValorDefecto("true");
 		tab_anual.setTipoFormulario(true);
 		tab_anual.getGrid().setColumns(4);
@@ -148,6 +151,7 @@ public class pre_anual_egresos extends Pantalla {
 
 		
 	}
+	///metodo año
 	public void seleccionaElAnio (){
 		if(com_anio.getValue()!=null){
 			tab_anual.setCondicion("ide_geani="+com_anio.getValue());
