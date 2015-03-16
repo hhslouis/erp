@@ -45,8 +45,7 @@ public class pre_anual_egresos extends Pantalla {
 		tab_anual.setTabla("pre_anual", "ide_pranu", 1);
 		tab_anual.getColumna("ide_prcla").setCombo("select ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla from pre_clasificador order by codigo_clasificador_prcla");
 		tab_anual.getColumna("ide_prcla").setVisible(false);
-		tab_anual.setCondicion("ide_prpro!=null");
-		//tab_anual.getColumna("ide_prpro").setRequerida(true);
+		tab_anual.setCondicion("not ide_prpro is null");
 		tab_anual.getColumna("ide_prpro").setCombo(ser_presupuesto.getPrograma("true,false"));
 		tab_anual.getColumna("ide_prpro").setAutoCompletar();
 		tab_anual.getColumna("ide_prpro").setLectura(true);
@@ -83,6 +82,9 @@ public class pre_anual_egresos extends Pantalla {
 		tab_anual.getColumna("valor_recaudado_efectivo_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_anual.getColumna("valor_recaudado_efectivo_pranu").setValorDefecto("0.00");
 		tab_anual.getColumna("valor_inicial_pranu").setMetodoChange("calcularValor");
+		
+		/// requerida para grabar
+		tab_anual.getColumna("ide_prpro").setRequerida(true);
 		tab_anual.getColumna("valor_inicial_pranu").setRequerida(true);
 		tab_anual.getColumna("activo_pranu").setValorDefecto("true");
 		tab_anual.setTipoFormulario(true);
