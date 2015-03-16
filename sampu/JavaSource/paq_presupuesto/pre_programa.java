@@ -140,6 +140,19 @@ public class pre_programa extends Pantalla {
 			utilitario.agregarMensajeInfo("Debe seleccionar un Clasificador", "");
 		}
 	}
+///METODO AÑO
+	public void seleccionaElAnio (){
+		if(com_anio.getValue()!=null){
+			tab_programa.setCondicion("ide_geani="+com_anio.getValue());
+			tab_programa.ejecutarSql();
+			//tab_mes.ejecutarValorForanea(tab_poa.getValorSeleccionado());
+
+		}
+		else{
+			utilitario.agregarMensajeInfo("Selecione un año", "");
+
+		}
+	}
 
 
 
