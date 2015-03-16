@@ -6,7 +6,9 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import framework.aplicacion.TablaGenerica;
 import framework.componentes.Boton;
+import framework.componentes.Confirmar;
 import framework.componentes.Division;
 import framework.componentes.PanelTabla;
 import framework.componentes.SeleccionTabla;
@@ -27,6 +29,8 @@ public class pre_clientes extends Pantalla {
 	private Tabla tab_tarifa=new Tabla();
 	private Tabla tab_clientes=new Tabla();
 	private SeleccionTabla set_pantalla_sucursal= new SeleccionTabla();
+	private SeleccionTabla set_actualizar=new SeleccionTabla();
+	private Confirmar con_guardar= new Confirmar();
 	@EJB
 	private ServicioGestion ser_gestion = (ServicioGestion) utilitario.instanciarEJB(ServicioGestion.class);
 	@EJB
@@ -46,7 +50,7 @@ public class pre_clientes extends Pantalla {
 		tab_clientes.getColumna("ide_retic").setCombo("rec_tipo_contribuyente", "ide_retic", "detalle_retic", "");
 		tab_clientes.getColumna("ide_retia").setCombo("rec_tipo_asistencia", "ide_retia", "detalle_retia", "");
 		tab_clientes.getColumna("ide_gtgen").setCombo("gth_genero", "ide_gtgen", "detalle_gtgen", "");
-		tab_clientes.getColumna("ide_gedip").setCombo(ser_gestion.getSqlDivisionPoliticaCiudad());
+		tab_clientes.getColumna("ide_gedip").setCombo(ser_gestion.getSqlDivisionPoliticaCiudadParroquia());
 		tab_clientes.getColumna("ide_gedip").setAutoCompletar();
 		tab_clientes.getColumna("ide_gttdi").setCombo("gth_tipo_documento_identidad", "ide_gttdi", " detalle_gttdi", "");
 		tab_clientes.getColumna("gth_ide_gttdi").setCombo("gth_tipo_documento_identidad", "ide_gttdi", "detalle_gttdi", "");
@@ -56,7 +60,7 @@ public class pre_clientes extends Pantalla {
 		tab_clientes.getColumna("ide_retil").setCombo("rec_tipo_cliente", "ide_retil", "detalle_retil", "");
 		tab_clientes.getColumna("ide_reclr").setCombo("rec_cliente_ruta", "ide_reclr", "detalle_reclr", "");
 		tab_clientes.getColumna("ide_tetar").setCombo("tes_tarifas", "ide_tetar", "detalle_tetar", "");
-		
+		tab_clientes.getColumna("activo_recli").setValorDefecto("true");
 		tab_clientes.getColumna("rec_ide_recli").setCombo(ser_facturacion.getClientes("0,1"));
 		tab_clientes.getColumna("rec_ide_recli").setAutoCompletar();
 		tab_clientes.getColumna("rec_ide_recli").setLectura(true);
@@ -178,6 +182,26 @@ public class pre_clientes extends Pantalla {
 		set_pantalla_sucursal.setRadio();
 		set_pantalla_sucursal.getTab_seleccion().ejecutarSql();
 		agregarComponente(set_pantalla_sucursal);
+		
+		//////modificar
+		Boton bot_modificar=new Boton();
+		bot_modificar.setValue("ACTUALIZAR MATRIZ");
+		bot_modificar.setIcon("ui-icon-person");
+		bot_modificar.setMetodo("actualizarMatriz");
+		bar_botones.agregarBoton(bot_modificar);
+		con_guardar.setId("con_guardar");
+		agregarComponente(con_guardar);
+		
+		
+		set_actualizar.setId("set_actualizar");
+		set_actualizar.setSeleccionTabla(ser_facturacion.getClientes("1"),"ide_recli");
+		set_actualizar.getTab_seleccion().getColumna("nombre_comercial_recli").setFiltro(true);
+		set_actualizar.getTab_seleccion().getColumna("ruc_comercial_recli").setFiltro(true);
+		set_actualizar.setRadio();
+		set_actualizar.getBot_aceptar().setMetodo("modificarMatriz");
+		agregarComponente(set_actualizar);	
+	
+
 
 	}
 	
@@ -219,13 +243,57 @@ public class pre_clientes extends Pantalla {
 		return tab_tarifa;
 	}
 
+	
 
 
 	public void setTab_tarifa(Tabla tab_tarifa) {
 		this.tab_tarifa = tab_tarifa;
 	}
 
+///////actualizar matriz
+	public void actualizarMatriz(){
+		//Hace aparecer el componente
+		if(tab_clientes.getValor("matriz_sucursal_recli")!=null && tab_clientes.getValor("matriz_sucursal_recli").equals("0")){
+		set_actualizar.getTab_seleccion().setSql(ser_facturacion.getClientes("1"));
+		set_actualizar.getTab_seleccion().getColumna("ruc_comercial_recli").setFiltro(true);
+		set_actualizar.getTab_seleccion().getColumna("nombre_comercial_recli").setFiltro(true);
+		set_actualizar.setRadio();
+		set_actualizar.getTab_seleccion().ejecutarSql();
+		set_actualizar.dibujar();	
+		}else{
+			utilitario.agregarMensaje("No se puede registrar matriz a una matriz","");
+		}
+		}
+	
+		
+	
+	public void modificarMatriz(){
+		String str_matriz=set_actualizar.getValorSeleccionado();
+	    tab_clientes.setValor("rec_ide_recli",(str_matriz));			
+	    tab_clientes.modificar(tab_clientes.getFilaActual());
+		utilitario.addUpdate("tab_cliente");	
 
+		con_guardar.setMessage("Esta Seguro de Actualizar la matriz");
+		con_guardar.setTitle("CONFIRMCION DE ACTUALIZAR");
+		con_guardar.getBot_aceptar().setMetodo("guardarActualilzar");
+		con_guardar.dibujar();
+		utilitario.addUpdate("con_guardar");
+
+
+	}
+	public void guardarActualilzar(){
+		System.out.println("Entra a guardar...");
+		tab_clientes.guardar();
+		con_guardar.cerrar();
+		set_actualizar.cerrar();
+		guardarPantalla();
+
+	}
+
+
+
+
+	
 
 	@Override
 	public void insertar() {
@@ -361,6 +429,14 @@ public class pre_clientes extends Pantalla {
 
 	public void setSet_pantalla_sucursal(SeleccionTabla set_pantalla_sucursal) {
 		this.set_pantalla_sucursal = set_pantalla_sucursal;
+	}
+
+	public SeleccionTabla getSet_actualizar() {
+		return set_actualizar;
+	}
+
+	public void setSet_actualizar(SeleccionTabla set_actualizar) {
+		this.set_actualizar = set_actualizar;
 	}
 
 }
