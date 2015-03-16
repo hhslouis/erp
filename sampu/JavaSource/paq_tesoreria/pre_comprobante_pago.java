@@ -67,6 +67,7 @@ public class pre_comprobante_pago extends Pantalla{
         tab_comprobante.setHeader("COMPROBANTE DE PAGO");
         tab_comprobante.setTabla("tes_comprobante_pago", "ide_tecpo", 1);
         tab_comprobante.getColumna("IDE_COEST").setCombo("cont_estado","ide_coest","detalle_coest","");
+        tab_comprobante.setCampoOrden("ide_tecpo desc");
         tab_comprobante.getColumna("IDE_PRTRA").setCombo(ser_Presupuesto.getTramite("true"));
         tab_comprobante.getColumna("IDE_PRTRA").setAutoCompletar();
         tab_comprobante.getColumna("IDE_COEST").setCombo("cont_estado","ide_coest","detalle_coest","");
@@ -427,11 +428,15 @@ public class pre_comprobante_pago extends Pantalla{
             if (tab_detalle_movimiento.guardar()) {
                 if( tab_retencion.guardar()){
                     if(tab_detalle_retencion.guardar()){
+                        guardarPantalla();
 
+                    	tab_comprobante.ejecutarSql();
+                        tab_detalle_movimiento.setCondicion("ide_comov="+tab_comprobante.getValor("ide_comov"));    
+        				tab_detalle_movimiento.ejecutarSql();
+        			
                     }
                 }
             }
-            guardarPantalla();
 
         }
     }
