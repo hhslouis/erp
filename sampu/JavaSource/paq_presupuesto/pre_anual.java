@@ -41,7 +41,7 @@ public class pre_anual extends Pantalla{
 		tab_anual.setId("tab_anual");
 		tab_anual.setHeader("PRESUPUESTO ANUAL DE INGRESOS");
 		tab_anual.setTabla("pre_anual", "ide_pranu", 1);
-		tab_anual.setCondicion("ide_prcla!=null");
+		tab_anual.setCondicion("not ide_prcla is null");
 		tab_anual.getColumna("ide_prcla").setCombo(ser_presupuesto.getCatalogoPresupuestario("true,false"));
 		tab_anual.getColumna("ide_prcla").setLectura(true);
 		tab_anual.getColumna("ide_prcla").setAutoCompletar();
@@ -82,6 +82,10 @@ public class pre_anual extends Pantalla{
 		tab_anual.getColumna("activo_pranu").setValorDefecto("true");
 		tab_anual.agregarRelacion(tab_mensual);
 		tab_anual.agregarRelacion(tab_reforma);
+		//requeridas
+		tab_anual.getColumna("ide_prcla").setRequerida(true);
+		tab_anual.getColumna("valor_inicial_pranu").setRequerida(true);
+
 		tab_anual.setTipoFormulario(true);
 		tab_anual.getGrid().setColumns(4);
 		tab_anual.dibujar();
@@ -131,7 +135,7 @@ public class pre_anual extends Pantalla{
 		agregarComponente(div_division);
 
 		Boton bot_agregar=new Boton();
-		bot_agregar.setValue("Agregar Clasificador");
+		bot_agregar.setValue("Agregar Partida Presupuestaria");
 		bot_agregar.setMetodo("agregarClasificador");
 		bar_botones.agregarBoton(bot_agregar);
 
