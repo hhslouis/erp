@@ -31,10 +31,9 @@ public class pre_anual_egresos extends Pantalla {
 	
 	public pre_anual_egresos(){
 		
-		com_anio.setCombo("select ide_geani,detalle_geani from gen_anio where activo_geani = true" + 
-				" order by detalle_geani");
-		com_anio.setMetodo("seleccioneElAnio");
-		bar_botones.agregarComponente(new Etiqueta("Año:"));
+		com_anio.setCombo(ser_contabilidad.getAnioDetalle("true,false","true,false"));
+		com_anio.setMetodo("seleccionaElAnio");
+		bar_botones.agregarComponente(new Etiqueta("Seleccione El Año:"));
 		bar_botones.agregarComponente(com_anio);
 
 		
@@ -47,37 +46,31 @@ public class pre_anual_egresos extends Pantalla {
 		tab_anual.getColumna("ide_prcla").setCombo("select ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla from pre_clasificador order by codigo_clasificador_prcla");
 		tab_anual.getColumna("ide_prcla").setVisible(false);
 		tab_anual.setCondicion("ide_prpro!=null");
+		//tab_anual.getColumna("ide_prpro").setRequerida(true);
 		tab_anual.getColumna("ide_prpro").setCombo(ser_presupuesto.getPrograma("true,false"));
 		tab_anual.getColumna("ide_prpro").setAutoCompletar();
 		tab_anual.getColumna("ide_prpro").setLectura(true);
-		tab_anual.getColumna("ide_geani").setCombo(ser_contabilidad.getAnio("true,false","true,false"));
+		tab_anual.getColumna("ide_geani").setCombo(ser_contabilidad.getAnio("true,false", "false,true"));
 		tab_anual.getColumna("ide_geani").setVisible(false);
 		tab_anual.setCondicion("ide_geani=-1");
 		tab_anual.getColumna("valor_reformado_h_pranu").setEtiqueta();
 		tab_anual.getColumna("valor_reformado_h_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_anual.getColumna("valor_reformado_h_pranu").setValorDefecto("0.00");
-
 		tab_anual.getColumna("valor_reformado_d_pranu").setEtiqueta();
 		tab_anual.getColumna("valor_reformado_d_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_anual.getColumna("valor_reformado_d_pranu").setValorDefecto("0.00");
-
 		//tab_anual.getColumna("ide_geani").setValorDefecto(com_anio.getValue().toString());
 		//tab_anual.getColumna("ide_prfup").setCombo("pre_funcion_programa", "ide_prfup", "detalle_prfup,", "");
 		tab_anual.getColumna("valor_reformado_pranu").setEtiqueta();
 		tab_anual.getColumna("valor_reformado_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
-
-		tab_anual.getColumna("valor_inicial_pranu").setEtiqueta();
-		tab_anual.getColumna("valor_inicial_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_anual.getColumna("valor_codificado_pranu").setEtiqueta();
 		tab_anual.getColumna("valor_codificado_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_anual.getColumna("valor_devengado_pranu").setEtiqueta();
 		tab_anual.getColumna("valor_devengado_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_anual.getColumna("valor_devengado_pranu").setValorDefecto("0.00");
-
 		tab_anual.getColumna("valor_precomprometido_pranu").setEtiqueta();
 		tab_anual.getColumna("valor_precomprometido_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_anual.getColumna("valor_precomprometido_pranu").setValorDefecto("0.00");
-
 		tab_anual.getColumna("valor_eje_comprometido_pranu").setEtiqueta();
 		tab_anual.getColumna("valor_eje_comprometido_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_anual.getColumna("valor_eje_comprometido_pranu").setValorDefecto("0.00");
@@ -87,7 +80,6 @@ public class pre_anual_egresos extends Pantalla {
 		tab_anual.getColumna("valor_recaudado_efectivo_pranu").setEtiqueta();
 		tab_anual.getColumna("valor_recaudado_efectivo_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_anual.getColumna("valor_recaudado_efectivo_pranu").setValorDefecto("0.00");
-
 		tab_anual.getColumna("valor_inicial_pranu").setMetodoChange("calcularValor");
 		tab_anual.getColumna("activo_pranu").setValorDefecto("true");
 		tab_anual.setTipoFormulario(true);
@@ -125,7 +117,7 @@ public class pre_anual_egresos extends Pantalla {
 		tab_reforma.getColumna("val_reforma_h_prrem").setMetodoChange("calcular");
 		tab_reforma.getColumna("val_reforma_d_prrem").setMetodoChange("calcular");
 		tab_reforma.getColumna("activo_prrem").setValorDefecto("true");
-	
+		tab_reforma.setCampoForanea("ide_pranu");
 		tab_reforma.dibujar();
 		PanelTabla pat_panel3=new PanelTabla();
 		pat_panel3.setPanelTabla(tab_reforma);
@@ -156,6 +148,20 @@ public class pre_anual_egresos extends Pantalla {
 
 		
 	}
+	public void seleccionaElAnio (){
+		if(com_anio.getValue()!=null){
+			tab_anual.setCondicion("ide_geani="+com_anio.getValue());
+			tab_anual.ejecutarSql();
+			//tab_mes.ejecutarValorForanea(tab_poa.getValorSeleccionado());
+
+		}
+		else{
+			utilitario.agregarMensajeInfo("Selecione un año", "");
+
+		}
+	}
+	
+
 	///// para subir vaslores de un tabla a otra 
 	public void  calcularValor(){
 		double dou_valor_h=0;
@@ -201,6 +207,7 @@ public class pre_anual_egresos extends Pantalla {
 			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
 			return;
 		}
+		
 	
 		//Filtrar los clasificadores del año seleccionado
 		set_programa.getTab_seleccion().setSql(ser_presupuesto.getPrograma("true,false"));
@@ -227,8 +234,6 @@ public class pre_anual_egresos extends Pantalla {
 			utilitario.agregarMensajeInfo("Debe seleccionar almenos un registro", "");
 		}
 	}
-
-
 	@Override
 	public void insertar() {
 		// TODO Auto-generated method stub
@@ -239,8 +244,9 @@ public class pre_anual_egresos extends Pantalla {
 			if(tab_anual.isFocus()){
 				tab_anual.insertar();
 				tab_anual.setValor("ide_geani",com_anio.getValue()+"");
+
 				}
-			else if(tab_mensual.isFocus()){
+				else if(tab_mensual.isFocus()){
 				tab_mensual.insertar();
 			}
 				else if(tab_reforma.isFocus()){
@@ -256,6 +262,7 @@ public class pre_anual_egresos extends Pantalla {
 	public void guardar() {
 		// TODO Auto-generated method stub
 		if(tab_anual.guardar()){
+			//if(validarAnual()){
 			if(tab_mensual.guardar()){
 				if(tab_reforma.guardar()){
 					
@@ -264,7 +271,7 @@ public class pre_anual_egresos extends Pantalla {
 		}
 		guardarPantalla();
 	}
-
+	
 	@Override
 	public void eliminar() {
 		// TODO Auto-generated method stub
