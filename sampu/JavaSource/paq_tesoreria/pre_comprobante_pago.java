@@ -76,7 +76,11 @@ public class pre_comprobante_pago extends Pantalla{
         tab_comprobante.getColumna("IDE_GEEDP").setCombo(ser_nomina.servicioEmpleadoContrato("true"));
         tab_comprobante.getColumna("IDE_ADSOC").setCombo(ser_Adquisicion.getSolicitudCompra("true"));
         tab_comprobante.getColumna("ide_tetic").setCombo("tes_tipo_concepto", "ide_tetic", "detalle_tetic,fecha_pago_tetic", "");
-        tab_comprobante.getColumna("ide_comov").setCombo("cont_movimiento", "ide_comov", "nro_comprobante_comov", "");
+        tab_comprobante.getColumna("fecha_tecpo").setRequerida(true);
+        tab_comprobante.getColumna("comprobante_egreso_tecpo").setRequerida(true);
+        tab_comprobante.getColumna("detalle_tecpo").setRequerida(true);
+
+        // tab_comprobante.getColumna("ide_comov").setCombo("cont_movimiento", "ide_comov", "nro_comprobante_comov", "");
         tab_comprobante.setTipoFormulario(true);
         tab_comprobante.getGrid().setColumns(4);
         tab_comprobante.agregarRelacion(tab_retencion);
@@ -85,19 +89,30 @@ public class pre_comprobante_pago extends Pantalla{
         PanelTabla pat_comprobante=new PanelTabla();
         pat_comprobante.setPanelTabla(tab_comprobante);
         ///DETALLE MOVIMIENTO
-        tab_detalle_movimiento.setId("tab_detalle_movimiento");
-        tab_detalle_movimiento.setIdCompleto("tab_tabulador:tab_detalle_movimiento");
-        tab_detalle_movimiento.setHeader("DETALLE MOVIMIENTO");
-        tab_detalle_movimiento.setTabla("cont_detalle_movimiento", "ide_codem", 2);
-        //filtra por asiento contable cuando no tiene relacion a tes_comprovante_pago
+    	/////detalle movinto
+		tab_detalle_movimiento.setId("tab_detalle_movimiento");
+		tab_detalle_movimiento.setIdCompleto("tab_tabulador:tab_detalle_movimiento");
+		tab_detalle_movimiento.setHeader("DETALLE DE MOVIMIENTO");
+		tab_detalle_movimiento.setTabla("cont_detalle_movimiento", "ide_codem", 2);
+		 //filtra por asiento contable cuando no tiene relacion a tes_comprovante_pago
         tab_detalle_movimiento.setCondicion("ide_comov="+tab_comprobante.getValor("ide_comov"));    
         tab_detalle_movimiento.getColumna("ide_comov").setVisible(false);
         tab_detalle_movimiento.getColumna("detalle_codem").setVisible(false);
-		tab_detalle_movimiento.getColumna("ide_cocac").setCombo(ser_contabilidad.servicioCatalogoCuentasTransaccion());
-		tab_detalle_movimiento.dibujar();
-        PanelTabla pat_movimiento=new PanelTabla();
-        pat_movimiento.setPanelTabla(tab_detalle_movimiento);
+		//tab_detalle_movimiento.getColumna("ide_prcla").setCombo(ser_Presupuesto.getCatalogoPresupuestario("true,false"));
+		tab_detalle_movimiento.getColumna("ide_prcla").setAutoCompletar();
+		//tab_detalle_movimiento.getColumna("ide_prpro").setCombo("pre_programa", "ide_prpro", "cod_programa_prpro", "");
+		//tab_detalle_movimiento.getColumna("ide_cocac").setCombo(ser_contabilidad.servicioCatalogoCuentasTransaccion());
+		tab_detalle_movimiento.getColumna("activo_codem").setLectura(true);
+		tab_detalle_movimiento.getColumna("activo_codem").setValorDefecto("true");
+		tab_detalle_movimiento.getColumna("haber_codem").setMetodoChange("calcularTotal");			
+		tab_detalle_movimiento.setColumnaSuma("haber_codem,debe_codem");			
+		tab_detalle_movimiento.getColumna("debe_codem").setMetodoChange("calcularTotal");			
+				
 
+		tab_detalle_movimiento.getGrid().setColumns(4);
+		tab_detalle_movimiento.dibujar();
+		PanelTabla pat_detalle_movimiento=new PanelTabla();
+		pat_detalle_movimiento.setPanelTabla(tab_detalle_movimiento);
 
 
         ///RETENCION
@@ -157,7 +172,7 @@ public class pre_comprobante_pago extends Pantalla{
 
 
 
-        tab_tabulador.agregarTab("DETALLE MOVIMIENTO", pat_movimiento);//intancia los tabuladores 
+        tab_tabulador.agregarTab("DETALLE MOVIMIENTO", pat_detalle_movimiento);//intancia los tabuladores 
         tab_tabulador.agregarTab("RETENCION", gri);
         ///tab_tabulador.agregarTab("DETALLE RETENCION", pat_detalle_retencion);
 
@@ -224,6 +239,14 @@ public class pre_comprobante_pago extends Pantalla{
 
 
     }
+  ///sacar valores
+	
+  	public void calcularTotal(AjaxBehaviorEvent evt){
+  		tab_detalle_movimiento.modificar(evt);
+  		tab_detalle_movimiento.sumarColumnas();
+  		utilitario.addUpdate("tab_detalle_movimiento");
+  	}
+
     public void importarSolicitudCompra(){
 
         set_solicitud.getTab_seleccion().setSql(ser_Adquisicion.getSolicitudCompra("true"));
@@ -344,7 +367,6 @@ public class pre_comprobante_pago extends Pantalla{
         else if (tab_detalle_movimiento.isFocus()){
             tab_detalle_movimiento.insertar();
             tab_detalle_movimiento.setValor("ide_comov", tab_comprobante.getValor("ide_comov"));
-
         }
         else if (tab_retencion.isFocus()) {
             tab_retencion.insertar();
