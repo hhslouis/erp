@@ -26,10 +26,7 @@ import framework.componentes.SeleccionFormatoReporte;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 
-/**
- *
- * @author HP-USER
- */
+
 public class pre_asi_vacacion extends Pantalla {
 
 	private Tabla tab_tabla1 = new Tabla();
@@ -122,7 +119,7 @@ public class pre_asi_vacacion extends Pantalla {
 		tab_tabla2.getColumna("ACTIVO_ASDEV").setValorDefecto("TRUE");
 		tab_tabla2.getColumna("ANULADO_ASDEV").setCheck();
 		tab_tabla2.getColumna("IDE_ASESV").setCombo("ASI_ESTADO_VACACION", "IDE_ASESV", "DETALLE_ASESV", "");
-		tab_tabla2.setLectura(true);		
+		//tab_tabla2.setLectura(true);		
 		tab_tabla2.dibujar();
 		PanelTabla pat_panel2 = new PanelTabla();
 		pat_panel2.setMensajeWarn("DETALLE VACACIÓN");
@@ -407,7 +404,7 @@ public class pre_asi_vacacion extends Pantalla {
 				System.out.println(""+set_empleado.getSeleccionados());
 				
 				p_parametros.put("IDE_GTEMP",set_empleado.getSeleccionados());
-				p_parametros.put("titulo", " BIESS GERENCIA ADMINISTRATIVA DEPARTAMENTO DE TALENTO HUMANO SALDO VACACIONES");
+				p_parametros.put("titulo", "GERENCIA ADMINISTRATIVA DEPARTAMENTO DE TALENTO HUMANO SALDO VACACIONES");
 				System.out.println("path "+rep_reporte.getPath());
 				sef_reporte.setSeleccionFormatoReporte(p_parametros, rep_reporte.getPath());						
 				set_empleado.cerrar();
