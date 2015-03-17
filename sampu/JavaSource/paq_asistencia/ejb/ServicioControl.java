@@ -620,11 +620,11 @@ public class ServicioControl {
 				"order by FECHA_MARCACION_ASVAA,HORA_MARCACION_ASVAA");
 
 		TablaGenerica tab_nove=getNovedades(fechaInicio, fechaFin, tab_marc);
-		//System.out.println("tab nove "+tab_nove.getSql());
+		System.out.println("tab nove "+tab_nove.getSql());
 		if (tab_nove.getTotalFilas()==0){
 
 
-			//System.out.println("crear novedades "+tab_marc.getSql());
+			System.out.println("crear novedades "+tab_marc.getSql());
 			TablaGenerica tab_deta_novedad=insertarNovedades(tab_marc, fechaInicio, fechaFin);
 			if (tab_deta_novedad!=null){
 				// actualizo las novedades importadas
