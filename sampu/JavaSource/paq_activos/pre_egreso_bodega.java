@@ -3,6 +3,7 @@ package paq_activos;
 import javax.ejb.EJB;
 
 import framework.aplicacion.Fila;
+import framework.aplicacion.TablaGenerica;
 import framework.componentes.Boton;
 import framework.componentes.BotonesCombo;
 import framework.componentes.Combo;
@@ -55,7 +56,7 @@ public class pre_egreso_bodega extends Pantalla{
 		Boton bot_egreso=new Boton();
 		bot_egreso.setIcon("ui-icon-person");
 		bot_egreso.setValue("Recibir Activo");
-		bot_egreso.setMetodo("importarActivo");
+		bot_egreso.setMetodo("importarDialogoActivo");
 		bar_botones.agregarBoton(bot_egreso);
 
 		BotonesCombo boc_seleccion_inversa = new BotonesCombo();
@@ -130,28 +131,28 @@ public class pre_egreso_bodega extends Pantalla{
 		
 		tab_activos_fijos.setId("tab_activos_fijos");
 		tab_activos_fijos.setTabla("afi_activo","ide_afact", 2);
-		tab_activos_fijos.getColumna("ide_afubi").setVisible(true);
-		tab_activos_fijos.getColumna("ide_aftia").setVisible(true);
-		tab_activos_fijos.getColumna("ide_aftip").setVisible(true);
-		tab_activos_fijos.getColumna("ide_afseg").setVisible(true);
-		tab_activos_fijos.getColumna("ide_afnoa").setVisible(true);
-		tab_activos_fijos.getColumna("ide_geare").setVisible(true);
-		tab_activos_fijos.getColumna("ide_afacd").setVisible(true);
-		tab_activos_fijos.getColumna("ide_cocac").setVisible(true);
-		tab_activos_fijos.getColumna("ide_afest").setVisible(true);
-		tab_activos_fijos.getColumna("ide_tepro").setVisible(true);
-		tab_activos_fijos.getColumna("foto_bien_afact").setVisible(true);
-		tab_activos_fijos.getColumna("valor_unitario_afact").setVisible(true);
-		tab_activos_fijos.getColumna("cantidad_afact").setVisible(true);
-		tab_activos_fijos.getColumna("valor_neto_afact").setVisible(true);
-		tab_activos_fijos.getColumna("valor_neto_afact").setVisible(true);
-		tab_activos_fijos.getColumna("valor_compra_afact").setVisible(true);
-		tab_activos_fijos.getColumna("secuencial_afact").setVisible(true);
+		tab_activos_fijos.getColumna("ide_afubi").setVisible(false);
+		tab_activos_fijos.getColumna("ide_aftia").setVisible(false);
+		tab_activos_fijos.getColumna("ide_aftip").setVisible(false);
+		tab_activos_fijos.getColumna("ide_afseg").setVisible(false);
+		tab_activos_fijos.getColumna("ide_afnoa").setVisible(false);
+		tab_activos_fijos.getColumna("ide_geare").setVisible(false);
+		tab_activos_fijos.getColumna("ide_afacd").setVisible(false);
+		tab_activos_fijos.getColumna("ide_cocac").setVisible(false);
+		tab_activos_fijos.getColumna("ide_afest").setVisible(false);
+		tab_activos_fijos.getColumna("ide_tepro").setVisible(false);
+		tab_activos_fijos.getColumna("foto_bien_afact").setVisible(false);
+		tab_activos_fijos.getColumna("valor_unitario_afact").setVisible(false);
+		tab_activos_fijos.getColumna("cantidad_afact").setVisible(false);
+		tab_activos_fijos.getColumna("valor_neto_afact").setVisible(false);
+		tab_activos_fijos.getColumna("valor_neto_afact").setVisible(false);
+		tab_activos_fijos.getColumna("valor_compra_afact").setVisible(false);
+		tab_activos_fijos.getColumna("secuencial_afact").setVisible(false);
 		tab_activos_fijos.setTipoFormulario(true);
 		tab_activos_fijos.getGrid().setColumns(4);
 		gri_cuerpo.getChildren().add(tab_activos_fijos);
 		
-		dia_recibir_activo.getBot_aceptar().setMetodo("aceptarDialogo");
+		dia_recibir_activo.getBot_aceptar().setMetodo("aceptarDialogoActivo");
 
 		dia_recibir_activo.setDialogo(gri_cuerpo);
 		agregarComponente(dia_recibir_activo);
@@ -220,16 +221,25 @@ public class pre_egreso_bodega extends Pantalla{
 	}
 	
 	//////recibir avtivo
-	public void importarActivo() {
+	public void importarDialogoActivo(){
+		//Hace aparecer el componente
+		if(com_anio.getValue()==null){
+			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
+			return;
+		}
+			tab_activos_fijos.limpiar();
+			tab_activos_fijos.insertar();
+			//tab_direccion.limpiar();
+		//	tab_direccion.insertar();
+			dia_recibir_activo.dibujar();
+		}
 		
-		
-	}
-	
-	public void aceptarActivo() {
 
-		
+	//long ide_inicial=0;
+	public void aceptarDialogoActivo() {
 		
 	}
+		
 	
 	
 	
@@ -306,6 +316,18 @@ public void seleccionarNinguna() {
 
 	public void setDia_ingreso(Dialogo dia_ingreso) {
 		this.dia_ingreso = dia_ingreso;
+	}
+	public Tabla getTab_activos_fijos() {
+		return tab_activos_fijos;
+	}
+	public void setTab_activos_fijos(Tabla tab_activos_fijos) {
+		this.tab_activos_fijos = tab_activos_fijos;
+	}
+	public Dialogo getDia_recibir_activo() {
+		return dia_recibir_activo;
+	}
+	public void setDia_recibir_activo(Dialogo dia_recibir_activo) {
+		this.dia_recibir_activo = dia_recibir_activo;
 	}
 
 }
