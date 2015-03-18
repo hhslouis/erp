@@ -71,10 +71,13 @@ public class pre_contratacion extends Pantalla{
 		tab_poa.getColumna("objetivo_proyecto_prpoa").setVisible(false);
 		tab_poa.getColumna("meta_proyecto_prpoa").setVisible(false);
 		tab_poa.getColumna("ide_prsua").setCombo("select ide_prsua,codigo_prsua,detalle_prsua from pre_sub_actividad order by codigo_prsua,detalle_prsua");
+		tab_poa.getColumna("ide_prsua").setLectura(true);
+		tab_poa.getColumna("ide_prsua").setAutoCompletar();
 		tab_poa.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
 		tab_poa.getColumna("ide_prcla").setCombo(ser_presupuesto.getCatalogoPresupuestario("true,false"));
+		tab_poa.getColumna("ide_prcla").setAutoCompletar();
+		tab_poa.getColumna("ide_prcla").setLectura(true);
 		tab_poa.getColumna("ide_prfup").setVisible(false);
-		//tab_poa.getColumna("ide_prcla").setAutoCompletar();
 		tab_poa.getColumna("ide_prcla").setAncho(25);
 		tab_poa.getColumna("activo_prpoa").setLectura(true);
 		tab_poa.getColumna("activo_prpoa").setValorDefecto("true");
@@ -311,6 +314,19 @@ public class pre_contratacion extends Pantalla{
 		
 	}
 
+	public void aceptarSubActividad(){
+		if(set_sub_actividad.getValorSeleccionado()!=null){
+			tab_poa.setValor("ide_prsua", set_sub_actividad.getValorSeleccionado());
+			//Actualiza 
+			utilitario.addUpdate("tab_poa");//actualiza mediante ajax el objeto tab_poa
+			set_sub_actividad.cerrar();
+		}
+		else{
+			utilitario.agregarMensajeInfo("Debe seleccionar una Sub_Actividad", "");
+		}
+	}
+	
+	
 	@Override
 	public void insertar() {
 		// TODO Auto-generated method stub
@@ -455,6 +471,12 @@ public class pre_contratacion extends Pantalla{
 
 	public void setArb_arbol(Arbol arb_arbol) {
 		this.arb_arbol = arb_arbol;
+	}
+	public SeleccionTabla getSet_sub_actividad() {
+		return set_sub_actividad;
+	}
+	public void setSet_sub_actividad(SeleccionTabla set_sub_actividad) {
+		this.set_sub_actividad = set_sub_actividad;
 	}
 
 
