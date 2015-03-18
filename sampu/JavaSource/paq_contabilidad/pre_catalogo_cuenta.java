@@ -38,10 +38,11 @@ public class pre_catalogo_cuenta extends Pantalla{
 		tab_tipo_catalogo_cuenta.setTipoFormulario(true);  //formulario 
 		tab_tipo_catalogo_cuenta.getGrid().setColumns(4); //hacer  columnas 
 		tab_tipo_catalogo_cuenta.setTabla("cont_catalogo_cuenta", "ide_cocac", 1);		
-	   tab_tipo_catalogo_cuenta.getColumna("con_ide_cocac2").setCombo("select ide_cocac,cue_codigo_cocac,cue_descripcion_cocac from cont_catalogo_cuenta order by cue_codigo_cocac ");
-	   tab_tipo_catalogo_cuenta.getColumna("con_ide_cocac2").setAutoCompletar();
-	   tab_tipo_catalogo_cuenta.getColumna("ide_cogrc").setCombo("cont_grupo_cuenta","ide_cogrc","detalle_cogrc", "");
-	   tab_tipo_catalogo_cuenta.getColumna("nivel_cocac").setCombo(utilitario.getListaGruposNivelCuenta());
+	  	tab_tipo_catalogo_cuenta.getColumna("con_ide_cocac2").setCombo("select ide_cocac,cue_codigo_cocac,cue_descripcion_cocac from cont_catalogo_cuenta order by cue_codigo_cocac ");
+	  	tab_tipo_catalogo_cuenta.getColumna("con_ide_cocac2").setAutoCompletar();
+	  	tab_tipo_catalogo_cuenta.getColumna("ide_cogrc").setCombo("cont_grupo_cuenta","ide_cogrc","detalle_cogrc", "");
+	  	tab_tipo_catalogo_cuenta.getColumna("ide_botip").setCombo("bodt_tipo_producto", "ide_botip", "detalle_botip", "");
+	  	tab_tipo_catalogo_cuenta.getColumna("nivel_cocac").setCombo(utilitario.getListaGruposNivelCuenta());
 	  // para contruir los radios
 	   List lista = new ArrayList();
        Object fila1[] = {
