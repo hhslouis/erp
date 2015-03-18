@@ -37,6 +37,7 @@ public class pre_factura_compras extends Pantalla{
 		tab_adq_factura.agregarRelacion(tab_adq_detalle); 
 		tab_adq_factura.setTipoFormulario(true);
 		tab_adq_factura.getGrid().setColumns(4);
+		tab_adq_factura.setCampoOrden("ide_adfac desc");
 		tab_adq_factura.getColumna("ide_adsoc").setCombo(ser_Adquisicion.getCompras("true,false"));
 		tab_adq_factura.getColumna("subtotal_adfac").setEtiqueta();
 		tab_adq_factura.getColumna("subtotal_adfac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
@@ -182,7 +183,7 @@ public class pre_factura_compras extends Pantalla{
 		double duo_total=0;
 		double  porcentaje_descuento=0;
 		double duo_iva=par_iva;
-
+		calcularSolicitud();
 				
 		//tab_adq_factura.getValor("valor_descuento_adfac");
 		duo_subtotal=Double.parseDouble(tab_adq_factura.getValor("valor_descuento_adfac"));
@@ -206,7 +207,6 @@ public class pre_factura_compras extends Pantalla{
 		tab_adq_factura.setValor("base_iva_adfac",utilitario.getFormatoNumero(duo_valor_descuento,2));
 
 		tab_adq_factura.setValor("total_adfac",utilitario.getFormatoNumero(duo_total,2));
-		tab_adq_factura.setValor("VALOR_DESCUENTO_ADFAC",utilitario.getFormatoNumero(duo_subtotal,2));
 		tab_adq_factura.setValor("VALOR_IVA_ADFAC",utilitario.getFormatoNumero(duo_total_iva,2));
 
 
@@ -223,7 +223,7 @@ public class pre_factura_compras extends Pantalla{
 		double duo_total=0;
 		double  porcentaje_descuento=0;
 		double duo_iva=par_iva;
-
+		calcularSolicitud();
 				
 		//tab_adq_factura.getValor("valor_descuento_adfac");
 		duo_subtotal=Double.parseDouble(tab_adq_factura.getValor("porcent_desc_adfac"));
@@ -236,19 +236,19 @@ public class pre_factura_compras extends Pantalla{
 			return;
 		}
 		dou_subtotal_adfac=Double.parseDouble(tab_adq_factura.getValor("subtotal_adfac"));
-		porcentaje_descuento=(duo_subtotal*duo_subtotal)/100;
-		duo_valor_descuento=dou_subtotal_adfac-duo_subtotal;
+		porcentaje_descuento=(dou_subtotal_adfac*duo_subtotal)/100;
+		duo_valor_descuento=dou_subtotal_adfac-porcentaje_descuento;
 		duo_total_iva=duo_valor_descuento*duo_iva;
 		duo_total=duo_valor_descuento+duo_total_iva;
 		tab_adq_factura.setValor("valor_descuento_adfac",utilitario.getFormatoNumero(porcentaje_descuento,2));
 		tab_adq_factura.setValor("subtotal_adfac",utilitario.getFormatoNumero(duo_valor_descuento,2));
 		tab_adq_factura.setValor("base_iva_adfac",utilitario.getFormatoNumero(duo_valor_descuento,2));
 		tab_adq_factura.setValor("total_adfac",utilitario.getFormatoNumero(duo_total,2));
-		tab_adq_factura.setValor("VALOR_DESCUENTO_ADFAC",utilitario.getFormatoNumero(duo_subtotal,2));
+		tab_adq_factura.setValor("VALOR_DESCUENTO_ADFAC",utilitario.getFormatoNumero(porcentaje_descuento,2));
 		tab_adq_factura.setValor("VALOR_IVA_ADFAC",utilitario.getFormatoNumero(duo_total_iva,2));
 
 
-		utilitario.addUpdateTabla(tab_adq_factura, "total_adfac,subtotal_adfac,VALOR_IVA_ADFAC,porcent_desc_adfac", "");	
+		utilitario.addUpdateTabla(tab_adq_factura, "total_adfac,subtotal_adfac,VALOR_IVA_ADFAC,porcent_desc_adfac,VALOR_DESCUENTO_ADFAC", "");	
 
 
 
