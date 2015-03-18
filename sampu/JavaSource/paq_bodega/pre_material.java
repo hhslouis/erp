@@ -5,18 +5,24 @@ package paq_bodega;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.EJB;
+
 
 import framework.componentes.Division;
 import framework.componentes.PanelTabla;
 import framework.componentes.Tabla;
 import framework.componentes.Tabulador;
 
+import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_sistema.aplicacion.Pantalla;
 
 public class pre_material extends Pantalla{
 	private Tabla tab_material=new Tabla();
 	private Tabla tab_material_tarifa = new Tabla();
 	private Tabla tab_punto_venta=new Tabla();
+	@EJB
+	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
+	
 	
 	public pre_material() {
 		tab_material.setHeader("MATERIALES DE BODEGA");
@@ -25,6 +31,7 @@ public class pre_material extends Pantalla{
 		tab_material.getColumna("ide_bounm").setCombo("bodt_unidad_medida", "ide_bounm", "detalle_bounm,abreviatura_bounm", "");
 		tab_material.getColumna("ide_botip").setCombo("bodt_tipo_producto", "ide_botip", "detalle_botip", "");
 		tab_material.getColumna("ide_bogrm").setCombo("bodt_grupo_material", "ide_bogrm", "detalle_bogrm", "");
+		tab_material.getColumna("ide_cocac").setCombo(ser_contabilidad.getCuentaContable("true"));
 		tab_material.getColumna("foto_bomat").setUpload("fotos");
     	tab_material.getColumna("foto_bomat").setImagen("128", "128");
 		List lista = new ArrayList();
