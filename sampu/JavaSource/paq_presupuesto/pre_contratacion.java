@@ -37,6 +37,7 @@ public class pre_contratacion extends Pantalla{
 	private SeleccionTabla set_clasificador=new SeleccionTabla();
 	private SeleccionTabla set_funcion=new SeleccionTabla();
 	private SeleccionTabla set_actualizarfuncion=new SeleccionTabla();
+	private SeleccionTabla set_sub_actividad=new SeleccionTabla();
 	private Confirmar con_guardar=new Confirmar();
 	private Arbol arb_arbol = new Arbol();
 	@EJB
@@ -72,6 +73,7 @@ public class pre_contratacion extends Pantalla{
 		tab_poa.getColumna("ide_prsua").setCombo("select ide_prsua,codigo_prsua,detalle_prsua from pre_sub_actividad order by codigo_prsua,detalle_prsua");
 		tab_poa.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
 		tab_poa.getColumna("ide_prcla").setCombo(ser_presupuesto.getCatalogoPresupuestario("true,false"));
+		tab_poa.getColumna("ide_prfup").setVisible(false);
 		//tab_poa.getColumna("ide_prcla").setAutoCompletar();
 		tab_poa.getColumna("ide_prcla").setAncho(25);
 		tab_poa.getColumna("activo_prpoa").setLectura(true);
@@ -200,6 +202,23 @@ public class pre_contratacion extends Pantalla{
 		set_funcion.getTab_seleccion().getColumna("detalle_prfup").setFiltroContenido(); //pone filtro
 		set_funcion.getBot_aceptar().setMetodo("aceptarFuncionPrograma");
 		agregarComponente(set_funcion);
+		
+		////////dub_actividad
+		
+		Boton bot_sub_actividad=new Boton();
+		bot_sub_actividad.setValue("Agregar Sub_Actividad");
+		bot_sub_actividad.setMetodo("agregarSubActividad");
+		bar_botones.agregarBoton(bot_sub_actividad);
+		
+		set_sub_actividad.setId("set_sub_actividad");
+		set_sub_actividad.setTitle("SELECCIONE UNA SUB_ACTIVIDAD");
+		set_sub_actividad.setRadio();
+		set_sub_actividad.setSeleccionTabla("select ide_prsua,codigo_prsua,detalle_prsua from pre_sub_actividad order by codigo_prsua,detalle_prsua", "");  
+		set_sub_actividad.getTab_seleccion().getColumna("detalle_prsua").setFiltroContenido();
+		set_sub_actividad.getBot_aceptar().setMetodo("aceptarSubActividad");
+		agregarComponente(set_sub_actividad);
+		
+		
 
 
 
@@ -276,6 +295,20 @@ public class pre_contratacion extends Pantalla{
 		}
 		set_funcion.cerrar();
 		utilitario.addUpdate("tab_poa");
+	}
+	
+	
+	public void agregarSubActividad(){
+		if(com_anio.getValue()==null){
+			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
+			return;
+			
+		}
+		set_sub_actividad.getTab_seleccion().setSql("select ide_prsua,codigo_prsua,detalle_prsua from pre_sub_actividad order by codigo_prsua,detalle_prsua");  
+		set_sub_actividad.getTab_seleccion().ejecutarSql();
+		set_sub_actividad.dibujar();
+
+		
 	}
 
 	@Override
