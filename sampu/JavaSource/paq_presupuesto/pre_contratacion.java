@@ -368,12 +368,13 @@ public class pre_contratacion extends Pantalla{
 				if( tab_financiamiento.guardar()){
 					if(tab_reforma.guardar()){
 						tab_archivo.guardar();	
+						guardarPantalla();
 					}
 
 				}
 			}
 		}
-		guardarPantalla();
+		
 	}
 
 	@Override
