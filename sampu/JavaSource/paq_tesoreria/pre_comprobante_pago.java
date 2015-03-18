@@ -78,9 +78,10 @@ public class pre_comprobante_pago extends Pantalla{
         tab_comprobante.getColumna("IDE_ADSOC").setCombo(ser_Adquisicion.getSolicitudCompra("true"));
         tab_comprobante.getColumna("ide_tetic").setCombo("tes_tipo_concepto", "ide_tetic", "detalle_tetic,fecha_pago_tetic", "");
         tab_comprobante.getColumna("fecha_tecpo").setRequerida(true);
+        tab_comprobante.getColumna("fecha_tecpo").setValorDefecto(utilitario.getFechaActual());
         tab_comprobante.getColumna("comprobante_egreso_tecpo").setRequerida(true);
         tab_comprobante.getColumna("detalle_tecpo").setRequerida(true);
-
+        tab_comprobante.getColumna("activo_tecpo").setValorDefecto("true");
         // tab_comprobante.getColumna("ide_comov").setCombo("cont_movimiento", "ide_comov", "nro_comprobante_comov", "");
         tab_comprobante.setTipoFormulario(true);
         tab_comprobante.getGrid().setColumns(4);
@@ -108,7 +109,7 @@ public class pre_comprobante_pago extends Pantalla{
 		tab_detalle_movimiento.getColumna("haber_codem").setMetodoChange("calcularTotal");			
 		tab_detalle_movimiento.setColumnaSuma("haber_codem,debe_codem");			
 		tab_detalle_movimiento.getColumna("debe_codem").setMetodoChange("calcularTotal");			
-				
+		
 
 		tab_detalle_movimiento.getGrid().setColumns(4);
 		tab_detalle_movimiento.dibujar();
@@ -125,6 +126,8 @@ public class pre_comprobante_pago extends Pantalla{
         tab_retencion.getColumna("total_ret_teret").setEtiqueta();
         tab_retencion.getColumna("total_ret_teret").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
         tab_retencion.getColumna("total_ret_teret").setValorDefecto("0.00");
+        tab_comprobante.getColumna("activo_teret").setValorDefecto("true");
+
         tab_retencion.setTipoFormulario(true);
         tab_retencion.getGrid().setColumns(4);
         tab_retencion.agregarRelacion(tab_detalle_retencion);
@@ -150,6 +153,7 @@ public class pre_comprobante_pago extends Pantalla{
         tab_detalle_retencion.getColumna("valor_retenido_teder").setEtiqueta();
         tab_detalle_retencion.getColumna("valor_retenido_teder").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
         tab_detalle_retencion.getColumna("valor_retenido_teder").setValorDefecto("0.00");
+        tab_comprobante.getColumna("activo_teder").setValorDefecto("true");
 
         tab_detalle_retencion.setTipoFormulario(true);
         tab_detalle_retencion.getGrid().setColumns(2);
@@ -348,12 +352,34 @@ public class pre_comprobante_pago extends Pantalla{
             set_retencion.cerrar();
              utilitario.addUpdateTabla(tab_detalle_retencion, "valor_retenido_teder,base_imponible_teder,ide_teimp","");
              utilitario.addUpdateTabla(tab_retencion, "total_ret_teret","");
+            calcularValorPago();
+            utilitario.addUpdateTabla(tab_comprobante, "valor_pago_tecpo","");
 
         }
 
 
     }
-
+    ////calcular ValorPago
+    public void calcularValorPago(){
+    	double dou_val_compra=0;
+    	double dou_total_retencion=0;
+    	double dou_valor_pago=0;
+    	try {
+			//Obtenemos el valor de la cantidad
+    		dou_val_compra=Double.parseDouble(tab_comprobante.getValor("valor_compra_tecpo"));
+		} catch (Exception e) {
+		}
+    	try {
+			//Obtenemos el valor de la cantidad
+    		dou_total_retencion=Double.parseDouble(tab_retencion.getValor("total_ret_teret"));
+		} catch (Exception e) {
+		}
+    	dou_valor_pago=dou_val_compra-dou_total_retencion;
+    	
+    	tab_comprobante.setValor("valor_pago_tecpo", utilitario.getFormatoNumero(dou_valor_pago,2));
+    	tab_comprobante.modificar(tab_comprobante.getFilaActual());//para que haga el update
+    	utilitario.addUpdateTabla(tab_comprobante,"valor_pago_tecpo","");
+    }
 
 
    
