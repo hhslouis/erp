@@ -37,6 +37,7 @@ import framework.componentes.Reporte;
 import framework.componentes.SeleccionFormatoReporte;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
+import framework.componentes.Texto;
 
 public class pre_activo extends Pantalla {
 	private Tabla tab_activos_fijos=new Tabla();
@@ -47,9 +48,13 @@ public class pre_activo extends Pantalla {
 	private SeleccionFormatoReporte self_reporte = new SeleccionFormatoReporte();
 	private Map map_parametros = new HashMap();
 	private SeleccionTabla set_empleado=new SeleccionTabla();
+	private SeleccionTabla set_egreso=new SeleccionTabla();
 	private Etiqueta eti_titulo=new Etiqueta();
 	private Etiqueta eti_pie=new Etiqueta();
 	private Confirmar con_guardar= new Confirmar();
+	private  Dialogo dia_egreso= new Dialogo();
+	private Texto tex_maximo=new Texto();
+
 	private Dialogo dia_fecha=new Dialogo();
 
 	@EJB
@@ -219,8 +224,55 @@ public class pre_activo extends Pantalla {
 
 		dia_fecha.setDialogo(gri_cuerpo);
 		agregarComponente(dia_fecha);
-
 		
+		//// set tabla egreso
+		/*set_egreso.setId("set_egreso");
+		set_egreso.setSql("");
+		set_egreso.getBot_aceptar().setMetodo("importar");
+		agregarComponente(set_egreso);*/
+		
+////////boton bodega
+		Boton bot_egreso=new Boton();
+		bot_egreso.setIcon("ui-icon-person");
+		bot_egreso.setValue("EGREO BODEGA");
+		bot_egreso.setMetodo("importar");
+		bar_botones.agregarBoton(bot_egreso);
+			
+		
+		dia_egreso.setId("dia_egreso");
+		dia_egreso.setTitle("EGRESO BODEGA");
+		dia_egreso.setWidth("30%");
+		dia_egreso.setHeight("23%");		
+		dia_egreso.getBot_aceptar().setMetodo("importar");	
+		Grid gri_grid=new Grid();
+		gri_grid.setStyle("height:" + (dia_egreso.getAltoPanel()-10) + "px;overflow: auto;display: block;");
+		gri_grid.setColumns(1);
+		gri_grid.setWidth("98%");
+		gri_grid.getChildren().add(new Etiqueta("INGRESE EL DOCUMENTO DE EGRESO DE BODEGA"));
+		tex_maximo.setStyle("width:98%");
+		//tex_maximo.setSoloEnteros();
+		gri_grid.getChildren().add(tex_maximo);		
+		dia_egreso.setDialogo(gri_grid);		
+		agregarComponente(dia_egreso);
+	}
+		public void importar(){
+			if(tab_activos_fijos.isEmpty()){
+				//if(getMaximoSecuencialEmpleados()==0 && int_maximo_detalle==-1){
+					if(dia_egreso.isVisible()){
+						if(tex_maximo.getValue()!=null && !tex_maximo.getValue().toString().isEmpty()){
+							dia_egreso.cerrar();
+						}
+						else{
+							utilitario.agregarMensajeInfo("Debe ingresar un valor en el campo  texto", "");
+							return;
+						}
+					}else{
+						dia_egreso.dibujar();	
+						return;
+					}			
+				}
+
+			
 
 	}
 	
@@ -609,6 +661,18 @@ public class pre_activo extends Pantalla {
 
 	public void setDia_fecha(Dialogo dia_fecha) {
 		this.dia_fecha = dia_fecha;
+	}
+	public SeleccionTabla getSet_egreso() {
+		return set_egreso;
+	}
+	public void setSet_egreso(SeleccionTabla set_egreso) {
+		this.set_egreso = set_egreso;
+	}
+	public Dialogo getDia_egreso() {
+		return dia_egreso;
+	}
+	public void setDia_egreso(Dialogo dia_egreso) {
+		this.dia_egreso = dia_egreso;
 	}
 
 
