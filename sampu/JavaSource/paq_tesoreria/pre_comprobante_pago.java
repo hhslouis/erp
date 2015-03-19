@@ -126,7 +126,7 @@ public class pre_comprobante_pago extends Pantalla{
         tab_retencion.getColumna("total_ret_teret").setEtiqueta();
         tab_retencion.getColumna("total_ret_teret").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
         tab_retencion.getColumna("total_ret_teret").setValorDefecto("0.00");
-        tab_comprobante.getColumna("activo_teret").setValorDefecto("true");
+        tab_retencion.getColumna("activo_teret").setValorDefecto("true");
 
         tab_retencion.setTipoFormulario(true);
         tab_retencion.getGrid().setColumns(4);
@@ -153,7 +153,7 @@ public class pre_comprobante_pago extends Pantalla{
         tab_detalle_retencion.getColumna("valor_retenido_teder").setEtiqueta();
         tab_detalle_retencion.getColumna("valor_retenido_teder").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
         tab_detalle_retencion.getColumna("valor_retenido_teder").setValorDefecto("0.00");
-        tab_comprobante.getColumna("activo_teder").setValorDefecto("true");
+        tab_detalle_retencion.getColumna("activo_teder").setValorDefecto("true");
 
         tab_detalle_retencion.setTipoFormulario(true);
         tab_detalle_retencion.getGrid().setColumns(2);
