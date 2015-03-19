@@ -39,7 +39,6 @@ public class pre_comprobante_pago extends Pantalla{
 	public static String par_impuesto_iva;
   
 
-
     @EJB
     private ServicioAdquisicion ser_Adquisicion=(ServicioAdquisicion) utilitario.instanciarEJB(ServicioAdquisicion.class);
     @EJB
