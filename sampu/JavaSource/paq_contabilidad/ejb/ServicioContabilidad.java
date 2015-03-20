@@ -233,7 +233,7 @@ public String servicioCatalogoCuentasTransaccion(){
  */
 public String servicioCodigoMaximo(String tabla,String ide_primario){
 	
-	String maximo="Select (case when max("+ide_primario+") is null then 0 else max("+ide_primario+") end) + 1 as codigo from "+tabla;
+	String maximo="Select 1 as ide,(case when max("+ide_primario+") is null then 0 else max("+ide_primario+") end) + 1 as codigo from "+tabla;
 	return maximo;
 }
 /**
@@ -254,6 +254,7 @@ public String guardaSecuencial(String secuencial_vigente,String modulo){
 	String mensaje="Actualizado Secuencial";
 	double nuevo_valor=Double.parseDouble(secuencial_vigente);
 	utilitario.getConexion().ejecutarSql("update gen_modulo_secuencial set numero_secuencial_gemos="+nuevo_valor+" where ide_gemod="+modulo);
+	System.out.println("update gen_modulo_secuencial set numero_secuencial_gemos="+nuevo_valor+" where ide_gemod="+modulo);
 	return mensaje;
 }
 }
