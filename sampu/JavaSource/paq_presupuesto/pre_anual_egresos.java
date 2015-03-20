@@ -103,7 +103,7 @@ public class pre_anual_egresos extends Pantalla {
 		tab_mensual.setTabla("pre_mensual", "ide_prmen", 2);
 		tab_mensual.getColumna("ide_prtra").setLectura(true);
 		tab_mensual.getColumna("ide_comov").setLectura(true);
-		//tab_mensual.setCondicion("ide_prpro!=null");
+		tab_mensual.setCondicion("ide_prpro!=null");
 		tab_mensual.getColumna("ide_gemes").setCombo("gen_mes", "ide_gemes", "detalle_gemes", "");
 		tab_mensual.getColumna("ide_codem").setLectura(true);
 		//tab_anual.getColumna("ide_prfup").setCombo("pre_funcion_programa", "ide_prfup", "detalle_prfup,", "");
