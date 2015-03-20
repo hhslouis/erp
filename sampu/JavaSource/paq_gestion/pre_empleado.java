@@ -13,6 +13,8 @@ import framework.aplicacion.TablaGenerica;
 import framework.componentes.*;
 import framework.reportes.ReporteDataSource;
 import framework.componentes.Boton;
+import oracle.net.aso.i;
+
 import org.primefaces.component.panelmenu.PanelMenu;
 import org.primefaces.component.submenu.Submenu;
 import org.primefaces.event.DateSelectEvent;
@@ -102,6 +104,13 @@ public class pre_empleado extends Pantalla {
 	private Confirmar con_guardar_cuenta=new Confirmar();
 
 	private Confirmar con_guardar=new Confirmar();
+	//DFJ
+	private Dialogo dia_contrata=new Dialogo();
+	private Tabla tab_empleado_departamento_dia=new Tabla();
+	private final static String IDE_GAME="24";
+	private Tabla tab_partida_cargo=new Tabla();
+
+
 
 
 	@EJB
@@ -192,7 +201,7 @@ public class pre_empleado extends Pantalla {
 		bot_cuenta_anticipo.setMetodo("importarCuentaAnticipo");
 		bar_botones.agregarBoton(bot_cuenta_anticipo);
 
-	
+
 		set_cuenta_anticipo.setId("set_cuenta_anticipo");
 		set_cuenta_anticipo.setSeleccionTabla(ser_contabilidad.servicioCatalogoCuentaAnio("true","-1"),"ide_cocac");
 		set_cuenta_anticipo.getTab_seleccion().getColumna("ide_cocac").setFiltro(true);
@@ -210,7 +219,7 @@ public class pre_empleado extends Pantalla {
 
 		con_guardar_cuenta.setId("con_guardar_cuenta");
 		agregarComponente(con_guardar_cuenta);
-		
+
 		set_actualizar_cuenta.setId("set_actualizar_cuenta");
 		set_actualizar_cuenta.setSeleccionTabla(ser_contabilidad.servicioCatalogoCuentaAnio("true","-1"),"ide_cocac");
 		set_actualizar_cuenta.setRadio();
@@ -356,7 +365,343 @@ public class pre_empleado extends Pantalla {
 		sel_tab_sucursal.getTab_seleccion().getColumna("nom_sucu").setFiltro(true);
 		sel_tab_sucursal.getBot_aceptar().setMetodo("aceptarReporte");
 		agregarComponente(sel_tab_sucursal);
+
+
+		//DFJ
+		Boton bot_contrato=new Boton();
+		bot_contrato.setValue("Contratación");
+		bot_contrato.setMetodo("abrirContratacion");
+		bar_botones.agregarBoton(bot_contrato);
+
+		dia_contrata.setId("dia_contrata");
+		dia_contrata.setTitle("CONTRATACIÓN");
+		dia_contrata.setWidth("85%");
+		dia_contrata.setHeight("95%");
+		dia_contrata.getBot_aceptar().setMetodo("acpetarContratacion");
+		agregarComponente(dia_contrata);
+
+
+
+		tab_partida_cargo.setId("tab_partida_cargo");
+		tab_partida_cargo.setTabla("GEN_PARTIDA_GRUPO_CARGO", "IDE_GEPGC", 51);
+		tab_partida_cargo.setCondicion("IDE_GEPGC=-1");
+		tab_partida_cargo.getColumna("IDE_GEGRO").setUnico(true);
+		tab_partida_cargo.getColumna("IDE_GECAF").setUnico(true);
+		tab_partida_cargo.getColumna("IDE_SUCU").setUnico(true);
+		tab_partida_cargo.getColumna("IDE_GEARE").setUnico(true);
+		tab_partida_cargo.getColumna("IDE_GEDEP").setUnico(true);
+		tab_partida_cargo.getColumna("IDE_GEPAP").setUnico(true);
+		tab_partida_cargo.getColumna("IDE_GEGRO").setCombo("GEN_GRUPO_OCUPACIONAL",	"IDE_GEGRO", "DETALLE_GEGRO", "");
+		tab_partida_cargo.getColumna("IDE_GEGRO").setMetodoChange("cargarCargoFuncionalContratacion");
+		tab_partida_cargo.getColumna("IDE_GECAF").setCombo("select a.IDE_GECAF,a.DETALLE_GECAF from GEN_CARGO_FUNCIONAL a, GEN_GRUPO_CARGO b where a.IDE_GECAF = b.IDE_GECAF");
+		tab_partida_cargo.getColumna("IDE_GECAF").setBuscarenCombo(false);
+		tab_partida_cargo.setMostrarcampoSucursal(true);
+		tab_partida_cargo.getColumna("IDE_SUCU").setCombo("SIS_SUCURSAL", "IDE_SUCU","NOM_SUCU", "");
+		tab_partida_cargo.getColumna("IDE_SUCU").setBuscarenCombo(false);
+		tab_partida_cargo.getColumna("IDE_SUCU").setNombreVisual("SUCURSAL");
+		tab_partida_cargo.getColumna("IDE_SUCU").setMetodoChange("cargarAreaContratacion");
+		tab_partida_cargo.getColumna("IDE_GEARE").setCombo("SELECT b.IDE_GEARE,b.DETALLE_GEARE FROM GEN_DEPARTAMENTO_SUCURSAL a " +
+				"inner join GEN_AREA b on a.IDE_GEARE=b.IDE_GEARE " +
+				"GROUP BY b.IDE_GEARE,b.DETALLE_GEARE " +
+				"ORDER BY b.DETALLE_GEARE");
+		tab_partida_cargo.getColumna("IDE_GEARE").setMetodoChange("cargarDepartamentosContratacion");
+		tab_partida_cargo.getColumna("IDE_GEARE").setBuscarenCombo(false);
+		tab_partida_cargo.getColumna("IDE_GEDEP").setCombo("SELECT DISTINCT a.IDE_GEDEP,a.DETALLE_GEDEP FROM GEN_DEPARTAMENTO a, GEN_DEPARTAMENTO_SUCURSAL b WHERE a.IDE_GEDEP=b.IDE_GEDEP");
+		tab_partida_cargo.getColumna("IDE_GEDEP").setBuscarenCombo(false);
+		tab_partida_cargo.getColumna("IDE_GEPAP").setCombo("GEN_PARTIDA_PRESUPUESTARIA", "IDE_GEPAP","CODIGO_PARTIDA_GEPAP,DETALLE_GEPAP", "ACTIVO_GEPAP=TRUE");
+		tab_partida_cargo.getColumna("IDE_GEPAP").setAutoCompletar();
+		tab_partida_cargo.setMostrarcampoSucursal(true);
+		tab_partida_cargo.getColumna("ACTIVO_GEPGC").setCheck();
+		tab_partida_cargo.getColumna("ACTIVO_GEPGC").setValorDefecto("true");
+		tab_partida_cargo.getColumna("IDE_GTTEM").setCombo("GTH_TIPO_EMPLEADO","IDE_GTTEM", "DETALLE_GTTEM", "");
+		tab_partida_cargo.getColumna("IDE_GTTEM").setRequerida(true);
+		tab_partida_cargo.getColumna("IDE_GEPAP").setRequerida(true);
+		tab_partida_cargo.getColumna("VACANTE_GEPGC").setVisible(false);
+		tab_partida_cargo.getColumna("VACANTE_GEPGC").setValorDefecto("true");	
+		tab_partida_cargo.getColumna("FECHA_ACTIVACION_GEPGC").setVisible(false);		
+		tab_partida_cargo.getColumna("FECHA_DESACTIVA_GEPGC").setVisible(false);
+		tab_partida_cargo.getColumna("MOTIVO_GEPGC").setVisible(false);
+		tab_partida_cargo.getColumna("ACTIVO_GEPGC").setVisible(false);
+		tab_partida_cargo.getColumna("ENCARGO_GEPGC").setVisible(false);
+		tab_partida_cargo.getColumna("SALARIO_ENCARGO_GEPGC").setVisible(false);
+		tab_partida_cargo.getColumna("ENCARGO_GEPGC").setVisible(false);
+		tab_partida_cargo.setTipoFormulario(true);
+		tab_partida_cargo.getGrid().setColumns(4);
+		tab_partida_cargo.setMostrarNumeroRegistros(false);
+		tab_partida_cargo.dibujar();
+
+
+
+
+
+
+		tab_empleado_departamento_dia.setId("tab_empleado_departamento_dia");	
+		tab_empleado_departamento_dia.setTabla("GEN_EMPLEADOS_DEPARTAMENTO_PAR","IDE_GEEDP", 50);		
+		tab_empleado_departamento_dia.getColumna("IDE_GEGRO").setCombo("GEN_GRUPO_OCUPACIONAL", "IDE_GEGRO", "DETALLE_GEGRO", "");
+		tab_empleado_departamento_dia.getColumna("FECHA_GEEDP").setValorDefecto(utilitario.getFechaActual());
+		tab_empleado_departamento_dia.getColumna("IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL","IDE_GECAF","DETALLE_GECAF","");	
+		tab_empleado_departamento_dia.getColumna("IDE_GECAF").setBuscarenCombo(true);
+		tab_empleado_departamento_dia.getColumna("GEN_IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL", "IDE_GECAF", "DETALLE_GECAF", "");
+		tab_empleado_departamento_dia.getColumna("IDE_SUCU").setCombo("SIS_SUCURSAL", "IDE_SUCU", "NOM_SUCU", "");
+		tab_empleado_departamento_dia.getColumna("IDE_SUCU").setVisible(true);
+		tab_empleado_departamento_dia.getColumna("IDE_GEARE").setCombo(
+				"GEN_AREA",
+				"IDE_GEARE",
+				"DETALLE_GEARE",
+				"IDE_GEARE IN (SELECT IDE_GEARE from GEN_DEPARTAMENTO_SUCURSAL)");	 //DFJ QUITAR FILTRO X SUCURSAL	
+		tab_empleado_departamento_dia.getColumna("IDE_GEARE").setBuscarenCombo(true);		
+		tab_empleado_departamento_dia.getColumna("IDE_GEDEP").setCombo("GEN_DEPARTAMENTO","IDE_GEDEP","DETALLE_GEDEP","");
+		tab_empleado_departamento_dia.getColumna("IDE_GEDEP").setBuscarenCombo(true);
+		tab_empleado_departamento_dia.getColumna("IDE_GECAE").setCombo("GEN_CATEGORIA_ESTATUS", "IDE_GECAE", "DETALLE_GECAE", "");
+		tab_empleado_departamento_dia.getColumna("IDE_GETIV").setCombo(
+				"GEN_TIPO_VINCULACION", "IDE_GETIV", "DETALLE_GETIV", "");
+		tab_empleado_departamento_dia.getColumna("IDE_GETIV").setBuscarenCombo(
+				true);
+		tab_empleado_departamento_dia.getColumna("IDE_GTTEM").setCombo(
+				"GTH_TIPO_EMPLEADO", "IDE_GTTEM", "DETALLE_GTTEM", "");
+		tab_empleado_departamento_dia.getColumna("IDE_GTTCO").setCombo(
+				"GTH_TIPO_CONTRATO", "IDE_GTTCO", "DETALLE_GTTCO", "");
+		tab_empleado_departamento_dia.getColumna("IDE_GTTSI").setCombo(
+				"GTH_TIPO_SINDICATO", "IDE_GTTSI", "DETALLE_GTTSI", "");
+		tab_empleado_departamento_dia.getColumna("IDE_GTGRE").setCombo(
+				"GTH_GRUPO_EMPLEADO", "IDE_GTGRE", "DETALLE_GTGRE", "");
+		tab_empleado_departamento_dia.getColumna("IDE_GTGRE").setCombo(
+				"GTH_GRUPO_EMPLEADO", "IDE_GTGRE", "DETALLE_GTGRE", "");
+		tab_empleado_departamento_dia.getColumna("ACTIVO_GEEDP").setCheck();
+		tab_empleado_departamento_dia.getColumna("ACTIVO_GEEDP").setLectura(true);
+		tab_empleado_departamento_dia.getColumna("ACTIVO_GEEDP").setValorDefecto("true");
+		tab_empleado_departamento_dia.getColumna("ACUMULA_FONDOS_GEEDP").setCheck();
+		tab_empleado_departamento_dia.getColumna("LINEA_SUPERVICION_GEEDP")
+		.setCheck();
+		tab_empleado_departamento_dia.getColumna("IDE_GTEMP").setVisible(false);		
+		tab_empleado_departamento_dia.getColumna("CONTROL_ASISTENCIA_GEEDP").setCheck();
+		tab_empleado_departamento_dia.getColumna("CONTROL_ASISTENCIA_GEEDP").setValorDefecto("false");		
+		tab_empleado_departamento_dia.setMostrarcampoSucursal(true);
+		tab_empleado_departamento_dia.setTipoFormulario(true);
+		tab_empleado_departamento_dia.getGrid().setColumns(4);
+		//tab_empleado_departamento_dia.getColumna("IDE_GTTCO").setMetodoChange("cambioTipoContrato");
+		tab_empleado_departamento_dia.setRecuperarLectura(true);
+		tab_empleado_departamento_dia.setMostrarNumeroRegistros(false);
+		tab_empleado_departamento_dia.setCondicion("IDE_GEEDP=-1");
+		
+		
+		tab_empleado_departamento_dia.getColumna("IDE_GEGRO").setVisible(false);
+		tab_empleado_departamento_dia.getColumna("IDE_GECAF").setVisible(false);
+		tab_empleado_departamento_dia.getColumna("IDE_SUCU").setVisible(false);
+		tab_empleado_departamento_dia.getColumna("IDE_GEARE").setVisible(false);
+		tab_empleado_departamento_dia.getColumna("IDE_GEDEP").setVisible(false);
+		tab_empleado_departamento_dia.getColumna("IDE_GTTEM").setVisible(false);
+		tab_empleado_departamento_dia.getColumna("IDE_GEPGC").setVisible(false);
+		tab_empleado_departamento_dia.getColumna("IDE_GEPGC").setVisible(false);
+		
+		
+		
+		tab_empleado_departamento_dia.dibujar();
+		Grid grid=new Grid();
+		grid.getChildren().add(tab_partida_cargo);
+		grid.getChildren().add(tab_empleado_departamento_dia);
+		dia_contrata.setDialogo(grid);
+
 	}
+
+	public void cargarDepartamentosContratacion() {
+		if (tab_partida_cargo.getTotalFilas()>0){
+			tab_partida_cargo.getColumna("IDE_GEDEP").setCombo("SELECT a.IDE_GEDEP,a.DETALLE_GEDEP FROM GEN_DEPARTAMENTO a, GEN_DEPARTAMENTO_SUCURSAL b WHERE a.IDE_GEDEP=b.IDE_GEDEP AND b.IDE_GEARE="+ tab_partida_cargo.getValor("IDE_GEARE")+ " AND IDE_SUCU="+ tab_partida_cargo.getValor("IDE_SUCU"));
+			utilitario.addUpdateTabla(tab_partida_cargo, "IDE_GEDEP", "");
+		}
+	}
+
+
+	public void cargarAreaContratacion() {
+		tab_partida_cargo.getColumna("IDE_GEARE").setCombo("SELECT b.IDE_GEARE,b.DETALLE_GEARE FROM GEN_DEPARTAMENTO_SUCURSAL a " +
+				"inner join GEN_AREA b on a.IDE_GEARE=b.IDE_GEARE " +
+				"where a.IDE_SUCU="+ tab_partida_cargo.getValor("IDE_SUCU")+" "+
+				"GROUP BY b.IDE_GEARE,b.DETALLE_GEARE " +
+				"ORDER BY b.DETALLE_GEARE" );
+		utilitario.addUpdateTabla(tab_partida_cargo, "IDE_GEARE", "");
+	}
+
+	public void cargarCargoFuncionalContratacion(AjaxBehaviorEvent evt) {
+		tab_partida_cargo.modificar(evt);
+		tab_partida_cargo.getColumna("IDE_GECAF").setCombo("select a.IDE_GECAF,a.DETALLE_GECAF from GEN_CARGO_FUNCIONAL a, GEN_GRUPO_CARGO b where a.IDE_GECAF = b.IDE_GECAF AND IDE_GEGRO ="+ tab_partida_cargo.getValor("IDE_GEGRO"));
+		utilitario.addUpdateTabla(tab_partida_cargo, "IDE_GECAF", "");
+	}
+
+
+	private boolean validacionesContratacion(){
+
+
+
+		if(tab_partida_cargo.getValor("IDE_GEGRO")==null || 
+				tab_partida_cargo.getValor("IDE_GECAF")	==null || 
+				tab_partida_cargo.getValor("IDE_SUCU")	==null || 
+				tab_partida_cargo.getValor("IDE_GEARE")	==null || 
+				tab_partida_cargo.getValor("IDE_GEDEP")	==null || 
+				tab_partida_cargo.getValor("IDE_GEPAP")	==null 
+				){
+			utilitario.agregarMensajeInfo("Debe ingresar todos los valores que son requeridos *", "");
+			return false;
+		}
+
+
+		if(tab_empleado_departamento_dia.getValor("fecha_finctr_geedp")!=null && !tab_empleado_departamento_dia.getValor("fecha_finctr_geedp").isEmpty()){
+
+			if(tab_empleado_departamento_dia.getValor("fecha_geedp")!=null && !tab_empleado_departamento_dia.getValor("fecha_geedp").isEmpty()){
+
+				if (utilitario.isFechaMenor(utilitario.getFecha(tab_empleado_departamento_dia.getValor("fecha_finctr_geedp")), utilitario.getFecha(tab_empleado_departamento_dia.getValor("fecha_geedp")))){
+					utilitario.agregarMensajeInfo("No se puede guardar", "La fecha fin de contrato no puede ser menor que la fecha contrato");
+					return false;
+				}	
+			}
+		}					
+
+
+		if(tab_empleado_departamento_dia.getValor("fecha_encargo_fin_geedp")!=null && !tab_empleado_departamento_dia.getValor("fecha_encargo_fin_geedp").isEmpty()){
+			if(tab_empleado_departamento_dia.getValor("fecha_geedp")!=null && !tab_empleado_departamento_dia.getValor("fecha_geedp").isEmpty()){
+
+				if (utilitario.isFechaMenor(utilitario.getFecha(tab_empleado_departamento_dia.getValor("fecha_encargo_fin_geedp")), utilitario.getFecha(tab_empleado_departamento_dia.getValor("fecha_geedp")))){
+					utilitario.agregarMensajeInfo("No se puede guardar", "La fecha encargo fin de contrato no puede ser menor que la fecha contrato");
+					return false;
+				}
+			}
+		}
+
+		if(tab_empleado_departamento_dia.getValor("fecha_encargo_geedp")!=null && !tab_empleado_departamento_dia.getValor("fecha_encargo_geedp").isEmpty()){
+			if(tab_empleado_departamento_dia.getValor("fecha_geedp")!=null && !tab_empleado_departamento_dia.getValor("fecha_geedp").isEmpty()){
+
+				if (utilitario.isFechaMenor(utilitario.getFecha(tab_empleado_departamento_dia.getValor("fecha_encargo_geedp")), utilitario.getFecha(tab_empleado_departamento_dia.getValor("fecha_geedp")))){
+					utilitario.agregarMensajeInfo("No se puede guardar", "La fecha encargo inicio no puede ser menor que la fecha contrato");
+					return false;
+				}
+			}
+		}					
+
+		if(tab_empleado_departamento_dia.getValor("fecha_encargo_geedp")!=null && !tab_empleado_departamento_dia.getValor("fecha_encargo_geedp").isEmpty()){
+			if(tab_empleado_departamento_dia.getValor("fecha_encargo_fin_geedp")!=null && !tab_empleado_departamento_dia.getValor("fecha_encargo_fin_geedp").isEmpty()){
+				if (utilitario.isFechaMayor(utilitario.getFecha(tab_empleado_departamento_dia.getValor("fecha_encargo_geedp")), utilitario.getFecha(tab_empleado_departamento_dia.getValor("fecha_encargo_fin_geedp")))){
+					utilitario.agregarMensajeInfo("No se puede guardar", "La fecha de encargo inicial no puede ser mayor que la fecha encargo fin");
+					return false;
+				}	
+			}						
+		}
+
+		if(tab_empleado_departamento_dia.getValor("fecha_ajuste_geedp")!=null && !tab_empleado_departamento_dia.getValor("fecha_ajuste_geedp").isEmpty()){
+			if(tab_empleado_departamento_dia.getValor("fecha_geedp")!=null && !tab_empleado_departamento_dia.getValor("fecha_geedp").isEmpty()){
+
+				if (utilitario.isFechaMenor(utilitario.getFecha(tab_empleado_departamento_dia.getValor("fecha_ajuste_geedp")), utilitario.getFecha(tab_empleado_departamento_dia.getValor("fecha_geedp")))){
+					utilitario.agregarMensajeInfo("No se puede guardar", "La fecha ajuste de contrato no puede ser menor que la fecha contrato");
+					return false;
+				}
+			}
+		}
+
+
+
+		/*aqui se valida la fecha de contrato con acciones de personal anteriores*/
+		TablaGenerica tab_fecha=utilitario.consultar("select ide_gtemp,max (fecha_geedp) as fecha_contrato from gen_empleados_departamento_par where ide_gtemp="+aut_empleado.getValor()+" group by ide_gtemp");
+
+		if (tab_deta_empleado_depar.getTotalFilas()>1){
+			System.out.println("valor"+aut_empleado.getValor());
+			if(tab_fecha.getTotalFilas()>0){
+				if(tab_fecha.getValor("fecha_contrato")!=null && !tab_fecha.getValor("fecha_contrato").isEmpty() ){
+					if(tab_empleado_departamento_dia.getValor("fecha_geedp")!=null && !tab_empleado_departamento_dia.getValor("fecha_geedp").isEmpty()){
+						if(utilitario.isFechaMayor(utilitario.getFecha(tab_fecha.getValor("fecha_contrato")), utilitario.getFecha(tab_empleado_departamento.getValor("fecha_geedp")))){
+							utilitario.agregarMensajeInfo("No se puede Guardar", "La fecha de contrato actual no puede ser menor que la fecha de contrato del anterior accion de personal");
+							return false;
+						}	
+					}
+				}
+			}
+		}
+
+		if(tab_empleado_departamento_dia.isFilaInsertada()){
+			//Desactiva todas las partidas y solo deja activa la nueva		    	
+			utilitario.getConexion().agregarSql("UPDATE GEN_DETALLE_EMPLEADO_DEPARTAME set ACTIVO_GEDED=false WHERE IDE_GTEMP="+aut_empleado.getValor());
+			utilitario.getConexion().agregarSql("UPDATE GEN_EMPLEADOS_DEPARTAMENTO_PAR set ACTIVO_GEEDP=false WHERE IDE_GTEMP="+aut_empleado.getValor());				
+		}
+		return true;		
+	}
+
+
+	public void acpetarContratacion(){
+		if (validacionesContratacion()){
+			String str_IDE_GEPGC=null;
+			//Guarda partida grupo cargo
+			TablaGenerica tab_con_partida=utilitario.consultar("SELECT * FROM GEN_PARTIDA_GRUPO_CARGO WHERE " +
+					"IDE_GEGRO="+tab_partida_cargo.getValor("IDE_GEGRO")+" " +
+					"AND IDE_GECAF="+tab_partida_cargo.getValor("IDE_GECAF")+" " +
+					"AND IDE_SUCU="+tab_partida_cargo.getValor("IDE_SUCU")+" " +
+					"AND IDE_GEARE="+tab_partida_cargo.getValor("IDE_GEARE")+" " +
+					"AND IDE_GEDEP="+tab_partida_cargo.getValor("IDE_GEDEP")+" " +
+					"AND  IDE_GEPAP="+tab_partida_cargo.getValor("IDE_GEPAP")+"");
+
+
+			tab_empleado_departamento_dia.setValor("IDE_GEGRO",tab_partida_cargo.getValor("IDE_GEGRO"));
+			tab_empleado_departamento_dia.setValor("IDE_GECAF", tab_partida_cargo.getValor("IDE_GECAF"));
+			tab_empleado_departamento_dia.setValor("IDE_SUCU", tab_partida_cargo.getValor("IDE_SUCU"));
+			tab_empleado_departamento_dia.setValor("IDE_GEARE",tab_partida_cargo.getValor("IDE_GEARE"));
+			tab_empleado_departamento_dia.setValor("IDE_GEDEP",tab_partida_cargo.getValor("IDE_GEDEP"));
+			tab_empleado_departamento_dia.setValor("IDE_GTTEM",tab_partida_cargo.getValor("IDE_GTTEM"));
+			
+			tab_empleado_departamento_dia.setValor("ACTIVO_GEEDP", "true");
+			
+			if(tab_con_partida.isEmpty()){
+		
+				tab_partida_cargo.guardar();
+
+				str_IDE_GEPGC=tab_partida_cargo.getValor("IDE_GEPGC");	
+				
+			}
+			else{
+				str_IDE_GEPGC=tab_con_partida.getValor("IDE_GEPGC");
+
+			}
+
+			//Guardar registro de GEN_DETALLE_EMPLEADO_DEPARTAME
+			TablaGenerica tab_ded=new TablaGenerica();
+			tab_ded.setTabla("GEN_DETALLE_EMPLEADO_DEPARTAME", "IDE_GEDED", -1);
+			tab_ded.setCondicion("IDE_GEDED=-1");
+			tab_ded.ejecutarSql();
+
+			tab_ded.insertar();
+			tab_ded.setValor("IDE_GEINS", null);
+			tab_ded.setValor("IDE_GEAME", IDE_GAME);
+			tab_ded.setValor("FECHA_INGRESO_GEDED", tab_empleado_departamento_dia.getValor("fecha_geedp"));
+
+			tab_ded.setValor("ACTIVO_GEDED", "true");
+			tab_ded.setValor("IDE_GTEMP", aut_empleado.getValor());
+			tab_ded.setValor("GEN_IDE_GEDED", tab_deta_empleado_depar.getValor("IDE_GEDED")); //recursivo guarda el anterior
+
+			tab_ded.guardar();
+
+			tab_empleado_departamento_dia.setValor("IDE_GEDED", tab_ded.getValor("IDE_GEDED"));
+			tab_empleado_departamento_dia.setValor("IDE_GEPGC", str_IDE_GEPGC);
+			tab_empleado_departamento_dia.guardar();
+
+			if(guardarPantalla().isEmpty()){
+				dibujarDatosEmpleadoDepartamento();
+				utilitario.addUpdate("pan_opcion");
+				dia_contrata.cerrar(); 	
+			}			
+		}
+	}
+
+
+	public void abrirContratacion(){
+		if(aut_empleado.getValor()!=null){
+			tab_empleado_departamento_dia.limpiar();
+			tab_empleado_departamento_dia.insertar();
+			tab_empleado_departamento_dia.setValor("IDE_GTEMP", aut_empleado.getValor());
+			tab_partida_cargo.limpiar();
+			tab_partida_cargo.insertar();
+			utilitario.getConexion().getSqlPantalla().clear();
+			dia_contrata.dibujar();
+		}
+		else{
+			utilitario.agregarMensajeInfo("Debe seleccionar un empleado", "");
+		}
+	}
+
 
 	public  void aceptarCuentaAnticipo(){
 		String str_seleccionado=set_cuenta_anticipo.getValorSeleccionado();
@@ -374,22 +719,22 @@ public class pre_empleado extends Pantalla {
 	public void importarCuentaAnticipo(){
 		if(aut_empleado.getValor()!= null){
 			if(tab_anio.getValor("ide_geani")!=null){
-			set_cuenta_anticipo.getTab_seleccion().setSql(ser_contabilidad.servicioCatalogoCuentaAnio("true",tab_anio.getValorSeleccionado()));
-			set_cuenta_anticipo.getTab_seleccion().ejecutarSql();
-			set_cuenta_anticipo.dibujar();
+				set_cuenta_anticipo.getTab_seleccion().setSql(ser_contabilidad.servicioCatalogoCuentaAnio("true",tab_anio.getValorSeleccionado()));
+				set_cuenta_anticipo.getTab_seleccion().ejecutarSql();
+				set_cuenta_anticipo.dibujar();
 			}
 			else{
 				utilitario.agregarMensajeInfo("SELECCIONE UN AÑO","No se encuentra seleccionado un año para la cuenta de anticipo");
 			}
-			
+
 		}else {
 			utilitario.agregarMensajeInfo("SELECCIONE UN EMPLEADO","");
 
 		}
 
 	}
-public void actualizarCuentaAnticipo(){
-		 if(aut_empleado.getValor()!= null){
+	public void actualizarCuentaAnticipo(){
+		if(aut_empleado.getValor()!= null){
 			if(tab_cuenta_anticipo.getValor("ide_cocac")!=null){
 				set_actualizar_cuenta.getTab_seleccion().setSql(ser_contabilidad.servicioCatalogoCuentaAnio("true",tab_anio.getValorSeleccionado()));
 				set_actualizar_cuenta.getTab_seleccion().ejecutarSql();
@@ -398,14 +743,14 @@ public void actualizarCuentaAnticipo(){
 			else{
 				utilitario.agregarMensajeInfo("SELECCIONE UNA CUENTA","No se encuentra seleccionado la cuenta anticipo para actualizar");
 			}
-			
+
 		}else {
 			utilitario.agregarMensajeInfo("SELECCIONE UN EMPLEADO","");
 		}
 
 	}
-	
-public void modificarCuentaAnticipo(){
+
+	public void modificarCuentaAnticipo(){
 		System.out.println("entre modificar  ");
 		String str_cuenta= set_actualizar_cuenta.getValorSeleccionado();
 		System.out.println("q selecciona  "+str_cuenta);
@@ -1789,7 +2134,7 @@ public void modificarCuentaAnticipo(){
 
 
 
-		
+
 		// ITEM 4 : OPCION 14		
 		ItemMenu itm_datos_experiencia_laboral = new ItemMenu();
 		itm_datos_experiencia_laboral.setValue("DATOS EXPERIENCIA LABORAL");
@@ -2977,7 +3322,7 @@ public void modificarCuentaAnticipo(){
 			pan_opcion.setTitle("DATOS DE EXPERIENCIA LABORAL");
 			pan_opcion.getChildren().add(pat_panel1);
 
-			
+
 		} else {
 			utilitario.agregarMensajeInfo("No se puede abrir el item", "Seleccione un Colaborador en el autocompletar");
 			limpiar();
@@ -4999,11 +5344,11 @@ public void modificarCuentaAnticipo(){
 			}
 		}else if (str_opcion.equals("22")){
 
-		
-						
-				if (tab_cuenta_bancaria.guardar()){
-					guardarPantalla();
-				
+
+
+			if (tab_cuenta_bancaria.guardar()){
+				guardarPantalla();
+
 			}
 		}else if (str_opcion.equals("23")){
 			if (tab_inversion.guardar()){
@@ -5202,7 +5547,7 @@ public void modificarCuentaAnticipo(){
 				tab_archivo_empleado.eliminar();
 			}
 		} 
-		
+
 		else if (str_opcion.equals("1")) {
 			if (tab_conyuge.isFocus()){
 				tab_conyuge.eliminar();
@@ -5244,80 +5589,80 @@ public void modificarCuentaAnticipo(){
 				}
 			}
 		}
-		
-		else if (str_opcion.equals("5")) {
-				tab_cargas_familiares.eliminar();
-			}
-		
-		else if (str_opcion.equals("6")) {
-				tab_familiar.eliminar();
-			}
-			//		else if (str_opcion.equals("8")) {
-			//			tab_direccion.eliminar();
-			//		}else if (str_opcion.equals("9")) {
-			//			tab_telefonos.eliminar();
-			//		}else if (str_opcion.equals("10")) {
-			//			tab_correos.eliminar();
-			//		}
-			else if (str_opcion.equals("7")){
-				if (tab_seguro_vida.isFocus()){
-					tab_seguro_vida.eliminar();
-					filtrarBeneficiariosSeguroVida();
-				}else if (tab_beneficiario_seguro.isFocus()){
-					tab_beneficiario_seguro.eliminar();
-				}
-			}else if (str_opcion.equals("8")){
-				if (tab_registro_militar.isFocus()){
-					tab_registro_militar.eliminar();
-				}
-			}else if (str_opcion.equals("9")){
-				if (tab_hobbies.isFocus()){
-					tab_hobbies.eliminar();
-				}
-			}else if (str_opcion.equals("10")){
-				if (tab_educacion.isFocus()){
-					tab_educacion.eliminar();
-				}
-			}else if (str_opcion.equals("11")){
-				if (tab_idiomas.isFocus()){
-					tab_idiomas.eliminar();
-				}
-			}else if (str_opcion.equals("12")){
-				if (tab_capacitacion.isFocus()){
-					tab_capacitacion.eliminar();
-				}
-			}
-			
-			else if (str_opcion.equals("14")){
-				if(tab_experiencia_laboral.isFocus()){
-						tab_experiencia_laboral.eliminar();
-				}
-			}else if (str_opcion.equals("15")) {
-				tab_amigos.eliminar();
-			}else if (str_opcion.equals("16")){
-				if (tab_situacion_economica.isFocus()){
-					tab_situacion_economica.eliminar();
-				}
-			}
-			else if (str_opcion.equals("22")){ 
-				
-				System.out.println("emtere a eliminar cuenta bancaria");
-				
-					tab_cuenta_bancaria.eliminar();
-				
-			}
-			
-			else if (str_opcion.equals("29")){
-				if (tab_sri_gastos_deducible.isFocus()){
-					if (tab_sri_gastos_deducible.isFilaInsertada()){
-						tab_sri_gastos_deducible.eliminar();
-						tab_sri_gastos_deducible.sumarColumnas();
-						utilitario.addUpdate("tab_sri_gastos_deducible");
-					}
-				}
-			}
 
-		
+		else if (str_opcion.equals("5")) {
+			tab_cargas_familiares.eliminar();
+		}
+
+		else if (str_opcion.equals("6")) {
+			tab_familiar.eliminar();
+		}
+		//		else if (str_opcion.equals("8")) {
+		//			tab_direccion.eliminar();
+		//		}else if (str_opcion.equals("9")) {
+		//			tab_telefonos.eliminar();
+		//		}else if (str_opcion.equals("10")) {
+		//			tab_correos.eliminar();
+		//		}
+		else if (str_opcion.equals("7")){
+			if (tab_seguro_vida.isFocus()){
+				tab_seguro_vida.eliminar();
+				filtrarBeneficiariosSeguroVida();
+			}else if (tab_beneficiario_seguro.isFocus()){
+				tab_beneficiario_seguro.eliminar();
+			}
+		}else if (str_opcion.equals("8")){
+			if (tab_registro_militar.isFocus()){
+				tab_registro_militar.eliminar();
+			}
+		}else if (str_opcion.equals("9")){
+			if (tab_hobbies.isFocus()){
+				tab_hobbies.eliminar();
+			}
+		}else if (str_opcion.equals("10")){
+			if (tab_educacion.isFocus()){
+				tab_educacion.eliminar();
+			}
+		}else if (str_opcion.equals("11")){
+			if (tab_idiomas.isFocus()){
+				tab_idiomas.eliminar();
+			}
+		}else if (str_opcion.equals("12")){
+			if (tab_capacitacion.isFocus()){
+				tab_capacitacion.eliminar();
+			}
+		}
+
+		else if (str_opcion.equals("14")){
+			if(tab_experiencia_laboral.isFocus()){
+				tab_experiencia_laboral.eliminar();
+			}
+		}else if (str_opcion.equals("15")) {
+			tab_amigos.eliminar();
+		}else if (str_opcion.equals("16")){
+			if (tab_situacion_economica.isFocus()){
+				tab_situacion_economica.eliminar();
+			}
+		}
+		else if (str_opcion.equals("22")){ 
+
+			System.out.println("emtere a eliminar cuenta bancaria");
+
+			tab_cuenta_bancaria.eliminar();
+
+		}
+
+		else if (str_opcion.equals("29")){
+			if (tab_sri_gastos_deducible.isFocus()){
+				if (tab_sri_gastos_deducible.isFilaInsertada()){
+					tab_sri_gastos_deducible.eliminar();
+					tab_sri_gastos_deducible.sumarColumnas();
+					utilitario.addUpdate("tab_sri_gastos_deducible");
+				}
+			}
+		}
+
+
 	}
 
 	public AutoCompletar getAut_empleado() {
@@ -6003,4 +6348,31 @@ public void modificarCuentaAnticipo(){
 
 		}	
 	}
+
+	public Dialogo getDia_contrata() {
+		return dia_contrata;
+	}
+
+	public void setDia_contrata(Dialogo dia_contrata) {
+		this.dia_contrata = dia_contrata;
+	}
+
+	public Tabla getTab_empleado_departamento_dia() {
+		return tab_empleado_departamento_dia;
+	}
+
+	public void setTab_empleado_departamento_dia(Tabla tab_empleado_departamento_dia) {
+		this.tab_empleado_departamento_dia = tab_empleado_departamento_dia;
+	}
+
+	public Tabla getTab_partida_cargo() {
+		return tab_partida_cargo;
+	}
+
+	public void setTab_partida_cargo(Tabla tab_partida_cargo) {
+		this.tab_partida_cargo = tab_partida_cargo;
+	}
+
+
+
 }
