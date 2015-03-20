@@ -146,6 +146,7 @@ public class pre_anual_egresos extends Pantalla {
 
 		set_programa.setId("set_programa");
 		set_programa.setSeleccionTabla(ser_presupuesto.getPrograma("true,false"),"IDE_PRPRO");
+		set_programa.getTab_seleccion().getColumna("cod_programa_prpro").setFiltroContenido();
 		set_programa.getBot_aceptar().setMetodo("aceptarPrograma");
 		set_programa.getTab_seleccion().ejecutarSql();
 		set_programa.setRadio();
