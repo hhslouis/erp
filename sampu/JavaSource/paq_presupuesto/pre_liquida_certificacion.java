@@ -14,6 +14,7 @@ public class pre_liquida_certificacion extends Pantalla {
 		tab_liquida_certificacion.setHeader("LIQUIDACION CERTIFICACION");
 		tab_liquida_certificacion.setTabla("pre_liquida_certificacion", "ide_prlce", 1);
 		tab_liquida_certificacion.getColumna("activo_prlce").setValorDefecto("true");
+		tab_liquida_certificacion.agregarRelacion(tab_detalle);
 		tab_liquida_certificacion.dibujar();
 		PanelTabla pat_liquida =new PanelTabla();
 		pat_liquida.setPanelTabla(tab_liquida_certificacion);
