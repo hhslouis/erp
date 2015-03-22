@@ -32,6 +32,8 @@ public class pre_libera_compromiso extends Pantalla{
 		tab_libera_compromiso.getColumna("IDE_GEEDP").setAutoCompletar();
 		tab_libera_compromiso.getColumna("activo_prlic").setValorDefecto("true");
 		tab_libera_compromiso.agregarRelacion(tab_detalle_libera);
+		tab_libera_compromiso.setTipoFormulario(true);
+		tab_libera_compromiso.getGrid().setColumns(2);
 		tab_libera_compromiso.dibujar();
 		PanelTabla pat_libera=new PanelTabla();
 		pat_libera.setPanelTabla(tab_libera_compromiso);
