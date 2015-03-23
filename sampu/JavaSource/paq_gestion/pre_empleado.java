@@ -1,6 +1,8 @@
 package paq_gestion;
 
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -111,6 +113,7 @@ public class pre_empleado extends Pantalla {
 	private Tabla tab_partida_cargo=new Tabla();
 	public static String par_nacionalidad;
 	public static String par_tipo_sangre;
+	
 
 
 
@@ -453,6 +456,7 @@ public class pre_empleado extends Pantalla {
 		tab_empleado_departamento_dia.getColumna("IDE_GEGRO").setCombo("GEN_GRUPO_OCUPACIONAL", "IDE_GEGRO", "DETALLE_GEGRO", "");
 		//tab_empleado_departamento_dia.getColumna("FECHA_GEEDP").setValorDefecto(utilitario.getFechaActual());***
 		tab_empleado_departamento_dia.getColumna("FECHA_GEEDP").setMetodoChange("mismaFecha");
+		tab_empleado_departamento_dia.getColumna("FECHA_FINCTR_GEEDP").setMetodoChange("sumarFechas");
 		tab_empleado_departamento_dia.getColumna("IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL","IDE_GECAF","DETALLE_GECAF","");	
 		tab_empleado_departamento_dia.getColumna("IDE_GECAF").setBuscarenCombo(true);
 		tab_empleado_departamento_dia.getColumna("GEN_IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL", "IDE_GECAF", "DETALLE_GECAF", "");
@@ -534,7 +538,7 @@ public class pre_empleado extends Pantalla {
 		tab_empleado_departamento_dia.getColumna("ACUMULA_FONDOS_GEEDP").setNombreVisual("ACUMULA FONDOS");
 		tab_empleado_departamento_dia.getColumna("CONTROL_ASISTENCIA_GEEDP").setNombreVisual("CONTROL ASISTENCIA");
 		tab_empleado_departamento_dia.getColumna("OBSERVACION_GEEDP").setNombreVisual("OBSERVACION");
-		tab_empleado_departamento_dia.getColumna("OBSERVACION_GEEDP").setOrden(6);// para q se me ponga en el orden #6
+		tab_empleado_departamento_dia.getColumna("OBSERVACION_GEEDP").setOrden(9);// para q se me ponga en el orden #9
 
 		tab_empleado_departamento_dia.dibujar();
 		Grid grid=new Grid();
@@ -542,6 +546,21 @@ public class pre_empleado extends Pantalla {
 		grid.getChildren().add(tab_empleado_departamento_dia);
 		dia_contrata.setDialogo(grid);
 
+	}
+	///////////sumar las fecha del contrato
+	
+	public void sumarFecha(AjaxBehaviorEvent evt){
+		
+		TablaGenerica tab_num_dias= utilitario.consultar("select ide_gttco,dia_finc_gttco,detalle_gttco from gth_tipo_contrato where ide_gttco = "+tab_empleado_departamento_dia.getValor("IDE_GTTCO")+" order by dia_finc_gttco");
+		int num_dias= Integer.parseInt(tab_num_dias.getValor("dia_finc_gttco"));
+		String fechas=""; // tab_empleado_departamento_dia.getValor("FECHA_GEEDP")+"";
+		SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+	    Date fechaDate = null;
+	    fechaDate = formato.parse(fechas);
+	   
+		String str_fecha_fin=utilitario.sumarDiasFecha(fch, num_dias); 
+		tab_empleado_departamento_dia.setValor("FECHA_FINCTR_GEEDP", tab_empleado_departamento_dia.)
+		
 	}
 	//////////////////SE ME CARGA EL MISMO DATO AL OTRO CAMPO 
 		
