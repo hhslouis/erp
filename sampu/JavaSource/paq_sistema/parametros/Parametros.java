@@ -67,8 +67,8 @@ public class Parametros {
          */
 
         lis_parametros.add(new Parametro("2", "p_gth_tipo_contrato_nombramiento", "Indica el tipo de documento de contrato NOMBRAMIENTO", "0","GTH_TIPO_CONTRATO", "IDE_GTTCO", "DETALLE_GTTCO"));
-
-        
+        lis_parametros.add(new Parametro("2", "p_gth_tipo_sangre", "Indica el tipo de sangre del empleado", "11","gth_tipo_sangre", "ide_gttis", "detalle_gttis"));
+        lis_parametros.add(new Parametro("2", "p_gth_nacionalidad", "Indica la nacionalidad del empleado", "2","gth_nacionalidad", "ide_gtnac", "detalle_gtnac"));
         lis_parametros.add(new Parametro("2", "p_gth_tipo_documento_cedula", "Indica el tipo de documento de identidad CEDULA", "0","GTH_TIPO_DOCUMENTO_IDENTIDAD", "IDE_GTTDI", "DETALLE_GTTDI"));
         lis_parametros.add(new Parametro("2", "p_gth_tipo_documento_ruc", "Indica el tipo de documento de identidad RUC", "2","GTH_TIPO_DOCUMENTO_IDENTIDAD", "IDE_GTTDI", "DETALLE_GTTDI"));
         lis_parametros.add(new Parametro("2", "p_gth_estado_civil_soltero", "Indica el estado civil soltero", "0","GTH_ESTADO_CIVIL", "IDE_GTESC", "DETALLE_GTESC"));
