@@ -18,6 +18,7 @@ public class pre_poliza extends Pantalla {
 		
 		//AGREGAR LOS DOS COMPONENTES
 		tab_poliza.setId("tab_poliza");
+		tab_poliza.setHeader("POLIZA");
 		tab_poliza.setTabla("tes_poliza", "ide_tepol", 1);// 1 YA Q ES LA PRIMERA TABLA
 		tab_poliza.agregarRelacion(tab_renovacion_poliza); //CON ESTO LE DECIMOS Q TIENE RELACION
 		//COMBOS
@@ -26,15 +27,16 @@ public class pre_poliza extends Pantalla {
 		tab_poliza.getColumna("ide_tetip").setCombo("tes_tipo_poliza", "ide_tetip", "detalle_tetip", "");
 		tab_poliza.getColumna("ide_geins").setCombo("gen_institucion", "ide_geins", "detalle_geins", "");
 		tab_poliza.getColumna("ide_coest").setCombo("cont_estado", "ide_coest", "detalle_coest", "");
+		tab_poliza.getColumna("ide_gemos").setCombo("gen_modulo_secuencial", "ide_gemos", "numero_secuencial_gemos", "");
 		tab_poliza.dibujar();
 		PanelTabla pat_poliza= new PanelTabla();
 		pat_poliza.setPanelTabla(tab_poliza);
 		
 		tab_renovacion_poliza.setId("tab_renovacion_poliza");
+		tab_renovacion_poliza.setHeader("RENOVACION DE POLIZA");
 		tab_renovacion_poliza.setTabla("tes_renovacion_poliza", "ide_terep", 2);//2 YA Q ES LA SEGUNDA TABLA
-		//FORMULARIO
-		tab_renovacion_poliza.setTipoFormulario(true);
-		tab_renovacion_poliza.getGrid().setColumns(2);
+		tab_renovacion_poliza.getColumna("ide_coest").setCombo("cont_estado", "ide_coest", "detalle_coest", "");
+		tab_renovacion_poliza.getColumna("ide_copag").setCombo("cont_parametros_general", "ide_copag", "detalle_copag", "");
 		tab_renovacion_poliza.dibujar();
 		PanelTabla pat_renovacion_poliza=new PanelTabla();
 		pat_renovacion_poliza.setPanelTabla(tab_renovacion_poliza);
