@@ -109,7 +109,8 @@ public class pre_empleado extends Pantalla {
 	private Tabla tab_empleado_departamento_dia=new Tabla();
 	private final static String IDE_GAME="24";
 	private Tabla tab_partida_cargo=new Tabla();
-
+	public static String par_nacionalidad;
+	public static String par_tipo_sangre;
 
 
 
@@ -121,7 +122,9 @@ public class pre_empleado extends Pantalla {
 	private ServicioNomina ser_nomina = (ServicioNomina) utilitario.instanciarEJB(ServicioNomina.class);
 
 	public pre_empleado() {
-
+		//parametros
+		par_nacionalidad=utilitario.getVariable("p_gth_nacionalidad");
+		par_tipo_sangre=utilitario.getVariable("p_gth_tipo_sangre");
 
 		bar_botones.agregarReporte();
 
@@ -392,9 +395,10 @@ public class pre_empleado extends Pantalla {
 		tab_partida_cargo.getColumna("IDE_GEDEP").setUnico(true);
 		tab_partida_cargo.getColumna("IDE_GEPAP").setUnico(true);
 		tab_partida_cargo.getColumna("IDE_GEGRO").setCombo("GEN_GRUPO_OCUPACIONAL",	"IDE_GEGRO", "DETALLE_GEGRO", "");
-		tab_partida_cargo.getColumna("IDE_GEGRO").setMetodoChange("cargarCargoFuncionalContratacion");
+		tab_partida_cargo.getColumna("IDE_GEGRO").setMetodoChange("grupoOcupacional");
 		tab_partida_cargo.getColumna("IDE_GECAF").setCombo("select a.IDE_GECAF,a.DETALLE_GECAF from GEN_CARGO_FUNCIONAL a, GEN_GRUPO_CARGO b where a.IDE_GECAF = b.IDE_GECAF");
 		tab_partida_cargo.getColumna("IDE_GECAF").setBuscarenCombo(false);
+		tab_partida_cargo.getColumna("IDE_GECAF").setVisible(false);
 		tab_partida_cargo.setMostrarcampoSucursal(true);
 		tab_partida_cargo.getColumna("IDE_SUCU").setCombo("SIS_SUCURSAL", "IDE_SUCU","NOM_SUCU", "");
 		tab_partida_cargo.getColumna("IDE_SUCU").setBuscarenCombo(false);
@@ -428,17 +432,27 @@ public class pre_empleado extends Pantalla {
 		tab_partida_cargo.setTipoFormulario(true);
 		tab_partida_cargo.getGrid().setColumns(4);
 		tab_partida_cargo.setMostrarNumeroRegistros(false);
+		///// muentra nombres de los campos
+		tab_partida_cargo.getColumna("IDE_GEPGC").setNombreVisual("CODIGO");
+		tab_partida_cargo.getColumna("IDE_GTTEM").setNombreVisual("REGIMEN LABORAL");
+		tab_partida_cargo.getColumna("IDE_SUCU").setNombreVisual("LUGAR TRABAJO");
+		tab_partida_cargo.getColumna("IDE_GEGRO").setNombreVisual("GRUPO OCUPACIONAL");
+		tab_partida_cargo.getColumna("IDE_GEPAP").setNombreVisual("PARTIDA PRESUPUESTARIA");
+		tab_partida_cargo.getColumna("IDE_GEARE").setNombreVisual("PROCESO");
+		tab_partida_cargo.getColumna("IDE_GEDEP").setNombreVisual("SUB_PROCESO");
+		tab_partida_cargo.getColumna("TITULO_CARGO_GEPGC").setNombreVisual("DENOMINACION PUESTO");
 		tab_partida_cargo.dibujar();
 
 
 
 
-
+		////// SEGUNDA DIVICION 
 
 		tab_empleado_departamento_dia.setId("tab_empleado_departamento_dia");	
 		tab_empleado_departamento_dia.setTabla("GEN_EMPLEADOS_DEPARTAMENTO_PAR","IDE_GEEDP", 50);		
 		tab_empleado_departamento_dia.getColumna("IDE_GEGRO").setCombo("GEN_GRUPO_OCUPACIONAL", "IDE_GEGRO", "DETALLE_GEGRO", "");
-		tab_empleado_departamento_dia.getColumna("FECHA_GEEDP").setValorDefecto(utilitario.getFechaActual());
+		//tab_empleado_departamento_dia.getColumna("FECHA_GEEDP").setValorDefecto(utilitario.getFechaActual());***
+		tab_empleado_departamento_dia.getColumna("FECHA_GEEDP").setMetodoChange("mismaFecha");
 		tab_empleado_departamento_dia.getColumna("IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL","IDE_GECAF","DETALLE_GECAF","");	
 		tab_empleado_departamento_dia.getColumna("IDE_GECAF").setBuscarenCombo(true);
 		tab_empleado_departamento_dia.getColumna("GEN_IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL", "IDE_GECAF", "DETALLE_GECAF", "");
@@ -484,7 +498,7 @@ public class pre_empleado extends Pantalla {
 		tab_empleado_departamento_dia.setMostrarNumeroRegistros(false);
 		tab_empleado_departamento_dia.setCondicion("IDE_GEEDP=-1");
 		
-		
+		//// campos ocultos en dialogo contratación
 		tab_empleado_departamento_dia.getColumna("IDE_GEGRO").setVisible(false);
 		tab_empleado_departamento_dia.getColumna("IDE_GECAF").setVisible(false);
 		tab_empleado_departamento_dia.getColumna("IDE_SUCU").setVisible(false);
@@ -493,9 +507,35 @@ public class pre_empleado extends Pantalla {
 		tab_empleado_departamento_dia.getColumna("IDE_GTTEM").setVisible(false);
 		tab_empleado_departamento_dia.getColumna("IDE_GEPGC").setVisible(false);
 		tab_empleado_departamento_dia.getColumna("IDE_GEPGC").setVisible(false);
-		
-		
-		
+		tab_empleado_departamento_dia.getColumna("IDE_GTTSI").setVisible(false);
+		tab_empleado_departamento_dia.getColumna("GEN_IDE_GEGRO").setVisible(false);
+		tab_empleado_departamento_dia.getColumna("IDE_GECAE").setVisible(false);
+		tab_empleado_departamento_dia.getColumna("IDE_GETIV").setVisible(false);
+		tab_empleado_departamento_dia.getColumna("IDE_GEDED").setVisible(false);
+		tab_empleado_departamento_dia.getColumna("AJUSTE_SUELDO_GEEDP").setVisible(false);
+		tab_empleado_departamento_dia.getColumna("FECHA_ENCARGO_GEEDP").setVisible(false);
+		tab_empleado_departamento_dia.getColumna("FECHA_AJUSTE_GEEDP").setVisible(false);
+		tab_empleado_departamento_dia.getColumna("FECHA_LIQUIDACION_GEEDP").setVisible(false);
+		tab_empleado_departamento_dia.getColumna("LIQUIDACION_GEEDP").setVisible(false);
+		tab_empleado_departamento_dia.getColumna("FECHA_ENCARGO_FIN_GEEDP").setVisible(false);
+		tab_empleado_departamento_dia.getColumna("SUELDO_SUBROGA_GEEDP").setVisible(false);
+		tab_empleado_departamento_dia.getColumna("EJECUTO_LIQUIDACION_GEEDP").setVisible(false);
+		tab_empleado_departamento_dia.getColumna("GEN_IDE_GECAF").setVisible(false);
+		tab_empleado_departamento_dia.getColumna("LINEA_SUPERVICION_GEEDP").setVisible(false);
+		//tab_empleado_departamento_dia.getColumna("IDE_GEDED").setVisible(false);
+		////NOMBRE DE CAMPOS 
+		tab_empleado_departamento_dia.getColumna("IDE_GEEDP").setNombreVisual("CODIGO");
+		tab_empleado_departamento_dia.getColumna("IDE_GTGRE").setNombreVisual("JORNADA LABORAL");
+		tab_empleado_departamento_dia.getColumna("FECHA_GEEDP").setNombreVisual("FECHA INICIO GESTION");
+		tab_empleado_departamento_dia.getColumna("FECHA_FINCTR_GEEDP").setNombreVisual("FECHA FIN GESTION");
+		tab_empleado_departamento_dia.getColumna("RMU_GEEDP").setNombreVisual("RMU");
+		tab_empleado_departamento_dia.getColumna("IDE_GTTCO").setNombreVisual("TIPO CONTRATO");
+		tab_empleado_departamento_dia.getColumna("ACTIVO_GEEDP").setNombreVisual("ACTIVO");
+		tab_empleado_departamento_dia.getColumna("ACUMULA_FONDOS_GEEDP").setNombreVisual("ACUMULA FONDOS");
+		tab_empleado_departamento_dia.getColumna("CONTROL_ASISTENCIA_GEEDP").setNombreVisual("CONTROL ASISTENCIA");
+		tab_empleado_departamento_dia.getColumna("OBSERVACION_GEEDP").setNombreVisual("OBSERVACION");
+		tab_empleado_departamento_dia.getColumna("OBSERVACION_GEEDP").setOrden(6);// para q se me ponga en el orden #6
+
 		tab_empleado_departamento_dia.dibujar();
 		Grid grid=new Grid();
 		grid.getChildren().add(tab_partida_cargo);
@@ -503,7 +543,14 @@ public class pre_empleado extends Pantalla {
 		dia_contrata.setDialogo(grid);
 
 	}
-
+	//////////////////SE ME CARGA EL MISMO DATO AL OTRO CAMPO 
+		
+	public void grupoOcupacional(AjaxBehaviorEvent evt){
+		tab_partida_cargo.modificar(evt);//Siempre es la primera linea
+		tab_partida_cargo.setValor("IDE_GECAF", tab_partida_cargo.getValor("IDE_GEGRO"));
+		utilitario.addUpdateTabla(tab_partida_cargo, "IDE_GECAF", "");
+	}
+	
 	public void cargarDepartamentosContratacion() {
 		if (tab_partida_cargo.getTotalFilas()>0){
 			tab_partida_cargo.getColumna("IDE_GEDEP").setCombo("SELECT a.IDE_GEDEP,a.DETALLE_GEDEP FROM GEN_DEPARTAMENTO a, GEN_DEPARTAMENTO_SUCURSAL b WHERE a.IDE_GEDEP=b.IDE_GEDEP AND b.IDE_GEARE="+ tab_partida_cargo.getValor("IDE_GEARE")+ " AND IDE_SUCU="+ tab_partida_cargo.getValor("IDE_SUCU"));
@@ -523,7 +570,7 @@ public class pre_empleado extends Pantalla {
 
 	public void cargarCargoFuncionalContratacion(AjaxBehaviorEvent evt) {
 		tab_partida_cargo.modificar(evt);
-		tab_partida_cargo.getColumna("IDE_GECAF").setCombo("select a.IDE_GECAF,a.DETALLE_GECAF from GEN_CARGO_FUNCIONAL a, GEN_GRUPO_CARGO b where a.IDE_GECAF = b.IDE_GECAF AND IDE_GEGRO ="+ tab_partida_cargo.getValor("IDE_GEGRO"));
+		tab_partida_cargo.getColumna("IDE_GECAF").setValorDefecto("select a.IDE_GECAF from GEN_CARGO_FUNCIONAL a, GEN_GRUPO_CARGO b where a.IDE_GECAF = b.IDE_GECAF AND IDE_GEGRO ="+ tab_partida_cargo.getValor("IDE_GEGRO")+" limit 1");
 		utilitario.addUpdateTabla(tab_partida_cargo, "IDE_GECAF", "");
 	}
 
@@ -692,6 +739,7 @@ public class pre_empleado extends Pantalla {
 			tab_empleado_departamento_dia.limpiar();
 			tab_empleado_departamento_dia.insertar();
 			tab_empleado_departamento_dia.setValor("IDE_GTEMP", aut_empleado.getValor());
+			tab_empleado_departamento_dia.setValor("FECHA_GEEDP",tab_empleado.getValor("fecha_ingreso_gtemp"));
 			tab_partida_cargo.limpiar();
 			tab_partida_cargo.insertar();
 			utilitario.getConexion().getSqlPantalla().clear();
@@ -701,7 +749,7 @@ public class pre_empleado extends Pantalla {
 			utilitario.agregarMensajeInfo("Debe seleccionar un empleado", "");
 		}
 	}
-
+	
 
 	public  void aceptarCuentaAnticipo(){
 		String str_seleccionado=set_cuenta_anticipo.getValorSeleccionado();
@@ -2193,8 +2241,10 @@ public class pre_empleado extends Pantalla {
 		tab_empleado.getColumna("IDE_GTESC").setCombo("GTH_ESTADO_CIVIL", "IDE_GTESC", "DETALLE_GTESC", "");
 		tab_empleado.getColumna("IDE_GEDIP").setCombo(ser_gestion.getSqlDivisionPoliticaCiudad());
 		//tab_empleado.getColumna("IDE_GEDIP").setAutoCompletar();
-		tab_empleado.getColumna("IDE_GTTIS").setCombo("GTH_TIPO_SANGRE", "IDE_GTTIS", "DETALLE_GTTIS", "");
-		tab_empleado.getColumna("IDE_GTNAC").setCombo("GTH_NACIONALIDAD", "IDE_GTNAC", "DETALLE_GTNAC", "");
+		//tab_empleado.getColumna("IDE_GTTIS").setCombo("GTH_TIPO_SANGRE", "IDE_GTTIS", "DETALLE_GTTIS", "");
+		//tab_empleado.getColumna("IDE_GTNAC").setCombo("GTH_NACIONALIDAD", "IDE_GTNAC", "DETALLE_GTNAC", "");
+		tab_empleado.getColumna("IDE_GTNAC").setValorDefecto(par_nacionalidad);
+		tab_empleado.getColumna("IDE_GTTIS").setValorDefecto(par_tipo_sangre);
 		tab_empleado.getColumna("PRIMER_NOMBRE_GTEMP").setRequerida(true);
 		tab_empleado.getColumna("APELLIDO_PATERNO_GTEMP").setRequerida(true);
 		tab_empleado.getColumna("DOCUMENTO_IDENTIDAD_GTEMP").setRequerida(true);
@@ -2209,8 +2259,19 @@ public class pre_empleado extends Pantalla {
 		tab_empleado.getColumna("PATH_FOTO_GTEMP").setValorDefecto("imagenes/im_empleado.png");
 		tab_empleado.getColumna("PATH_FOTO_GTEMP").setImagen("128", "128");
 		tab_empleado.getColumna("SEPARACION_BIENES_GTEMP").setCheck();
+		tab_empleado.getColumna("SEPARACION_BIENES_GTEMP").setValorDefecto("false");
+		tab_empleado.getColumna("fecha_ingreso_gtemp").setMetodoChange("mismaFecha");
 		tab_empleado.getColumna("DISCAPACITADO_GTEMP").setCheck();
-		tab_empleado.getColumna("PATH_FIRMA_GTEMP").setUpload("firmas");		
+		tab_empleado.getColumna("PATH_FIRMA_GTEMP").setUpload("firmas");
+		tab_empleado.getColumna("carnet_extranjeria_gtemp").setVisible(false);
+		tab_empleado.getColumna("fecha_ingreso_pais_gtemp").setVisible(false);
+		tab_empleado.getColumna("ide_gttis").setVisible(false);
+		tab_empleado.getColumna("ide_gtnac").setVisible(false);
+		tab_empleado.getColumna("SEPARACION_BIENES_GTEMP").setVisible(false);
+		tab_empleado.getColumna("CARGO_PUBLICO_GTEMP").setVisible(false);
+		tab_empleado.getColumna("fecha_ingreso_grupo_gtemp").setVisible(false);
+		tab_empleado.getColumna("ide_gtesc").setVisible(false);
+
 		List lista = new ArrayList();
 		Object fila1[] = {
 				"0", "PRIVADO"
@@ -2319,6 +2380,7 @@ public class pre_empleado extends Pantalla {
 		tab_discapacidad.getColumna("ACTIVO_GTDIE").setCheck();
 		tab_discapacidad.getColumna("ACTIVO_GTDIE").setValorDefecto("true");
 		tab_discapacidad.getColumna("PORCENTAJE_GTDIE").setVisible(true);
+		tab_discapacidad.getColumna("ide_gtgrd").setVisible(false);
 		tab_discapacidad.dibujar();
 
 		PanelTabla pat_panel5 = new PanelTabla();
@@ -2343,7 +2405,7 @@ public class pre_empleado extends Pantalla {
 		tab_archivo_empleado.getColumna("IDE_GTNEE").setValorDefecto(tab_negocio_empl.getValor("ide_gtnee"));
 		tab_archivo_empleado.setTipoFormulario(true);
 		tab_archivo_empleado.setMostrarNumeroRegistros(true);
-		tab_archivo_empleado.getGrid().setColumns(6);
+		tab_archivo_empleado.getGrid().setColumns(9);
 		tab_archivo_empleado.setIdCompleto("tab_tabulador:tab_archivo_empleado");
 		tab_archivo_empleado.dibujar();
 		PanelTabla pat_panel6 = new PanelTabla();
@@ -2364,6 +2426,16 @@ public class pre_empleado extends Pantalla {
 		pan_opcion.getChildren().add(div1);
 
 	}
+
+/////////metodo para q se me pogo la misma fecha en otro comapo
+public void mismaFecha(AjaxBehaviorEvent evt){
+	tab_empleado.modificar(evt); //Siempre es la primera linea
+	tab_empleado.setValor("fecha_ingreso_grupo_gtemp",tab_empleado.getValor("fecha_ingreso_gtemp"));
+	utilitario.addUpdateTabla(tab_empleado, "fecha_ingreso_grupo_gtemp,", "");
+	//utilitario.addUpdateTabla(tab_empleado_departamento_dia, "FECHA_GEEDP", "");
+
+}
+
 
 	/**
 	 * muestra en pantalla la tabla con los datos del conyugue del empleado
@@ -3770,7 +3842,8 @@ public class pre_empleado extends Pantalla {
 		}
 
 	}
-
+	
+	
 
 
 	/**
