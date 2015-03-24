@@ -113,6 +113,7 @@ public class pre_empleado extends Pantalla {
 	private Tabla tab_partida_cargo=new Tabla();
 	public static String par_nacionalidad;
 	public static String par_tipo_sangre;
+	public static String par_tipo_sindicato; 
 	
 
 
@@ -128,6 +129,7 @@ public class pre_empleado extends Pantalla {
 		//parametros
 		par_nacionalidad=utilitario.getVariable("p_gth_nacionalidad");
 		par_tipo_sangre=utilitario.getVariable("p_gth_tipo_sangre");
+		par_tipo_sindicato=utilitario.getVariable("p_gth_tipo_sindicato");
 
 		bar_botones.agregarReporte();
 
@@ -481,6 +483,7 @@ public class pre_empleado extends Pantalla {
 				"GTH_TIPO_CONTRATO", "IDE_GTTCO", "DETALLE_GTTCO", "");
 		tab_empleado_departamento_dia.getColumna("IDE_GTTSI").setCombo(
 				"GTH_TIPO_SINDICATO", "IDE_GTTSI", "DETALLE_GTTSI", "");
+		tab_empleado_departamento_dia.getColumna("IDE_GTTSI").setValorDefecto(par_tipo_sindicato);
 		tab_empleado_departamento_dia.getColumna("IDE_GTGRE").setCombo(
 				"GTH_GRUPO_EMPLEADO", "IDE_GTGRE", "DETALLE_GTGRE", "");
 		tab_empleado_departamento_dia.getColumna("IDE_GTGRE").setCombo(
