@@ -65,7 +65,8 @@ public class Parametros {
         /*
          * GESTION DE TALENTO HUMANO MODULO =2
          */
-
+       
+        lis_parametros.add(new Parametro("2", "p_gth_tipo_sindicato", "Indica el tipo de sindicato que pertenece", "1","gth_tipo_sindicato", "ide_gttsi", "detalle_gttsi"));
         lis_parametros.add(new Parametro("2", "p_gth_tipo_contrato_nombramiento", "Indica el tipo de documento de contrato NOMBRAMIENTO", "0","GTH_TIPO_CONTRATO", "IDE_GTTCO", "DETALLE_GTTCO"));
         lis_parametros.add(new Parametro("2", "p_gth_tipo_sangre", "Indica el tipo de sangre del empleado", "11","gth_tipo_sangre", "ide_gttis", "detalle_gttis"));
         lis_parametros.add(new Parametro("2", "p_gth_nacionalidad", "Indica la nacionalidad del empleado", "2","gth_nacionalidad", "ide_gtnac", "detalle_gtnac"));
