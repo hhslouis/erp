@@ -362,6 +362,9 @@ public class Parametros {
         lis_parametros.add(new Parametro("16", "p_modulo_no_adjudicado","Indica el modulo que pertenece al no adjudicado ","10","cont_parametros_general","ide_copag","detalle_copag"));
         lis_parametros.add(new Parametro("16", "p_modulo_proveedor","Indica el modulo que pertenece el proveedor ","9","cont_parametros_general","ide_copag","detalle_copag"));
         lis_parametros.add(new Parametro("16", "p_modulo_estado_comprometido","Indica el modulo que pertenece el comprometido ","21","cont_estado","ide_coest","detalle_coest"));
+        lis_parametros.add(new Parametro("16", "p_modulo_estado_comprometido","Indica el modulo que pertenece el comprometido ","21","cont_estado","ide_coest","detalle_coest"));
+        lis_parametros.add(new Parametro("16", "p_sub_actividad","Indica el nombre sub actividad para ","5","pre_nivel_funcion_programa","ide_prnfp","detalle_prnfp"));
+
         /*
          * TESORERIA=18
          * */
