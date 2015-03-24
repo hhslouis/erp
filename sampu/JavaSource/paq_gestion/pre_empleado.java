@@ -555,11 +555,16 @@ public class pre_empleado extends Pantalla {
 		int num_dias= Integer.parseInt(tab_num_dias.getValor("dia_finc_gttco"));
 		String fechas=""; // tab_empleado_departamento_dia.getValor("FECHA_GEEDP")+"";
 		SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-	    Date fechaDate = null;
-	    fechaDate = formato.parse(fechas);
+	  
+		//Date fechaDate = null;
 	   
-		String str_fecha_fin=utilitario.sumarDiasFecha(fch, num_dias); 
-		tab_empleado_departamento_dia.setValor("FECHA_FINCTR_GEEDP", tab_empleado_departamento_dia.)
+		//fechaDate = formato.parse(fechas);
+	   
+		
+		//String str_fecha_fin=utilitario.sumarDiasFecha(fch, num_dias); 
+		
+		
+		//tab_empleado_departamento_dia.setValor("FECHA_FINCTR_GEEDP", tab_empleado_departamento_dia.)
 		
 	}
 	//////////////////SE ME CARGA EL MISMO DATO AL OTRO CAMPO 
