@@ -54,6 +54,7 @@ public class pre_programa extends Pantalla {
 		tab_vigente.setId("tab_vigente");
 		tab_vigente.setHeader("VIGENTE");
 		tab_vigente.setTabla("cont_vigente", "ide_covig", 2);
+		tab_vigente.setCondicion("ide_covig=-1");
 		tab_vigente.getColumna("ide_prcla").setVisible(false);
 		tab_vigente.getColumna("ide_prasp").setVisible(false);
 		tab_vigente.getColumna("ide_cocac").setVisible(false);
@@ -70,7 +71,8 @@ public class pre_programa extends Pantalla {
 				arb_arbol.setId("arb_arbol");
 				arb_arbol.setArbol("pre_funcion_programa", "ide_prfup", "codigo_prfup ||' '||detalle_prfup", "pre_ide_prfup");
 				//arb_arbol.setCondicion("ide_prfup in (select ide_prfup from cont_vigente where ide_prfup != null and ide_geani=-1 )"); //Carga vacio
-				arb_arbol.onSelect("seleccionar_arbol");	
+				arb_arbol.onSelect("seleccionar_arbol");
+				arb_arbol.setDynamic(false);
 				arb_arbol.dibujar();
 
 
