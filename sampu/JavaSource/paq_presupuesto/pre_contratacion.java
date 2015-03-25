@@ -70,9 +70,6 @@ public class pre_contratacion extends Pantalla{
 		tab_poa.getColumna("objeto_programa_prpoa").setVisible(false);
 		tab_poa.getColumna("objetivo_proyecto_prpoa").setVisible(false);
 		tab_poa.getColumna("meta_proyecto_prpoa").setVisible(false);
-		tab_poa.getColumna("ide_prsua").setCombo("select ide_prsua,codigo_prsua,detalle_prsua from pre_sub_actividad order by codigo_prsua,detalle_prsua");
-		tab_poa.getColumna("ide_prsua").setLectura(true);
-		tab_poa.getColumna("ide_prsua").setAutoCompletar();
 		tab_poa.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
 		tab_poa.getColumna("ide_prcla").setCombo(ser_presupuesto.getCatalogoPresupuestario("true,false"));
 		tab_poa.getColumna("ide_prcla").setAutoCompletar();
@@ -207,7 +204,7 @@ public class pre_contratacion extends Pantalla{
 		agregarComponente(set_funcion);
 		
 		////////dub_actividad
-		
+		/*
 		Boton bot_sub_actividad=new Boton();
 		bot_sub_actividad.setValue("Agregar Sub_Actividad");
 		bot_sub_actividad.setMetodo("agregarSubActividad");
@@ -221,7 +218,7 @@ public class pre_contratacion extends Pantalla{
 		set_sub_actividad.getBot_aceptar().setMetodo("aceptarSubActividad");
 		agregarComponente(set_sub_actividad);
 		
-		
+		*/
 
 
 
