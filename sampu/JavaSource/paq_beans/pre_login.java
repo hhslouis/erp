@@ -31,7 +31,7 @@ import persistencia.Conexion;
 /**
  *
  * @author Diego
- */
+ */ 
 @ManagedBean
 @SessionScoped
 public class pre_login {
