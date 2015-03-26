@@ -49,11 +49,11 @@ public class pre_funcion_programa extends Pantalla {
 		tab_funcion_programa.getColumna("ide_prsua").setAutoCompletar();
 		tab_funcion_programa.getColumna("activo_prfup").setValorDefecto("true");
 		tab_funcion_programa.getColumna("ide_prfup").setNombreVisual("CODIGO");
-		tab_funcion_programa.getColumna("detalle_prfup").setNombreVisual("NOMBRE (Programa/Proyecto/");
+		tab_funcion_programa.getColumna("detalle_prfup").setNombreVisual("NOMBRE");
 		tab_funcion_programa.getColumna("codigo_prfup").setNombreVisual("CODIGO");
-		tab_funcion_programa.getColumna("activo_prfup").setNombreVisual("");
-		tab_funcion_programa.getColumna("ide_prnfp").setNombreVisual("");
-		tab_funcion_programa.getColumna("ide_prsua").setNombreVisual("");
+		tab_funcion_programa.getColumna("activo_prfup").setNombreVisual("ACTIVO");
+		tab_funcion_programa.getColumna("ide_prnfp").setNombreVisual("NIVEL DE FUNCION");
+		tab_funcion_programa.getColumna("ide_prsua").setNombreVisual("SUB ACTIVIDAD");
 
 		tab_funcion_programa.dibujar();
 		PanelTabla pat_funcion_programa=new PanelTabla();
