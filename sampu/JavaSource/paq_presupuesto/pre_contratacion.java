@@ -3,6 +3,7 @@ package paq_presupuesto;
 
 
 import javax.ejb.EJB;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import org.primefaces.event.NodeSelectEvent;
 
@@ -79,10 +80,17 @@ public class pre_contratacion extends Pantalla{
 		tab_poa.getColumna("activo_prpoa").setLectura(true);
 		tab_poa.getColumna("activo_prpoa").setValorDefecto("true");
 		tab_poa.getColumna("ide_geare").setCombo("gen_area","ide_geare","detalle_geare","");
-
+		tab_poa.getColumna("presupuesto_inicial_prpoa").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:black");
+		tab_poa.getColumna("presupuesto_inicial_prpoa").setValorDefecto("0.00");
+		tab_poa.getColumna("presupuesto_inicial_prpoa").setEtiqueta();
+		tab_poa.getColumna("reforma_prpoa").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:black");
+		tab_poa.getColumna("reforma_prpoa").setValorDefecto("0.00");
+		tab_poa.getColumna("reforma_prpoa").setEtiqueta();
+		tab_poa.getColumna("presupuesto_codificado_prpoa").setEtiqueta();
+		tab_poa.getColumna("presupuesto_codificado_prpoa").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:black");
+		tab_poa.getColumna("presupuesto_codificado_prpoa").setValorDefecto("0.00");
 		tab_poa.setTipoFormulario(true);
 		tab_poa.getGrid().setColumns(4);
-
 
 		tab_poa.agregarRelacion(tab_mes);//agraga relacion para los tabuladores
 		tab_poa.agregarRelacion(tab_financiamiento);
@@ -112,9 +120,11 @@ public class pre_contratacion extends Pantalla{
 		tab_reforma.setCampoForanea("ide_prpoa");
 		tab_reforma.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
 		tab_reforma.getColumna("ide_gemes").setCombo("select ide_gemes,detalle_gemes from gen_mes order by ide_gemes");
-
-		tab_reforma.setTipoFormulario(true);
-		tab_reforma.getGrid().setColumns(4);
+		tab_reforma.getColumna("valor_reformado_prpor").setMetodoChange("valorReforma");
+		tab_reforma.getColumna("ide_coest").setVisible(false);
+		tab_reforma.getColumna("resolucion_prpor").setVisible(false);
+		tab_reforma.getColumna("ide_gemes").setVisible(false);
+		tab_reforma.getColumna("activo_prpor").setValorDefecto("true");
 		tab_reforma.dibujar();
 		PanelTabla pat_panel3=new PanelTabla();
 		pat_panel3.setPanelTabla(tab_reforma);
@@ -127,6 +137,8 @@ public class pre_contratacion extends Pantalla{
 		tab_financiamiento.setCampoForanea("ide_prpoa");
 		tab_financiamiento.getColumna("ide_prfuf").setCombo("pre_fuente_financiamiento","ide_prfuf","detalle_prfuf","");
 		tab_financiamiento.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
+		tab_financiamiento.getColumna("valor_financiamiento_prpof").setMetodoChange("valorFinanciamiento");
+		tab_financiamiento.getColumna("activo_prpof").setValorDefecto("true");
 		tab_financiamiento.dibujar();
 		PanelTabla pat_panel4= new PanelTabla();
 		pat_panel4.setPanelTabla(tab_financiamiento);
@@ -223,6 +235,73 @@ public class pre_contratacion extends Pantalla{
 
 
 	}
+	//valor Financiamiento
+///// para subir vaslores de un tabla a otra 
+	public void  calcularValor(){
+		double dou_valor_finan=0;
+		double dou_valor_codificado=0;
+		double dou_valor_refor=0;
+		
+		try {
+			//Obtenemos el valor de la cantidad
+			dou_valor_refor=Double.parseDouble(tab_reforma.getValor("valor_reformado_prpor"));
+		} catch (Exception e) {
+		}
+		
+		
+		
+		String valor_financiamiento=tab_financiamiento.getSumaColumna("valor_financiamiento_prpof")+"";
+		dou_valor_finan=Double.parseDouble(valor_financiamiento);
+		dou_valor_codificado=dou_valor_finan+dou_valor_refor;
+
+		
+		//Asignamos el total a la tabla detalle, con 2 decimales
+		tab_poa.setValor("presupuesto_inicial_prpoa",utilitario.getFormatoNumero(valor_financiamiento,2));
+		tab_poa.setValor("presupuesto_codificado_prpoa", utilitario.getFormatoNumero(dou_valor_codificado, 2));
+		tab_poa.modificar(tab_poa.getFilaActual());//para que haga el update
+		utilitario.addUpdateTabla(tab_poa, "presupuesto_inicial_prpoa,presupuesto_codificado_prpoa", "");	
+
+	}
+	
+	public void valorFinanciamiento(AjaxBehaviorEvent evt) {
+		tab_financiamiento.modificar(evt); //Siempre es la primera linea
+		calcularValor();
+
+	}
+
+	/////valor reforma
+///// para subir vaslores de un tabla a otra Financiamiento 
+	public void  calcularReforma(){
+		double dou_valor_refor=0;
+		double dou_valor_codificado=0;
+		double dou_valor_finan=0;
+		
+		try {
+			//Obtenemos el valor de la cantidad
+			dou_valor_finan=Double.parseDouble(tab_financiamiento.getValor("valor_financiamiento_prpof"));
+		} catch (Exception e) {
+		}
+		
+		String valor_reforma=tab_reforma.getSumaColumna("valor_reformado_prpor")+"";
+		dou_valor_refor=Double.parseDouble(valor_reforma);
+		//calcula valor codficado
+		dou_valor_codificado=dou_valor_finan+dou_valor_refor;
+		
+		//Asignamos el total a la tabla detalle, con 2 decimales
+		tab_poa.setValor("reforma_prpoa",utilitario.getFormatoNumero(valor_reforma,2));
+		tab_poa.setValor("presupuesto_codificado_prpoa", utilitario.getFormatoNumero(dou_valor_codificado, 2));
+		tab_poa.modificar(tab_poa.getFilaActual());//para que haga el update
+		utilitario.addUpdateTabla(tab_poa, "reforma_prpoa,presupuesto_codificado_prpoa", "");	
+
+	}
+	
+	public void valorReforma(AjaxBehaviorEvent evt) {
+		tab_reforma.modificar(evt); //Siempre es la primera linea
+		calcularReforma();
+
+	}
+
+
 	public void seleccionar_arbol(NodeSelectEvent evt) {
 		if(com_anio.getValue()==null){
 			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
