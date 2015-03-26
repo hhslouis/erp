@@ -145,6 +145,7 @@ public class pre_contratacion extends Pantalla{
 		tab_financiamiento.getColumna("valor_financiamiento_prpof").setMetodoChange("valorFinanciamiento");
 		tab_financiamiento.getColumna("activo_prpof").setValorDefecto("true");
 		tab_financiamiento.getColumna("activo_prpof").setLectura(true);
+		tab_financiamiento.getColumna("ide_coest").setVisible(false);
 		tab_financiamiento.dibujar();
 		PanelTabla pat_panel4= new PanelTabla();
 		pat_panel4.setPanelTabla(tab_financiamiento);
@@ -195,7 +196,7 @@ public class pre_contratacion extends Pantalla{
 
 
 		Boton bot_agregar=new Boton();
-		bot_agregar.setValue("Agregar Clasificador");
+		bot_agregar.setValue("Agregar Cuenta Presupuestaria");
 		bot_agregar.setMetodo("agregarClasificador");
 		bar_botones.agregarBoton(bot_agregar);
 
@@ -208,37 +209,7 @@ public class pre_contratacion extends Pantalla{
 		set_clasificador.getBot_aceptar().setMetodo("aceptarClasificador");
 		agregarComponente(set_clasificador);
 
-		Boton bot_funcionp=new Boton();
-		bot_funcionp.setValue("Agregar Funciòn Programa");
-		bot_funcionp.setMetodo("agregarFuncionPrograma");
-		bar_botones.agregarBoton(bot_funcionp);
-
-		set_funcion.setId("set_funcion");
-		set_funcion.setTitle("SELECCIONE FUNCIÒN PROGRAMA");
-		set_funcion.setRadio(); //solo selecciona una opcion
-		set_funcion.setSeleccionTabla(ser_presupuesto.getFuncionPrograma(), "ide_prfup"); 
-		set_funcion.getTab_seleccion().getColumna("detalle_prfup").setFiltroContenido(); //pone filtro
-		set_funcion.getBot_aceptar().setMetodo("aceptarFuncionPrograma");
-		agregarComponente(set_funcion);
 		
-		////////dub_actividad
-		/*
-		Boton bot_sub_actividad=new Boton();
-		bot_sub_actividad.setValue("Agregar Sub_Actividad");
-		bot_sub_actividad.setMetodo("agregarSubActividad");
-		bar_botones.agregarBoton(bot_sub_actividad);
-		
-		set_sub_actividad.setId("set_sub_actividad");
-		set_sub_actividad.setTitle("SELECCIONE UNA SUB_ACTIVIDAD");
-		set_sub_actividad.setRadio();
-		set_sub_actividad.setSeleccionTabla("select ide_prsua,codigo_prsua,detalle_prsua from pre_sub_actividad order by codigo_prsua,detalle_prsua", "");  
-		set_sub_actividad.getTab_seleccion().getColumna("detalle_prsua").setFiltroContenido();
-		set_sub_actividad.getBot_aceptar().setMetodo("aceptarSubActividad");
-		agregarComponente(set_sub_actividad);
-		
-		*/
-
-
 
 	}
 	//valor Financiamiento
@@ -353,60 +324,7 @@ public class pre_contratacion extends Pantalla{
 			utilitario.agregarMensajeInfo("Debe seleccionar un Clasificador", "");
 		}
 	}
-	public void agregarFuncionPrograma(){
-		System.out.println(" ingresar al importar");
-		if(com_anio.getValue()==null){
-			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
-			return;
-		}
-
-		set_funcion.getTab_seleccion().setSql(ser_presupuesto.getFuncionPrograma());
-		set_funcion.getTab_seleccion().ejecutarSql();
-		set_funcion.dibujar();
-
-	}
-
-	public  void aceptarFuncionPrograma(){
-		String str_seleccionado = set_funcion.getValorSeleccionado();
-		System.out.println("entra al str  "+str_seleccionado);
-
-		if (str_seleccionado!=null){
-			tab_poa.insertar();
-			tab_poa.setValor("ide_prfup",str_seleccionado);
-			tab_poa.setValor("ide_geani", com_anio.getValue()+"");
-
-			System.out.println("inserta el valor  "+str_seleccionado);
-
-		}
-		set_funcion.cerrar();
-		utilitario.addUpdate("tab_poa");
-	}
 	
-	
-	public void agregarSubActividad(){
-		if(com_anio.getValue()==null){
-			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
-			return;
-			
-		}
-		set_sub_actividad.getTab_seleccion().setSql("select ide_prsua,codigo_prsua,detalle_prsua from pre_sub_actividad order by codigo_prsua,detalle_prsua");  
-		set_sub_actividad.getTab_seleccion().ejecutarSql();
-		set_sub_actividad.dibujar();
-
-		
-	}
-
-	public void aceptarSubActividad(){
-		if(set_sub_actividad.getValorSeleccionado()!=null){
-			tab_poa.setValor("ide_prsua", set_sub_actividad.getValorSeleccionado());
-			//Actualiza 
-			utilitario.addUpdate("tab_poa");//actualiza mediante ajax el objeto tab_poa
-			set_sub_actividad.cerrar();
-		}
-		else{
-			utilitario.agregarMensajeInfo("Debe seleccionar una Sub_Actividad", "");
-		}
-	}
 	
 	
 	@Override
