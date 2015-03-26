@@ -72,6 +72,7 @@ public class pre_contratacion extends Pantalla{
 		tab_poa.getColumna("objetivo_proyecto_prpoa").setVisible(false);
 		tab_poa.getColumna("meta_proyecto_prpoa").setVisible(false);
 		tab_poa.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
+		tab_poa.getColumna("ide_coest").setVisible(false);
 		tab_poa.getColumna("ide_prcla").setCombo(ser_presupuesto.getCatalogoPresupuestario("true,false"));
 		tab_poa.getColumna("ide_prcla").setAutoCompletar();
 		tab_poa.getColumna("ide_prcla").setLectura(true);
@@ -108,6 +109,8 @@ public class pre_contratacion extends Pantalla{
 		tab_mes.setTabla("pre_poa_mes","ide_prpom",3);
 		tab_mes.setCampoForanea("ide_prpoa");
 		tab_mes.getColumna("ide_gemes").setCombo("select ide_gemes,detalle_gemes from gen_mes order by ide_gemes");
+		tab_mes.getColumna("activo_prpom").setValorDefecto("true");
+		tab_mes.getColumna("activo_prpom").setLectura(true);
 		tab_mes.dibujar();
 		PanelTabla pat_panel2 = new PanelTabla();
 		pat_panel2.setPanelTabla(tab_mes);
@@ -122,9 +125,11 @@ public class pre_contratacion extends Pantalla{
 		tab_reforma.getColumna("ide_gemes").setCombo("select ide_gemes,detalle_gemes from gen_mes order by ide_gemes");
 		tab_reforma.getColumna("valor_reformado_prpor").setMetodoChange("valorReforma");
 		tab_reforma.getColumna("ide_coest").setVisible(false);
-		tab_reforma.getColumna("resolucion_prpor").setVisible(false);
+		tab_reforma.getColumna("pre_ide_prpoa").setVisible(false);
 		tab_reforma.getColumna("ide_gemes").setVisible(false);
 		tab_reforma.getColumna("activo_prpor").setValorDefecto("true");
+		tab_reforma.getColumna("activo_prpor").setLectura(true);
+		tab_reforma.getColumna("fecha_prpor").setValorDefecto(utilitario.getFechaActual());
 		tab_reforma.dibujar();
 		PanelTabla pat_panel3=new PanelTabla();
 		pat_panel3.setPanelTabla(tab_reforma);
@@ -139,6 +144,7 @@ public class pre_contratacion extends Pantalla{
 		tab_financiamiento.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
 		tab_financiamiento.getColumna("valor_financiamiento_prpof").setMetodoChange("valorFinanciamiento");
 		tab_financiamiento.getColumna("activo_prpof").setValorDefecto("true");
+		tab_financiamiento.getColumna("activo_prpof").setLectura(true);
 		tab_financiamiento.dibujar();
 		PanelTabla pat_panel4= new PanelTabla();
 		pat_panel4.setPanelTabla(tab_financiamiento);
