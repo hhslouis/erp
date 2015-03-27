@@ -2,6 +2,9 @@ package paq_presupuesto;
 
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.ejb.EJB;
 import javax.faces.event.AjaxBehaviorEvent;
 
@@ -16,6 +19,8 @@ import framework.componentes.Division;
 import framework.componentes.Etiqueta;
 import framework.componentes.Imagen;
 import framework.componentes.PanelTabla;
+import framework.componentes.Reporte;
+import framework.componentes.SeleccionFormatoReporte;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import framework.componentes.Tabulador;
@@ -41,6 +46,13 @@ public class pre_contratacion extends Pantalla{
 	private SeleccionTabla set_sub_actividad=new SeleccionTabla();
 	private Confirmar con_guardar=new Confirmar();
 	private Arbol arb_arbol = new Arbol();
+	///reporte
+	private Map p_parametros = new HashMap();
+	private Reporte rep_reporte = new Reporte();
+	private SeleccionFormatoReporte self_reporte = new SeleccionFormatoReporte();
+	private Map map_parametros = new HashMap();
+	private SeleccionTabla sel_poa= new SeleccionTabla();
+	
 	@EJB
 	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
 
@@ -51,6 +63,15 @@ public class pre_contratacion extends Pantalla{
 
 
 	public pre_contratacion(){
+		
+		///reporte
+		rep_reporte.setId("rep_reporte"); //id
+		rep_reporte.getBot_aceptar().setMetodo("aceptarReporte");//ejecuta el metodo al aceptar reporte
+		agregarComponente(rep_reporte);//agrega el componente a la pantalla
+		bar_botones.agregarReporte();//aparece el boton de reportes en la barra de botones
+		self_reporte.setId("self_reporte"); //id
+		agregarComponente(self_reporte);
+		
 		com_anio.setCombo("select ide_geani,detalle_geani from gen_anio order by detalle_geani");
 		com_anio.setMetodo("filtrarAnio");
 		//com_anio.setMetodo("seleccionaElAnio");
@@ -209,7 +230,49 @@ public class pre_contratacion extends Pantalla{
 		set_clasificador.getBot_aceptar().setMetodo("aceptarClasificador");
 		agregarComponente(set_clasificador);
 
+		/////dialogo para reporte
+		sel_poa.setId("sel_poa");
+		sel_poa.setSeleccionTabla("select a.ide_prpoa,detalle_programa,programa,detalle_proyecto,proyecto,detalle_producto,producto,detalle_actividad,actividad," +
+				" detalle_subactividad,subactividad,codigo_subactividad,fecha_inicio_prpoa,fecha_fin_prpoa,num_resolucion_prpoa,presupuesto_inicial_prpoa," +
+				" presupuesto_codificado_prpoa,reforma_prpoa,detalle_geani,codigo_clasificador_prcla,descripcion_clasificador_prcla,detalle_geare" +
+				" from pre_poa a" +
+				" left join  gen_anio b on a.ide_geani= b.ide_geani" +
+				" left join pre_clasificador c on a.ide_prcla = c.ide_prcla" +
+				" left join (select a.ide_prfup,codigo_subactividad,detalle_subactividad,subactividad,detalle_actividad,actividad," +
+				" detalle_producto,producto,detalle_proyecto,proyecto,detalle_programa ,programa" +
+				" from (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_subactividad,detalle_prfup as detalle_subactividad,detalle_prnfp as subactividad" +
+				" from pre_funcion_programa a, pre_nivel_funcion_programa b" +
+				" where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =5) a ," +
+				" (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_actividad,detalle_prfup as detalle_actividad,detalle_prnfp as actividad" +
+				" from pre_funcion_programa a, pre_nivel_funcion_programa b" +
+				" where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =4) b, " +
+				" (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_producto,detalle_prfup as detalle_producto,detalle_prnfp as producto" +
+				" from pre_funcion_programa a, pre_nivel_funcion_programa b" +
+				" where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =3) c, " +
+				" (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_proyecto,detalle_prfup as detalle_proyecto,detalle_prnfp as proyecto" +
+				" from pre_funcion_programa a, pre_nivel_funcion_programa b" +
+				" where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =2) d, " +
+				" (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_programa,detalle_prfup as detalle_programa,detalle_prnfp as programa" +
+				" from pre_funcion_programa a, pre_nivel_funcion_programa b" +
+				" where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =1) e" +
+				" where a.pre_ide_prfup = b.ide_prfup" +
+				" and b.pre_ide_prfup = c.ide_prfup" +
+				" and c.pre_ide_prfup = d.ide_prfup" +
+				" and d.pre_ide_prfup = e.ide_prfup" +
+				" ) f on a.ide_prfup = f.ide_prfup" +
+				" left join gen_area g on a.ide_geare=g.ide_geare" +
+				" where a.ide_geani=" +com_anio.getValue()+				
+			    " order by codigo_subactividad,a.ide_prpoa", "");
+		sel_poa.getTab_seleccion().getColumna("detalle_programa").setFiltro(true);
+		sel_poa.getTab_seleccion().getColumna("detalle_proyecto").setFiltro(true);
+		sel_poa.getTab_seleccion().getColumna("detalle_actividad").setFiltro(true);
+		sel_poa.getTab_seleccion().getColumna("detalle_subactividad").setFiltro(true);
+		sel_poa.getTab_seleccion().getColumna("codigo_subactividad").setFiltro(true);
+		sel_poa.getTab_seleccion().getColumna("codigo_clasificador_prcla").setFiltro(true);
+		sel_poa.getBot_aceptar().setMetodo("aceptarReporte");
+		agregarComponente(sel_poa);
 		
+		inicializarSelPoa();
 
 	}
 	//valor Financiamiento
@@ -325,7 +388,129 @@ public class pre_contratacion extends Pantalla{
 		}
 	}
 	
+	////reporte
+	//reporte
+public void abrirListaReportes() {
+	// TODO Auto-generated method stub
+	rep_reporte.dibujar();
+}
+public void aceptarReporte(){
+	if(rep_reporte.getReporteSelecionado().equals("PLAN OPERATIVO ANUAL (POA)"));{
+		TablaGenerica tab_reporte=utilitario.consultar("select ide_geani,detalle_geani from gen_anio where ide_geani="+com_anio.getValue());
+		if (rep_reporte.isVisible()){
+			
+			p_parametros=new HashMap();		
+			rep_reporte.cerrar();
+			p_parametros.clear();
+			aceptarselPoa();
+			
+		}
+		else if(sel_poa.isVisible()) {
+			
+			if(sel_poa.getListaSeleccionados().size()>0){	
+				p_parametros.put("ide_prpoa",sel_poa.getSeleccionados());
+				p_parametros.put("titulo","PLAN OPERATIVO ANUAL (POA) "+tab_reporte.getValor("detalle_geani"));
+				p_parametros.put("ide_geani", Integer.parseInt(com_anio.getValue().toString()));
+				self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
+				sel_poa.cerrar();
+			   self_reporte.dibujar();
+			}		
+		}
+		else{
+			utilitario.agregarMensajeInfo("No se puede continuar", "No ha Seleccionado Ningun Registro");
+
+		}
+		
+}
+}
+
+	public void inicializarSelPoa(){
+
+	/////dialogo para reporte
+		sel_poa.setId("sel_poa");
+		sel_poa.setSeleccionTabla("select a.ide_prpoa,detalle_programa,programa,detalle_proyecto,proyecto,detalle_producto,producto,detalle_actividad,actividad," +
+				" detalle_subactividad,subactividad,codigo_subactividad,fecha_inicio_prpoa,fecha_fin_prpoa,num_resolucion_prpoa,presupuesto_inicial_prpoa," +
+				" presupuesto_codificado_prpoa,reforma_prpoa,detalle_geani,codigo_clasificador_prcla,descripcion_clasificador_prcla,detalle_geare" +
+				" from pre_poa a" +
+				" left join  gen_anio b on a.ide_geani= b.ide_geani" +
+				" left join pre_clasificador c on a.ide_prcla = c.ide_prcla" +
+				" left join (select a.ide_prfup,codigo_subactividad,detalle_subactividad,subactividad,detalle_actividad,actividad," +
+				" detalle_producto,producto,detalle_proyecto,proyecto,detalle_programa ,programa" +
+				" from (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_subactividad,detalle_prfup as detalle_subactividad,detalle_prnfp as subactividad" +
+				" from pre_funcion_programa a, pre_nivel_funcion_programa b" +
+				" where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =5) a ," +
+				" (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_actividad,detalle_prfup as detalle_actividad,detalle_prnfp as actividad" +
+				" from pre_funcion_programa a, pre_nivel_funcion_programa b" +
+				" where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =4) b, " +
+				" (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_producto,detalle_prfup as detalle_producto,detalle_prnfp as producto" +
+				" from pre_funcion_programa a, pre_nivel_funcion_programa b" +
+				" where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =3) c, " +
+				" (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_proyecto,detalle_prfup as detalle_proyecto,detalle_prnfp as proyecto" +
+				" from pre_funcion_programa a, pre_nivel_funcion_programa b" +
+				" where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =2) d, " +
+				" (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_programa,detalle_prfup as detalle_programa,detalle_prnfp as programa" +
+				" from pre_funcion_programa a, pre_nivel_funcion_programa b" +
+				" where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =1) e" +
+				" where a.pre_ide_prfup = b.ide_prfup" +
+				" and b.pre_ide_prfup = c.ide_prfup" +
+				" and c.pre_ide_prfup = d.ide_prfup" +
+				" and d.pre_ide_prfup = e.ide_prfup" +
+				" ) f on a.ide_prfup = f.ide_prfup" +
+				" left join gen_area g on a.ide_geare=g.ide_geare" +
+				" where a.ide_geani=-1" +				
+			    " order by codigo_subactividad,a.ide_prpoa", "ide_prpoa");
+		sel_poa.getTab_seleccion().ejecutarSql();
+		sel_poa.getTab_seleccion().getColumna("detalle_programa").setFiltro(true);
+		sel_poa.getTab_seleccion().getColumna("detalle_proyecto").setFiltro(true);
+		sel_poa.getTab_seleccion().getColumna("detalle_actividad").setFiltro(true);
+		sel_poa.getTab_seleccion().getColumna("detalle_subactividad").setFiltro(true);
+		sel_poa.getTab_seleccion().getColumna("codigo_subactividad").setFiltro(true);
+		sel_poa.getTab_seleccion().getColumna("codigo_clasificador_prcla").setFiltro(true);
+		sel_poa.getBot_aceptar().setMetodo("aceptarReporte");
+		agregarComponente(sel_poa);
+		
+} 
+
+public void aceptarselPoa(){
+	sel_poa.getTab_seleccion().setSql("select a.ide_prpoa,detalle_programa,programa,detalle_proyecto,proyecto,detalle_producto,producto,detalle_actividad,actividad," +
+			" detalle_subactividad,subactividad,codigo_subactividad,fecha_inicio_prpoa,fecha_fin_prpoa,num_resolucion_prpoa,presupuesto_inicial_prpoa," +
+			" presupuesto_codificado_prpoa,reforma_prpoa,detalle_geani,codigo_clasificador_prcla,descripcion_clasificador_prcla,detalle_geare" +
+			" from pre_poa a" +
+			" left join  gen_anio b on a.ide_geani= b.ide_geani" +
+			" left join pre_clasificador c on a.ide_prcla = c.ide_prcla" +
+			" left join (select a.ide_prfup,codigo_subactividad,detalle_subactividad,subactividad,detalle_actividad,actividad," +
+			" detalle_producto,producto,detalle_proyecto,proyecto,detalle_programa ,programa" +
+			" from (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_subactividad,detalle_prfup as detalle_subactividad,detalle_prnfp as subactividad" +
+			" from pre_funcion_programa a, pre_nivel_funcion_programa b" +
+			" where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =5) a ," +
+			" (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_actividad,detalle_prfup as detalle_actividad,detalle_prnfp as actividad" +
+			" from pre_funcion_programa a, pre_nivel_funcion_programa b" +
+			" where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =4) b, " +
+			" (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_producto,detalle_prfup as detalle_producto,detalle_prnfp as producto" +
+			" from pre_funcion_programa a, pre_nivel_funcion_programa b" +
+			" where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =3) c, " +
+			" (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_proyecto,detalle_prfup as detalle_proyecto,detalle_prnfp as proyecto" +
+			" from pre_funcion_programa a, pre_nivel_funcion_programa b" +
+			" where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =2) d, " +
+			" (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_programa,detalle_prfup as detalle_programa,detalle_prnfp as programa" +
+			" from pre_funcion_programa a, pre_nivel_funcion_programa b" +
+			" where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =1) e" +
+			" where a.pre_ide_prfup = b.ide_prfup" +
+			" and b.pre_ide_prfup = c.ide_prfup" +
+			" and c.pre_ide_prfup = d.ide_prfup" +
+			" and d.pre_ide_prfup = e.ide_prfup" +
+			" ) f on a.ide_prfup = f.ide_prfup" +
+			" left join gen_area g on a.ide_geare=g.ide_geare" +
+			" where a.ide_geani=" +com_anio.getValue()+				
+		    " order by codigo_subactividad,a.ide_prpoa");
+	sel_poa.getTab_seleccion().ejecutarSql();
+	sel_poa.getBot_aceptar().setMetodo("aceptarReporte");
+	sel_poa.dibujar();
 	
+}
+
+
+
 	
 	@Override
 	public void insertar() {
@@ -478,6 +663,30 @@ public class pre_contratacion extends Pantalla{
 	}
 	public void setSet_sub_actividad(SeleccionTabla set_sub_actividad) {
 		this.set_sub_actividad = set_sub_actividad;
+	}
+	public Reporte getRep_reporte() {
+		return rep_reporte;
+	}
+	public void setRep_reporte(Reporte rep_reporte) {
+		this.rep_reporte = rep_reporte;
+	}
+	public SeleccionFormatoReporte getSelf_reporte() {
+		return self_reporte;
+	}
+	public void setSelf_reporte(SeleccionFormatoReporte self_reporte) {
+		this.self_reporte = self_reporte;
+	}
+	public Map getMap_parametros() {
+		return map_parametros;
+	}
+	public void setMap_parametros(Map map_parametros) {
+		this.map_parametros = map_parametros;
+	}
+	public SeleccionTabla getSel_poa() {
+		return sel_poa;
+	}
+	public void setSel_poa(SeleccionTabla sel_poa) {
+		this.sel_poa = sel_poa;
 	}
 
 
