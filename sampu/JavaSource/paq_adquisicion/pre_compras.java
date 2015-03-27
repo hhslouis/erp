@@ -77,7 +77,7 @@ public class pre_compras extends Pantalla{
 		self_reporte.setId("self_reporte"); //id
 		agregarComponente(self_reporte);
 		tab_compras.setId("tab_compras");
-		tab_compras.setHeader("SOLICITUD DE COMPRA");
+		tab_compras.setHeader("HOJA DE REQUERIMIENTO");
 		tab_compras.setTabla("adq_solicitud_compra", "ide_adsoc", 1);
 		tab_compras.setCampoOrden("ide_adsoc desc");
 		tab_compras.getColumna("ide_coest").setCombo("cont_estado","ide_coest", "detalle_coest","");
