@@ -52,7 +52,6 @@ public class pre_modulo extends Pantalla{
 		tab_modulo_estado.setId("tab_modulo_estado");
 		tab_modulo_estado.setIdCompleto("tab_tabulador:tab_modulo_estado");
 		tab_modulo_estado.setTabla("gen_modulo_estado","ide_gemoe", 2);
-		tab_modulo_estado.getColumna("ide_gemod").setCombo("gen_modulo", "ide_gemod", "detalle_gemod", "");
 		tab_modulo_estado.getColumna("ide_coest").setCombo("cont_estado", "ide_coest", "detalle_coest", "");
 		tab_modulo_estado.dibujar();
 		PanelTabla pat_panel2 = new PanelTabla();
@@ -72,7 +71,6 @@ public class pre_modulo extends Pantalla{
 		tab_modulo_secuencial.setId("tab_modulo_secuencial");
 		tab_modulo_secuencial.setIdCompleto("tab_tabulador:tab_modulo_secuencial");
 		tab_modulo_secuencial.setTabla("gen_modulo_secuencial", "ide_gemos", 4);
-		tab_modulo_secuencial.getColumna("ide_gemod").setCombo("gen_modulo", "ide_gemod", "detalle_gemod", "");
 		tab_modulo_secuencial.dibujar();
 		PanelTabla pat_panel4= new PanelTabla();
 		pat_panel4.setPanelTabla(tab_modulo_secuencial);
