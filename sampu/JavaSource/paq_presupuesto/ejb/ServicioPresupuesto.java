@@ -101,4 +101,12 @@ public TablaGenerica getTablaGenericaPrograma(String ide_prpro){
 			" order by cod_programa_prpro");
 	return tab_programa;
 }
+public String getCertificacion(String activo){
+	String tab_certificacion=("select ide_prcer,num_documento_prcer,detalle_prcer,fecha_prcer " +
+			"from pre_certificacion where activo_prcer  in ("+activo+") order by num_documento_prcer");
+	return tab_certificacion;
+	
+}
+
+
 }
