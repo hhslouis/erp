@@ -77,7 +77,7 @@ public class pre_factura_compras extends Pantalla{
 
 		Boton bot_buscar=new Boton();
 		bot_buscar.setIcon("ui-icon-person");
-		bot_buscar.setValue("Buscar Solicitud Compra ");
+		bot_buscar.setValue("Buscar Hoja de Requerimiento");
 		bot_buscar.setMetodo("importarSolicitudCompra");
 		bar_botones.agregarBoton(bot_buscar);
 
