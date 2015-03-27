@@ -68,7 +68,7 @@ public class pre_funcion_programa extends Pantalla {
 		tab_vigente.setId("tab_vigente");
 		tab_vigente.setHeader("AÑO VIGENTE");
 		tab_vigente.setTabla("cont_vigente", "ide_covig", 2);
-		tab_vigente.setCondicion("ide_covig=-1");
+		tab_vigente.setCondicion("not ide_prfup is null");
 		tab_vigente.getColumna("ide_geani").setCombo("gen_anio","ide_geani","detalle_geani","");
 		tab_vigente.getColumna("ide_geani").setUnico(true);
 		tab_vigente.getColumna("ide_prfup").setUnico(true);
