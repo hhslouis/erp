@@ -52,6 +52,8 @@ public class pre_partida_grupo_cargo extends Pantalla {
 	private Dialogo dia_filtro_vacante = new Dialogo();
 	private Dialogo dia_sueldo_subrogacion = new Dialogo();
 	private Confirmar con_guardar=new Confirmar();
+	private Confirmar con_guardar_partida=new Confirmar();
+	private SeleccionTabla set_partida=new SeleccionTabla();
 
 
 
@@ -75,6 +77,7 @@ public class pre_partida_grupo_cargo extends Pantalla {
 
 		tab_tabla.setId("tab_tabla");
 		tab_tabla.setTabla("GEN_PARTIDA_GRUPO_CARGO", "IDE_GEPGC", 1);
+		tab_tabla.setCampoOrden("IDE_GEPGC desc");
 		tab_tabla.getColumna("IDE_GEGRO").setUnico(true);
 		tab_tabla.getColumna("IDE_GECAF").setUnico(true);
 		tab_tabla.getColumna("IDE_SUCU").setUnico(true);
@@ -82,9 +85,10 @@ public class pre_partida_grupo_cargo extends Pantalla {
 		tab_tabla.getColumna("IDE_GEDEP").setUnico(true);
 		tab_tabla.getColumna("IDE_GEPAP").setUnico(true);
 		tab_tabla.getColumna("IDE_GEGRO").setCombo("GEN_GRUPO_OCUPACIONAL",	"IDE_GEGRO", "DETALLE_GEGRO", "");
-		tab_tabla.getColumna("IDE_GEGRO").setMetodoChange("cargarCargoFuncional");
-		tab_tabla.getColumna("IDE_GECAF").setCombo("select a.IDE_GECAF,a.DETALLE_GECAF from GEN_CARGO_FUNCIONAL a, GEN_GRUPO_CARGO b where a.IDE_GECAF = b.IDE_GECAF");
-		tab_tabla.getColumna("IDE_GECAF").setBuscarenCombo(false);
+		tab_tabla.getColumna("IDE_GEGRO").setMetodoChange("grupoOcupacional");
+		//tab_tabla.getColumna("IDE_GECAF").setCombo("select a.IDE_GECAF,a.DETALLE_GECAF from GEN_CARGO_FUNCIONAL a, GEN_GRUPO_CARGO b where a.IDE_GECAF = b.IDE_GECAF");
+		//tab_tabla.getColumna("IDE_GECAF").setBuscarenCombo(false);
+		tab_tabla.getColumna("IDE_GECAF").setVisible(false);
 		tab_tabla.setMostrarcampoSucursal(true);
 		tab_tabla.getColumna("IDE_SUCU").setCombo("SIS_SUCURSAL", "IDE_SUCU","NOM_SUCU", "");
 		tab_tabla.getColumna("IDE_SUCU").setBuscarenCombo(false);
@@ -100,6 +104,7 @@ public class pre_partida_grupo_cargo extends Pantalla {
 		tab_tabla.getColumna("IDE_GEDEP").setBuscarenCombo(false);
 		tab_tabla.getColumna("IDE_GEPAP").setCombo("GEN_PARTIDA_PRESUPUESTARIA", "IDE_GEPAP","CODIGO_PARTIDA_GEPAP,DETALLE_GEPAP", "ACTIVO_GEPAP=TRUE");
 		tab_tabla.getColumna("IDE_GEPAP").setAutoCompletar();
+		tab_tabla.getColumna("IDE_GEPAP").setLectura(true);
 		tab_tabla.setMostrarcampoSucursal(true);
 		tab_tabla.getColumna("ACTIVO_GEPGC").setCheck();
 		tab_tabla.getColumna("ACTIVO_GEPGC").setValorDefecto("true");
@@ -116,6 +121,28 @@ public class pre_partida_grupo_cargo extends Pantalla {
 		tab_tabla.getColumna("ENCARGO_GEPGC").setCheck();
 		tab_tabla.getColumna("SALARIO_ENCARGO_GEPGC").setLectura(true);
 		tab_tabla.getColumna("ENCARGO_GEPGC").setMetodoChange("salarioEncargo");
+		tab_tabla.getColumna("IDE_GEPGC").setNombreVisual("CODIGO");
+		tab_tabla.getColumna("IDE_GTTEM").setNombreVisual("REGIMEN LABORAL");
+		tab_tabla.getColumna("IDE_SUCU").setNombreVisual("LUGAR TRABAJO");
+		tab_tabla.getColumna("IDE_SUCU").setOrden(3);
+		tab_tabla.getColumna("IDE_GEGRO").setNombreVisual("GRUPO OCUPACIONAL");
+		tab_tabla.getColumna("IDE_GEGRO").setOrden(4);
+		tab_tabla.getColumna("IDE_GEPAP").setNombreVisual("PARTIDA PRESUPUESTARIA");
+		tab_tabla.getColumna("IDE_GEPAP").setOrden(7);
+		tab_tabla.getColumna("IDE_GEARE").setNombreVisual("PROCESO");
+		tab_tabla.getColumna("IDE_GEARE").setOrden(5);
+		tab_tabla.getColumna("IDE_GEDEP").setNombreVisual("SUB_PROCESO");
+		tab_tabla.getColumna("IDE_GEDEP").setOrden(6);
+		tab_tabla.getColumna("TITULO_CARGO_GEPGC").setNombreVisual("DENOMINACION PUESTO");
+		tab_tabla.getColumna("TITULO_CARGO_GEPGC").setOrden(2);
+		tab_tabla.getColumna("FECHA_ACTIVACION_GEPGC").setNombreVisual("FECHA ACTIVACIÓN");
+		tab_tabla.getColumna("FECHA_DESACTIVA_GEPGC ").setNombreVisual("FECHA DESACTIVA");
+		tab_tabla.getColumna("MOTIVO_GEPGC").setNombreVisual("MOTIVO ACTIVACIÓN");
+		tab_tabla.getColumna("ACTIVO_GEPGC").setNombreVisual("ACTIVO");
+		tab_tabla.getColumna("VACANTE_GEPGC").setNombreVisual("VACANTE");
+
+		tab_tabla.getColumna("ENCARGO_GEPGC").setVisible(false);
+		tab_tabla.getColumna("SALARIO_ENCARGO_GEPGC").setVisible(false);
 		tab_tabla.setTipoFormulario(true);
 		tab_tabla.getGrid().setColumns(4);
 		tab_tabla.dibujar();
@@ -224,8 +251,71 @@ public class pre_partida_grupo_cargo extends Pantalla {
 		agregarComponente(con_guardar);
 
 		
+		/////pARTIDA PRESUPUESTARIA BOTON
+		Boton bot_agregar=new Boton();
+		bot_agregar.setValue("AGREGAR PARTIDA PRESUPUESTARIA");
+		bot_agregar.setMetodo("agregarPartida");
+		bar_botones.agregarBoton(bot_agregar);
+		///boton guaradar
+		con_guardar_partida.setId("con_guardar_partida");
+		agregarComponente(con_guardar_partida);
+		
+		
+		set_partida.setId("set_partida");
+		set_partida.setTitle("SELECCIONE UNA PARTIDA PRESUPUESTARIA");
+		set_partida.setRadio(); //solo selecciona una opcion
+		set_partida.setSeleccionTabla("select ide_gepap,codigo_partida_gepap,detalle_gepap from gen_partida_presupuestaria order by codigo_partida_gepap", "ide_gepap");
+		set_partida.getTab_seleccion().getColumna("codigo_partida_gepap").setFiltroContenido(); //pone filtro
+		set_partida.getTab_seleccion().getColumna("detalle_gepap").setFiltroContenido();//pone filtro
+		set_partida.getBot_aceptar().setMetodo("modificarPartida");
+		agregarComponente(set_partida);
 
+		
 	}
+		//////////////////SE ME CARGA EL MISMO DATO AL OTRO CAMPO 
+			
+		public void grupoOcupacional(AjaxBehaviorEvent evt){
+		tab_tabla.modificar(evt);//Siempre es la primera linea
+		tab_tabla.setValor("IDE_GECAF", tab_tabla.getValor("IDE_GEGRO"));
+		utilitario.addUpdateTabla(tab_tabla, "IDE_GECAF", "");
+		}
+
+
+	/////partda presupestaria
+	public void agregarPartida(){
+		
+		//Filtrar los clasificadores del año seleccionado
+		set_partida.getTab_seleccion().setSql("select ide_gepap,codigo_partida_gepap,detalle_gepap from gen_partida_presupuestaria order by codigo_partida_gepap");
+		set_partida.getTab_seleccion().ejecutarSql();
+		set_partida.dibujar();
+	}
+	
+	public void modificarPartida(){
+			String str_partidaActualizado=set_partida.getValorSeleccionado();
+		    tab_tabla.setValor("ide_gepap",str_partidaActualizado);			
+		    tab_tabla.modificar(tab_tabla.getFilaActual());
+			utilitario.addUpdate("tab_tabla");	
+
+			con_guardar_partida.setMessage("Esta Seguro que desea Guardar ");
+			con_guardar_partida.setTitle("CONFIRMCIÓN GUARDAR PARTIDA");
+			con_guardar_partida.getBot_aceptar().setMetodo("guardarPartida");
+			con_guardar_partida.dibujar();
+			utilitario.addUpdate("con_guardar_partida");
+
+
+		}
+		public void guardarPartida(){
+			System.out.println("Entra a guardar...");
+			tab_tabla.guardar();
+			con_guardar_partida.cerrar();
+			set_partida.cerrar();
+
+
+			guardarPantalla();
+
+		}
+
+	
 
 	public void salarioEncargo(AjaxBehaviorEvent evt){
 
@@ -323,12 +413,6 @@ public class pre_partida_grupo_cargo extends Pantalla {
 		actualizarCombos();
 	}
 
-	public void cargarCargoFuncional(AjaxBehaviorEvent evt) {
-		tab_tabla.modificar(evt);
-		tab_tabla.getColumna("IDE_GECAF").setCombo("select a.IDE_GECAF,a.DETALLE_GECAF from GEN_CARGO_FUNCIONAL a, GEN_GRUPO_CARGO b where a.IDE_GECAF = b.IDE_GECAF AND IDE_GEGRO ="+ tab_tabla.getValor("IDE_GEGRO"));
-		utilitario.addUpdateTabla(tab_tabla, "IDE_GECAF", "");
-	}
-
 	public void cargarArea() {
 		
 		tab_tabla.getColumna("IDE_GEARE").setCombo("SELECT b.IDE_GEARE,b.DETALLE_GEARE FROM GEN_DEPARTAMENTO_SUCURSAL a " +
@@ -359,8 +443,7 @@ public class pre_partida_grupo_cargo extends Pantalla {
 
 	private void actualizarCombos() {
 
-		tab_tabla.getColumna("IDE_GECAF").setCombo("select a.IDE_GECAF,a.DETALLE_GECAF from GEN_CARGO_FUNCIONAL a, GEN_GRUPO_CARGO b where a.IDE_GECAF = b.IDE_GECAF AND IDE_GEGRO ="+ tab_tabla.getValor("IDE_GEGRO"));
-		
+
 		
 		tab_tabla.getColumna("IDE_GEARE").setCombo("SELECT b.IDE_GEARE,b.DETALLE_GEARE FROM GEN_DEPARTAMENTO_SUCURSAL a " +
 				"inner join GEN_AREA b on a.IDE_GEARE=b.IDE_GEARE " +
@@ -425,7 +508,6 @@ public class pre_partida_grupo_cargo extends Pantalla {
 
 	@Override
 	public void insertar() {
-		tab_tabla.getColumna("IDE_GECAF").setCombo("select a.IDE_GECAF,a.DETALLE_GECAF from GEN_CARGO_FUNCIONAL a, GEN_GRUPO_CARGO b where a.IDE_GECAF = b.IDE_GECAF AND IDE_GEGRO =-1");
 		tab_tabla.getColumna("IDE_GEARE").setCombo("SELECT a.IDE_GEARE,a.DETALLE_GEARE FROM GEN_AREA a, GEN_DEPARTAMENTO_SUCURSAL b WHERE a.IDE_GEARE=b.IDE_GEARE AND IDE_SUCU=-1");
 		tab_tabla.getColumna("IDE_GEDEP").setCombo("SELECT a.IDE_GEDEP,a.DETALLE_GEDEP FROM GEN_DEPARTAMENTO a, GEN_DEPARTAMENTO_SUCURSAL b WHERE a.IDE_GEDEP=b.IDE_GEDEP AND b.IDE_GEARE=-1 AND IDE_SUCU=-1");
 		tab_tabla.insertar();
@@ -436,7 +518,8 @@ public class pre_partida_grupo_cargo extends Pantalla {
 	@Override
 	public void guardar() {
 				if (tab_tabla.getTotalFilas() > 0) {			
-					TablaGenerica tab_partida = utilitario.consultar("SELECT * FROM GEN_PARTIDA_GRUPO_CARGO WHERE IDE_GEPAP="+ tab_tabla.getValor("IDE_GEPAP")+ " AND vacante_gepgc=false");
+					TablaGenerica tab_partida = utilitario.consultar("SELECT * FROM GEN_PARTIDA_GRUPO_CARGO WHERE IDE_GEPGC="+ tab_tabla.getValor("IDE_GEPGC")+ " AND vacante_gepgc=false");
+					System.out.println("imprimo sql"+tab_partida.getSql());
 					if (tab_partida.getTotalFilas() > 0) {
 						utilitario.agregarMensajeInfo("No se puede guardar","Esta partida ya se encuentra en uso");
 					} else {
@@ -596,6 +679,12 @@ public class pre_partida_grupo_cargo extends Pantalla {
 
 	public void setDia_sueldo_subrogacion(Dialogo dia_sueldo_subrogacion) {
 		this.dia_sueldo_subrogacion = dia_sueldo_subrogacion;
+	}
+	public SeleccionTabla getSet_partida() {
+		return set_partida;
+	}
+	public void setSet_partida(SeleccionTabla set_partida) {
+		this.set_partida = set_partida;
 	}
 
 }
