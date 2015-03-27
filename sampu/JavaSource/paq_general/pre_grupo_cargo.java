@@ -78,11 +78,9 @@ public class pre_grupo_cargo extends Pantalla {
 
 
 		bar_botones.agregarReporte();
-
 		rep_reporte.setId("rep_reporte");
 		rep_reporte.getBot_aceptar().setMetodo("aceptarReporte");
 		agregarComponente(rep_reporte);
-
 		sef_reporte.setId("sef_reporte");
 		agregarComponente(sef_reporte);
 
