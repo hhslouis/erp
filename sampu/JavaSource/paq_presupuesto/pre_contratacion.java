@@ -230,47 +230,6 @@ public class pre_contratacion extends Pantalla{
 		set_clasificador.getBot_aceptar().setMetodo("aceptarClasificador");
 		agregarComponente(set_clasificador);
 
-		/////dialogo para reporte
-		sel_poa.setId("sel_poa");
-		sel_poa.setSeleccionTabla("select a.ide_prpoa,detalle_programa,programa,detalle_proyecto,proyecto,detalle_producto,producto,detalle_actividad,actividad," +
-				" detalle_subactividad,subactividad,codigo_subactividad,fecha_inicio_prpoa,fecha_fin_prpoa,num_resolucion_prpoa,presupuesto_inicial_prpoa," +
-				" presupuesto_codificado_prpoa,reforma_prpoa,detalle_geani,codigo_clasificador_prcla,descripcion_clasificador_prcla,detalle_geare" +
-				" from pre_poa a" +
-				" left join  gen_anio b on a.ide_geani= b.ide_geani" +
-				" left join pre_clasificador c on a.ide_prcla = c.ide_prcla" +
-				" left join (select a.ide_prfup,codigo_subactividad,detalle_subactividad,subactividad,detalle_actividad,actividad," +
-				" detalle_producto,producto,detalle_proyecto,proyecto,detalle_programa ,programa" +
-				" from (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_subactividad,detalle_prfup as detalle_subactividad,detalle_prnfp as subactividad" +
-				" from pre_funcion_programa a, pre_nivel_funcion_programa b" +
-				" where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =5) a ," +
-				" (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_actividad,detalle_prfup as detalle_actividad,detalle_prnfp as actividad" +
-				" from pre_funcion_programa a, pre_nivel_funcion_programa b" +
-				" where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =4) b, " +
-				" (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_producto,detalle_prfup as detalle_producto,detalle_prnfp as producto" +
-				" from pre_funcion_programa a, pre_nivel_funcion_programa b" +
-				" where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =3) c, " +
-				" (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_proyecto,detalle_prfup as detalle_proyecto,detalle_prnfp as proyecto" +
-				" from pre_funcion_programa a, pre_nivel_funcion_programa b" +
-				" where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =2) d, " +
-				" (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_programa,detalle_prfup as detalle_programa,detalle_prnfp as programa" +
-				" from pre_funcion_programa a, pre_nivel_funcion_programa b" +
-				" where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =1) e" +
-				" where a.pre_ide_prfup = b.ide_prfup" +
-				" and b.pre_ide_prfup = c.ide_prfup" +
-				" and c.pre_ide_prfup = d.ide_prfup" +
-				" and d.pre_ide_prfup = e.ide_prfup" +
-				" ) f on a.ide_prfup = f.ide_prfup" +
-				" left join gen_area g on a.ide_geare=g.ide_geare" +
-				" where a.ide_geani=" +com_anio.getValue()+				
-			    " order by codigo_subactividad,a.ide_prpoa", "");
-		sel_poa.getTab_seleccion().getColumna("detalle_programa").setFiltro(true);
-		sel_poa.getTab_seleccion().getColumna("detalle_proyecto").setFiltro(true);
-		sel_poa.getTab_seleccion().getColumna("detalle_actividad").setFiltro(true);
-		sel_poa.getTab_seleccion().getColumna("detalle_subactividad").setFiltro(true);
-		sel_poa.getTab_seleccion().getColumna("codigo_subactividad").setFiltro(true);
-		sel_poa.getTab_seleccion().getColumna("codigo_clasificador_prcla").setFiltro(true);
-		sel_poa.getBot_aceptar().setMetodo("aceptarReporte");
-		agregarComponente(sel_poa);
 		
 		inicializarSelPoa();
 
