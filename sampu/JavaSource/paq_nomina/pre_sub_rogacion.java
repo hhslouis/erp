@@ -131,14 +131,7 @@ public class pre_sub_rogacion extends Pantalla{
 		bot_reactiva.setIcon("ui-icon-transfer-e-w");
 		//	bar_botones.agregarBoton(bot_reactiva);
 
-		rep_reporte.setId("rep_reporte");
-		rep_reporte.getBot_aceptar().setMetodo("aceptarReporte");
-		agregarComponente(rep_reporte);
-		sef_reporte.setId("sef_reporte");
-		agregarComponente(sef_reporte);
-		bar_botones.agregarReporte();
-
-		//dialogo de tipo vinculacion
+			//dialogo de tipo vinculacion
 
 		List lista1 = new ArrayList();
 		Object fila1[] = {
@@ -169,7 +162,6 @@ public class pre_sub_rogacion extends Pantalla{
 
 		//seleccion tabla de accion motivo
 		sel_tab_accion_motivo.setId("sel_tab_accion_motivo");
-		//sel_tab_accion_motivo.setSeleccionTabla("SELECT ide_gemed,detalle_gemed,detalle_reporte_gemed FROM gen_motivo_empleado_depa", "ide_gemed");
 		sel_tab_accion_motivo.setSeleccionTabla("SELECT a.IDE_GEAME,b.DETALLE_GEAED,c.DETALLE_GEMED,c.detalle_reporte_gemed FROM GEN_ACCION_MOTIVO_EMPLEADO a " +
 				"LEFT JOIN ( " +
 				"SELECT IDE_GEAED,DETALLE_GEAED from GEN_ACCION_EMPLEADO_DEPA " +
@@ -213,57 +205,29 @@ public class pre_sub_rogacion extends Pantalla{
 		tab_partida_vigente.setHeader(eti_cargo_actual);
 		tab_partida_vigente.setId("tab_partida_vigente");
 		tab_partida_vigente.setIdCompleto("tab_tabulador:tab_partida_vigente");
-		tab_partida_vigente.setTabla("GEN_EMPLEADOS_DEPARTAMENTO_PAR",
-				"IDE_GEEDP", 1);		
-		tab_partida_vigente.getColumna("IDE_GEGRO").setCombo(
-				"GEN_GRUPO_OCUPACIONAL", "IDE_GEGRO", "DETALLE_GEGRO", "");		
-		tab_partida_vigente
-		.getColumna("IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL",
-				"IDE_GECAF",
-				"DETALLE_GECAF",
+		tab_partida_vigente.setTabla("GEN_EMPLEADOS_DEPARTAMENTO_PAR","IDE_GEEDP", 1);		
+		tab_partida_vigente.getColumna("IDE_GEGRO").setCombo("GEN_GRUPO_OCUPACIONAL", "IDE_GEGRO", "DETALLE_GEGRO", "");		
+		tab_partida_vigente.getColumna("IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL","IDE_GECAF","DETALLE_GECAF",
 				"PRINCIPAL_SECUNDARIO_GECAF=TRUE AND IDE_GECAF IN (SELECT IDE_GECAF FROM GEN_GRUPO_CARGO where IDE_GEGRO=-1)");
-		tab_partida_vigente.getColumna("GEN_IDE_GECAF").setCombo(
-				"GEN_CARGO_FUNCIONAL", "IDE_GECAF", "DETALLE_GECAF", "");
-		tab_partida_vigente.getColumna("IDE_SUCU").setCombo("SIS_SUCURSAL",
-				"IDE_SUCU", "NOM_SUCU", "");
+		tab_partida_vigente.getColumna("GEN_IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL", "IDE_GECAF", "DETALLE_GECAF", "");
+		tab_partida_vigente.getColumna("IDE_SUCU").setCombo("SIS_SUCURSAL","IDE_SUCU", "NOM_SUCU", "");
 		tab_partida_vigente.getColumna("IDE_SUCU").setVisible(true);		
-		tab_partida_vigente
-		.getColumna("IDE_GEARE")
-		.setCombo(
-				"GEN_AREA",
-				"IDE_GEARE",
-				"DETALLE_GEARE",
+		tab_partida_vigente.getColumna("IDE_GEARE").setCombo("GEN_AREA","IDE_GEARE","DETALLE_GEARE",
 				"IDE_GEARE IN (SELECT IDE_GEARE from GEN_DEPARTAMENTO_SUCURSAL where IDE_SUCU=-1)");
-		tab_partida_vigente.getColumna("IDE_GEARE").setMetodoChange(
-				"cargarCargoDepartamentos");
+		tab_partida_vigente.getColumna("IDE_GEARE").setMetodoChange("cargarCargoDepartamentos");
 		tab_partida_vigente.getColumna("IDE_GEARE").setBuscarenCombo(false);
-		tab_partida_vigente
-		.getColumna("IDE_GEDEP")
-		.setCombo(
-				"GEN_DEPARTAMENTO",
-				"IDE_GEDEP",
-				"DETALLE_GEDEP",
+		tab_partida_vigente.getColumna("IDE_GEDEP").setCombo("GEN_DEPARTAMENTO","IDE_GEDEP","DETALLE_GEDEP",
 				"IDE_GEDEP IN (SELECT IDE_GEDEP from GEN_DEPARTAMENTO_SUCURSAL where IDE_SUCU=-1 AND IDE_GEARE=-1)");		
-		tab_partida_vigente.getColumna("IDE_GECAE").setCombo(
-				"GEN_CATEGORIA_ESTATUS", "IDE_GECAE", "DETALLE_GECAE", "");
-		tab_partida_vigente.getColumna("IDE_GETIV").setCombo(
-				"GEN_TIPO_VINCULACION", "IDE_GETIV", "DETALLE_GETIV", "");		
-		tab_partida_vigente
-		.getColumna("IDE_GEPGC")
-		.setCombo(
-				"SELECT IDE_GEPGC,PAP.CODIGO_PARTIDA_GEPAP,PAP.DETALLE_GEPAP "
+		tab_partida_vigente.getColumna("IDE_GECAE").setCombo("GEN_CATEGORIA_ESTATUS", "IDE_GECAE", "DETALLE_GECAE", "");
+		tab_partida_vigente.getColumna("IDE_GETIV").setCombo("GEN_TIPO_VINCULACION", "IDE_GETIV", "DETALLE_GETIV", "");		
+		tab_partida_vigente.getColumna("IDE_GEPGC").setCombo("SELECT IDE_GEPGC,PAP.CODIGO_PARTIDA_GEPAP,PAP.DETALLE_GEPAP "
 						+ "from GEN_PARTIDA_GRUPO_CARGO pgc "
 						+ "left join GEN_PARTIDA_PRESUPUESTARIA pap on PAP.IDE_GEPAP=PGC.IDE_GEPAP");
-		tab_partida_vigente.getColumna("IDE_GTTEM").setCombo(
-				"GTH_TIPO_EMPLEADO", "IDE_GTTEM", "DETALLE_GTTEM", "");
-		tab_partida_vigente.getColumna("IDE_GTTCO").setCombo(
-				"GTH_TIPO_CONTRATO", "IDE_GTTCO", "DETALLE_GTTCO", "");
-		tab_partida_vigente.getColumna("IDE_GTTSI").setCombo(
-				"GTH_TIPO_SINDICATO", "IDE_GTTSI", "DETALLE_GTTSI", "");
-		tab_partida_vigente.getColumna("IDE_GTGRE").setCombo(
-				"GTH_GRUPO_EMPLEADO", "IDE_GTGRE", "DETALLE_GTGRE", "");
-		tab_partida_vigente.getColumna("IDE_GTGRE").setCombo(
-				"GTH_GRUPO_EMPLEADO", "IDE_GTGRE", "DETALLE_GTGRE", "");		
+		tab_partida_vigente.getColumna("IDE_GTTEM").setCombo("GTH_TIPO_EMPLEADO", "IDE_GTTEM", "DETALLE_GTTEM", "");
+		tab_partida_vigente.getColumna("IDE_GTTCO").setCombo("GTH_TIPO_CONTRATO", "IDE_GTTCO", "DETALLE_GTTCO", "");
+		tab_partida_vigente.getColumna("IDE_GTTSI").setCombo("GTH_TIPO_SINDICATO", "IDE_GTTSI", "DETALLE_GTTSI", "");
+		tab_partida_vigente.getColumna("IDE_GTGRE").setCombo("GTH_GRUPO_EMPLEADO", "IDE_GTGRE", "DETALLE_GTGRE", "");
+		tab_partida_vigente.getColumna("IDE_GTGRE").setCombo("GTH_GRUPO_EMPLEADO", "IDE_GTGRE", "DETALLE_GTGRE", "");		
 		tab_partida_vigente.getColumna("ACTIVO_GEEDP").setVisible(false);
 		tab_partida_vigente.getColumna("ACUMULA_FONDOS_GEEDP").setCheck();
 		tab_partida_vigente.getColumna("LINEA_SUPERVICION_GEEDP").setCheck();
@@ -299,6 +263,19 @@ public class pre_sub_rogacion extends Pantalla{
 		tab_partida_vigente.setLectura(true);
 		tab_partida_vigente.getGrid().setColumns(4);
 		tab_partida_vigente.setMostrarNumeroRegistros(false);
+		tab_partida_vigente.getColumna("IDE_GEDED").setVisible(false);
+		tab_partida_vigente.getColumna("IDE_GETIV").setVisible(false);
+		tab_partida_vigente.getColumna("GEN_IDE_GEGRO").setVisible(false);
+		tab_partida_vigente.getColumna("IDE_GTTSI").setVisible(false);
+		tab_partida_vigente.getColumna("GEN_IDE_GECAF").setVisible(false);
+		tab_partida_vigente.getColumna("AJUSTE_SUELDO_GEEDP").setVisible(false);
+		tab_partida_vigente.getColumna("FECHA_AJUSTE_GEEDP").setVisible(false);
+		tab_partida_vigente.getColumna("FECHA_LIQUIDACION_GEEDP").setVisible(false);
+		tab_partida_vigente.getColumna("IDE_GECAE").setVisible(false);
+		tab_partida_vigente.getColumna("IDE_GECAF").setVisible(false);
+		tab_partida_vigente.getColumna("LIQUIDACION_GEEDP").setVisible(false);
+		tab_partida_vigente.getColumna("EJECUTO_LIQUIDACION_GEEDP").setVisible(false);
+		tab_partida_vigente.getColumna("LINEA_SUPERVICION_GEEDP").setVisible(false);
 		tab_partida_vigente.dibujar();
 		PanelTabla pat_panel = new PanelTabla();
 		pat_panel.setPanelTabla(tab_partida_vigente);
@@ -310,22 +287,14 @@ public class pre_sub_rogacion extends Pantalla{
 
 		tab_deta_empleado_depar.setId("tab_deta_empleado_depar");
 		tab_deta_empleado_depar.onSelect("seleccionarTabla1");
-
-		tab_deta_empleado_depar
-		.setIdCompleto("tab_tabulador:tab_deta_empleado_depar");
-		tab_deta_empleado_depar.setTabla("GEN_DETALLE_EMPLEADO_DEPARTAME",
-				"IDE_GEDED", 2);
+		tab_deta_empleado_depar.setIdCompleto("tab_tabulador:tab_deta_empleado_depar");
+		tab_deta_empleado_depar.setTabla("GEN_DETALLE_EMPLEADO_DEPARTAME","IDE_GEDED", 2);
 		tab_deta_empleado_depar.getColumna("FECHA_SALIDA_GEDED").setVisible(false);
 		tab_deta_empleado_depar.getColumna("GEN_IDE_GEDED").setVisible(false);
-
-		tab_deta_empleado_depar.getColumna("IDE_GEINS").setCombo(
-				"GEN_INSTITUCION", "IDE_GEINS", "DETALLE_GEINS", "");
+		tab_deta_empleado_depar.getColumna("IDE_GEINS").setCombo("GEN_INSTITUCION", "IDE_GEINS", "DETALLE_GEINS", "");
 		tab_deta_empleado_depar.getColumna("IDE_GEINS").setAutoCompletar();
 		tab_deta_empleado_depar.setRecuperarLectura(true);
-		tab_deta_empleado_depar
-		.getColumna("IDE_GEAME")
-		.setCombo(
-				"SELECT a.IDE_GEAME,b.IDE_GEAED,b.DETALLE_GEAED,c.DETALLE_GEMED FROM GEN_ACCION_MOTIVO_EMPLEADO a "
+		tab_deta_empleado_depar.getColumna("IDE_GEAME").setCombo("SELECT a.IDE_GEAME,b.IDE_GEAED,b.DETALLE_GEAED,c.DETALLE_GEMED FROM GEN_ACCION_MOTIVO_EMPLEADO a "
 						+ "LEFT JOIN ( "
 						+ "SELECT IDE_GEAED,DETALLE_GEAED from GEN_ACCION_EMPLEADO_DEPA "
 						+ ")b ON b.IDE_GEAED=a.IDE_GEAED "
@@ -350,13 +319,13 @@ public class pre_sub_rogacion extends Pantalla{
 		tab_deta_empleado_depar.dibujar();
 		PanelTabla pat_panel2 = new PanelTabla();
 		pat_panel2.setPanelTabla(tab_deta_empleado_depar);
-		tab_deta_empleado_depar.setRecuperarLectura(false);
+		//tab_deta_empleado_depar.setRecuperarLectura(false);
 
 		tab_empleado_departamento.setHeader(eti_cargo_accion);
 		tab_empleado_departamento.setId("tab_empleado_departamento");
 		tab_empleado_departamento.setIdCompleto("tab_tabulador:tab_empleado_departamento");
 		tab_empleado_departamento.setTabla("GEN_EMPLEADOS_DEPARTAMENTO_PAR","IDE_GEEDP", 3);
-		tab_empleado_departamento.onSelect("seleccionaTablaEmpleadosDepartamento");
+		//tab_empleado_departamento.onSelect("seleccionaTablaEmpleadosDepartamento");++
 		tab_empleado_departamento.getColumna("IDE_GEGRO").setCombo("GEN_GRUPO_OCUPACIONAL", "IDE_GEGRO", "DETALLE_GEGRO", "");
 		tab_empleado_departamento.getColumna("FECHA_GEEDP").setValorDefecto(utilitario.getFechaActual());
 		tab_empleado_departamento.getColumna("FECHA_GEEDP").setMetodoChange("llenarFechaFinContrato");
@@ -365,68 +334,53 @@ public class pre_sub_rogacion extends Pantalla{
 		tab_empleado_departamento.getColumna("IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL","IDE_GECAF","DETALLE_GECAF","");
 		tab_empleado_departamento.getColumna("IDE_GECAF").setMetodoChange("cargarPartidaGrupoCargo");
 		tab_empleado_departamento.getColumna("IDE_GECAF").setBuscarenCombo(false);
-		tab_empleado_departamento.getColumna("GEN_IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL", "IDE_GECAF", "DETALLE_GECAF", "");
+		//tab_empleado_departamento.getColumna("GEN_IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL", "IDE_GECAF", "DETALLE_GECAF", "");
 		tab_empleado_departamento.getColumna("GEN_IDE_GECAF").setVisible(false);
 		tab_empleado_departamento.getColumna("IDE_SUCU").setCombo("SIS_SUCURSAL", "IDE_SUCU", "NOM_SUCU", "");
 		tab_empleado_departamento.getColumna("IDE_SUCU").setVisible(true);
-		tab_empleado_departamento.getColumna("IDE_SUCU").setMetodoChange(
-				"cargarCargoAreas");
-		tab_empleado_departamento
-		.getColumna("IDE_GEARE")
-		.setCombo(
-				"GEN_AREA",
-				"IDE_GEARE",
-				"DETALLE_GEARE",
-				"IDE_GEARE IN (SELECT IDE_GEARE from GEN_DEPARTAMENTO_SUCURSAL where IDE_SUCU=-1)");
-		tab_empleado_departamento.getColumna("IDE_GEARE").setMetodoChange(
-				"cargarCargoDepartamentos");
-		tab_empleado_departamento.getColumna("IDE_GEARE").setBuscarenCombo(
-				false);
+		tab_empleado_departamento.getColumna("IDE_SUCU").setMetodoChange("cargarCargoAreas");
+		tab_empleado_departamento.getColumna("IDE_GEARE").setCombo("GEN_AREA","IDE_GEARE","DETALLE_GEARE","IDE_GEARE IN (SELECT IDE_GEARE from GEN_DEPARTAMENTO_SUCURSAL where IDE_SUCU=-1)");
+		tab_empleado_departamento.getColumna("IDE_GEARE").setMetodoChange("cargarCargoDepartamentos");
+		tab_empleado_departamento.getColumna("IDE_GEARE").setBuscarenCombo(false);
 //		tab_empleado_departamento.getColumna("IDE_GEDEP").setCombo("GEN_DEPARTAMENTO","IDE_GEDEP","DETALLE_GEDEP","IDE_GEDEP IN (SELECT IDE_GEDEP from GEN_DEPARTAMENTO_SUCURSAL where IDE_SUCU=-1 AND IDE_GEARE=-1)");
 		tab_empleado_departamento.getColumna("IDE_GEDEP").setCombo("GEN_DEPARTAMENTO","IDE_GEDEP","DETALLE_GEDEP","");
-
-		tab_empleado_departamento.getColumna("IDE_GEDEP").setMetodoChange(
-				"cargarPartidaGrupoCargo");
-		tab_empleado_departamento.getColumna("IDE_GEDEP").setBuscarenCombo(
-				false);
+		tab_empleado_departamento.getColumna("IDE_GEDEP").setMetodoChange("cargarPartidaGrupoCargo");
+		tab_empleado_departamento.getColumna("IDE_GEDEP").setBuscarenCombo(false);
 		tab_empleado_departamento.getColumna("IDE_GECAE").setCombo("GEN_CATEGORIA_ESTATUS", "IDE_GECAE", "DETALLE_GECAE", "");
 		tab_empleado_departamento.getColumna("IDE_GECAE").setLectura(true);
-
-		tab_empleado_departamento.getColumna("IDE_GETIV").setCombo(
-				"GEN_TIPO_VINCULACION", "IDE_GETIV", "DETALLE_GETIV", "");
-		tab_empleado_departamento.getColumna("IDE_GETIV").setBuscarenCombo(
-				false);
-
-
+		tab_empleado_departamento.getColumna("IDE_GETIV").setCombo("GEN_TIPO_VINCULACION", "IDE_GETIV", "DETALLE_GETIV", "");
+		tab_empleado_departamento.getColumna("IDE_GETIV").setBuscarenCombo(false);
 		tab_empleado_departamento.getColumna("AJUSTE_SUELDO_GEEDP").setMetodoChange("cambioAjuste");
 		tab_empleado_departamento.getColumna("IDE_GEPGC").setCombo("SELECT IDE_GEPGC,PAP.CODIGO_PARTIDA_GEPAP,PAP.DETALLE_GEPAP,pgc.TITULO_CARGO_GEPGC "
 				+"from GEN_PARTIDA_GRUPO_CARGO pgc "
 				+ "left join GEN_PARTIDA_PRESUPUESTARIA pap on PAP.IDE_GEPAP=PGC.IDE_GEPAP ");
 		tab_empleado_departamento.getColumna("IDE_GEPGC").setLectura(true);
-		tab_empleado_departamento.getColumna("IDE_GTTEM").setCombo(
-				"GTH_TIPO_EMPLEADO", "IDE_GTTEM", "DETALLE_GTTEM", "");
-		tab_empleado_departamento.getColumna("IDE_GTTCO").setCombo(
-				"GTH_TIPO_CONTRATO", "IDE_GTTCO", "DETALLE_GTTCO", "");
-		tab_empleado_departamento.getColumna("IDE_GTTSI").setCombo(
-				"GTH_TIPO_SINDICATO", "IDE_GTTSI", "DETALLE_GTTSI", "");
+		tab_empleado_departamento.getColumna("IDE_GTTEM").setCombo("GTH_TIPO_EMPLEADO", "IDE_GTTEM", "DETALLE_GTTEM", "");
+		tab_empleado_departamento.getColumna("IDE_GTTCO").setCombo("GTH_TIPO_CONTRATO", "IDE_GTTCO", "DETALLE_GTTCO", "");
+		tab_empleado_departamento.getColumna("IDE_GTTSI").setCombo("GTH_TIPO_SINDICATO", "IDE_GTTSI", "DETALLE_GTTSI", "");
 		tab_empleado_departamento.getColumna("IDE_GTTSI").setVisible(false);
-		tab_empleado_departamento.getColumna("IDE_GTGRE").setCombo(
-				"GTH_GRUPO_EMPLEADO", "IDE_GTGRE", "DETALLE_GTGRE", "");
-		tab_empleado_departamento.getColumna("IDE_GTGRE").setCombo(
-				"GTH_GRUPO_EMPLEADO", "IDE_GTGRE", "DETALLE_GTGRE", "");
+		tab_empleado_departamento.getColumna("IDE_GTGRE").setCombo("GTH_GRUPO_EMPLEADO", "IDE_GTGRE", "DETALLE_GTGRE", "");
+		tab_empleado_departamento.getColumna("IDE_GTGRE").setCombo("GTH_GRUPO_EMPLEADO", "IDE_GTGRE", "DETALLE_GTGRE", "");
 		tab_empleado_departamento.getColumna("ACTIVO_GEEDP").setCheck();
 		tab_empleado_departamento.getColumna("ACTIVO_GEEDP").setLectura(true);
 		tab_empleado_departamento.getColumna("ACTIVO_GEEDP").setValorDefecto("true");
 		tab_empleado_departamento.getColumna("ACUMULA_FONDOS_GEEDP").setCheck();
-		tab_empleado_departamento.getColumna("LINEA_SUPERVICION_GEEDP")
-		.setCheck();
+		tab_empleado_departamento.getColumna("LINEA_SUPERVICION_GEEDP").setCheck();
 		tab_empleado_departamento.getColumna("IDE_GEPGC").setAutoCompletar();
 		tab_empleado_departamento.getColumna("IDE_GEPGC").setMetodoChange("cambioPartida");
 		tab_empleado_departamento.getColumna("IDE_GTEMP").setVisible(false);
 		tab_empleado_departamento.getColumna("IDE_GEDED").setVisible(false);
 		tab_empleado_departamento.getColumna("IDE_GETIV").setVisible(false);
 		tab_empleado_departamento.getColumna("GEN_IDE_GEGRO").setVisible(false);
-		
+		tab_empleado_departamento.getColumna("IDE_GTTSI").setVisible(false);
+		tab_empleado_departamento.getColumna("AJUSTE_SUELDO_GEEDP").setVisible(false);
+		tab_empleado_departamento.getColumna("FECHA_AJUSTE_GEEDP").setVisible(false);
+		tab_empleado_departamento.getColumna("FECHA_LIQUIDACION_GEEDP").setVisible(false);
+		tab_empleado_departamento.getColumna("IDE_GECAE").setVisible(false);
+		tab_empleado_departamento.getColumna("IDE_GECAF").setVisible(false);
+		tab_empleado_departamento.getColumna("LIQUIDACION_GEEDP").setVisible(false);
+		tab_empleado_departamento.getColumna("EJECUTO_LIQUIDACION_GEEDP").setVisible(false);
+		tab_empleado_departamento.getColumna("LINEA_SUPERVICION_GEEDP").setVisible(false);	
 		tab_empleado_departamento.getColumna("CONTROL_ASISTENCIA_GEEDP").setCheck();
 		tab_empleado_departamento.getColumna("CONTROL_ASISTENCIA_GEEDP").setValorDefecto("false");		
 		tab_partida_vigente.getColumna("LIQUIDACION_GEEDP").setRadio(listaliquidacion, "0");
@@ -560,25 +514,6 @@ public class pre_sub_rogacion extends Pantalla{
 
 	}
 
-	
-public Dialogo getDia_partida_grupo_cargo() {
-		return dia_partida_grupo_cargo;
-	}
-
-
-	public void setDia_partida_grupo_cargo(Dialogo dia_partida_grupo_cargo) {
-		this.dia_partida_grupo_cargo = dia_partida_grupo_cargo;
-	}
-
-
-	public AutoCompletar getAut_part_gru_cargo() {
-		return aut_part_gru_cargo;
-	}
-
-
-	public void setAut_part_gru_cargo(AutoCompletar aut_part_gru_cargo) {
-		this.aut_part_gru_cargo = aut_part_gru_cargo;
-	}
 
 
 public void aceptarPartidaGrupoCargo(){
@@ -1808,6 +1743,25 @@ try {
 		this.set_encargo = set_encargo;
 	}
 
+	
+public Dialogo getDia_partida_grupo_cargo() {
+		return dia_partida_grupo_cargo;
+	}
+
+
+	public void setDia_partida_grupo_cargo(Dialogo dia_partida_grupo_cargo) {
+		this.dia_partida_grupo_cargo = dia_partida_grupo_cargo;
+	}
+
+
+	public AutoCompletar getAut_part_gru_cargo() {
+		return aut_part_gru_cargo;
+	}
+
+
+	public void setAut_part_gru_cargo(AutoCompletar aut_part_gru_cargo) {
+		this.aut_part_gru_cargo = aut_part_gru_cargo;
+	}
 	
 
 }
