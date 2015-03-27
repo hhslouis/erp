@@ -196,7 +196,7 @@ public class pre_contratacion extends Pantalla{
 
 
 		Boton bot_agregar=new Boton();
-		bot_agregar.setValue("Agregar Cuenta Presupuestaria");
+		bot_agregar.setValue("Agregar Partida Presupuestaria");
 		bot_agregar.setMetodo("agregarClasificador");
 		bar_botones.agregarBoton(bot_agregar);
 
