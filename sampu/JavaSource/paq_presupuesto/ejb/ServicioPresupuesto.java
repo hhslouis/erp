@@ -84,7 +84,7 @@ public String getPoa (String activo){
 	return tab_poa;
 }
 public TablaGenerica getTablaGenericaPoa(String ide_prpoa) {
-	TablaGenerica tab_poa=utilitario.consultar("select ide_prpoa,b.ide_prcla,b.codigo_clasificador_prcla,b.descripcion_clasificador_prcla " +
+	TablaGenerica tab_poa=utilitario.consultar("select ide_prpoa,b.ide_prcla,b.codigo_clasificador_prcla,b.descripcion_clasificador_prcla,presupuesto_codificado_prpoa " +
 			" from pre_poa a,pre_clasificador b where a.ide_prcla=b.ide_prcla " +
 			" and  ide_prpoa in("+ide_prpoa+")order by descripcion_clasificador_prcla");
 	return tab_poa;
