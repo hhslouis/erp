@@ -186,8 +186,12 @@ public void validaSubActividad(AjaxBehaviorEvent evt){
 			}
 			return;
 		}
+		
+		if(tab_funcion_programa.isFocus()){
+			
+		
 		System.out.println("vine por otro lado ");
-
+       
 		TablaGenerica nivel_funcion=utilitario.consultar("select * from pre_nivel_funcion_programa where ide_prnfp ="+tab_funcion_programa.getValor("ide_prnfp"));
 		int nivelpadre =0;
 		if(tab_funcion_programa.getValor("pre_ide_prfup").equals("")){
@@ -217,6 +221,19 @@ public void validaSubActividad(AjaxBehaviorEvent evt){
 		}
 		else {
 			utilitario.agregarMensajeError("No se puede Guardar", "Revice el nivel jerarquico para la creaciòn del presente registro");
+		}
+		}
+		
+		if (tab_funcion_programa.guardar()) {
+			if (tab_vigente.guardar()) {
+				guardarPantalla();
+				//Actualizar el arbol
+				arb_funcion_programa.ejecutarSql();
+				utilitario.addUpdate("arb_funcion_programa");
+				
+				
+			}
+			
 		}
 	}
 
