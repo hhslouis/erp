@@ -55,7 +55,7 @@ public class pre_liquida_certificacion extends Pantalla {
 		tab_detalle.setHeader("DETALLE LIQUIDACION CERTIFICACION");
 		tab_detalle.setTabla("pre_detalle_liquida_certif", "ide_prdcl", 2);
 		tab_detalle.getColumna("activo_prdcl").setValorDefecto("true");
-		tab_detalle.getColumna("ide_prpoa").setCombo(ser_presupuesto.getPoa("true,false"));
+		tab_detalle.getColumna("ide_prpoa").setCombo(ser_presupuesto.getPoaTodos());
 		tab_detalle.getColumna("ide_prpoa").setAutoCompletar();
 		tab_detalle.dibujar();
 		PanelTabla pat_detalle=new PanelTabla();
@@ -76,7 +76,7 @@ public class pre_liquida_certificacion extends Pantalla {
 			bar_botones.agregarBoton(bot_buscar);
 
 			set_poa.setId("set_poa");
-			set_poa.setSeleccionTabla(ser_presupuesto.getPoa("true,false"),"ide_prpoa");
+			set_poa.setSeleccionTabla(ser_presupuesto.getPoa("-1"),"ie_prpoa");
 			set_poa.setTitle("Seleccione Poa");
 			set_poa.getBot_aceptar().setMetodo("aceptarPoa");
 			agregarComponente(set_poa);
@@ -107,7 +107,7 @@ public class pre_liquida_certificacion extends Pantalla {
 			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
 			return;
 		}
-		set_poa.getTab_seleccion().setSql(ser_presupuesto.getPoa("true,false"));
+		set_poa.getTab_seleccion().setSql(ser_presupuesto.getPoa(com_anio.getValue().toString()));
 		set_poa.getTab_seleccion().ejecutarSql();
 		set_poa.dibujar();
 
