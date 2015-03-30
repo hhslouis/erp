@@ -52,6 +52,7 @@ public class pre_contratacion extends Pantalla{
 	private SeleccionFormatoReporte self_reporte = new SeleccionFormatoReporte();
 	private Map map_parametros = new HashMap();
 	private SeleccionTabla sel_poa= new SeleccionTabla();
+	private SeleccionTabla sel_resolucion= new SeleccionTabla();
 	
 	@EJB
 	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
@@ -145,6 +146,7 @@ public class pre_contratacion extends Pantalla{
 		tab_reforma.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
 		tab_reforma.getColumna("ide_gemes").setCombo("select ide_gemes,detalle_gemes from gen_mes order by ide_gemes");
 		tab_reforma.getColumna("valor_reformado_prpor").setMetodoChange("valorReforma");
+		tab_reforma.getColumna("SALDO_ACTUAL_PRPOR").setLectura(true);
 		tab_reforma.getColumna("ide_coest").setVisible(false);
 		tab_reforma.getColumna("pre_ide_prpoa").setVisible(false);
 		tab_reforma.getColumna("ide_gemes").setVisible(false);
@@ -232,6 +234,8 @@ public class pre_contratacion extends Pantalla{
 
 		
 		inicializarSelPoa();
+		inicializarSelResolucion();
+		
 
 	}
 	//valor Financiamiento
@@ -347,6 +351,8 @@ public class pre_contratacion extends Pantalla{
 		}
 	}
 	
+	
+	
 	////reporte
 	//reporte
 public void abrirListaReportes() {
@@ -354,21 +360,21 @@ public void abrirListaReportes() {
 	rep_reporte.dibujar();
 }
 public void aceptarReporte(){
-	if(rep_reporte.getReporteSelecionado().equals("PLAN OPERATIVO ANUAL (POA)"));{
+	if(rep_reporte.getReporteSelecionado().equals("Plan Operativo Anual (POA)")){
 		TablaGenerica tab_reporte=utilitario.consultar("select ide_geani,detalle_geani from gen_anio where ide_geani="+com_anio.getValue());
 		if (rep_reporte.isVisible()){
 			
 			p_parametros=new HashMap();		
 			rep_reporte.cerrar();
 			p_parametros.clear();
-			aceptarselPoa();
+			aceptarSelPoa();
 			
 		}
 		else if(sel_poa.isVisible()) {
 			
 			if(sel_poa.getListaSeleccionados().size()>0){	
 				p_parametros.put("ide_prpoa",sel_poa.getSeleccionados());
-				p_parametros.put("titulo","PLAN OPERATIVO ANUAL (POA) "+tab_reporte.getValor("detalle_geani"));
+				p_parametros.put("titulo","Plan Operativo Anual (POA) "+tab_reporte.getValor("detalle_geani"));
 				p_parametros.put("ide_geani", Integer.parseInt(com_anio.getValue().toString()));
 				self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
 				sel_poa.cerrar();
@@ -379,8 +385,37 @@ public void aceptarReporte(){
 			utilitario.agregarMensajeInfo("No se puede continuar", "No ha Seleccionado Ningun Registro");
 
 		}
-		
-}
+	}
+	
+	
+	/////REFORMA
+	else if(rep_reporte.getReporteSelecionado().equals("Reforma Plan Operativo Anual (POA)")){
+		TablaGenerica tab_reporte=utilitario.consultar("select ide_geani,detalle_geani from gen_anio where ide_geani="+com_anio.getValue());
+		if (rep_reporte.isVisible()){
+			
+			p_parametros=new HashMap();		
+			rep_reporte.cerrar();
+			p_parametros.clear();
+			aceptarSelResolucion();
+		}
+		else if(sel_resolucion.isVisible()) {
+			
+			if(sel_resolucion.getListaSeleccionados().size()>0){	
+				System.out.println("entra reporte");
+				p_parametros.put("pnro_resolucion",sel_resolucion.getSeleccionados());
+				p_parametros.put("titulo","Reforma Plan Operativo Anual (POA) "+tab_reporte.getValor("detalle_geani"));
+				p_parametros.put("ide_geani", Integer.parseInt(com_anio.getValue().toString()));
+				self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
+				sel_poa.cerrar();
+			   self_reporte.dibujar();
+			}		
+		}
+		else{
+			utilitario.agregarMensajeInfo("No se puede continuar", "No ha Seleccionado Ningun Registro");
+
+		}
+	}
+	
 }
 
 	public void inicializarSelPoa(){
@@ -430,7 +465,7 @@ public void aceptarReporte(){
 		
 } 
 
-public void aceptarselPoa(){
+public void aceptarSelPoa(){
 	sel_poa.getTab_seleccion().setSql("select a.ide_prpoa,detalle_programa,programa,detalle_proyecto,proyecto,detalle_producto,producto,detalle_actividad,actividad," +
 			" detalle_subactividad,subactividad,codigo_subactividad,fecha_inicio_prpoa,fecha_fin_prpoa,num_resolucion_prpoa,presupuesto_inicial_prpoa," +
 			" presupuesto_codificado_prpoa,reforma_prpoa,detalle_geani,codigo_clasificador_prcla,descripcion_clasificador_prcla,detalle_geare" +
@@ -468,6 +503,29 @@ public void aceptarselPoa(){
 	
 }
 
+public void inicializarSelResolucion (){
+/////dialogo para reporte
+		sel_resolucion.setId("sel_resolucion");
+		sel_resolucion.setSeleccionTabla("select 1 as codigo,resolucion_prpor " +
+				" from pre_poa_reforma group by resolucion_prpor","ide_prpor");
+		sel_resolucion.getTab_seleccion().ejecutarSql();
+		sel_resolucion.getTab_seleccion().getColumna("resolucion_prpor").setFiltro(true);
+		sel_resolucion.getBot_aceptar().setMetodo("aceptarReporte");
+		agregarComponente(sel_resolucion);
+	
+}
+
+public void aceptarSelResolucion (){
+/////dialogo para reporte
+		sel_resolucion.getTab_seleccion().setSql("select 1 as codigo,resolucion_prpor " +
+				" from pre_poa_reforma group by resolucion_prpor");
+		sel_resolucion.getTab_seleccion().ejecutarSql();
+		sel_resolucion.getTab_seleccion().getColumna("resolucion_prpor").setFiltro(true);
+		sel_resolucion.getBot_aceptar().setMetodo("aceptarReporte");
+		sel_resolucion.dibujar();
+	
+}
+
 
 
 	
@@ -490,6 +548,7 @@ public void aceptarselPoa(){
 		}
 		else if (tab_reforma.isFocus()) {
 			tab_reforma.insertar();
+			tab_reforma.setValor("SALDO_ACTUAL_PRPOR", tab_poa.getValor("presupuesto_codificado_prpoa"));
 
 		}
 
@@ -647,6 +706,13 @@ public void aceptarselPoa(){
 	public void setSel_poa(SeleccionTabla sel_poa) {
 		this.sel_poa = sel_poa;
 	}
+	public SeleccionTabla getSel_resolucion() {
+		return sel_resolucion;
+	}
+	public void setSel_resolucion(SeleccionTabla sel_resolucion) {
+		this.sel_resolucion = sel_resolucion;
+	}
+
 
 
 
