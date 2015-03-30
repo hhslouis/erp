@@ -405,8 +405,9 @@ public void aceptarReporte(){
 				p_parametros.put("pnro_resolucion",sel_resolucion.getSeleccionados());
 				p_parametros.put("titulo","Reforma Plan Operativo Anual (POA) "+tab_reporte.getValor("detalle_geani"));
 				p_parametros.put("ide_geani", Integer.parseInt(com_anio.getValue().toString()));
+
 				self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
-				sel_poa.cerrar();
+				sel_resolucion.cerrar();
 			   self_reporte.dibujar();
 			}		
 		}
@@ -506,8 +507,8 @@ public void aceptarSelPoa(){
 public void inicializarSelResolucion (){
 /////dialogo para reporte
 		sel_resolucion.setId("sel_resolucion");
-		sel_resolucion.setSeleccionTabla("select 1 as codigo,resolucion_prpor " +
-				" from pre_poa_reforma group by resolucion_prpor","ide_prpor");
+		sel_resolucion.setSeleccionTabla("select resolucion_prpor as codigo,resolucion_prpor " +
+				" from pre_poa_reforma group by resolucion_prpor","codigo");
 		sel_resolucion.getTab_seleccion().ejecutarSql();
 		sel_resolucion.getTab_seleccion().getColumna("resolucion_prpor").setFiltro(true);
 		sel_resolucion.getBot_aceptar().setMetodo("aceptarReporte");
@@ -517,7 +518,7 @@ public void inicializarSelResolucion (){
 
 public void aceptarSelResolucion (){
 /////dialogo para reporte
-		sel_resolucion.getTab_seleccion().setSql("select 1 as codigo,resolucion_prpor " +
+		sel_resolucion.getTab_seleccion().setSql("select resolucion_prpor as codigo,resolucion_prpor " +
 				" from pre_poa_reforma group by resolucion_prpor");
 		sel_resolucion.getTab_seleccion().ejecutarSql();
 		sel_resolucion.getTab_seleccion().getColumna("resolucion_prpor").setFiltro(true);
