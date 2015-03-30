@@ -154,7 +154,7 @@ order by codigo_subactividad,a.ide_prpoa]]>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
-					<text><![CDATA[ACTIVIDAD:]]></text>
+					<text><![CDATA[FASE:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement uuid="68fe53f9-a12b-49bb-96d4-5522ed9148f7" x="283" y="41" width="74" height="14"/>
@@ -182,14 +182,14 @@ order by codigo_subactividad,a.ide_prpoa]]>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
-					<text><![CDATA[VALOR REFORMADO:]]></text>
+					<text><![CDATA[VALOR A REFORMAR:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement uuid="7107fd6f-586f-4fd9-b9cb-883edf721bdc" x="369" y="91" width="125" height="14"/>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
-					<text><![CDATA[VALOR CODIFICADO:]]></text>
+					<text><![CDATA[VALOR REFORMADO:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement uuid="9cda70dd-b2d3-4ac1-b027-88c9b435c1c0" x="11" y="77" width="62" height="14"/>
