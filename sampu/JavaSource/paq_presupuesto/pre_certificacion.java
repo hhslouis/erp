@@ -85,7 +85,7 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 		tab_poa_certificacion.setId("tab_poa_certificacion");
 		tab_poa_certificacion.setHeader("POA CERTIFICACION");
 		tab_poa_certificacion.setTabla("pre_poa_certificacion", "ide_prpoc", 2);
-		tab_poa_certificacion.getColumna("ide_prpoa").setCombo(ser_presupuesto.getPoa("true,false"));
+		tab_poa_certificacion.getColumna("ide_prpoa").setCombo(ser_presupuesto.getPoaTodos());
 		tab_poa_certificacion.getColumna("activo_prpoc").setValorDefecto("true");
 		tab_poa_certificacion.getColumna("valor_certificado_prpoc").setMetodoChange("calcular");
 		tab_poa_certificacion.dibujar();
@@ -106,7 +106,7 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 		bar_botones.agregarBoton(bot_buscar);
 
 		set_poa.setId("set_poa");
-		set_poa.setSeleccionTabla(ser_presupuesto.getPoa("true,false"),"ide_prpoa");
+		set_poa.setSeleccionTabla(ser_presupuesto.getPoa("-1"),"ide_prpoa");
 		set_poa.setTitle("Seleccione Poa");
 		set_poa.getTab_seleccion().getColumna("codigo_clasificador_prcla").setFiltro(true);
 		set_poa.getTab_seleccion().getColumna("descripcion_clasificador_prcla").setFiltro(true);
@@ -171,7 +171,7 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 			utilitario.agregarMensajeInfo("No puede buscar un POA", "Debe tener una Certificación Presupuestaria");
 		}
 
-		set_poa.getTab_seleccion().setSql(ser_presupuesto.getPoa("true,false"));
+		set_poa.getTab_seleccion().setSql(ser_presupuesto.getPoa(com_anio.getValue().toString()));
 		set_poa.getTab_seleccion().ejecutarSql();
 		set_poa.dibujar();
 
