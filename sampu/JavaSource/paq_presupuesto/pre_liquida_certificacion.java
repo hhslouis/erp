@@ -42,6 +42,8 @@ public class pre_liquida_certificacion extends Pantalla {
 		tab_liquida_certificacion.setTabla("pre_liquida_certificacion", "ide_prlce", 1);
 		tab_liquida_certificacion.getColumna("activo_prlce").setValorDefecto("true");
 		tab_liquida_certificacion.getColumna("ide_prcer").setCombo(ser_presupuesto.getCertificacion("true,false"));
+		tab_liquida_certificacion.getColumna("ide_prcer").setAutoCompletar();
+		tab_liquida_certificacion.getColumna("ide_prcer").setLectura(true);
 		tab_liquida_certificacion.agregarRelacion(tab_detalle);
 		tab_liquida_certificacion.dibujar();
 		PanelTabla pat_liquida =new PanelTabla();
@@ -120,9 +122,10 @@ public class pre_liquida_certificacion extends Pantalla {
 			for(int i=0;i<tab_poa.getTotalFilas();i++){
 				tab_detalle.insertar();
 				tab_detalle.setValor("ide_prpoa", tab_poa.getValor(i, "ide_prpoa"));
+				tab_detalle.setValor("valor_certificado_prdcl", tab_poa.getValor("presupuesto_codificado_prpoa"));
 			}
 			set_poa.cerrar();
-			utilitario.addUpdate("tab_detalle_libera");
+			utilitario.addUpdate("tab_detalle");
 		}
 	}
 
@@ -146,7 +149,8 @@ public class pre_liquida_certificacion extends Pantalla {
 		String str_seleccionado = set_certificacion.getValorSeleccionado();
 		
 		if (str_seleccionado!=null){
-				tab_liquida_certificacion.setValor("ide_prcer", tab_liquida_certificacion.getValor("ide_prcer"));
+			tab_liquida_certificacion.insertar();
+			tab_liquida_certificacion.setValor("ide_prcer", str_seleccionado);
 			}
 			set_certificacion.cerrar();
 			utilitario.addUpdate("tab_liquida_certificacion");
@@ -160,7 +164,7 @@ public class pre_liquida_certificacion extends Pantalla {
 	public void insertar() {
 		// TODO Auto-generated method stub
 		if(tab_liquida_certificacion.isFocus()){
-			tab_liquida_certificacion.insertar();
+		utilitario.agregarMensajeInfo("No puede insertar", "Debe buscar una Certificaciòn");
 		}
 		else if(tab_detalle.isFocus()){
 			utilitario.agregarMensajeInfo("No puede insertar", "Debe ingresar un poa");
