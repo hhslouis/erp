@@ -39,6 +39,8 @@ public class pre_factura_compras extends Pantalla{
 		tab_adq_factura.getGrid().setColumns(4);
 		tab_adq_factura.setCampoOrden("ide_adfac desc");
 		tab_adq_factura.getColumna("ide_adsoc").setCombo(ser_Adquisicion.getCompras("true,false"));
+		tab_adq_factura.getColumna("ide_adsoc").setAutoCompletar();
+		tab_adq_factura.getColumna("ide_adsoc").setLectura(true);
 		tab_adq_factura.getColumna("subtotal_adfac").setEtiqueta();
 		tab_adq_factura.getColumna("subtotal_adfac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_adq_factura.getColumna("base_iva_adfac").setEtiqueta();
