@@ -87,6 +87,7 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 		tab_certificacion.getColumna("ide_geani").setVisible(false);
 		tab_certificacion.getColumna("VALOR_LIBERADO_PRCER").setMetodoChange("calcularCertificacion");
 		tab_certificacion.getColumna("VALOR_LIBERADO_PRCER").setValorDefecto("0.00");
+		tab_certificacion.getColumna("VALOR_LIBERADO_PRCER").setEtiqueta();
 		tab_certificacion.getColumna("VALOR_LIBERADO_PRCER").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:black");
 		tab_certificacion.getColumna("VALOR_DISPONIBLE_PRCER").setEtiqueta();
 		tab_certificacion.getColumna("VALOR_DISPONIBLE_PRCER").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:black");
@@ -94,7 +95,6 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 		tab_certificacion.getColumna("VALOR_CERTIFICACION_PRCER").setEtiqueta();
 		tab_certificacion.getColumna("VALOR_CERTIFICACION_PRCER").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:black");
 		tab_certificacion.getColumna("VALOR_CERTIFICACION_PRCER").setValorDefecto("0.00");
-
 		tab_certificacion.setTipoFormulario(true);
 		tab_certificacion.getGrid().setColumns(4);
 		tab_certificacion.agregarRelacion(tab_poa_certificacion);
@@ -111,6 +111,8 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 		tab_poa_certificacion.getColumna("ide_prpoa").setLectura(true);
 		tab_poa_certificacion.getColumna("activo_prpoc").setValorDefecto("true");
 		tab_poa_certificacion.getColumna("valor_certificado_prpoc").setMetodoChange("calcular");
+		tab_poa_certificacion.getColumna("ide_prpoa").setLongitud(50);
+
 		tab_poa_certificacion.dibujar();
 		PanelTabla pat_poa_certi=new PanelTabla();
 		pat_poa_certi.setPanelTabla(tab_poa_certificacion);
@@ -143,6 +145,8 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 		if(com_anio.getValue()!=null){
 			tab_certificacion.setCondicion("ide_geani="+com_anio.getValue());
 			tab_certificacion.ejecutarSql();
+			tab_poa_certificacion.ejecutarValorForanea(tab_certificacion.getValorSeleccionado());
+
 
 		}
 	}
