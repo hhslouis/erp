@@ -111,7 +111,7 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 		tab_poa_certificacion.getColumna("ide_prpoa").setLectura(true);
 		tab_poa_certificacion.getColumna("activo_prpoc").setValorDefecto("true");
 		tab_poa_certificacion.getColumna("valor_certificado_prpoc").setMetodoChange("calcular");
-		tab_poa_certificacion.getColumna("ide_prpoa").setLongitud(50);
+		tab_poa_certificacion.getColumna("ide_prpoa").setAncho(50);
 
 		tab_poa_certificacion.dibujar();
 		PanelTabla pat_poa_certi=new PanelTabla();
@@ -135,7 +135,20 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 		set_poa.setTitle("Seleccione Poa");
 		set_poa.getTab_seleccion().getColumna("codigo_clasificador_prcla").setFiltro(true);
 		set_poa.getTab_seleccion().getColumna("descripcion_clasificador_prcla").setFiltro(true);
-		set_poa.setRadio();
+		set_poa.getTab_seleccion().getColumna("DETALLE_PROGRAMA").setFiltro(true);//pone filtro
+		set_poa.getTab_seleccion().getColumna("PROGRAMA").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("DETALLE_PROYECTO").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("PROYECTO").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("DETALLE_PRODUCTO").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("PRODUCTO").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("DETALLE_ACTIVIDAD").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("ACTIVIDAD").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("DETALLE_SUBACTIVIDAD").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("SUBACTIVIDAD").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("CODIGO_SUBACTIVIDAD").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("NUM_RESOLUCION_PRPOA").setFiltro(true);
+		set_poa.getBot_aceptar().setMetodo("aceptarPoa");
+		//set_poa.setRadio();
 		set_poa.getBot_aceptar().setMetodo("aceptarPoa");
 		agregarComponente(set_poa);
 
@@ -209,9 +222,10 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 
 		if (str_seleccionados!=null){
 			TablaGenerica tab_poa = ser_presupuesto.getTablaGenericaPoa(str_seleccionados);		
+			for(int i=0;i<tab_poa.getTotalFilas();i++){	
 				tab_poa_certificacion.insertar();
 				tab_poa_certificacion.setValor("ide_prpoa", tab_poa.getValor( "ide_prpoa"));
-			
+			}
 			set_poa.cerrar();
 			utilitario.addUpdate("tab_poa_certificacion");
 		}
