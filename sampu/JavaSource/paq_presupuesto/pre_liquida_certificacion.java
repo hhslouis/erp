@@ -1,5 +1,8 @@
 package paq_presupuesto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ejb.EJB;
 
 import framework.aplicacion.TablaGenerica;
@@ -44,6 +47,20 @@ public class pre_liquida_certificacion extends Pantalla {
 		tab_liquida_certificacion.getColumna("ide_prcer").setCombo(ser_presupuesto.getCertificacion("true,false"));
 		tab_liquida_certificacion.getColumna("ide_prcer").setAutoCompletar();
 		tab_liquida_certificacion.getColumna("ide_prcer").setLectura(true);
+		  // para contruir los radios
+		   List lista = new ArrayList();
+	       Object fila1[] = {
+	           "1", "TOTAL"
+	       };
+	       Object fila2[] = {
+	           "0", "PARCIAL"
+	       };
+	       
+	       lista.add(fila1);
+	       lista.add(fila2);
+	       tab_liquida_certificacion.getColumna("total_parcial_prlce").setRadio(lista, "1");
+	       tab_liquida_certificacion.getColumna("total_parcial_prlce").setRadioVertical(true);
+	 
 		tab_liquida_certificacion.agregarRelacion(tab_detalle);
 		tab_liquida_certificacion.dibujar();
 		PanelTabla pat_liquida =new PanelTabla();
@@ -78,6 +95,18 @@ public class pre_liquida_certificacion extends Pantalla {
 			set_poa.setId("set_poa");
 			set_poa.setSeleccionTabla(ser_presupuesto.getPoa("-1"),"ie_prpoa");
 			set_poa.setTitle("Seleccione Poa");
+			set_poa.getTab_seleccion().getColumna("DETALLE_PROGRAMA").setFiltro(true);//pone filtro
+			set_poa.getTab_seleccion().getColumna("PROGRAMA").setFiltro(true);
+			set_poa.getTab_seleccion().getColumna("DETALLE_PROYECTO").setFiltro(true);
+			set_poa.getTab_seleccion().getColumna("PROYECTO").setFiltro(true);
+			set_poa.getTab_seleccion().getColumna("DETALLE_PRODUCTO").setFiltro(true);
+			set_poa.getTab_seleccion().getColumna("PRODUCTO").setFiltro(true);
+			set_poa.getTab_seleccion().getColumna("DETALLE_ACTIVIDAD").setFiltro(true);
+			set_poa.getTab_seleccion().getColumna("ACTIVIDAD").setFiltro(true);
+			set_poa.getTab_seleccion().getColumna("DETALLE_SUBACTIVIDAD").setFiltro(true);
+			set_poa.getTab_seleccion().getColumna("SUBACTIVIDAD").setFiltro(true);
+			set_poa.getTab_seleccion().getColumna("CODIGO_SUBACTIVIDAD").setFiltro(true);
+			set_poa.getTab_seleccion().getColumna("NUM_RESOLUCION_PRPOA").setFiltro(true);
 			set_poa.getBot_aceptar().setMetodo("aceptarPoa");
 			agregarComponente(set_poa);
 
@@ -126,7 +155,10 @@ public class pre_liquida_certificacion extends Pantalla {
 			}
 			set_poa.cerrar();
 			utilitario.addUpdate("tab_detalle");
+		}else{
+			utilitario.agregarMensajeInfo("Debe seleccionar almenos un registro", "");
 		}
+	
 	}
 
 	/////certificacion
