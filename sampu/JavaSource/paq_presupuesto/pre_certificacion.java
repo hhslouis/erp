@@ -74,6 +74,7 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 		tab_certificacion.setId("tab_certificacion");
 		tab_certificacion.setHeader("CERTIFICACION PRESUPUESTARIA");
 		tab_certificacion.setTabla("pre_certificacion", "ide_prcer", 1);
+		tab_certificacion.setCampoOrden("ide_prcer desc");
 		tab_certificacion.getColumna("IDE_GEEDP").setCombo(ser_nomina.servicioEmpleadoContrato("true"));
 		tab_certificacion.getColumna("IDE_GEEDP").setAutoCompletar();
 		tab_certificacion.getColumna("gen_ide_geedp").setCombo(ser_nomina.servicioEmpleadoContrato("true,false"));
@@ -82,6 +83,7 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 		tab_certificacion.getColumna("ide_gtemp").setLectura(true);
 		tab_certificacion.getColumna("ide_gtemp").setAutoCompletar();
 		tab_certificacion.getColumna("activo_prcer").setValorDefecto("true");
+		tab_certificacion.getColumna("activo_prcer").setLectura(true);
 		tab_certificacion.getColumna("ide_geani").setCombo(ser_contabilidad.getAnio("true,false","true,false"));
 		tab_certificacion.setCondicion("ide_geani=-1"); 
 		tab_certificacion.getColumna("ide_geani").setVisible(false);
@@ -110,6 +112,7 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 		tab_poa_certificacion.getColumna("ide_prpoa").setAutoCompletar();
 		tab_poa_certificacion.getColumna("ide_prpoa").setLectura(true);
 		tab_poa_certificacion.getColumna("activo_prpoc").setValorDefecto("true");
+		tab_poa_certificacion.getColumna("activo_prpoc").setLectura(true);
 		tab_poa_certificacion.getColumna("valor_certificado_prpoc").setMetodoChange("calcular");
 		tab_poa_certificacion.getColumna("ide_prpoa").setAncho(50);
 
@@ -147,6 +150,8 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 		set_poa.getTab_seleccion().getColumna("SUBACTIVIDAD").setFiltro(true);
 		set_poa.getTab_seleccion().getColumna("CODIGO_SUBACTIVIDAD").setFiltro(true);
 		set_poa.getTab_seleccion().getColumna("NUM_RESOLUCION_PRPOA").setFiltro(true);
+		
+
 		set_poa.getBot_aceptar().setMetodo("aceptarPoa");
 		//set_poa.setRadio();
 		set_poa.getBot_aceptar().setMetodo("aceptarPoa");
