@@ -1,5 +1,8 @@
 package paq_presupuesto;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.ejb.EJB;
 import javax.faces.event.AjaxBehaviorEvent;
 
@@ -9,6 +12,8 @@ import framework.componentes.Combo;
 import framework.componentes.Division;
 import framework.componentes.Etiqueta;
 import framework.componentes.PanelTabla;
+import framework.componentes.Reporte;
+import framework.componentes.SeleccionFormatoReporte;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import paq_contabilidad.ejb.ServicioContabilidad;
@@ -23,6 +28,12 @@ public class pre_certificacion extends Pantalla{
 	private SeleccionTabla set_poa=new SeleccionTabla();
 	private Combo com_anio=new Combo();
 	private String empleado;
+	///reporte
+	private Map p_parametros = new HashMap();
+	private Reporte rep_reporte = new Reporte();
+	private SeleccionFormatoReporte self_reporte = new SeleccionFormatoReporte();
+	private Map map_parametros = new HashMap();
+
 
   
   @EJB
@@ -36,6 +47,16 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 			
 	
 	public pre_certificacion(){
+		
+		///reporte
+		rep_reporte.setId("rep_reporte"); //id
+		rep_reporte.getBot_aceptar().setMetodo("aceptarReporte");//ejecuta el metodo al aceptar reporte
+		agregarComponente(rep_reporte);//agrega el componente a la pantalla
+		bar_botones.agregarReporte();//aparece el boton de reportes en la barra de botones
+		self_reporte.setId("self_reporte"); //id
+		agregarComponente(self_reporte);
+		
+		
 		///BOTON COMBO
 		empleado=ser_seguridad.getUsuario(utilitario.getVariable("ide_usua")).getValor("ide_gtemp");
 		System.out.println("empleado"+empleado);
@@ -86,6 +107,8 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 		tab_poa_certificacion.setHeader("POA CERTIFICACION");
 		tab_poa_certificacion.setTabla("pre_poa_certificacion", "ide_prpoc", 2);
 		tab_poa_certificacion.getColumna("ide_prpoa").setCombo(ser_presupuesto.getPoaTodos());
+		tab_poa_certificacion.getColumna("ide_prpoa").setAutoCompletar();
+		tab_poa_certificacion.getColumna("ide_prpoa").setLectura(true);
 		tab_poa_certificacion.getColumna("activo_prpoc").setValorDefecto("true");
 		tab_poa_certificacion.getColumna("valor_certificado_prpoc").setMetodoChange("calcular");
 		tab_poa_certificacion.dibujar();
@@ -194,6 +217,32 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 	
 	}
 
+	//reporte
+public void abrirListaReportes() {
+	// TODO Auto-generated method stub
+	rep_reporte.dibujar();
+}
+public void aceptarReporte(){
+	if(rep_reporte.getReporteSelecionado().equals("Certificaciòn Presupuestaria"));{
+		TablaGenerica tab_reporte=utilitario.consultar("select ide_geani,detalle_geani from gen_anio where ide_geani="+com_anio.getValue());
+		if (rep_reporte.isVisible()){
+			p_parametros=new HashMap();		
+			rep_reporte.cerrar();	
+			p_parametros.put("titulo","Certificaciòn Presupuestaria");
+			p_parametros.put("ide_geani", Integer.parseInt(tab_certificacion.getValor("ide_prcer")));
+			self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
+		self_reporte.dibujar();
+		
+		}
+		else{
+			utilitario.agregarMensajeInfo("No se puede continuar", "No ha Seleccionado Ningun Registro");
+
+		}
+	}
+		
+}
+	
+
 
 
 	@Override
@@ -268,5 +317,38 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 	public void setCom_anio(Combo com_anio) {
 		this.com_anio = com_anio;
 	}
+
+	public Map getP_parametros() {
+		return p_parametros;
+	}
+
+	public void setP_parametros(Map p_parametros) {
+		this.p_parametros = p_parametros;
+	}
+
+	public Reporte getRep_reporte() {
+		return rep_reporte;
+	}
+
+	public void setRep_reporte(Reporte rep_reporte) {
+		this.rep_reporte = rep_reporte;
+	}
+
+	public SeleccionFormatoReporte getSelf_reporte() {
+		return self_reporte;
+	}
+
+	public void setSelf_reporte(SeleccionFormatoReporte self_reporte) {
+		this.self_reporte = self_reporte;
+	}
+
+	public Map getMap_parametros() {
+		return map_parametros;
+	}
+
+	public void setMap_parametros(Map map_parametros) {
+		this.map_parametros = map_parametros;
+	}
+	
 
 }
