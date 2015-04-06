@@ -66,6 +66,15 @@ public class pre_egreso_material extends Pantalla {
 		tab_egreso.setTabla("bodt_egreso", "ide_boegr", 2);		
 		tab_egreso.getColumna("ide_boinv").setCombo(ser_Bodega.getInventarioMaterial());
 		tab_egreso.getColumna("ide_boinv").setLectura(true);
+		tab_egreso.getColumna("ide_bobod").setVisible(false);
+		tab_egreso.getColumna("costo_egreso_boegr").setVisible(false);
+		tab_egreso.getColumna("total_egreso_boegr").setVisible(false);
+		tab_egreso.getColumna("existencias_boegr").setVisible(false);
+		tab_egreso.getColumna("costo_anterior_boegr").setVisible(false);
+		tab_egreso.getColumna("fecha_ingreso_articulo_boegr").setVisible(false);
+		tab_egreso.getColumna("fecha_egreso_boegr").setLectura(true);
+		tab_egreso.getColumna("documento_egreso_boegr").setLectura(true);
+		tab_egreso.getColumna("activo_boegr").setLectura(true);
 		tab_egreso.dibujar();
 		PanelTabla pat_egreso=new PanelTabla();
 		pat_egreso.setPanelTabla(tab_egreso);
@@ -120,6 +129,9 @@ public class pre_egreso_material extends Pantalla {
 		if (str_seleccionado!=null){
 			tab_egreso.insertar();
 			tab_egreso.setValor("ide_boinv",str_seleccionado);
+			tab_egreso.setValor("fecha_egreso_boegr", tab_concepto_egreso.getValor("fecha_egreso_bocoe"));
+			tab_egreso.setValor("documento_egreso_boegr", tab_concepto_egreso.getValor("numero_egreso_bocoe"));			
+
 			
 			
 		}
