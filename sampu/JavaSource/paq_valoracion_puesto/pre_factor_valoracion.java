@@ -20,6 +20,7 @@ public class pre_factor_valoracion extends Pantalla {
 		tab_factor.setId("tab_factor");
 		tab_factor.setHeader("FACTOR VALORACIÓN PUESTO");
 		tab_factor.setTabla("gth_factor_valoracion", "ide_gtfav", 1);
+		tab_factor.getColumna("activo_gtfav").setValorDefecto("true");
 		tab_factor.agregarRelacion(tab_grupo);
 		tab_factor.agregarRelacion(tab_valora);
 		tab_factor.dibujar();
@@ -29,6 +30,7 @@ public class pre_factor_valoracion extends Pantalla {
 		tab_valora.setId("tab_valora");
 		tab_valora.setIdCompleto("tab_tabulador:tab_valora");
 		tab_valora.setTabla("gth_valora_grupo", "ide_gtvag", 2);
+		tab_valora.getColumna("activo_gtvag").setValorDefecto("true");
 		tab_valora.dibujar();
 		PanelTabla pat_valora=new PanelTabla();
 		pat_valora.setPanelTabla(tab_valora);
@@ -38,6 +40,7 @@ public class pre_factor_valoracion extends Pantalla {
 		tab_grupo.setIdCompleto("tab_tabulador:tab_grupo");
 		tab_grupo.setTabla("gth_grupo_valora", "ide_gtgrv", 3);
 		tab_grupo.getColumna("ide_gegro").setCombo("gen_grupo_ocupacional", "ide_gegro", "detalle_gegro", "");
+		tab_grupo.getColumna("activo_gtgrv").setValorDefecto("true");
 		tab_grupo.dibujar();
 		PanelTabla pat_grupo=new PanelTabla();
 		pat_grupo.setPanelTabla(tab_grupo);
@@ -64,17 +67,14 @@ public class pre_factor_valoracion extends Pantalla {
 	@Override
 	public void guardar() {
 		// TODO Auto-generated method stub
-		if(tab_factor.isFocus()){
-			tab_factor.guardar();
-			if(tab_valora.isFocus()){
-				tab_valora.guardar();
-				if(tab_grupo.isFocus()){
-					tab_grupo.guardar();
-					guardarPantalla();
+		if(tab_factor.guardar()){
+			if(tab_valora.guardar()){
+				if(tab_grupo.guardar()){
 				}
 			}
 		}
-		
+		guardarPantalla();
+
 	}
 
 	@Override

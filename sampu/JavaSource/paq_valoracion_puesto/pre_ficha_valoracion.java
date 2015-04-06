@@ -1,32 +1,83 @@
 package paq_valoracion_puesto;
 
+import javax.ejb.EJB;
+import javax.faces.event.AjaxBehaviorEvent;
+
+import framework.aplicacion.TablaGenerica;
+import framework.componentes.Boton;
 import framework.componentes.Division;
 import framework.componentes.PanelTabla;
+import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
+import framework.componentes.Tabulador;
+import paq_nomina.ejb.ServicioNomina;
 import paq_sistema.aplicacion.Pantalla;
+import paq_sistema.ejb.ServicioSeguridad;
 
 public class pre_ficha_valoracion extends Pantalla{
 	
 	private Tabla tab_ficha=new Tabla();
 	private Tabla tab_detalle=new Tabla();
 	private Tabla tab_descripcion=new Tabla();
+	private String empleado;
+	private SeleccionTabla sel_factor=new SeleccionTabla();
+	private SeleccionTabla sel_valora=new SeleccionTabla();
+
+	
+	 @EJB
+	 private ServicioNomina ser_nomina = (ServicioNomina) utilitario.instanciarEJB(ServicioNomina.class);
+	 
+	 @EJB
+	 private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanciarEJB(ServicioSeguridad.class);
+
 	
 	
 	public pre_ficha_valoracion (){
+		
+		///TABULADOR
+				Tabulador tab_Tabulador=new Tabulador();
+				tab_Tabulador.setId("tab_tabulador");
+				
+		///seguridad
+		empleado=ser_seguridad.getUsuario(utilitario.getVariable("ide_usua")).getValor("ide_gtemp");
+		System.out.println("empleado"+empleado);
+		if(empleado==null ||empleado.isEmpty()){
+		utilitario.agregarNotificacionInfo("Mensaje", "No exixte usuario registrado para el registro de compras");
+		return;
+	}
 		tab_ficha.setId("tab_ficha");
 		tab_ficha.setHeader("VALORACIÓN PUESTOS");
 		tab_ficha.setTabla("gth_ficha_valoracion", "ide_gtfiv", 1);
+		tab_ficha.getColumna("activo_gtfiv").setValorDefecto("true");
+		tab_ficha.getColumna("ide_gtemp").setCombo(ser_nomina.servicioEmpleadosActivos("true,false"));
+		tab_ficha.getColumna("ide_gtemp").setLectura(true);
+		tab_ficha.getColumna("ide_gtemp").setAutoCompletar();
+		tab_ficha.getColumna("ide_gegro").setCombo("gen_grupo_ocupacional", "ide_gegro", "detalle_gegro", "");
+		tab_ficha.getColumna("fecha_valoracion_gtfiv").setValorDefecto(utilitario.getFechaActual());
+		tab_ficha.getColumna("ide_gegro").setMetodoChange("rmu");
+		tab_ficha.getColumna("rmu_gtfiv").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:black");
+		tab_ficha.getColumna("rmu_gtfiv").setEtiqueta();
+		tab_ficha.getColumna("rmu_gtfiv").setValorDefecto("00.00");
+		tab_ficha.getColumna("TOTAL_PUNTOS_GTFIV").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:black");
+		tab_ficha.getColumna("TOTAL_PUNTOS_GTFIV").setEtiqueta();
+		tab_ficha.getColumna("TOTAL_PUNTOS_GTFIV").setValorDefecto("00.00");
 		tab_ficha.agregarRelacion(tab_detalle);
+		//tab_ficha.agregarRelacion(tab_descripcion);
 		tab_ficha.dibujar();
-		PanelTabla pat_fecha=new PanelTabla();
-		pat_fecha.setPanelTabla(tab_ficha);
+		PanelTabla pat_ficha=new PanelTabla();
+		pat_ficha.setPanelTabla(tab_ficha);
+		
+		
 		
 		////detalle valoración
 		
 		tab_detalle.setId("tab_detalle");
-		tab_detalle.setHeader("DETALLE VALORACIÓN");
+		//tab_detalle.setHeader("DETALLE VALORACIÓN");
+		tab_detalle.setIdCompleto("tab_tabulador:tab_detalle");
 		tab_detalle.setTabla("gth_detalle_valoracion", "ide_gtdev", 2);
-		tab_detalle.agregarRelacion(tab_descripcion);
+		tab_detalle.getColumna("activo_gtdev").setValorDefecto("true");
+		tab_detalle.getColumna("ide_gtvag").setCombo("select ide_gtvag, detalle_gtfav, detalle_gtvag from gth_valora_grupo a, gth_factor_valoracion b" +
+										" where a.ide_gtfav= b.ide_gtfav order by detalle_gtfav,detalle_gtvag");
 		tab_detalle.dibujar();
 		PanelTabla pat_detalle=new PanelTabla();
 		pat_detalle.setPanelTabla(tab_detalle);
@@ -35,38 +86,116 @@ public class pre_ficha_valoracion extends Pantalla{
 		
 
 		tab_descripcion.setId("tab_descripcion");
-		tab_descripcion.setHeader("DESCRIPCIÓN VALORACIÓN");
+		//tab_descripcion.setHeader("DESCRIPCIÓN VALORACIÓN");
+		tab_descripcion.setIdCompleto("tab_tabulador:tab_descripcion");
 		tab_descripcion.setTabla("gth_descripcion_valoracion", "ide_gtdva",3);
+		tab_descripcion.getColumna("ide_geare").setCombo("gen_area", "ide_geare", "detalle_geare", "");
+		tab_descripcion.getColumna("activo_gtdva").setValorDefecto("true");
 		tab_descripcion.dibujar();
 		PanelTabla pat_des=new PanelTabla();
 		pat_des.setPanelTabla(tab_descripcion);
 		
+		tab_Tabulador.agregarTab("DETALLE VALORACIÓN", pat_detalle);
+		tab_Tabulador.agregarTab("DESCRIPCIÓN VALORACIÓN", pat_des);
 
 		Division div_divi=new Division();
-		div_divi.dividir3(pat_fecha, pat_detalle, pat_des, "40%", "30%", "h");
+		div_divi.dividir2(pat_ficha, tab_Tabulador, "50%", "h");
 		agregarComponente(div_divi);
+	
+		/////factor valoraciòn
+		Boton bot_puesto = new Boton();
+		bot_puesto.setValue("Valoraciòn Puesto");
+		//bot_puesto.setTitle("Valoraciòn Puesto");
+		bot_puesto.setIcon("ui-icon-person");
+		bot_puesto.setMetodo("importarPuesto");
+		bar_botones.agregarBoton(bot_puesto);
 		
+		sel_factor.setId("sel_factor");
+		sel_factor.setSeleccionTabla("gth_factor_valoracion","ide_gtfav","detalle_gtfav");
+		sel_factor.setTitle("FACTOR VALORACIÒN");
+		sel_factor.getBot_aceptar().setMetodo("aceptarPuesto");
+		sel_factor.setRadio();
+		agregarComponente(sel_factor);
+		
+		sel_valora.setId("sel_valora");
+		sel_valora.setSeleccionTabla("gth_valora_grupo","ide_gtvag","detalle_gtvag,puntos_gtvag");
+		sel_valora.setTitle("VALORACIÒN GRUPO");
+		sel_valora.getBot_aceptar().setMetodo("aceptarPuesto");
+		sel_valora.setRadio();
+		agregarComponente(sel_valora);
 		
 		
 	}
 	
+	///pas q me suba el valor de rmu
+	public void rmu(AjaxBehaviorEvent evt){
+		tab_ficha.modificar(evt);
+		TablaGenerica tab_rmu=utilitario.consultar("select ide_gegro, rmu_gegro from gen_grupo_ocupacional where ide_gegro="+tab_ficha.getValor("ide_gegro"));
+		System.out.println("imprimir consulta nrmu "+tab_rmu.getSql());
+		tab_ficha.setValor("rmu_gtfiv", tab_rmu.getValor("rmu_gegro"));
+		utilitario.addUpdateTabla(tab_ficha, "rmu_gtfiv", "");
+	}
+	
+	/// ventana factor valoraciòn
+	public void importarPuesto(){
+		sel_factor.getTab_seleccion().setSql("select ide_gtfav,detalle_gtfav from gth_factor_valoracion order by detalle_gtfav");
+		sel_factor.getTab_seleccion().ejecutarSql();
+		sel_factor.dibujar();
+	}
+	String str_seleccionado="";
+	public void aceptarPuesto(){
+		if(sel_factor.isVisible()){
+			if(sel_factor.getValorSeleccionado()!=null){
+				tab_detalle.insertar();
+				str_seleccionado=sel_factor.getValorSeleccionado();
+				sel_valora.getTab_seleccion().setSql("select ide_gtvag,detalle_gtvag,puntos_gtvag from gth_valora_grupo order by detalle_gtvag");
+				sel_valora.getTab_seleccion().ejecutarSql();
+				sel_valora.dibujar();
+				sel_factor.cerrar();
+			}
+			 else {
+                 utilitario.agregarMensajeInfo("Seleccione un registro","");
+             }	
+		}
+		else if (sel_valora.isVisible()){
+			str_seleccionado=sel_valora.getValorSeleccionado();
+			TablaGenerica tab_puesto=utilitario.consultar("select ide_gtvag,detalle_gtvag,puntos_gtvag from gth_valora_grupo where ide_gtvag="+sel_factor.getValorSeleccionado());
+			if(sel_valora.getValorSeleccionado()!=null){
+				tab_detalle.setValor("ide_gtvag", str_seleccionado);
+				
+				
+			}
+			sel_valora.cerrar();
+		}
+		
+	}
 
 	@Override
 	public void insertar() {
 		// TODO Auto-generated method stub
-		utilitario.getTablaisFocus().insertar();
+		String ide_gtempxx=ser_seguridad.getUsuario(utilitario.getVariable("ide_usua")).getValor("ide_gtemp");
 		
+		if(tab_ficha.isFocus()){
+			tab_ficha.insertar();
+			tab_ficha.setValor("ide_gtemp",ide_gtempxx );
+			utilitario.addUpdate("tab_ficha");
+			
+		}
+		else if(tab_detalle.isFocus()){
+			tab_detalle.insertar();
+			
+		}
+		else if (tab_descripcion.isFocus()){
+			tab_descripcion.insertar();
+		}
 	}
 
 	@Override
 	public void guardar() {
 		// TODO Auto-generated method stub
 		if(tab_ficha.guardar()){
-			tab_ficha.guardar();
 			if(tab_detalle.guardar()){
-				tab_detalle.guardar();
 				if(tab_descripcion.guardar()){
-					tab_descripcion.guardar();
 					guardarPantalla();
 					
 				}
@@ -111,6 +240,23 @@ public class pre_ficha_valoracion extends Pantalla{
 	public void setTab_descripcion(Tabla tab_descripcion) {
 		this.tab_descripcion = tab_descripcion;
 	}
+
+	public SeleccionTabla getSel_factor() {
+		return sel_factor;
+	}
+
+	public void setSel_factor(SeleccionTabla sel_factor) {
+		this.sel_factor = sel_factor;
+	}
+
+	public SeleccionTabla getSel_valora() {
+		return sel_valora;
+	}
+
+	public void setSel_valora(SeleccionTabla sel_valora) {
+		this.sel_valora = sel_valora;
+	}
+	
 	
 
 }
