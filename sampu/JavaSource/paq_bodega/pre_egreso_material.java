@@ -107,7 +107,7 @@ public class pre_egreso_material extends Pantalla {
 
 	public void seleccionaElAnio (){
 		if(com_anio.getValue()!=null){
-			tab_concepto_egreso.setCondicion("ide_geani="+com_anio.getValue());
+			tab_concepto_egreso.setCondicion("ide_geani="+com_anio.getValue()+" and ide_adsoc is null");
 			tab_concepto_egreso.ejecutarSql();
 			tab_concepto_egreso.imprimirSql();
 			tab_egreso.ejecutarValorForanea(tab_concepto_egreso.getValorSeleccionado());
@@ -131,7 +131,7 @@ public class pre_egreso_material extends Pantalla {
 			tab_egreso.setValor("ide_boinv",str_seleccionado);
 			tab_egreso.setValor("fecha_egreso_boegr", tab_concepto_egreso.getValor("fecha_egreso_bocoe"));
 			tab_egreso.setValor("documento_egreso_boegr", tab_concepto_egreso.getValor("numero_egreso_bocoe"));			
-
+			tab_egreso.setValor("activo_boegr", "true");
 			
 			
 		}
