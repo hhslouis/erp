@@ -52,15 +52,8 @@ public class pre_ficha_valoracion extends Pantalla{
 		tab_ficha.getColumna("ide_gtemp").setCombo(ser_nomina.servicioEmpleadosActivos("true,false"));
 		tab_ficha.getColumna("ide_gtemp").setLectura(true);
 		tab_ficha.getColumna("ide_gtemp").setAutoCompletar();
-		tab_ficha.getColumna("ide_gegro").setCombo("gen_grupo_ocupacional", "ide_gegro", "detalle_gegro", "");
 		tab_ficha.getColumna("fecha_valoracion_gtfiv").setValorDefecto(utilitario.getFechaActual());
-		tab_ficha.getColumna("ide_gegro").setMetodoChange("rmu");
-		tab_ficha.getColumna("rmu_gtfiv").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:black");
-		tab_ficha.getColumna("rmu_gtfiv").setEtiqueta();
-		tab_ficha.getColumna("rmu_gtfiv").setValorDefecto("00.00");
-		tab_ficha.getColumna("TOTAL_PUNTOS_GTFIV").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:black");
-		tab_ficha.getColumna("TOTAL_PUNTOS_GTFIV").setEtiqueta();
-		tab_ficha.getColumna("TOTAL_PUNTOS_GTFIV").setValorDefecto("00.00");
+		tab_ficha.agregarRelacion(tab_descripcion);
 		tab_ficha.agregarRelacion(tab_detalle);
 		//tab_ficha.agregarRelacion(tab_descripcion);
 		tab_ficha.dibujar();
@@ -78,6 +71,12 @@ public class pre_ficha_valoracion extends Pantalla{
 		tab_detalle.getColumna("activo_gtdev").setValorDefecto("true");
 		tab_detalle.getColumna("ide_gtvag").setCombo("select ide_gtvag, detalle_gtfav, detalle_gtvag from gth_valora_grupo a, gth_factor_valoracion b" +
 										" where a.ide_gtfav= b.ide_gtfav order by detalle_gtfav,detalle_gtvag");
+		//tab_detalle.getColumna("ide_gtvag").setCombo("gth_valora_grupo", "ide_gtvag", "detalle_gtvag", "");
+		tab_detalle.getColumna("ide_gtvag").setAutoCompletar();
+		tab_detalle.getColumna("ide_gtvag").setLectura(true);
+		tab_detalle.getColumna("PUNTOS_GTDEV").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:black");
+		tab_detalle.getColumna("PUNTOS_GTDEV").setEtiqueta();
+		tab_detalle.getColumna("PUNTOS_GTDEV").setValorDefecto("00.00");
 		tab_detalle.dibujar();
 		PanelTabla pat_detalle=new PanelTabla();
 		pat_detalle.setPanelTabla(tab_detalle);
@@ -91,6 +90,15 @@ public class pre_ficha_valoracion extends Pantalla{
 		tab_descripcion.setTabla("gth_descripcion_valoracion", "ide_gtdva",3);
 		tab_descripcion.getColumna("ide_geare").setCombo("gen_area", "ide_geare", "detalle_geare", "");
 		tab_descripcion.getColumna("activo_gtdva").setValorDefecto("true");
+		tab_descripcion.getColumna("ide_gegro").setCombo("gen_grupo_ocupacional", "ide_gegro", "detalle_gegro", "");
+		tab_descripcion.getColumna("ide_gegro").setMetodoChange("rmu");
+		tab_descripcion.getColumna("rmu_gtdva").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:black");
+		tab_descripcion.getColumna("rmu_gtdva").setEtiqueta();
+		tab_descripcion.getColumna("rmu_gtdva").setValorDefecto("00.00");
+		tab_descripcion.getColumna("TOTAL_PUNTOS_GTDVA").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:black");
+		tab_descripcion.getColumna("TOTAL_PUNTOS_GTDVA").setEtiqueta();
+		tab_descripcion.getColumna("TOTAL_PUNTOS_GTDVA").setValorDefecto("00.00");
+	
 		tab_descripcion.dibujar();
 		PanelTabla pat_des=new PanelTabla();
 		pat_des.setPanelTabla(tab_descripcion);
@@ -129,11 +137,11 @@ public class pre_ficha_valoracion extends Pantalla{
 	
 	///pas q me suba el valor de rmu
 	public void rmu(AjaxBehaviorEvent evt){
-		tab_ficha.modificar(evt);
-		TablaGenerica tab_rmu=utilitario.consultar("select ide_gegro, rmu_gegro from gen_grupo_ocupacional where ide_gegro="+tab_ficha.getValor("ide_gegro"));
+		tab_descripcion.modificar(evt);
+		TablaGenerica tab_rmu=utilitario.consultar("select ide_gegro, rmu_gegro from gen_grupo_ocupacional where ide_gegro="+tab_descripcion.getValor("ide_gegro"));
 		System.out.println("imprimir consulta nrmu "+tab_rmu.getSql());
-		tab_ficha.setValor("rmu_gtfiv", tab_rmu.getValor("rmu_gegro"));
-		utilitario.addUpdateTabla(tab_ficha, "rmu_gtfiv", "");
+		tab_descripcion.setValor("rmu_gtdva", tab_rmu.getValor("rmu_gegro"));
+		utilitario.addUpdateTabla(tab_descripcion, "rmu_gtdva", "");
 	}
 	
 	/// ventana factor valoraciòn
@@ -146,7 +154,7 @@ public class pre_ficha_valoracion extends Pantalla{
 	public void aceptarPuesto(){
 		if(sel_factor.isVisible()){
 			if(sel_factor.getValorSeleccionado()!=null){
-				tab_detalle.insertar();
+				//tab_detalle.insertar();
 				str_seleccionado=sel_factor.getValorSeleccionado();
 				sel_valora.getTab_seleccion().setSql("select ide_gtvag,detalle_gtvag,puntos_gtvag from gth_valora_grupo order by detalle_gtvag");
 				sel_valora.getTab_seleccion().ejecutarSql();
@@ -158,14 +166,17 @@ public class pre_ficha_valoracion extends Pantalla{
              }	
 		}
 		else if (sel_valora.isVisible()){
-			str_seleccionado=sel_valora.getValorSeleccionado();
-			TablaGenerica tab_puesto=utilitario.consultar("select ide_gtvag,detalle_gtvag,puntos_gtvag from gth_valora_grupo where ide_gtvag="+sel_factor.getValorSeleccionado());
+			 str_seleccionado=sel_valora.getValorSeleccionado();
+			TablaGenerica tab_puesto=utilitario.consultar("select ide_gtvag,detalle_gtvag,puntos_gtvag from gth_valora_grupo where ide_gtvag="+str_seleccionado);
+			System.out.println("imprimir consulta puesti"+ tab_puesto.getSql());
 			if(sel_valora.getValorSeleccionado()!=null){
+				tab_detalle.insertar();
 				tab_detalle.setValor("ide_gtvag", str_seleccionado);
-				
+				tab_detalle.setValor("puntos_gtdev", tab_puesto.getValor("puntos_gtvag"));
 				
 			}
 			sel_valora.cerrar();
+			utilitario.addUpdate("tab_detalle");
 		}
 		
 	}
@@ -182,7 +193,8 @@ public class pre_ficha_valoracion extends Pantalla{
 			
 		}
 		else if(tab_detalle.isFocus()){
-			tab_detalle.insertar();
+			utilitario.agregarMensajeInfo("No se puede insertar", "Buscar valoraciòn puestos");
+			//tab_detalle.insertar();
 			
 		}
 		else if (tab_descripcion.isFocus()){
