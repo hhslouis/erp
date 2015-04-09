@@ -357,7 +357,7 @@ public class pre_empleado extends Pantalla {
 		sel_tab_area.getTab_seleccion().getColumna("detalle_geare").setFiltro(true);
 		sel_tab_area.getBot_aceptar().setMetodo("aceptarReporte");
 		agregarComponente(sel_tab_area);
-
+		
 		sel_tab_departamento.setId("sel_tab_departamento");
 		sel_tab_departamento.setTitle("SELECCION DE DEPARTAMENTOS");
 		sel_tab_departamento.setSeleccionTabla("SELECT ide_gedep,detalle_gedep FROM gen_departamento where ide_geare in(-1) order by detalle_gedep", "ide_gedep");
@@ -492,8 +492,7 @@ public class pre_empleado extends Pantalla {
 		tab_empleado_departamento_dia.getColumna("ACTIVO_GEEDP").setLectura(true);
 		tab_empleado_departamento_dia.getColumna("ACTIVO_GEEDP").setValorDefecto("true");
 		tab_empleado_departamento_dia.getColumna("ACUMULA_FONDOS_GEEDP").setCheck();
-		tab_empleado_departamento_dia.getColumna("LINEA_SUPERVICION_GEEDP")
-		.setCheck();
+		tab_empleado_departamento_dia.getColumna("LINEA_SUPERVICION_GEEDP").setCheck();
 		tab_empleado_departamento_dia.getColumna("IDE_GTEMP").setVisible(false);		
 		tab_empleado_departamento_dia.getColumna("CONTROL_ASISTENCIA_GEEDP").setCheck();
 		tab_empleado_departamento_dia.getColumna("CONTROL_ASISTENCIA_GEEDP").setValorDefecto("false");		
@@ -1667,8 +1666,8 @@ public class pre_empleado extends Pantalla {
 				}
 			}else if(sel_tab_departamento.isVisible()){
 				if(sel_tab_departamento.getSeleccionados()!=null && !sel_tab_departamento.getSeleccionados().isEmpty()){
-					p_parametros.put("ide_gedep", sel_tab_departamento.getSeleccionados());										
-					set_empleado.getTab_seleccion().setSql("SELECT emp.ide_gtemp,emp.documento_identidad_gtemp, " +
+					p_parametros.put("ide_gedep", sel_tab_departamento.getSeleccionados());		
+    				set_empleado.getTab_seleccion().setSql("SELECT emp.ide_gtemp,emp.documento_identidad_gtemp, " +
 							"emp.apellido_paterno_gtemp ||' '|| emp.apellido_materno_gtemp ||' '|| emp.primer_nombre_gtemp ||' '|| emp.segundo_nombre_gtemp as nombres FROM gth_empleado emp " +
 							"inner join gen_empleados_departamento_par edp on emp.ide_gtemp=edp.ide_gtemp " +
 							"where edp.ide_gedep in ("+sel_tab_departamento.getSeleccionados()+") and edp.activo_geedp=TRUE");
@@ -3283,19 +3282,31 @@ public void mismaFecha(AjaxBehaviorEvent evt){
 			tab_educacion = new Tabla();
 			tab_educacion.setId("tab_educacion");
 			tab_educacion.setTabla("GTH_EDUCACION_EMPLEADO", "IDE_GTEDE", 12);
+			tab_educacion.getColumna("IDE_GTEDE").setNombreVisual("CODIGO");
 			tab_educacion.getColumna("IDE_GEINS").setCombo("select IDE_GEINS,DETALLE_GEINS from  GEN_INSTITUCION where ide_getii in ("+utilitario.getVariable("p_gen_tipo_institucion_educativa")+")");
+			tab_educacion.getColumna("IDE_GEINS").setVisible(false);
 			//tab_educacion.getColumna("IDE_GEINS").setAutoCompletar();
 			tab_educacion.getColumna("IDE_GTTES").setCombo("GTH_TIPO_ESPECIALIDAD", "IDE_GTTES", "DETALLE_GTTES", "");
+			tab_educacion.getColumna("IDE_GTTES").setNombreVisual("ESPECIALIDAD");
 			tab_educacion.getColumna("IDE_GTTED").setCombo("GTH_TIPO_EDUCACION", "IDE_GTTED", "DETALLE_GTTED", "");
+			tab_educacion.getColumna("IDE_GTTED").setNombreVisual("EDUCACION");
 			tab_educacion.getColumna("IDE_GTTTP").setCombo("GTH_TIPO_TITULO_PROFESIONAL", "IDE_GTTTP", "DETALLE_GTTTP", "");
+			tab_educacion.getColumna("IDE_GTTTP").setNombreVisual("TITULO");
 			tab_educacion.getColumna("IDE_GTANA").setCombo("GTH_ANIO_APROBADO", "IDE_GTANA", "DETALLE_GTANA", "");
+			tab_educacion.getColumna("IDE_GTANA").setNombreVisual("AÑO APROBADO");
 			tab_educacion.getColumna("IDE_GEDIP").setCombo(ser_gestion.getSqlDivisionPoliticaCiudad());
 			tab_educacion.getColumna("IDE_GEDIP").setNombreVisual("CIUDAD ");
+			tab_educacion.getColumna("REGISTRO_TITULO_GTEDE").setNombreVisual("REGISTRO SENECYT");
+			tab_educacion.getColumna("IDE_GEDIP").setVisible(false);
 			tab_educacion.getColumna("ANIO_GRADO_GTEDE").setMascara("9999");
+			tab_educacion.getColumna("ANIO_GRADO_GTEDE").setNombreVisual("AÑO GRADO");
 			//tab_educacion.getColumna("IDE_GEDIP").setAutoCompletar();
 			tab_educacion.getColumna("IDE_GTEMP").setValorDefecto(aut_empleado.getValor());
 			tab_educacion.getColumna("IDE_GTEMP").setVisible(false);
+			tab_educacion.getColumna("ANIO_GTEDE").setVisible(false);
 			tab_educacion.getColumna("ACTIVO_GTEDE").setCheck();
+			tab_educacion.getColumna("ACTIVO_GTEDE").setNombreVisual("ACTIVO");
+			tab_educacion.getColumna("OBSERVACIONES_GTEDE").setNombreVisual("OBSERVACIONES");
 			tab_educacion.setCondicion("IDE_GTEMP =" + aut_empleado.getValor());
 			tab_educacion.setTipoFormulario(true);
 			tab_educacion.getGrid().setColumns(4);
@@ -3358,14 +3369,18 @@ public void mismaFecha(AjaxBehaviorEvent evt){
 			tab_capacitacion = new Tabla();
 			tab_capacitacion.setId("tab_capacitacion");
 			tab_capacitacion.setTabla("GTH_CAPACITACION_EMPLEADO", "IDE_GTCEM", 17);
+			
 			tab_capacitacion.getColumna("IDE_GEINS").setCombo("SELECT ide_geins,detalle_geins FROM GEN_INSTITUCION " +
 					"where gen_ide_geins IN("+utilitario.getVariable("p_gen_instituciones")+")");
 			//tab_capacitacion.getColumna("IDE_GEINS").setAutoCompletar();
 			tab_capacitacion.getColumna("IDE_GEDIP").setCombo(ser_gestion.getSqlDivisionPoliticaCiudad());
+			tab_capacitacion.getColumna("IDE_GEDIP").setVisible(false);
 			//tab_capacitacion.getColumna("IDE_GEDIP").setAutoCompletar();
 			tab_capacitacion.getColumna("IDE_GETPR").setCombo("GEN_TIPO_PERIODO", "IDE_GETPR", "DETALLE_GETPR", "");
+			tab_capacitacion.getColumna("IDE_GETPR").setVisible(false);
 			tab_capacitacion.getColumna("IDE_GTEMP").setValorDefecto(aut_empleado.getValor());
 			tab_capacitacion.getColumna("IDE_GTEMP").setVisible(false);
+			tab_capacitacion.getColumna("instructor_gtcem").setVisible(false);
 			List lista = new ArrayList();
 			Object fila1[] = {
 					"0", "EXTERNA"
@@ -3377,8 +3392,15 @@ public void mismaFecha(AjaxBehaviorEvent evt){
 			lista.add(fila2);
 			tab_capacitacion.getColumna("TIPO_GTCEM").setRadio(lista, "1");
 			tab_capacitacion.getColumna("TIPO_GTCEM").setRadioVertical(true);
+			tab_capacitacion.getColumna("TIPO_GTCEM").setVisible(false);
 			tab_capacitacion.getColumna("ACTIVO_GTCEM").setCheck();
+			tab_capacitacion.getColumna("ACTIVO_GTCEM").setVisible(false);
 			tab_capacitacion.setCondicion("IDE_GTEMP =" + aut_empleado.getValor());
+			tab_capacitacion.getColumna("IDE_GTCEM").setNombreVisual("CÓDIGO");
+			tab_capacitacion.getColumna("DETALLE_GTCEM").setNombreVisual("DETALLE");
+			tab_capacitacion.getColumna("DURACION_GTCEM").setNombreVisual("DURACIÓN");
+			tab_capacitacion.getColumna("IDE_GEINS").setNombreVisual("INSTITUCIÓN");
+			tab_capacitacion.getColumna("FECHA_GTCEM").setNombreVisual("FECHA");
 			tab_capacitacion.setTipoFormulario(true);
 			tab_capacitacion.getGrid().setColumns(4);
 			tab_capacitacion.setMostrarNumeroRegistros(true);
@@ -3406,12 +3428,25 @@ public void mismaFecha(AjaxBehaviorEvent evt){
 			tab_experiencia_laboral = new Tabla();
 			tab_experiencia_laboral.setId("tab_experiencia_laboral");
 			tab_experiencia_laboral.setTabla("GTH_EXPERIENCIA_LABORAL_EMPLEA", "IDE_GTELE", 16);
+			tab_experiencia_laboral.getColumna("IDE_GTELE").setNombreVisual("CÓDIGO");
 			tab_experiencia_laboral.getColumna("IDE_GEINS").setCombo("GEN_INSTITUCION", "IDE_GEINS", "DETALLE_GEINS", "");
 			//tab_experiencia_laboral.getColumna("IDE_GEINS").setAutoCompletar();
 			tab_experiencia_laboral.getColumna("IDE_GTEMP").setValorDefecto(aut_empleado.getValor());
 			tab_experiencia_laboral.getColumna("IDE_GTEMP").setVisible(false);
 			tab_experiencia_laboral.getColumna("ACTIVO_GTELE").setCheck();
 			tab_experiencia_laboral.setCondicion("IDE_GTEMP =" + aut_empleado.getValor());
+			tab_experiencia_laboral.getColumna("DETALLE_CARGO_GTELE").setNombreVisual("DETALLE CARGO");
+			tab_experiencia_laboral.getColumna("NRO_SUBORDINADOS_GTELE").setVisible(false);
+			tab_experiencia_laboral.getColumna("JEFE_INMEDIATO_GTELE").setVisible(false);
+			tab_experiencia_laboral.getColumna("FUNCIONES_DESEMPENIO_GTELE").setVisible(false);
+			tab_experiencia_laboral.getColumna("ACTIVO_GTELE").setVisible(false);
+			tab_experiencia_laboral.getColumna("FECHA_INGRESO_GTELE").setNombreVisual("FECHA INGRESO");
+			tab_experiencia_laboral.getColumna("IDE_GEINS").setNombreVisual("INSTITUCIÓN");
+			tab_experiencia_laboral.getColumna("AREA_DESEMPENIO_GTELE").setNombreVisual("ÁREA DESEMPEÑO");
+			tab_experiencia_laboral.getColumna("MOTIVO_SALIDA_GTELE").setVisible(false);
+			tab_experiencia_laboral.getColumna("CARGO_JEFE_GTELE").setNombreVisual("CARGO JEFE");
+			tab_experiencia_laboral.getColumna("TELEFONO_GTELE").setNombreVisual("TELÉFONO");
+			tab_experiencia_laboral.getColumna("FECHA_SALIDA_GTELE").setNombreVisual("FECHA SALIDA");
 			tab_experiencia_laboral.setTipoFormulario(true);
 			tab_experiencia_laboral.getGrid().setColumns(4);
 			tab_experiencia_laboral.setMostrarNumeroRegistros(true);
@@ -3537,6 +3572,7 @@ public void mismaFecha(AjaxBehaviorEvent evt){
 			tab_direccion.getColumna("ACTIVO_GTDIR").setCheck();
 			tab_direccion.getColumna("NOTIFICACION_GTDIR").setCheck();
 			tab_direccion.getColumna("IDE_GEDIP").setCombo(ser_gestion.getSqlDivisionPoliticaCiudad());
+			tab_direccion.getColumna("IDE_GEDIP").setVisible(false);
 			//tab_direccion.getColumna("IDE_GEDIP").setAutoCompletar();
 			//tab_direccion.getColumna("IDE_GEDIP").setLongitud(250);
 			tab_direccion.getColumna("IDE_GTEMP").setVisible(false);
@@ -3894,9 +3930,16 @@ public void mismaFecha(AjaxBehaviorEvent evt){
 			tab_cuenta_bancaria.getColumna("ACREDITACION_GTCBE").setMetodoChange("cambiaEstadoAcreditacion");
 			tab_cuenta_bancaria.getColumna("SALDO_PROMEDIO_GTCBE").setDecimales(3);
 			tab_cuenta_bancaria.getColumna("individual_conjunta_gtcbe").setVisible(false);
+			tab_cuenta_bancaria.getColumna("IDE_GTCBE").setNombreVisual("CÓDIGO");
+			tab_cuenta_bancaria.getColumna("IDE_GTTCB").setNombreVisual("TIPO CUENTA");
+			tab_cuenta_bancaria.getColumna("SALDO_PROMEDIO_GTCBE").setNombreVisual("SALDO PROMEDIO");
+			tab_cuenta_bancaria.getColumna("ACREDITACION_GTCBE").setNombreVisual("ACREDITACIÓN");
+			tab_cuenta_bancaria.getColumna("IDE_GEINS").setNombreVisual("INSTITUCIÓN");
+			tab_cuenta_bancaria.getColumna("NUMERO_CUENTA_GTCBE").setNombreVisual("NÚMERO DE CUENTA");
+			tab_cuenta_bancaria.getColumna("ACTIVO_GTCBE").setNombreVisual("ACTIVO");
 			tab_cuenta_bancaria.getColumna("ACTIVO_GTCBE").setCheck();
 			tab_cuenta_bancaria.getColumna("ACTIVO_GTCBE").setMetodoChange("cambiaEstadoCuentaBancaria");
-			tab_cuenta_bancaria.setCondicion("IDE_GTEMP =" + aut_empleado.getValor());			
+			tab_cuenta_bancaria.setCondicion("IDE_GTEMP =" + aut_empleado.getValor());
 			List<Object> lis=new ArrayList();
 			Object obj[]=new Object[2];
 			obj[0]="0";
@@ -4622,16 +4665,11 @@ public void mismaFecha(AjaxBehaviorEvent evt){
 				utilitario.agregarMensajeInfo("No se puede insertar", "Debe seleccionar un Colaborador en el autocompletar");
 			}
 		}else if (str_opcion.equals("14")){   // OPCION EXPERIENCIA LABORAL
+			System.out.println("entre aqui primero "+str_opcion);
 			if (aut_empleado.getValor()!=null){
 				if (tab_experiencia_laboral.isFocus()){
 					tab_experiencia_laboral.insertar();
-					tab_telefonos.limpiar();
-				}else if (tab_telefonos.isFocus()){
-					if (tab_experiencia_laboral.getTotalFilas()>0){
-						tab_telefonos.insertar();
-					}else{
-						utilitario.agregarMensajeInfo("No se puede insertar", "No existen datos de experiencia laboral");
-					}
+					System.out.println("entre aqui empleado ");
 				}
 			}else {
 				utilitario.agregarMensajeInfo("No se puede insertar", "Debe seleccionar un Colaborador en el autocompletar");
@@ -5255,31 +5293,7 @@ public void mismaFecha(AjaxBehaviorEvent evt){
 				guardarPantalla();
 			}
 		}else if (str_opcion.equals("14")){
-
-
-			if (tab_experiencia_laboral.getValor("fecha_ingreso_gtele")!=null && !tab_experiencia_laboral.getValor("fecha_ingreso_gtele").isEmpty()) {
-				if(utilitario.isFechaMayor(utilitario.getFecha(tab_experiencia_laboral.getValor("fecha_ingreso_gtele")),utilitario.getFecha(utilitario.getFechaActual()))){
-					utilitario.agregarMensajeInfo("No se puede guardar", "La fecha de ingreso no puede ser mayor que la fecha actual");
-					return;
-				}							
-			}
-
-			if (tab_experiencia_laboral.getValor("FECHA_SALIDA_GTELE")!=null && !tab_experiencia_laboral.getValor("FECHA_SALIDA_GTELE").isEmpty()) {
-				if(utilitario.isFechaMayor(utilitario.getFecha(tab_experiencia_laboral.getValor("FECHA_SALIDA_GTELE")),utilitario.getFecha(utilitario.getFechaActual()))){
-					utilitario.agregarMensajeInfo("No se puede guardar", "La fecha de salida no puede ser mayor que la fecha actual");
-					return;
-				}							
-			}
-
-			try {
-				if(utilitario.isFechaMayor(utilitario.getFecha(tab_experiencia_laboral.getValor("fecha_ingreso_gtele")),utilitario.getFecha(tab_experiencia_laboral.getValor("FECHA_SALIDA_GTELE")))){
-					utilitario.agregarMensajeInfo("No se puede guardar", "La fecha de ingreso no puede ser mayor que la fecha de salida");
-					return;
-				}		
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-
+			
 			if (tab_experiencia_laboral.guardar()){
 				guardarPantalla();
 			}
