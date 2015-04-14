@@ -63,7 +63,31 @@ public class ServicioBodega {
 	public String getDatosInventario (String material,String anio){
 
 		String tab_inventario="select ide_boinv,ide_geani,ingreso_material_boinv,egreso_material_boinv,existencia_inicial_boinv,costo_anterior_boinv,costo_actual_boinv,"
-+" fecha_ingr_articulo_boinv,costo_inicial_boinv,ide_bomat from bodt_inventario where ide_geani ="+anio+" and ide_bomat ="+material;
++" fecha_ingr_articulo_boinv,costo_inicial_boinv,ide_bomat,(case when existencia_inicial_boinv is null then 0 else existencia_inicial_boinv end) +  (case when ingreso_material_boinv is null then 0 else  ingreso_material_boinv end) - (case when egreso_material_boinv is null then 0 else egreso_material_boinv end) as existencia_actual from bodt_inventario where ide_geani ="+anio+" and ide_bomat ="+material;
+	    return tab_inventario;
+
+	}
+	/**
+	 * Este servicio retorna los datos del inventario por  año 
+	 * @param anio = Recibe año del inventario del material a conultar.
+	 * @return String 
+	 */
+	public String getDatosInventarioAnio (String anio){
+
+		String tab_inventario="select ide_boinv,ide_geani,ingreso_material_boinv,egreso_material_boinv,existencia_inicial_boinv,costo_anterior_boinv,costo_actual_boinv,"
++" fecha_ingr_articulo_boinv,costo_inicial_boinv,a.ide_bomat,(case when existencia_inicial_boinv is null then 0 else existencia_inicial_boinv end) +  (case when ingreso_material_boinv is null then 0 else  ingreso_material_boinv end) - (case when egreso_material_boinv is null then 0 else egreso_material_boinv end) as existencia_actual,codigo_bomat,detalle_bomat from bodt_inventario a, bodt_material b where a.ide_bomat = b.ide_bomat and ide_geani ="+anio;
+	    return tab_inventario;
+
+	}
+	/**
+	 * Este servicio retorna los datos del inventario por clave principal de la tabla bodt_inventario 
+	 * @param ide_boinv = Recibe el ide del material a consultar
+	 * @return String 
+	 */
+	public String getDatosInventarioPrincipal (String ide_boinv){
+
+		String tab_inventario="select ide_boinv,ide_geani,ingreso_material_boinv,egreso_material_boinv,existencia_inicial_boinv,costo_anterior_boinv,costo_actual_boinv,"
++" fecha_ingr_articulo_boinv,costo_inicial_boinv,ide_bomat,(case when existencia_inicial_boinv is null then 0 else existencia_inicial_boinv end) +  (case when ingreso_material_boinv is null then 0 else  ingreso_material_boinv end) - (case when egreso_material_boinv is null then 0 else egreso_material_boinv end) as existencia_actual from bodt_inventario where ide_boinv in ("+ide_boinv+"); ";
 	    return tab_inventario;
 
 	}
@@ -92,6 +116,76 @@ public class ServicioBodega {
 		
 	}
 
+	/**
+	 * Metodo que permite crear matriz para generaciuon de Kardex de Bodega 
+	 * @return Boolean, true si se creo la matriz correctamente, false si no se creo
+	 */	
+	public Boolean matrizKardexInventarios(String codigo_materiales){
+		System.out.println("kardex "+codigo_materiales);
+	    Boolean resultado =false;
+		double val_ingreso=0;
+		double val_egreso=0;
+		TablaGenerica inventario=utilitario.consultar(getDatosInventarioPrincipal(codigo_materiales));
+		String sql_insert="";
+		utilitario.getConexion().ejecutarSql("delete from rep_bodt_kardex; ");
+		for(int i=0;i<inventario.getTotalFilas();i++){
+			TablaGenerica total_ingresos=utilitario.consultar(numeroMatrizKardex("bodt_bodega", inventario.getValor(i,"ide_boinv")));
+			TablaGenerica total_egresos=utilitario.consultar(numeroMatrizKardex("bodt_egreso", inventario.getValor(i,"ide_boinv")));
+			val_ingreso= Double.parseDouble(total_ingresos.getValor("contador"));
+			val_egreso= Double.parseDouble(total_egresos.getValor("contador"));
+			
+			if(val_ingreso<val_egreso){
+				TablaGenerica inventario_egreso = utilitario.consultar(datosMatrizKardex("bodt_egreso", inventario.getValor(i,"ide_boinv")));
+			    TablaGenerica inventario_ingreso= utilitario.consultar(datosMatrizKardex("bodt_bodega", inventario.getValor(i,"ide_boinv")));
+				for(int j=0;j<inventario_egreso.getTotalFilas();j++){
+			    	sql_insert ="insert into rep_bodt_kardex (codigo_rebok,ide_boinv,codigo_ingreso_rebok,codigo_egreso_rebok) values ("+j+","+inventario.getValor(i,"ide_boinv")+",null,"+inventario_egreso.getValor(j,"ide_boegr")+");";
+			    	utilitario.getConexion().ejecutarSql(sql_insert);
+	       
+				}
+				for(int k=0;k<inventario_ingreso.getTotalFilas();k++){
+			    	String sql_update="update rep_bodt_kardex set codigo_ingreso_rebok="+inventario_ingreso.getValor(k,"ide_bobod")+" where ide_boinv="+inventario.getValor(i,"ide_boinv")+" and codigo_rebok="+k;
+			    	utilitario.getConexion().ejecutarSql(sql_update);
+
+				}
+			}
+			else{
+				TablaGenerica inventario_ingreso = utilitario.consultar(datosMatrizKardex("bodt_bodega", inventario.getValor(i,"ide_boinv")));
+				TablaGenerica inventario_egreso = utilitario.consultar(datosMatrizKardex("bodt_egreso", inventario.getValor(i,"ide_boinv")));
+
+				for(int j=0;j<inventario_ingreso.getTotalFilas();j++){
+			    	sql_insert ="insert into rep_bodt_kardex (codigo_rebok,ide_boinv,codigo_ingreso_rebok,codigo_egreso_rebok) values ("+j+","+inventario.getValor(i,"ide_boinv")+","+inventario_ingreso.getValor(j,"ide_bobod")+",null);";
+			    	utilitario.getConexion().ejecutarSql(sql_insert);
+
+				}
+				for(int k=0;k<inventario_egreso.getTotalFilas();k++){
+			    	String sql_update="update rep_bodt_kardex set codigo_egreso_rebok="+inventario_ingreso.getValor(k,"ide_boegr")+" where ide_boinv="+inventario.getValor(i,"ide_boinv")+" and codigo_rebok="+k;
+			    	utilitario.getConexion().ejecutarSql(sql_update);
+	       
+				}
+				
+			}
+
+		}
+		return resultado;
+	}
+	public String datosMatrizKardex(String tabla, String codigo){
+		String sql="Select * from "+tabla+" where ide_boinv="+codigo;
+		System.out.println("DATOS MATRIZ "+sql);
+		return sql;
+	}
+	public String numeroMatrizKardex(String tabla,String codigo){
+		String sql ="select a.ide_boinv,(case when contador is null then 0 else contador end) as contador"
++" from bodt_inventario a"
++" left join ("
++" select count(ide_boinv) as contador,ide_boinv"
++" from "+tabla+" where not ide_boinv is null"
++" group by ide_boinv"
++" ) b on a.ide_boinv = b.ide_boinv"
++" where a.ide_boinv="+codigo;
+		System.out.println("nunero MATRIZ "+sql);
+
+		return sql;
+	}
 public double getResultadoStock(String ide_bomat,String ide_geani){
 	double  stock;
 	TablaGenerica sql=utilitario.consultar("select 1 as codigo, inicial-egreso as stock from (select ingreso_material_boinv,egreso_material_boinv," +
@@ -171,7 +265,16 @@ public TablaGenerica getTablaGenericaSolicitudCompra(String ide_addef){
 				" where a.ide_adsoc=c.ide_adsoc and b.ide_adfac=c.ide_adfac  and d.ide_bomat=b.ide_bomat and  b.ide_addef in ("+ide_addef+") order by codigo_bomat");
 	return tab_solicitud_comp;
 }
-
+public TablaGenerica getTablaGenericaValidaInventario(String ide_addef,String anio){
+	TablaGenerica tab_solicitud_comp=utilitario.consultar("select ide_addef,a.ide_bomat from adq_detalle_factura a"
++" left join bodt_inventario b on  a.ide_bomat= b.ide_bomat and b.ide_geani ="+anio
++" where b.ide_bomat is null and ide_addef in ("+ide_addef+")");
+	return tab_solicitud_comp;
+}
+public TablaGenerica getTablaGenericaMaterial(String ide_bomat){
+	TablaGenerica tab_solicitud_comp=utilitario.consultar("select ide_bomat,detalle_bomat,codigo_bomat from bodt_material where ide_bomat in ("+ide_bomat+")");
+	return tab_solicitud_comp;
+}
 public String getEgresoSolicitud(){
 	String tab_solicitud="select a.ide_adsoc,num_factura_bobod as numero_factura,num_doc_bobod as ingreso_bodega,detalle_adsoc as detalle_compra,"
 +" nro_solicitud_adsoc as numero_solicitud_compra,valor_adsoc as valor_compra,nombre_tepro as proveedor,ruc_tepro as ruc_proveedor" 

@@ -254,6 +254,24 @@ public void  aceptarDialogoSolicitud(){
 	if(str_seleccionados!=null || !str_seleccionados.isEmpty()){
 		
 	TablaGenerica tab_consulta_solicitud= ser_bodega.getTablaGenericaSolicitudCompra(str_seleccionados);
+	
+	if (tab_ingreso_material.getValor("tipo_ingreso_bobod").equals("0")){
+	   TablaGenerica validaInventario=ser_bodega.getTablaGenericaValidaInventario(str_seleccionados, tab_ingreso_material.getValor("ide_geani"));
+	   String mensaje="";
+	   if(validaInventario.getTotalFilas()>0){
+		   for(int i=0;i<validaInventario.getTotalFilas();i++){
+			   TablaGenerica material=ser_bodega.getTablaGenericaMaterial(validaInventario.getValor(i, "ide_bomat"));
+			  mensaje+=material.getValor("codigo_bomat")+" "+material.getValor("detalle_bomat")+" "; 
+		   }
+		   dia_recibir_solicitud.cerrar();
+		   utilitario.agregarNotificacionInfo("Materiales No Registrados en Inventarios", "El Siguiente Listado de Materiales no se encuentrados Registrados en Inventarios "+mensaje);
+		   return;
+	   }
+	   
+	}
+	
+	
+	
 	utilitario.getConexion().ejecutarSql("DELETE from SIS_BLOQUEO where upper(TABLA_BLOQ) like 'bodt_bodega'");
 	TablaGenerica valor=utilitario.consultar(ser_contabilidad.servicioCodigoMaximo("bodt_bodega", "ide_bobod"));
 	ide_inicial=Long.parseLong(valor.getValor("codigo"));
@@ -264,20 +282,26 @@ public void  aceptarDialogoSolicitud(){
 		
 		utilitario.getConexion().ejecutarSql("update adq_detalle_factura set recibido_addef= false where ide_addef="+tab_consulta_solicitud.getValor(i,"ide_addef"));
 		
-		utilitario.getConexion().ejecutarSql("INSERT INTO bodt_bodega(ide_bobod, ide_geani, ide_bomat, ide_tepro, fecha_ingreso_bobod, fecha_compra_bobod, recibido_bobod, " +
+		String consulta_inserta_bodega="INSERT INTO bodt_bodega(ide_bobod, ide_geani, ide_bomat, ide_tepro, fecha_ingreso_bobod, fecha_compra_bobod, recibido_bobod, " +
 				" cantidad_ingreso_bobod, numero_ingreso_bobod, num_factura_bobod, num_doc_bobod, descripcion_bobod, tipo_ingreso_bobod, " +
-				" valor_unitario_bobod, valor_total_bobod,activo_bobod, ide_adsoc) VALUES("+ide_inicial+", "+tab_ingreso_material.getValor("ide_geani")+","+tab_consulta_solicitud.getValor(i,"ide_bomat")+"," 
+				" valor_unitario_bobod, valor_total_bobod,activo_bobod, ide_adsoc,existencia_anterior_bobod,ide_boinv) VALUES("+ide_inicial+", "+tab_ingreso_material.getValor("ide_geani")+","+tab_consulta_solicitud.getValor(i,"ide_bomat")+"," 
 				+ tab_consulta_solicitud.getValor(i,"ide_tepro")+",'"+tab_ingreso_material.getValor("fecha_ingreso_bobod")+"','"+tab_consulta_solicitud.getValor(i,"fecha_factura_adfac")+"',true,"
 				+ tab_consulta_solicitud.getValor(i,"cantidad_addef")+",'"+tab_ingreso_material.getValor("numero_ingreso_bobod")+"','"+tab_consulta_solicitud.getValor(i,"num_factura_adfac")+
 				"','"+tab_ingreso_material.getValor("num_doc_bobod")+"','"+tab_ingreso_material.getValor("descripcion_bobod")+"','"+tab_ingreso_material.getValor("tipo_ingreso_bobod")+
-				"',"+tab_consulta_solicitud.getValor(i,"valor_unitario_addef")+","+tab_consulta_solicitud.getValor(i,"valor_total_addef")+",true,"+tab_consulta_solicitud.getValor(i,"ide_adsoc")+")");
+				"',"+tab_consulta_solicitud.getValor(i,"valor_unitario_addef")+","+tab_consulta_solicitud.getValor(i,"valor_total_addef")+",true,"+tab_consulta_solicitud.getValor(i,"ide_adsoc");
 	
 		if (tab_ingreso_material.getValor("tipo_ingreso_bobod").equals("0")){
-			
+			TablaGenerica inventario=utilitario.consultar(ser_bodega.getDatosInventario(tab_consulta_solicitud.getValor(i,"ide_bomat"), tab_ingreso_material.getValor("ide_geani")));
+			consulta_inserta_bodega +=","+inventario.getValor("existencia_actual") +","+inventario.getValor("ide_boinv")+");";
 			boolean resultado;
 			resultado =ser_bodega.registraInventarioIngresos(tab_consulta_solicitud.getValor(i,"ide_bomat"), tab_ingreso_material.getValor("ide_geani"), tab_consulta_solicitud.getValor(i,"cantidad_addef"), tab_consulta_solicitud.getValor(i,"valor_total_addef"));
 		    	
 		}
+		else {
+			consulta_inserta_bodega +=",null,null); ";
+		}
+		utilitario.getConexion().ejecutarSql(consulta_inserta_bodega);
+
 		ide_inicial++;	
 	}
 	utilitario.getConexion().ejecutarSql("update adq_factura set activo_adfac= false where ide_adfac in ( select ide_adfac from adq_factura where not ide_adfac in ("

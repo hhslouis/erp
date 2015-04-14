@@ -41,6 +41,8 @@ public class pre_ingreso_material extends Pantalla{
 	private	Radio lis_activo=new Radio();
 	private Confirmar con_guardar=new Confirmar();
 	private Confirmar con_guardar_material=new Confirmar();
+	private SeleccionTabla set_inventario_saldo = new SeleccionTabla();
+
 	double dou_cantidad_ingreso_bobod=0;
 	double dou_valor_unitario_bobod=0;
 	double dou_valor_total_bobod=0;
@@ -203,7 +205,47 @@ public class pre_ingreso_material extends Pantalla{
 		dia_bodega.setWidth("40%");
 		dia_bodega.setDynamic(false);
 		agregarComponente(dia_bodega);
+		
+		///Agregamos boton saldos inventario
 
+		
+				Boton bot_inventario_saldo = new Boton();
+				bot_inventario_saldo.setValue("Consultar Saldo Inventario");
+				bot_inventario_saldo.setTitle("SALDOS INVENTARIO");
+				bot_inventario_saldo.setIcon("ui-icon-person");
+				bot_inventario_saldo.setMetodo("importarSaldo");
+				bar_botones.agregarBoton(bot_inventario_saldo);
+				set_inventario_saldo.setId("set_inventario_saldo");
+				set_inventario_saldo.setSeleccionTabla(ser_Bodega.getDatosInventarioAnio("-1"),"ide_boinv");
+				set_inventario_saldo.getTab_seleccion().getColumna("existencia_actual").setNombreVisual("SALDO MATERIAL");
+				set_inventario_saldo.getTab_seleccion().getColumna("existencia_actual").setEstilo("font-size: 14px;color: red;font-weight: bold");
+				set_inventario_saldo.getTab_seleccion().getColumna("codigo_bomat").setFiltro(true);
+				set_inventario_saldo.getTab_seleccion().getColumna("detalle_bomat").setFiltro(true);
+				set_inventario_saldo.getTab_seleccion().getColumna("codigo_bomat").setNombreVisual("CODIGO MATERIAL");
+				set_inventario_saldo.getTab_seleccion().getColumna("detalle_bomat").setNombreVisual("NOMBRE MATERIAL");
+				set_inventario_saldo.getTab_seleccion().getColumna("ide_geani").setVisible(false);
+				set_inventario_saldo.getTab_seleccion().getColumna("ingreso_material_boinv").setVisible(false);
+				set_inventario_saldo.getTab_seleccion().getColumna("egreso_material_boinv").setVisible(false);
+				set_inventario_saldo.getTab_seleccion().getColumna("existencia_inicial_boinv").setVisible(false);
+				set_inventario_saldo.getTab_seleccion().getColumna("costo_anterior_boinv").setVisible(false);
+				set_inventario_saldo.getTab_seleccion().getColumna("costo_actual_boinv").setVisible(false);
+				set_inventario_saldo.getTab_seleccion().getColumna("fecha_ingr_articulo_boinv").setVisible(false);
+				set_inventario_saldo.getTab_seleccion().getColumna("costo_inicial_boinv").setVisible(false);
+				set_inventario_saldo.getTab_seleccion().getColumna("ide_bomat").setVisible(false);
+				set_inventario_saldo.getBot_aceptar().setRendered(false);
+				set_inventario_saldo.getTab_seleccion().ejecutarSql();
+				agregarComponente(set_inventario_saldo);
+
+	}
+	public void importarSaldo(){
+		if(com_anio.getValue()==null){
+			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
+			return;
+		}
+		
+		set_inventario_saldo.getTab_seleccion().setSql(ser_Bodega.getDatosInventarioAnio(com_anio.getValue().toString()));
+		set_inventario_saldo.getTab_seleccion().ejecutarSql();
+		set_inventario_saldo.dibujar();
 
 	}
 	public void aceptaInventario() {		
@@ -503,6 +545,13 @@ public class pre_ingreso_material extends Pantalla{
 
 	public void setCom_anio(Combo com_anio) {
 		this.com_anio = com_anio;
+	}
+	
+	public SeleccionTabla getSet_inventario_saldo() {
+		return set_inventario_saldo;
+	}
+	public void setSet_inventario_saldo(SeleccionTabla set_inventario_saldo) {
+		this.set_inventario_saldo = set_inventario_saldo;
 	}
 	public SeleccionTabla getSet_material() {
 		return set_material;

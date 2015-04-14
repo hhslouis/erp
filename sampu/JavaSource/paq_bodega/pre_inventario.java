@@ -22,6 +22,7 @@ public class pre_inventario extends Pantalla{
 	private Combo com_anio=new Combo();
 	private SeleccionTabla set_material=new SeleccionTabla();
 	private SeleccionTabla set_actualizamaterial=new SeleccionTabla();
+	private SeleccionTabla set_reporte_inventario=new SeleccionTabla();
 	private Confirmar con_guardar=new Confirmar();
 	public static String par_grupo_material;
 
@@ -109,7 +110,30 @@ public class pre_inventario extends Pantalla{
 		set_actualizamaterial.getBot_aceptar().setMetodo("modificarMaterial");
 		set_actualizamaterial.setRadio();
 		agregarComponente(set_actualizamaterial);
+		
+		
+		///////// imprimir kardex
+		Boton bot_kardex=new Boton();
+		bot_kardex.setIcon("ui-icon-person");
+		bot_kardex.setValue("Imprimir Kardex");
+		bot_kardex.setMetodo("imprimirKardex");
+		bar_botones.agregarBoton(bot_kardex);	
 
+		set_reporte_inventario.setId("set_reporte_inventario");
+		set_reporte_inventario.setSeleccionTabla(ser_Bodega.getDatosInventarioAnio("-1"),"ide_boinv");
+		set_reporte_inventario.getTab_seleccion().getColumna("codigo_bomat").setFiltro(true);
+		set_reporte_inventario.getTab_seleccion().getColumna("detalle_bomat").setFiltro(true);
+		set_reporte_inventario.getBot_aceptar().setMetodo("aceptarKardex");
+		agregarComponente(set_reporte_inventario);
+
+	}
+	public void imprimirKardex(){
+		set_reporte_inventario.getTab_seleccion().setSql(ser_Bodega.getDatosInventarioAnio(com_anio.getValue().toString()));
+		set_reporte_inventario.getTab_seleccion().ejecutarSql();
+		set_reporte_inventario.dibujar();
+	}
+	public void aceptarKardex(){
+        ser_Bodega.matrizKardexInventarios(set_reporte_inventario.getSeleccionados());
 	}
 	public void actualizarMaterial(){
 		System.out.println("Entra a actualizar...");
@@ -296,6 +320,12 @@ public void validarIngreso(AjaxBehaviorEvent evt){
 		return com_anio;
 	}
 
+	public SeleccionTabla getSet_reporte_inventario() {
+		return set_reporte_inventario;
+	}
+	public void setSet_reporte_inventario(SeleccionTabla set_reporte_inventario) {
+		this.set_reporte_inventario = set_reporte_inventario;
+	}
 	public void setCom_anio(Combo com_anio) {
 		this.com_anio = com_anio;
 	}

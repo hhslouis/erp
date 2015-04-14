@@ -1,6 +1,7 @@
 package paq_bodega;
 
 import javax.ejb.EJB;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import paq_bodega.ejb.ServicioBodega;
 import paq_contabilidad.ejb.ServicioContabilidad;
@@ -23,6 +24,7 @@ public class pre_egreso_material extends Pantalla {
 	private Etiqueta eti_total= new Etiqueta();
 
 	private SeleccionTabla set_inventario=new SeleccionTabla();
+	private SeleccionTabla set_inventario_saldo = new SeleccionTabla();
 
 	@EJB
 	private ServicioNomina ser_nomina = (ServicioNomina) utilitario.instanciarEJB(ServicioNomina.class);
@@ -66,6 +68,7 @@ public class pre_egreso_material extends Pantalla {
 		tab_egreso.setTabla("bodt_egreso", "ide_boegr", 2);		
 		tab_egreso.getColumna("ide_boinv").setCombo(ser_Bodega.getInventarioMaterial());
 		tab_egreso.getColumna("ide_boinv").setLectura(true);
+		tab_egreso.getColumna("cantidad_egreso_boegr").setMetodoChange("validarIngreso");
 		tab_egreso.getColumna("ide_bobod").setVisible(false);
 		tab_egreso.getColumna("costo_egreso_boegr").setVisible(false);
 		tab_egreso.getColumna("total_egreso_boegr").setVisible(false);
@@ -94,15 +97,45 @@ public class pre_egreso_material extends Pantalla {
 		
 		set_inventario.setId("set_inventario");
 		set_inventario.setSeleccionTabla(ser_contabilidad.getInventario("1","1",""),"ide_boinv");
-		set_inventario.getTab_seleccion().getColumna("ide_boinv").setFiltro(true);
 		set_inventario.getTab_seleccion().getColumna("codigo_bomat").setFiltro(true);
 		set_inventario.getTab_seleccion().getColumna("detalle_bomat").setFiltro(true);
 		set_inventario.getBot_aceptar().setMetodo("aceptarInventario");
 		set_inventario.setRadio();
 		set_inventario.getTab_seleccion().ejecutarSql();
 		agregarComponente(set_inventario);
+		
+		
+		
+		///Agregamos boton saldos inventario
 
-
+		
+		Boton bot_inventario_saldo = new Boton();
+		bot_inventario_saldo.setValue("Consultar Saldo Inventario");
+		bot_inventario_saldo.setTitle("SALDOS INVENTARIO");
+		bot_inventario_saldo.setIcon("ui-icon-person");
+		bot_inventario_saldo.setMetodo("importarSaldo");
+		bar_botones.agregarBoton(bot_inventario_saldo);
+		set_inventario_saldo.setId("set_inventario_saldo");
+		set_inventario_saldo.setSeleccionTabla(ser_Bodega.getDatosInventarioAnio("-1"),"ide_boinv");
+		set_inventario_saldo.getTab_seleccion().getColumna("existencia_actual").setNombreVisual("SALDO MATERIAL");
+		set_inventario_saldo.getTab_seleccion().getColumna("existencia_actual").setEstilo("font-size: 14px;color: red;font-weight: bold");
+		set_inventario_saldo.getTab_seleccion().getColumna("codigo_bomat").setFiltro(true);
+		set_inventario_saldo.getTab_seleccion().getColumna("detalle_bomat").setFiltro(true);
+		set_inventario_saldo.getTab_seleccion().getColumna("codigo_bomat").setNombreVisual("CODIGO MATERIAL");
+		set_inventario_saldo.getTab_seleccion().getColumna("detalle_bomat").setNombreVisual("NOMBRE MATERIAL");
+		set_inventario_saldo.getTab_seleccion().getColumna("ide_geani").setVisible(false);
+		set_inventario_saldo.getTab_seleccion().getColumna("ingreso_material_boinv").setVisible(false);
+		set_inventario_saldo.getTab_seleccion().getColumna("egreso_material_boinv").setVisible(false);
+		set_inventario_saldo.getTab_seleccion().getColumna("existencia_inicial_boinv").setVisible(false);
+		set_inventario_saldo.getTab_seleccion().getColumna("costo_anterior_boinv").setVisible(false);
+		set_inventario_saldo.getTab_seleccion().getColumna("costo_actual_boinv").setVisible(false);
+		set_inventario_saldo.getTab_seleccion().getColumna("fecha_ingr_articulo_boinv").setVisible(false);
+		set_inventario_saldo.getTab_seleccion().getColumna("costo_inicial_boinv").setVisible(false);
+		set_inventario_saldo.getTab_seleccion().getColumna("ide_bomat").setVisible(false);
+		set_inventario_saldo.getBot_aceptar().setRendered(false);
+		set_inventario_saldo.getTab_seleccion().ejecutarSql();
+		agregarComponente(set_inventario_saldo);
+		
 	}
 
 	public void seleccionaElAnio (){
@@ -122,10 +155,20 @@ public class pre_egreso_material extends Pantalla {
 		}
 	}
 
+	public void importarSaldo(){
+		if(com_anio.getValue()==null){
+			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
+			return;
+		}
+		
+		set_inventario_saldo.getTab_seleccion().setSql(ser_Bodega.getDatosInventarioAnio(com_anio.getValue().toString()));
+		set_inventario_saldo.getTab_seleccion().ejecutarSql();
+		set_inventario_saldo.dibujar();
+
+	}
 	public  void aceptarInventario(){
 		String str_seleccionado = set_inventario.getValorSeleccionado();
-		System.out.println("pruebabab f  "+str_seleccionado);
-
+	
 		if (str_seleccionado!=null){
 			tab_egreso.insertar();
 			tab_egreso.setValor("ide_boinv",str_seleccionado);
@@ -174,7 +217,33 @@ public class pre_egreso_material extends Pantalla {
 		}	
 	}
 
+	public void validarIngreso(AjaxBehaviorEvent evt){
+		tab_egreso.modificar(evt); //Siempre es la primera linea
 
+		double ingreso_material=0;
+		double existencia_inicial=0;
+
+		TablaGenerica existencia_material =utilitario.consultar(ser_Bodega.getDatosInventarioPrincipal(tab_egreso.getValor("ide_boinv")));
+		
+		try {
+		ingreso_material=Double.parseDouble(tab_egreso.getValor("cantidad_egreso_boegr"));
+		} catch (Exception e) {
+		}
+		
+		try {
+		existencia_inicial = Double.parseDouble(existencia_material.getValor("existencia_actual"));
+		} catch (Exception e) {
+		}
+		
+		if(ingreso_material > existencia_inicial)
+		{
+			tab_egreso.setValor("cantidad_egreso_boegr", "0");
+			utilitario.addUpdate("tab_egreso");
+			utilitario.agregarNotificacionInfo("Error Ingreso", "La cantidad de Egreso de Material supera el Total existente del material:      "+existencia_inicial);
+	       return;
+		}	
+		
+	}
 
 	@Override
 	public void guardar() {
@@ -203,6 +272,14 @@ public class pre_egreso_material extends Pantalla {
 
 	public void setCom_anio(Combo com_anio) {
 		this.com_anio = com_anio;
+	}
+
+	public SeleccionTabla getSet_inventario_saldo() {
+		return set_inventario_saldo;
+	}
+
+	public void setSet_inventario_saldo(SeleccionTabla set_inventario_saldo) {
+		this.set_inventario_saldo = set_inventario_saldo;
 	}
 
 	public SeleccionTabla getSet_inventario() {
