@@ -48,8 +48,7 @@ ACTIVO ASC]]>
 	<field name="cargo" class="java.lang.String"/>
 	<field name="activo_cargo" class="java.lang.Boolean"/>
 	<variable name="cont" class="java.lang.Integer" calculation="Count">
-		<variableExpression><![CDATA[$F{ide_gegro}
-]]></variableExpression>
+		<variableExpression><![CDATA[$F{ide_gegro}]]></variableExpression>
 		<initialValueExpression><![CDATA[1]]></initialValueExpression>
 	</variable>
 	<group name="ACTIVO">

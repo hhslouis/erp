@@ -133,8 +133,7 @@ $V{IDE_GTEMP_5}.equals(null)?"TOTAL:":" TOTAL: "+$V{IDE_GTEMP_5}
 					<textElement verticalAlignment="Middle">
 						<font size="9" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{departamento}.equals(null)?" DEPARTAMENTO SIN NOMBRE":$F{departamento}
-]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{departamento}.equals(null)?" DEPARTAMENTO SIN NOMBRE":$F{departamento}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
