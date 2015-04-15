@@ -80,6 +80,7 @@ public class pre_compras extends Pantalla{
 		tab_compras.setHeader("HOJA DE REQUERIMIENTO");
 		tab_compras.setTabla("adq_solicitud_compra", "ide_adsoc", 1);
 		tab_compras.setCampoOrden("ide_adsoc desc");
+		tab_compras.getColumna("ide_adtic").setCombo("adq_tipo_contratacion","ide_adtic", "detalle_adtic","");
 		tab_compras.getColumna("ide_coest").setCombo("cont_estado","ide_coest", "detalle_coest","");
 		tab_compras.getColumna("ide_coest").setLectura(true);
 		tab_compras.getColumna("ide_coest").setAutoCompletar();
