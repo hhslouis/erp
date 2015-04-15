@@ -34,6 +34,16 @@ public class ServicioBodega {
 		return tab_inventario;
 
 	}
+	public String getMaterialBodega (String ide_bomat){
+
+		String tab_inventario ="select ide_bomat, codigo_bomat,detalle_bomat " +
+				" from bodt_material " +
+				" WHERE ide_bomat in ("+ide_bomat+") " +
+				" ORDER BY detalle_bomat";
+		//System.out.println("llega como parametro "+ide);
+		return tab_inventario;
+
+	}
 	/**
 	 * Este servicio retorna los materiales existentes en el cálogo de materiales 
 	 * @param activo
@@ -49,7 +59,7 @@ public class ServicioBodega {
 		}
 		
 		        tab_inventario +="ORDER BY detalle_bogrm,detalle_bomat";
-		        System.out.println("material servicio "+tab_inventario);
+		       // System.out.println("material servicio "+tab_inventario);
 			return tab_inventario;
 
 

@@ -1,5 +1,8 @@
 package paq_bodega;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.ejb.EJB;
 import javax.faces.event.AjaxBehaviorEvent;
 
@@ -13,6 +16,8 @@ import framework.componentes.Confirmar;
 import framework.componentes.Division;
 import framework.componentes.Etiqueta;
 import framework.componentes.PanelTabla;
+import framework.componentes.Reporte;
+import framework.componentes.SeleccionFormatoReporte;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 
@@ -25,7 +30,9 @@ public class pre_inventario extends Pantalla{
 	private SeleccionTabla set_reporte_inventario=new SeleccionTabla();
 	private Confirmar con_guardar=new Confirmar();
 	public static String par_grupo_material;
-
+	private Map p_parametros = new HashMap();
+	private Reporte rep_reporte = new Reporte();
+	private SeleccionFormatoReporte self_reporte = new SeleccionFormatoReporte();
 
 
 	@EJB
@@ -34,6 +41,13 @@ public class pre_inventario extends Pantalla{
 	private ServicioBodega ser_Bodega = (ServicioBodega) utilitario.instanciarEJB(ServicioBodega.class);
 	public pre_inventario() {
 
+		rep_reporte.setId("rep_reporte"); //id
+		rep_reporte.getBot_aceptar().setMetodo("aceptarReporte");//ejecuta el metodo al aceptar reporte
+		agregarComponente(rep_reporte);//agrega el componente a la pantalla
+		bar_botones.agregarReporte();//aparece el boton de reportes en la barra de botones
+		self_reporte.setId("self_reporte"); //id
+		agregarComponente(self_reporte);
+		
 		com_anio.setCombo(ser_contabilidad.getAnioDetalle("true,false","true,false"));
 		com_anio.setMetodo("seleccionaElAnio");
 		bar_botones.agregarComponente(new Etiqueta("Seleccione El Año:"));
@@ -63,8 +77,11 @@ public class pre_inventario extends Pantalla{
 	
 
 		tab_inventario.setCondicion("ide_geani=-1"); 
-		//tab_inventario.getColumna("activo_boinv").setValorDefecto();
+		tab_inventario.getColumna("activo_boinv").setLectura(true);
 		tab_inventario.getColumna("ide_bomat").setCombo(ser_Bodega.getInventario("1","true,false",""));
+		tab_inventario.getColumna("ide_bomat").setAutoCompletar();
+		tab_inventario.getColumna("ide_bomat").setLectura(true);
+		//	tab_inventario.getColumna("ide_bomat").setCombo(ser_Bodega.getMaterialBodega("-1"));
 		tab_inventario.getColumna("gen_ide_geani").setCombo(ser_contabilidad.getAnio("true,false","true,false"));
 		tab_inventario.getColumna("IDE_GEARE").setCombo("gen_area","ide_geare","detalle_geare","");
 		tab_inventario.dibujar();
@@ -113,46 +130,51 @@ public class pre_inventario extends Pantalla{
 		
 		
 		///////// imprimir kardex
-		Boton bot_kardex=new Boton();
-		bot_kardex.setIcon("ui-icon-person");
-		bot_kardex.setValue("Imprimir Kardex");
-		bot_kardex.setMetodo("imprimirKardex");
-		bar_botones.agregarBoton(bot_kardex);	
-
 		set_reporte_inventario.setId("set_reporte_inventario");
 		set_reporte_inventario.setSeleccionTabla(ser_Bodega.getDatosInventarioAnio("-1"),"ide_boinv");
 		set_reporte_inventario.getTab_seleccion().getColumna("codigo_bomat").setFiltro(true);
 		set_reporte_inventario.getTab_seleccion().getColumna("detalle_bomat").setFiltro(true);
-		set_reporte_inventario.getBot_aceptar().setMetodo("aceptarKardex");
+		set_reporte_inventario.getTab_seleccion().getColumna("codigo_bomat").setNombreVisual("CODIGO MATERIAL");
+		set_reporte_inventario.getTab_seleccion().getColumna("detalle_bomat").setNombreVisual("NOMBRE MATERIAL");
+		set_reporte_inventario.getTab_seleccion().getColumna("ide_geani").setVisible(false);
+		set_reporte_inventario.getTab_seleccion().getColumna("ingreso_material_boinv").setVisible(false);
+		set_reporte_inventario.getTab_seleccion().getColumna("egreso_material_boinv").setVisible(false);
+		set_reporte_inventario.getTab_seleccion().getColumna("existencia_inicial_boinv").setVisible(false);
+		set_reporte_inventario.getTab_seleccion().getColumna("costo_anterior_boinv").setVisible(false);
+		set_reporte_inventario.getTab_seleccion().getColumna("costo_actual_boinv").setVisible(false);
+		set_reporte_inventario.getTab_seleccion().getColumna("fecha_ingr_articulo_boinv").setVisible(false);
+		set_reporte_inventario.getTab_seleccion().getColumna("costo_inicial_boinv").setVisible(false);
+		set_reporte_inventario.getTab_seleccion().getColumna("ide_bomat").setVisible(false);
+	
+		set_reporte_inventario.getBot_aceptar().setMetodo("aceptarReporte");
 		agregarComponente(set_reporte_inventario);
 
 	}
 	public void imprimirKardex(){
-		set_reporte_inventario.getTab_seleccion().setSql(ser_Bodega.getDatosInventarioAnio(com_anio.getValue().toString()));
-		set_reporte_inventario.getTab_seleccion().ejecutarSql();
-		set_reporte_inventario.dibujar();
-	}
-	public void aceptarKardex(){
-        ser_Bodega.matrizKardexInventarios(set_reporte_inventario.getSeleccionados());
-	}
-	public void actualizarMaterial(){
-		System.out.println("Entra a actualizar...");
 		if (tab_inventario.getValor("ide_geani")==null){
 			utilitario.agregarMensajeInfo("Debe seleccionar un año ","");
 			return;
 
 		}
-		System.out.println("Entra a actualizar1...");
+		set_reporte_inventario.getTab_seleccion().setSql(ser_Bodega.getDatosInventarioAnio(com_anio.getValue().toString()));
+		set_reporte_inventario.getTab_seleccion().ejecutarSql();
+		set_reporte_inventario.dibujar();
+	}
+	
+	public void actualizarMaterial(){
+		if (tab_inventario.getValor("ide_geani")==null){
+			utilitario.agregarMensajeInfo("Debe seleccionar un año ","");
+			return;
+
+		}
 		set_actualizamaterial.getTab_seleccion().setSql(ser_Bodega.getInventario("0","true",par_grupo_material));
 		set_actualizamaterial.getTab_seleccion().ejecutarSql();
 		set_actualizamaterial.dibujar();	
 	}	
 
 	public void modificarMaterial(){
-		System.out.println("Entra modificar...");
 
 		String str_materialActualizado=set_actualizamaterial.getValorSeleccionado();
-		System.out.println("Entra a guardar..."+str_materialActualizado);
 
 		TablaGenerica tab_materialModificado = ser_Bodega.getTablaInventario(str_materialActualizado);
 		tab_inventario.setValor("IDE_BOMAT", tab_materialModificado.getValor("IDE_BOMAT"));			
@@ -167,17 +189,13 @@ public class pre_inventario extends Pantalla{
 
 	}
 	public void guardarActualilzarMaterial(){
-		System.out.println("Entra a guardar...");
 		tab_inventario.guardar();
 		con_guardar.cerrar();
 		set_actualizamaterial.cerrar();
-
-
 		guardarPantalla();
 
 	}
 	public void importarMaterial(){
-		System.out.println(" ingresar al importar");
 		if(com_anio.getValue()==null){
 			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
 			return;
@@ -198,8 +216,6 @@ public class pre_inventario extends Pantalla{
 			tab_inventario.setValor("ide_bomat",str_seleccionados);
 			tab_inventario.setValor("ide_geani", com_anio.getValue()+"");
 
-			System.out.println("inserta el valor  "+str_seleccionados);
-
 		}
 		set_material.cerrar();
 		utilitario.addUpdate("tab_inventario");
@@ -207,6 +223,7 @@ public class pre_inventario extends Pantalla{
 
 	public void seleccionaElAnio (){
 		if(com_anio.getValue()!=null){
+
 			tab_inventario.setCondicion("ide_geani="+com_anio.getValue());
 			tab_inventario.ejecutarSql();
 			//tab_mes.ejecutarValorForanea(tab_poa.getValorSeleccionado());
@@ -262,6 +279,38 @@ public void validarIngreso(AjaxBehaviorEvent evt){
 	
 }
 
+public void abrirListaReportes() {
+	// TODO Auto-generated method stub
+	rep_reporte.dibujar();
+}
+public void aceptarReporte(){
+	if(rep_reporte.getReporteSelecionado().equals("Kardex Inventarios"));{
+		if (rep_reporte.isVisible()){
+			
+			p_parametros=new HashMap();		
+			rep_reporte.cerrar();
+			p_parametros.clear();
+			imprimirKardex();
+			
+		}
+		else if(set_reporte_inventario.isVisible()) {
+			
+			if(set_reporte_inventario.getListaSeleccionados().size()>0){	
+				p_parametros.put("pide_boinv",set_reporte_inventario.getSeleccionados());
+				p_parametros.put("titulo","TARJETA KARDEX DE INVENTARIOS");
+				self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
+			    self_reporte.dibujar();
+				set_reporte_inventario.cerrar();
+
+			}		
+		}
+		else{
+			utilitario.agregarMensajeInfo("No se puede continuar", "No ha Seleccionado Ningun Registro");
+
+		}
+
+}
+}
 	@Override
 	public void insertar() {
 		// TODO Auto-generated method stub
@@ -354,6 +403,24 @@ public void validarIngreso(AjaxBehaviorEvent evt){
 	}
 	public static void setPar_grupo_material(String par_grupo_material) {
 		pre_inventario.par_grupo_material = par_grupo_material;
+	}
+	public SeleccionFormatoReporte getSelf_reporte() {
+		return self_reporte;
+	}
+	public void setSelf_reporte(SeleccionFormatoReporte self_reporte) {
+		this.self_reporte = self_reporte;
+	}
+	public Map getP_parametros() {
+		return p_parametros;
+	}
+	public void setP_parametros(Map p_parametros) {
+		this.p_parametros = p_parametros;
+	}
+	public Reporte getRep_reporte() {
+		return rep_reporte;
+	}
+	public void setRep_reporte(Reporte rep_reporte) {
+		this.rep_reporte = rep_reporte;
 	} 
 
 }
