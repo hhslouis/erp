@@ -232,11 +232,11 @@ public class pre_activo extends Pantalla {
 		agregarComponente(set_egreso);*/
 		
 ////////boton bodega
-		Boton bot_egreso=new Boton();
-		bot_egreso.setIcon("ui-icon-person");
-		bot_egreso.setValue("EGREO BODEGA");
-		bot_egreso.setMetodo("importar");
-		bar_botones.agregarBoton(bot_egreso);
+	//	Boton bot_egreso=new Boton();
+	//	bot_egreso.setIcon("ui-icon-person");
+	//	bot_egreso.setValue("EGREO BODEGA");
+	//	bot_egreso.setMetodo("importar");
+	//	bar_botones.agregarBoton(bot_egreso);
 			
 		
 		dia_egreso.setId("dia_egreso");
