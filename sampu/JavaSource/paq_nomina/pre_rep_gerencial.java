@@ -326,6 +326,8 @@ public class pre_rep_gerencial extends Pantalla {
 		tab_datos.getColumna("MONTO").alinearDerecha();
 		tab_datos.getColumna("ide_label").setVisible(false);
 		tab_datos.getColumna("ide_col_ejex").setVisible(false);
+		tab_datos.getColumna("detalle_label").setNombreVisual("REGIMEN LABORAL");
+
 		tab_datos.dibujar();
 
 		PanelTabla pat_datos=new PanelTabla();
@@ -493,7 +495,7 @@ public class pre_rep_gerencial extends Pantalla {
 					"ide_col_ejex,nom_col_ejex,sum (monto) as monto " +
 					"from ( ";
 			str_sql=str_sql.concat(tab_rep_pantalla.getSql());
-			str_sql=str_sql.concat(" ) GROUP BY ide_col_ejex,nom_col_ejex " +
+			str_sql=str_sql.concat(" ) a GROUP BY ide_col_ejex,nom_col_ejex " +
 					"ORDER by nom_col_ejex");
 			System.out.println("sql agrupado "+str_sql);
 			tab_rep_pantalla=utilitario.consultar(str_sql);
@@ -828,7 +830,7 @@ public class pre_rep_gerencial extends Pantalla {
 		String str_sql=tab_rep.getSql();
 		str_sql="select ide_col_ejex as ide_label,nom_col_ejex as detalle_label,sum (monto) as " +
 				"monto from ( ".concat(str_sql);
-		str_sql=str_sql.concat(" )GROUP BY ide_col_ejex ,nom_col_ejex ORDER BY ide_col_ejex");
+		str_sql=str_sql.concat(" ) a GROUP BY ide_col_ejex ,nom_col_ejex ORDER BY ide_col_ejex");
 		System.out.println("sql pastel "+str_sql);
 		TablaGenerica tab_tot_dep=utilitario.consultar(str_sql);
 
