@@ -158,7 +158,7 @@ public class pre_compras extends Pantalla{
 		
 
 		Boton bot_adjudicado = new Boton();
-		bot_adjudicado.setValue("Adjudicado");
+		bot_adjudicado.setValue("Adjudicador");
 		bot_adjudicado.setTitle("ADJUDICADO");
 		bot_adjudicado.setIcon("ui-icon-person");
 		bot_adjudicado.setMetodo("importarAdjudicado");
