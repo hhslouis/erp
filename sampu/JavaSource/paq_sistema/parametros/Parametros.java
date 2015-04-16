@@ -352,6 +352,7 @@ public class Parametros {
         lis_parametros.add(new Parametro("15", "p_cotizacion_adquisicion","Indica el estado de la cotizacion ","11","cont_estado","ide_coest", "detalle_coest"));
         lis_parametros.add(new Parametro("15", "p_certificacion_adquisicion","Indica el estado de la certificacion de  adquisicion ","12","cont_estado","ide_coest", "detalle_coest"));
         lis_parametros.add(new Parametro("15", "p_solicitud_pago_adquisicion","Indica el estado de la solicitud pago adquisicion  ","13","cont_estado","ide_coest", "detalle_coest"));
+        lis_parametros.add(new Parametro("15", "p_empleado_adjudicador","Indica el listado de los empleados adjudicadores  ","13","gth_empleado","ide_gtemp", "documento_identidad_gtemp,apellido_paterno_gtemp, apellido_materno_gtemp, primer_nombre_gtemp,segundo_nombre_gtemp"));
 
         /*
          * PRESUPUESTO
