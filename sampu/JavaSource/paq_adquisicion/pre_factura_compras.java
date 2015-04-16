@@ -61,6 +61,7 @@ public class pre_factura_compras extends Pantalla{
 		tab_adq_detalle.setId("tab_adq_detalle");
 		tab_adq_detalle.setTabla("adq_detalle_factura", "ide_addef", 2);
 		tab_adq_detalle.getColumna("ide_bomat").setCombo(ser_bodega.getInventario("1","true,false",""));
+		tab_adq_detalle.getColumna("ide_bomat").setAutoCompletar();
 		tab_adq_detalle.getColumna("aplica_iva_addef").setVisible(false);
 		tab_adq_detalle.getColumna("cantidad_addef").setMetodoChange("calcularDetallle");
 		tab_adq_detalle.getColumna("valor_unitario_addef").setMetodoChange("calcularDetallle");
@@ -79,13 +80,21 @@ public class pre_factura_compras extends Pantalla{
 
 		Boton bot_buscar=new Boton();
 		bot_buscar.setIcon("ui-icon-person");
-		bot_buscar.setValue("Buscar Hoja de Requerimiento");
+		bot_buscar.setValue("Buscar Solicitud de Compras");
 		bot_buscar.setMetodo("importarSolicitudCompra");
 		bar_botones.agregarBoton(bot_buscar);
 
 		set_solicitud.setId("set_solicitud");
 		set_solicitud.setSeleccionTabla(ser_Adquisicion.getCompras("true,false"),"ide_adsoc");
-		set_solicitud.setTitle("SELECCION UNA SOLICITUD DE COMPRA");		
+		set_solicitud.setTitle("SELECCIONE UNA SOLICITUD DE COMPRA");	
+		set_solicitud.getTab_seleccion().getColumna("nombre_tepro").setNombreVisual("Proveedor");
+		set_solicitud.getTab_seleccion().getColumna("detalle_adsoc").setNombreVisual("Detalle Solicitud Compra");
+		set_solicitud.getTab_seleccion().getColumna("nro_solicitud_adsoc").setNombreVisual("Nro. Solicitud");
+		set_solicitud.getTab_seleccion().getColumna("ide_tepro").setVisible(false);
+		set_solicitud.getTab_seleccion().getColumna("nombre_tepro").setFiltro(true);
+		set_solicitud.getTab_seleccion().getColumna("detalle_adsoc").setFiltro(true);
+		set_solicitud.getTab_seleccion().getColumna("nro_solicitud_adsoc").setFiltro(true);
+		
 		set_solicitud.getBot_aceptar().setMetodo("aceptarSolicitudCompra");
 		set_solicitud.setRadio();
 		agregarComponente(set_solicitud);
@@ -112,9 +121,10 @@ public class pre_factura_compras extends Pantalla{
 		if (str_seleccionado!=null){
 			tab_adq_factura.insertar();
 			tab_adq_factura.setValor("ide_adsoc",str_seleccionado);
+			tab_adq_factura.setValor("detalle_adfac",tab_solicitud.getValor("detalle_adsoc"));
 		}
 		set_solicitud.cerrar();
-		utilitario.addUpdate("tab_comprobante");
+		utilitario.addUpdate("tab_adq_factura");
 	}
 	///CALCULAR 
 	public void calcular(){
