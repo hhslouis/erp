@@ -27,6 +27,7 @@ public class pre_compras extends Pantalla{
 	public static String par_adquisicion;
 	public static String par_certificacion;
 	public static String par_solicitud;
+	public static String par_empleado_adjudicador;
 
 	private SeleccionTabla set_tipo_compra=new SeleccionTabla();
 	private SeleccionTabla set_certificacion=new SeleccionTabla();
@@ -69,6 +70,7 @@ public class pre_compras extends Pantalla{
 		par_adquisicion=utilitario.getVariable("p_cotizacion_adquisicion");
 		par_certificacion=utilitario.getVariable("p_certificacion_adquisicion");
 		par_solicitud=utilitario.getVariable("p_solicitud_pago_adquisicion");
+		par_empleado_adjudicador=utilitario.getVariable("p_empleado_adjudicador");
 
 		rep_reporte.setId("rep_reporte"); //id
 		rep_reporte.getBot_aceptar().setMetodo("aceptarReporte");//ejecuta el metodo al aceptar reporte
@@ -77,24 +79,24 @@ public class pre_compras extends Pantalla{
 		self_reporte.setId("self_reporte"); //id
 		agregarComponente(self_reporte);
 		tab_compras.setId("tab_compras");
-		tab_compras.setHeader("HOJA DE REQUERIMIENTO");
+		tab_compras.setHeader("SOLICITUD DE COMPRAS ( BIENES / SERVICIOS )");
 		tab_compras.setTabla("adq_solicitud_compra", "ide_adsoc", 1);
 		tab_compras.setCampoOrden("ide_adsoc desc");
 		tab_compras.getColumna("ide_adtic").setCombo("adq_tipo_contratacion","ide_adtic", "detalle_adtic","");
 		tab_compras.getColumna("ide_coest").setCombo("cont_estado","ide_coest", "detalle_coest","");
-		tab_compras.getColumna("ide_coest").setLectura(true);
+	//	tab_compras.getColumna("ide_coest").setLectura(true);
 		tab_compras.getColumna("ide_coest").setAutoCompletar();
 		tab_compras.getColumna("ide_copag").setCombo("cont_parametros_general","ide_copag", "detalle_copag", "");
-		tab_compras.getColumna("ide_copag").setLectura(true);
+	//	tab_compras.getColumna("ide_copag").setLectura(true);
 		tab_compras.getColumna("ide_copag").setAutoCompletar();
 		tab_compras.getColumna("ide_geedp").setCombo(ser_nomina.servicioEmpleadoContrato("true,false"));
-		tab_compras.getColumna("ide_geedp").setLectura(true);
+	//	tab_compras.getColumna("ide_geedp").setLectura(true);
 		tab_compras.getColumna("ide_geedp").setAutoCompletar();
 		tab_compras.getColumna("ide_tepro").setCombo(ser_Bodega.getProveedor("true,false"));
-		tab_compras.getColumna("ide_tepro").setLectura(true);
+	//	tab_compras.getColumna("ide_tepro").setLectura(true);
 		tab_compras.getColumna("ide_tepro").setAutoCompletar();
 		tab_compras.getColumna("ide_prtra").setCombo(ser_Adquisicion.getTramite("true,false"));
-		tab_compras.getColumna("ide_prtra").setLectura(true);
+	//	tab_compras.getColumna("ide_prtra").setLectura(true);
 		tab_compras.getColumna("ide_prtra").setAutoCompletar();
 		tab_compras.getColumna("fecha_proforma2_adsoc").setVisible(false);
 		tab_compras.getColumna("valor_proforma2_adsoc").setVisible(false);
@@ -107,6 +109,7 @@ public class pre_compras extends Pantalla{
 		tab_compras.getColumna("fecha_proforma_proveedor_adsoc").setVisible(false);
 		tab_compras.getColumna("oferente1_adsoc").setVisible(false);
 		tab_compras.getColumna("fecha_registro").setValorDefecto(utilitario.getFechaActual());
+		tab_compras.getColumna("fecha_solicitud_adsoc").setValorDefecto(utilitario.getFechaActual());
 		tab_compras.getColumna("activo_adsoc").setValorDefecto("true");
 		tab_compras.getColumna("activo_adsoc").setLectura(true);
 		tab_compras.getColumna("aprobado_adsoc").setLectura(true);
@@ -121,14 +124,12 @@ public class pre_compras extends Pantalla{
 		agregarComponente(pat_panel1);
 
 		set_tipo_compra.setId("set_tipo_compra");
-		//set_empleado.setHeader("IMPORTAR EMPLEADO"+ser_nomina.ideEmpleadoContrato(tab_tiket_viaje.getValor("ide_geedp")).getStringColumna("nombres_apellidos"));
-
 		set_tipo_compra.setSeleccionTabla(ser_contabilidad.getModuloParametros("true", par_modulo_adquisicion),"ide_copag");
-
-
+		set_tipo_compra.getTab_seleccion().getColumna("detalle_copag").setNombreVisual("Tipo Compra");
 		//set_empleado.getTab_seleccion().getColumna("nombre_apellido").setFiltro(true);
 		set_tipo_compra.setTitle("Seleccione el tipo de compra");
 		set_tipo_compra.getBot_aceptar().setMetodo("aceptarCompra");
+		set_tipo_compra.getBot_cancelar().setMetodo("cancelarCompra");
 		set_tipo_compra.setRadio();
 		agregarComponente(set_tipo_compra);	
 
@@ -157,23 +158,7 @@ public class pre_compras extends Pantalla{
 		
 		
 
-		Boton bot_adjudicado = new Boton();
-		bot_adjudicado.setValue("Adjudicador");
-		bot_adjudicado.setTitle("ADJUDICADO");
-		bot_adjudicado.setIcon("ui-icon-person");
-		bot_adjudicado.setMetodo("importarAdjudicado");
-		bar_botones.agregarBoton(bot_adjudicado);
-		
-		set_adjudicado.setId("set_adjudicado");
-		set_adjudicado.setSeleccionTabla(ser_nomina.servicioEmpleadoContrato("true"),"ide_geedp");
-		set_adjudicado.getTab_seleccion().getColumna("NOMBRES_APELLIDOS").setFiltro(true);
-		set_adjudicado.getTab_seleccion().getColumna("DOCUMENTO_IDENTIDAD_GTEMP").setFiltro(true);
-		set_adjudicado.setTitle("Seleccione Adjudicado");
-		set_adjudicado.getBot_aceptar().setMetodo("aceptarAdjudicado");
-		set_adjudicado.setRadio();
-		agregarComponente(set_adjudicado);
-		
-		
+			
 		Boton bot_proveedor = new Boton();
 		bot_proveedor.setValue("Proveedor");
 		bot_proveedor.setTitle("PROVEEDOR");
@@ -182,21 +167,45 @@ public class pre_compras extends Pantalla{
 		bar_botones.agregarBoton(bot_proveedor);
 		
 		set_proveedor.setId("set_proveedor");
-		set_proveedor.setSeleccionTabla(ser_Bodega.getProveedor("true"),"ide_tepro");
-		set_proveedor.getTab_seleccion().getColumna("nombre_tepro").setFiltro(true);
-		set_proveedor.getTab_seleccion().getColumna("ruc_tepro").setFiltro(true);
+		set_proveedor.setSeleccionTabla(ser_Bodega.getProveedor("null"),"ide_tepro");
+		set_proveedor.getTab_seleccion().getColumna("NOMBRE_TEPRO").setNombreVisual("Nombre Proveedor");
+		set_proveedor.getTab_seleccion().getColumna("RUC_TEPRO").setNombreVisual("Ruc Proveedor");
+		set_proveedor.getTab_seleccion().getColumna("NOMBRE_TEPRO").setFiltro(true);
+		set_proveedor.getTab_seleccion().getColumna("RUC_TEPRO").setFiltro(true);
 		set_proveedor.setTitle("Seleccione Proveedor");
 		set_proveedor.getBot_aceptar().setMetodo("aceptarProveedor");
 		set_proveedor.setRadio();
 		agregarComponente(set_proveedor);
 		
+		Boton bot_adjudicado = new Boton();
+		bot_adjudicado.setValue("Adjudicador");
+		bot_adjudicado.setTitle("ADJUDICADO");
+		bot_adjudicado.setIcon("ui-icon-person");
+		bot_adjudicado.setMetodo("importarAdjudicado");
+		bar_botones.agregarBoton(bot_adjudicado);
 		
+		set_adjudicado.setId("set_adjudicado");
+		set_adjudicado.setSeleccionTabla(ser_nomina.servicioEmpleadoContratoCodigo("false", "-1"),"ide_geedp");
+		set_adjudicado.getTab_seleccion().getColumna("NOMBRES_APELLIDOS").setNombreVisual("Apellidos y Nombres");
+		set_adjudicado.getTab_seleccion().getColumna("DOCUMENTO_IDENTIDAD_GTEMP").setNombreVisual("Documento Identidad");
+		set_adjudicado.getTab_seleccion().getColumna("DETALLE_GEARE").setNombreVisual("Area");
+		set_adjudicado.getTab_seleccion().getColumna("DETALLE_GEDEP").setNombreVisual("Departamento");
+		set_adjudicado.getTab_seleccion().getColumna("NOM_SUCU").setNombreVisual("Lugar Trabajo");
+		set_adjudicado.getTab_seleccion().getColumna("NOMBRES_APELLIDOS").setFiltro(true);
+		set_adjudicado.getTab_seleccion().getColumna("DOCUMENTO_IDENTIDAD_GTEMP").setFiltro(true);
+		set_adjudicado.setTitle("Seleccione Adjudicado");
+		set_adjudicado.getBot_aceptar().setMetodo("aceptarAdjudicado");
+		set_adjudicado.setRadio();
+		agregarComponente(set_adjudicado);
 	}
 	public void importarProveedor(){
-
-		set_proveedor.setSeleccionTabla(ser_Bodega.getProveedor("true"),"ide_tepro");
+		if(tab_compras.getValor("ide_coest").equals(par_certificacion)){
+		set_proveedor.getTab_seleccion().setSql(ser_Bodega.getProveedor("true"));
 		set_proveedor.getTab_seleccion().ejecutarSql();
 		set_proveedor.dibujar();
+		}else{
+			utilitario.agregarMensajeInfo("Proveedor","Para agregar un Proveedor la Solicitud de Compra debe poseer Certificación Presupuestaria");
+		}
 
 	}
 
@@ -227,16 +236,13 @@ public class pre_compras extends Pantalla{
 
 	}
 	public void importarCertificacion(){
-	
+		if(tab_compras.getValor("ide_coest").equals(par_adquisicion)){
 		set_certificacion.getTab_seleccion().setSql(ser_Adquisicion.getTramite("true"));
 		set_certificacion.getTab_seleccion().ejecutarSql();
-		set_certificacion.dibujar();
-		tab_compras.setValor("ide_coest",par_certificacion); 
-		tab_compras.setValor("ide_prtra",set_certificacion.getValorSeleccionado()); 
-		//tab_compras.modificar();
-		tab_compras.guardar(); 
-		guardarPantalla();
-		utilitario.addUpdate("tab_compras");
+		set_certificacion.dibujar();		
+		}else{
+			utilitario.agregarMensajeInfo("Certificación Presupuestaria","Para agregar una Certificación Presupuestaria la Solicitud de Compra debe estar Cotizada");
+		}
 
 	}
 	public void aceptarCertificacion(){
@@ -244,6 +250,7 @@ public class pre_compras extends Pantalla{
 		String str_seleccionado = set_certificacion.getValorSeleccionado();
 		TablaGenerica tab_certificacion=ser_Adquisicion.getTablaGenericaTramite(str_seleccionado);
 		if (str_seleccionado!=null){
+			tab_compras.setValor("ide_coest",par_certificacion); 
 			tab_compras.setValor("ide_prtra",str_seleccionado);
 			tab_compras.setValor("valor_adsoc",tab_certificacion.getValor("total_compromiso_prtra"));
 			tab_compras.modificar(tab_compras.getFilaActual());
@@ -255,26 +262,31 @@ public class pre_compras extends Pantalla{
 		utilitario.addUpdate("tab_compras");
 	}
 	public void importarAdjudicado(){
-		
-		set_adjudicado.getTab_seleccion().setSql(ser_nomina.servicioEmpleadoContrato("true"));
+		if(tab_compras.getValor("ide_tepro")==null){
+			utilitario.agregarMensajeInfo("Adjudicador","Para agregar un Adjudicador la Solicitud de Compra debe poseer un Proveedor Adjudicado");
+			return;
+		}
+		else if(tab_compras.getValor("ide_coest").equals(par_certificacion)){
+		set_adjudicado.getTab_seleccion().setSql(ser_nomina.servicioEmpleadoContratoCodigo("true", par_empleado_adjudicador));
 		set_adjudicado.getTab_seleccion().ejecutarSql();
 		set_adjudicado.dibujar();
-		tab_compras.setValor("ide_coest",par_solicitud); 
-		tab_compras.setValor("ide_geedp",set_adjudicado.getValorSeleccionado()); 
-		utilitario.addUpdate("tab_compras");
-
+		}else{
+			utilitario.agregarMensajeInfo("Adjudicador","Para agregar un Adjudicador la Solicitud de Compra debe poseer Certificación Presupuestaria");
+		}
 	}
 	public void aceptarAdjudicado(){
 
 		String str_seleccionado = set_adjudicado.getValorSeleccionado();
 		TablaGenerica tab_empleado=ser_nomina.ideEmpleadoContrato(str_seleccionado);
 		if (str_seleccionado!=null){
+			tab_compras.setValor("ide_coest",par_solicitud); 
 			tab_compras.setValor("ide_geedp",str_seleccionado);
 			tab_compras.setValor("aprobado_adsoc","true"); 
+			tab_compras.setValor("fecha_adjudicacion_adsoc",utilitario.getFechaActual()); 
 			tab_compras.modificar(tab_compras.getFilaActual());
+			
 			tab_compras.guardar(); 
 			guardarPantalla();
-			//tab_compras.setValor("valor_adsoc",tab_empleado.getValor("total_compromiso_prtra"));
 					
 		}
 		set_adjudicado.cerrar();
@@ -290,6 +302,10 @@ public class pre_compras extends Pantalla{
 		utilitario.addUpdate("tab_compras");
 		set_tipo_compra.cerrar();
 
+	}
+	public void cancelarCompra(){
+		tab_compras.ejecutarSql();
+		set_tipo_compra.cerrar();
 	}
 	public void aceptarReporte(){
 		if(rep_reporte.getReporteSelecionado().equals("Solucitud Compra"));{
