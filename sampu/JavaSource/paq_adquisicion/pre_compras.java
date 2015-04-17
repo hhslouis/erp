@@ -1,21 +1,26 @@
 package paq_adquisicion;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.ejb.EJB;
 
 import framework.aplicacion.TablaGenerica;
 import framework.componentes.Boton;
+import framework.componentes.Division;
 import framework.componentes.PanelTabla;
 import framework.componentes.Reporte;
 import framework.componentes.SeleccionFormatoReporte;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
+import framework.componentes.Tabulador;
 import paq_adquisicion.ejb.ServicioAdquisicion;
 import paq_bodega.ejb.ServicioBodega;
 import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_nomina.ejb.ServicioNomina;
+import paq_presupuesto.ejb.ServicioPresupuesto;
 import paq_sistema.aplicacion.Pantalla;
 import paq_sistema.aplicacion.Utilitario;
 import paq_sistema.ejb.ServicioSeguridad;
@@ -36,6 +41,9 @@ public class pre_compras extends Pantalla{
 
 
 	private Tabla tab_compras=new Tabla();
+	private Tabla tab_detalle_compras=new Tabla();
+	private Tabla tab_archivo_compras=new Tabla();
+	
 	@EJB
 	private ServicioAdquisicion ser_Adquisicion =(ServicioAdquisicion)utilitario.instanciarEJB(ServicioAdquisicion.class);
 	
@@ -49,12 +57,16 @@ public class pre_compras extends Pantalla{
 	private ServicioContabilidad ser_estados = (ServicioContabilidad) utilitario.instanciarEJB(ServicioContabilidad.class);
 	@EJB
 	private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanciarEJB(ServicioSeguridad.class);
+	  @EJB
+	  private ServicioPresupuesto ser_presupuesto=(ServicioPresupuesto)utilitario.instanciarEJB(ServicioPresupuesto.class);
 
 	private Map p_parametros = new HashMap();
 	private Reporte rep_reporte = new Reporte();
 	private SeleccionFormatoReporte self_reporte = new SeleccionFormatoReporte();
 	private Map map_parametros = new HashMap();
 	private String empleado;
+	private Division div_division=new Division();
+
 	
 
 	public pre_compras(){
@@ -116,12 +128,63 @@ public class pre_compras extends Pantalla{
 		tab_compras.getColumna("ide_gtemp").setCombo(ser_nomina.servicioEmpleadosActivos("true,false"));
 		tab_compras.getColumna("ide_gtemp").setLectura(true);
 		tab_compras.getColumna("ide_gtemp").setAutoCompletar();
+		tab_compras.getColumna("ide_prpoa").setCombo(ser_presupuesto.getPoaTodos());
+		tab_compras.getColumna("ide_prpoa").setAutoCompletar();
+		tab_compras.getColumna("ide_adtie").setCombo("adq_tiempo_entrega","ide_adtie", "detalle_adtie","");
+		tab_compras.getColumna("ide_retip").setCombo("rec_tipo","ide_retip", "detalle_retip","");
+		  List lista = new ArrayList();
+	       Object fila1[] = {
+	           "1", "PARCIAL"
+	       };
+	       Object fila2[] = {
+	           "0", "TOTAL"
+	       };
+	       
+	       lista.add(fila1);
+	       lista.add(fila2);
+	    tab_compras.getColumna("tipo_recepcion_adsoc").setRadio(lista, "0");
+	    tab_compras.getColumna("tipo_recepcion_adsoc").setRadioVertical(true);
+		tab_compras.agregarRelacion(tab_detalle_compras);
+		tab_compras.agregarRelacion(tab_archivo_compras);		
 		tab_compras.setTipoFormulario(true);
 		tab_compras.getGrid().setColumns(4);
 		tab_compras.dibujar();
 		PanelTabla pat_panel1=new PanelTabla();
 		pat_panel1.setPanelTabla(tab_compras);
-		agregarComponente(pat_panel1);
+		
+		Tabulador tab_Tabulador=new Tabulador();
+		tab_Tabulador.setId("tab_tabulador");
+		// detalle de solicitu de compra
+		tab_detalle_compras.setId("tab_detalle_compras");
+		tab_detalle_compras.setIdCompleto("tab_tabulador:tab_detalle_compras");
+		tab_detalle_compras.setTabla("adq_detalle_solicitud","ide_addes", 2);
+		tab_detalle_compras.getColumna("activo_addes").setValorDefecto("true");
+		tab_detalle_compras.getColumna("activo_addes").setLectura(true);
+		tab_detalle_compras.dibujar();
+		PanelTabla pat_panel2 = new PanelTabla();
+		pat_panel2.setPanelTabla(tab_detalle_compras);
+		
+		// agregar archivos
+		tab_archivo_compras.setId("tab_archivo_compras");
+		tab_archivo_compras.setIdCompleto("tab_tabulador:tab_archivo_compras");
+		tab_archivo_compras.setTabla("adq_archivo","ide_adarc", 3);
+		tab_archivo_compras.getColumna("foto_adacr").setUpload("compras");
+		tab_archivo_compras.getColumna("activo_adacr").setValorDefecto("true");
+		tab_archivo_compras.getColumna("activo_adacr").setLectura(true);
+		tab_archivo_compras.setTipoFormulario(true);
+		tab_archivo_compras.getGrid().setColumns(4);
+		tab_archivo_compras.dibujar();
+		PanelTabla pat_panel3 = new PanelTabla();
+		pat_panel3.setPanelTabla(tab_archivo_compras);
+		
+		tab_Tabulador.agregarTab("PARAMETROS DE SOLICITUD", pat_panel2);
+		tab_Tabulador.agregarTab("ARCHIVOS ADJUNTOS SOLICITUD", pat_panel3);
+		
+		div_division=new Division();
+		div_division.dividir2(pat_panel1,tab_Tabulador,"50%","h");
+
+		agregarComponente(div_division);
+
 
 		set_tipo_compra.setId("set_tipo_compra");
 		set_tipo_compra.setSeleccionTabla(ser_contabilidad.getModuloParametros("true", par_modulo_adquisicion),"ide_copag");
@@ -326,8 +389,8 @@ public class pre_compras extends Pantalla{
 	@Override
 	public void insertar() {
 		// TODO Auto-generated method stub
+		if(tab_compras.isFocus()){
 		tab_compras.insertar();
-
 		String ide_gtempxx=ser_seguridad.getUsuario(utilitario.getVariable("ide_usua")).getValor("ide_gtemp");
 		tab_compras.setValor("ide_gtemp",ide_gtempxx );
 		tab_compras.setValor("ide_coest",par_estado_modulo_compra);
@@ -335,26 +398,49 @@ public class pre_compras extends Pantalla{
 		set_tipo_compra.getTab_seleccion().ejecutarSql();
 		set_tipo_compra.dibujar();
 		utilitario.addUpdate("tab_compras");
-
+		}
+		else if (tab_detalle_compras.isFocus()){
+			tab_detalle_compras.insertar();
+		}
+		else if (tab_archivo_compras.isFocus()){
+			tab_archivo_compras.insertar();
+		}
 	}
 
 	@Override
 	public void guardar() {
 		// TODO Auto-generated method stub
-		tab_compras.guardar();
+		if(tab_compras.guardar()){
+			if(tab_detalle_compras.guardar()){
+				tab_archivo_compras.guardar();
+			}
+		}
 		guardarPantalla();
 	}
 
 	@Override
 	public void eliminar() {
 		// TODO Auto-generated method stub
-		tab_compras.eliminar();
+		utilitario.getTablaisFocus().eliminar();
 	}
 	public Tabla getTab_compras() {
 		return tab_compras;
 	}
 	public void setTab_compras(Tabla tab_compras) {
 		this.tab_compras = tab_compras;
+	}
+	
+	public Tabla getTab_detalle_compras() {
+		return tab_detalle_compras;
+	}
+	public void setTab_detalle_compras(Tabla tab_detalle_compras) {
+		this.tab_detalle_compras = tab_detalle_compras;
+	}
+	public Tabla getTab_archivo_compras() {
+		return tab_archivo_compras;
+	}
+	public void setTab_archivo_compras(Tabla tab_archivo_compras) {
+		this.tab_archivo_compras = tab_archivo_compras;
 	}
 	public Map getP_parametros() {
 		return p_parametros;
