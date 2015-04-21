@@ -41,7 +41,7 @@ public class pre_sucursal_area_departamento extends Pantalla {
 
 
 		tab_area_dep.setId("tab_area_dep");
-		tab_area_dep.setSql("select ARE.IDE_GEARE,DETALLE_GEARE,DEP.IDE_GEDEP,DEP.DETALLE_GEDEP " +
+		tab_area_dep.setSql("select DEP.IDE_GEDEP,ARE.IDE_GEARE,DETALLE_GEARE,DEP.DETALLE_GEDEP " +
 				"from GEN_AREA ARE " +
 				"INNER JOIN GEN_DEPARTAMENTO DEP ON ARE.IDE_GEARE=DEP.IDE_GEARE " +
 				"ORDER BY DETALLE_GEARE ASC, DETALLE_GEDEP ASC");
