@@ -43,6 +43,9 @@ public class pre_compras extends Pantalla{
 	private Tabla tab_compras=new Tabla();
 	private Tabla tab_detalle_compras=new Tabla();
 	private Tabla tab_archivo_compras=new Tabla();
+	private Tabla tab_poa_solicitud=new Tabla();
+
+	
 	
 	@EJB
 	private ServicioAdquisicion ser_Adquisicion =(ServicioAdquisicion)utilitario.instanciarEJB(ServicioAdquisicion.class);
@@ -90,6 +93,8 @@ public class pre_compras extends Pantalla{
 		bar_botones.agregarReporte();//aparece el boton de reportes en la barra de botones
 		self_reporte.setId("self_reporte"); //id
 		agregarComponente(self_reporte);
+		
+		
 		tab_compras.setId("tab_compras");
 		tab_compras.setHeader("SOLICITUD DE COMPRAS ( BIENES / SERVICIOS )");
 		tab_compras.setTabla("adq_solicitud_compra", "ide_adsoc", 1);
@@ -128,8 +133,6 @@ public class pre_compras extends Pantalla{
 		tab_compras.getColumna("ide_gtemp").setCombo(ser_nomina.servicioEmpleadosActivos("true,false"));
 		tab_compras.getColumna("ide_gtemp").setLectura(true);
 		tab_compras.getColumna("ide_gtemp").setAutoCompletar();
-		tab_compras.getColumna("ide_prpoa").setCombo(ser_presupuesto.getPoaTodos());
-		tab_compras.getColumna("ide_prpoa").setAutoCompletar();
 		tab_compras.getColumna("ide_adtie").setCombo("adq_tiempo_entrega","ide_adtie", "detalle_adtie","");
 		tab_compras.getColumna("ide_retip").setCombo("rec_tipo","ide_retip", "detalle_retip","");
 		  List lista = new ArrayList();
@@ -145,7 +148,9 @@ public class pre_compras extends Pantalla{
 	    tab_compras.getColumna("tipo_recepcion_adsoc").setRadio(lista, "0");
 	    tab_compras.getColumna("tipo_recepcion_adsoc").setRadioVertical(true);
 		tab_compras.agregarRelacion(tab_detalle_compras);
-		tab_compras.agregarRelacion(tab_archivo_compras);		
+		tab_compras.agregarRelacion(tab_archivo_compras);	
+		tab_compras.agregarRelacion(tab_poa_solicitud);		
+		
 		tab_compras.setTipoFormulario(true);
 		tab_compras.getGrid().setColumns(4);
 		tab_compras.dibujar();
@@ -177,8 +182,20 @@ public class pre_compras extends Pantalla{
 		PanelTabla pat_panel3 = new PanelTabla();
 		pat_panel3.setPanelTabla(tab_archivo_compras);
 		
+		// agregar poa
+		tab_poa_solicitud.setId("tab_poa_solicitud");
+		tab_poa_solicitud.setIdCompleto("tab_tabulador:tab_poa_solicitud");
+		tab_poa_solicitud.setTabla("adq_poa_solicitud","ide_poaso", 4);
+		tab_poa_solicitud.getColumna("ide_prpoa").setCombo(ser_presupuesto.getPoaTodos());
+		tab_poa_solicitud.getColumna("ide_prpoa").setAutoCompletar();
+
+		tab_poa_solicitud.dibujar();
+		PanelTabla pat_panel4 = new PanelTabla();
+		pat_panel4.setPanelTabla(tab_poa_solicitud);
+		
 		tab_Tabulador.agregarTab("PARAMETROS DE SOLICITUD", pat_panel2);
 		tab_Tabulador.agregarTab("ARCHIVOS ADJUNTOS SOLICITUD", pat_panel3);
+		tab_Tabulador.agregarTab("PARTIDA PRESUPUESTARIA", pat_panel4);
 		
 		div_division=new Division();
 		div_division.dividir2(pat_panel1,tab_Tabulador,"50%","h");
@@ -355,11 +372,7 @@ public class pre_compras extends Pantalla{
 		set_adjudicado.cerrar();
 		utilitario.addUpdate("tab_compras");
 	}
-	//reporte
-	public void abrirListaReportes() {
-		// TODO Auto-generated method stub
-		rep_reporte.dibujar();
-	}
+	
 	public void aceptarCompra(){
 		tab_compras.setValor("ide_copag", set_tipo_compra.getValorSeleccionado());
 		utilitario.addUpdate("tab_compras");
@@ -370,16 +383,25 @@ public class pre_compras extends Pantalla{
 		tab_compras.ejecutarSql();
 		set_tipo_compra.cerrar();
 	}
+	//reporte
+    public void abrirListaReportes() {
+	// TODO Auto-generated method stub
+	rep_reporte.dibujar();
+	}
 	public void aceptarReporte(){
-		if(rep_reporte.getReporteSelecionado().equals("Solucitud Compra"));{
+		if(rep_reporte.getReporteSelecionado().equals("Solicitud Compra")){
+			System.out.println("entra reporte");
+
 			if (rep_reporte.isVisible()){
-				p_parametros=new HashMap();		
+				System.out.println("entra reporte a imporimir "+rep_reporte.getPath().toString());
+
+				p_parametros=new HashMap();
 				rep_reporte.cerrar();	
-				p_parametros.put("Titulo","Solucitud Compra");
-				p_parametros.put("ide_usua",Integer.parseInt("7"));
-				p_parametros.put("ide_empr",Integer.parseInt("0"));
-				p_parametros.put("ide_sucu",Integer.parseInt("1"));
-				//p_parametros.put("pide_fafac",Integer.parseInt(tab_cont_viajeros.getValor("ide_fanoc")));
+				p_parametros.clear();
+				p_parametros.put("titulo","SOLICITUD DE COMPRA");
+				p_parametros.put("ide_adsoc",Integer.parseInt(tab_compras.getValor("ide_adsoc")));
+				System.out.println("entra reporte a imporimir xxx "+p_parametros.toString());
+				
 				self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
 				self_reporte.dibujar();
 
@@ -405,6 +427,9 @@ public class pre_compras extends Pantalla{
 		else if (tab_archivo_compras.isFocus()){
 			tab_archivo_compras.insertar();
 		}
+		else if (tab_poa_solicitud.isFocus()){
+			tab_poa_solicitud.insertar();
+		}
 	}
 
 	@Override
@@ -412,7 +437,9 @@ public class pre_compras extends Pantalla{
 		// TODO Auto-generated method stub
 		if(tab_compras.guardar()){
 			if(tab_detalle_compras.guardar()){
-				tab_archivo_compras.guardar();
+				if(tab_archivo_compras.guardar()){
+					tab_poa_solicitud.guardar();
+				}
 			}
 		}
 		guardarPantalla();
@@ -430,6 +457,12 @@ public class pre_compras extends Pantalla{
 		this.tab_compras = tab_compras;
 	}
 	
+	public Tabla getTab_poa_solicitud() {
+		return tab_poa_solicitud;
+	}
+	public void setTab_poa_solicitud(Tabla tab_poa_solicitud) {
+		this.tab_poa_solicitud = tab_poa_solicitud;
+	}
 	public Tabla getTab_detalle_compras() {
 		return tab_detalle_compras;
 	}
@@ -442,6 +475,7 @@ public class pre_compras extends Pantalla{
 	public void setTab_archivo_compras(Tabla tab_archivo_compras) {
 		this.tab_archivo_compras = tab_archivo_compras;
 	}
+	
 	public Map getP_parametros() {
 		return p_parametros;
 	}
