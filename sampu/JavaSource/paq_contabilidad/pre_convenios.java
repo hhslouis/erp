@@ -232,7 +232,7 @@ public class pre_convenios extends Pantalla {
 			if (set_empleado_nuevo.getValorSeleccionado()!=null){
 			  String str_seleccionado_emnuevo=set_empleado_nuevo.getValorSeleccionado();
 				System.out.println("entro al empleado"+set_empleado_nuevo.getValorSeleccionado());
-				TablaGenerica tab_empleado_responsable = ser_nomina.ideEmpleadoContrato(str_seleccionado_emnuevo);	
+				TablaGenerica tab_empleado_responsable = ser_nomina.ideEmpleadoContrato(str_seleccionado_emnuevo,"true");	
 				
 				tab_tabla2.setValor("IDE_GEEDP", tab_empleado_responsable.getValor("IDE_GEEDP"));			
 				tab_tabla2.setValor("IDE_GTEMP", tab_empleado_responsable.getValor("IDE_GTEMP"));
@@ -370,7 +370,7 @@ System.out.println("if del aceptar persona"+str_seleccionado.toString());
 		String str_seleccionado=set_empleado.getValorSeleccionado();
 		if(str_seleccionado!=null){
 			//Inserto los empleados seleccionados en la tabla de resposable d econtratacion 
-			TablaGenerica tab_empleado_responsable = ser_nomina.ideEmpleadoContrato(str_seleccionado);		
+			TablaGenerica tab_empleado_responsable = ser_nomina.ideEmpleadoContrato(str_seleccionado,"true");		
 
 			System.out.println(" tabla generica"+tab_empleado_responsable.getSql());
 			//for(int i=0;i<tab_empleado_responsable.getTotalFilas();i++){
