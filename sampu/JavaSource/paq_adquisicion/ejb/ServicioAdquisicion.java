@@ -62,4 +62,9 @@ public String getSolicitud (String ide_adsoc){
 		return tab_estado;
 	
 }
+	public TablaGenerica getTablaGenericaTramitePOA (String ide_prtra){
+		TablaGenerica tab_estado=utilitario.consultar("select ide_prpot,ide_prpoa,ide_prtra,comprometido_prpot,observaciones_prpot from pre_poa_tramite where ide_prtra in ("+ide_prtra+")");
+		return tab_estado;
+	
+}
 }
