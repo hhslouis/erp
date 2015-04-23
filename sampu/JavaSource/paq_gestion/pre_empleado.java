@@ -114,6 +114,7 @@ public class pre_empleado extends Pantalla {
 	public static String par_nacionalidad;
 	public static String par_tipo_sangre;
 	public static String par_tipo_sindicato; 
+	public static String par_estado_civil_soltero; 
 	
 
 
@@ -130,6 +131,7 @@ public class pre_empleado extends Pantalla {
 		par_nacionalidad=utilitario.getVariable("p_gth_nacionalidad");
 		par_tipo_sangre=utilitario.getVariable("p_gth_tipo_sangre");
 		par_tipo_sindicato=utilitario.getVariable("p_gth_tipo_sindicato");
+		par_estado_civil_soltero=utilitario.getVariable("p_gth_estado_civil_soltero");
 
 		bar_botones.agregarReporte();
 
@@ -2271,6 +2273,7 @@ public class pre_empleado extends Pantalla {
 		//tab_empleado.getColumna("IDE_GTNAC").setCombo("GTH_NACIONALIDAD", "IDE_GTNAC", "DETALLE_GTNAC", "");
 		tab_empleado.getColumna("IDE_GTNAC").setValorDefecto(par_nacionalidad);
 		tab_empleado.getColumna("IDE_GTTIS").setValorDefecto(par_tipo_sangre);
+		tab_empleado.getColumna("ide_gtesc").setValorDefecto(par_estado_civil_soltero);		
 		tab_empleado.getColumna("PRIMER_NOMBRE_GTEMP").setRequerida(true);
 		tab_empleado.getColumna("APELLIDO_PATERNO_GTEMP").setRequerida(true);
 		tab_empleado.getColumna("DOCUMENTO_IDENTIDAD_GTEMP").setRequerida(true);
@@ -2295,7 +2298,7 @@ public class pre_empleado extends Pantalla {
 		tab_empleado.getColumna("ide_gtnac").setVisible(false);
 		tab_empleado.getColumna("SEPARACION_BIENES_GTEMP").setVisible(false);
 		tab_empleado.getColumna("CARGO_PUBLICO_GTEMP").setVisible(false);
-		tab_empleado.getColumna("fecha_ingreso_grupo_gtemp").setVisible(false);
+//		tab_empleado.getColumna("fecha_ingreso_grupo_gtemp").setVisible(false);
 		tab_empleado.getColumna("ide_gtesc").setVisible(false);
 
 		List lista = new ArrayList();
