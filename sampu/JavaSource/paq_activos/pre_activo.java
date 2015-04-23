@@ -336,7 +336,7 @@ public class pre_activo extends Pantalla {
 		String str_seleccionado=set_empleado.getValorSeleccionado();
 		if(str_seleccionado!=null){
 			//Inserto los empleados seleccionados en la tabla de resposable d econtratacion 
-			TablaGenerica tab_empleado_responsable = ser_nomina.ideEmpleadoContrato(str_seleccionado);		
+			TablaGenerica tab_empleado_responsable = ser_nomina.ideEmpleadoContrato(str_seleccionado,"true");		
 
 			System.out.println(" tabla generica"+tab_empleado_responsable.getSql());
 			for(int i=0;i<tab_empleado_responsable.getTotalFilas();i++){
