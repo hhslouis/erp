@@ -77,6 +77,7 @@ public class pre_tramite extends Pantalla   {
 		tab_tramite.setId("tab_tramite");
 		tab_tramite.setHeader("TRAMITE");
 		tab_tramite.setTabla("pre_tramite","ide_prtra", 1);
+		tab_tramite.setCampoOrden("ide_prtra desc");
 		tab_tramite.getColumna("ide_geedp").setCombo(ser_nomina.servicioEmpleadoContrato("true,false"));
 		tab_tramite.getColumna("ide_geedp").setLectura(true);
 		tab_tramite.getColumna("ide_geedp").setAutoCompletar();
@@ -101,7 +102,8 @@ public class pre_tramite extends Pantalla   {
 		tab_tramite.setCondicion("ide_geani=-1"); 
 		tab_tramite.getColumna("total_compromiso_prtra").setEtiqueta();
 		tab_tramite.getColumna("total_compromiso_prtra").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
-
+		tab_tramite.getColumna("activo_prtra").setValorDefecto("true");
+		tab_tramite.getColumna("activo_prtra").setLectura(true);
 
 		tab_tramite.setTipoFormulario(true);
 		tab_tramite.getGrid().setColumns(4);
@@ -118,6 +120,9 @@ public class pre_tramite extends Pantalla   {
 		tab_poa_tramite.setHeader("POA TRAMITE");
 		tab_poa_tramite.setIdCompleto("tab_tabulador:tab_poa_tramite");
 		tab_poa_tramite.setTabla("pre_poa_tramite", "ide_prpot", 2);
+		tab_poa_tramite.getColumna("ide_prpoa").setCombo(ser_presupuesto.getPoaTodos());
+		tab_poa_tramite.getColumna("ide_prpoa").setAutoCompletar();
+		tab_poa_tramite.getColumna("ide_prpoa").setLectura(true);
 		tab_poa_tramite.getColumna("comprometido_prpot").setMetodoChange("CalcularSuma");
 		tab_poa_tramite.dibujar();
 		PanelTabla pat_panel2=new PanelTabla();
@@ -197,7 +202,7 @@ public class pre_tramite extends Pantalla   {
 		bar_botones.agregarBoton(bot_buscar);
 
 		set_poa.setId("set_poa");
-		set_poa.setSeleccionTabla(ser_presupuesto.getPoa("true,false"),"ide_prpoa");
+		set_poa.setSeleccionTabla(ser_presupuesto.getPoa("-1"),"ide_prpoa");
 		set_poa.setTitle("Seleccione Poa");
 		set_poa.getBot_aceptar().setMetodo("aceptarPoa");
 		agregarComponente(set_poa);
@@ -245,7 +250,7 @@ public void importarPeticionario(){
 	public void aceptarPeticionario(){
 
 		String str_seleccionado = set_peticionario.getValorSeleccionado();
-		TablaGenerica tab_empleado=ser_nomina.ideEmpleadoContrato(str_seleccionado);
+		TablaGenerica tab_empleado=ser_nomina.ideEmpleadoContrato(str_seleccionado,"true");
 		if (str_seleccionado!=null){
 			tab_tramite.setValor("gen_ide_geedp2",str_seleccionado);
 			tab_tramite.modificar(tab_tramite.getFilaActual());
@@ -267,7 +272,7 @@ public void importarPeticionario(){
 		public void aceptarResponsable(){
 
 			String str_seleccionado = set_responsable.getValorSeleccionado();
-			TablaGenerica tab_empleado=ser_nomina.ideEmpleadoContrato(str_seleccionado);
+			TablaGenerica tab_empleado=ser_nomina.ideEmpleadoContrato(str_seleccionado,"true");
 			if (str_seleccionado!=null){
 				tab_tramite.setValor("gen_ide_geedp",str_seleccionado);
 				tab_tramite.modificar(tab_tramite.getFilaActual());
@@ -285,7 +290,7 @@ public void importarPeticionario(){
 			return;
 		}
 
-		set_poa.getTab_seleccion().setSql(ser_presupuesto.getPoa("true,false"));
+		set_poa.getTab_seleccion().setSql(ser_presupuesto.getPoa(com_anio.getValue().toString()));
 		set_poa.getTab_seleccion().ejecutarSql();
 		set_poa.dibujar();
 

@@ -174,7 +174,7 @@ public class pre_contratacion_publica extends Pantalla {
 	}
 	public void modificarResponsable(){
 		String str_empleadoActualizado=set_actualizar.getValorSeleccionado();
-	   	TablaGenerica tab_empleadoModificadoResponsable = ser_nomina.ideEmpleadoContrato(str_empleadoActualizado);		
+	   	TablaGenerica tab_empleadoModificadoResponsable = ser_nomina.ideEmpleadoContrato(str_empleadoActualizado,"true");		
 	    tab_responsable.setValor("IDE_GEEDP", tab_empleadoModificadoResponsable.getValor("IDE_GEEDP"));			
 	    tab_responsable.setValor("IDE_GTEMP", tab_empleadoModificadoResponsable.getValor("IDE_GTEMP"));	
 	    tab_responsable.modificar(tab_responsable.getFilaActual());
@@ -219,7 +219,7 @@ public class pre_contratacion_publica extends Pantalla {
 			String str_seleccionados=set_empleado.getSeleccionados();
 			if(str_seleccionados!=null){
 				//Inserto los empleados seleccionados en la tabla de resposable d econtratacion 
-				TablaGenerica tab_empleado_responsable = ser_nomina.ideEmpleadoContrato(str_seleccionados);		
+				TablaGenerica tab_empleado_responsable = ser_nomina.ideEmpleadoContrato(str_seleccionados,"true");		
 							
 				
 				for(int i=0;i<tab_empleado_responsable.getTotalFilas();i++){
