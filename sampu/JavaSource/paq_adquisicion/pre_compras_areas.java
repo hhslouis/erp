@@ -25,7 +25,7 @@ import paq_sistema.aplicacion.Pantalla;
 import paq_sistema.aplicacion.Utilitario;
 import paq_sistema.ejb.ServicioSeguridad;
 
-public class pre_compras extends Pantalla{
+public class pre_compras_areas extends Pantalla{
 
 	public static String par_estado_modulo_compra;
 	public static String par_modulo_adquisicion;
@@ -72,13 +72,19 @@ public class pre_compras extends Pantalla{
 
 	
 
-	public pre_compras(){
+	public pre_compras_areas(){
 		
 		empleado=ser_seguridad.getUsuario(utilitario.getVariable("ide_usua")).getValor("ide_gtemp");
+		TablaGenerica area = ser_nomina.ideEmpleadoContrato(empleado, "true");
 		System.out.println("empleado"+empleado);
+		
 		if(empleado==null ||empleado.isEmpty()){
 			utilitario.agregarNotificacionInfo("Mensaje", "No exixte usuario registrado para el registro de compras");
 			return;
+		}
+		if(area.getValor("ide_geare")==null||area.getValor("ide_geare").isEmpty()){
+			utilitario.agregarNotificacionInfo("Mensaje", "El Usuario asignado no posee un Area asiganada dentro de la Instituciòn");
+			return;			
 		}
 		par_modulo_adquisicion =utilitario.getVariable("p_modulo_adquisicion");
 		par_estado_modulo_compra =utilitario.getVariable("p_estado_modulo_compra");
@@ -99,21 +105,22 @@ public class pre_compras extends Pantalla{
 		tab_compras.setHeader("SOLICITUD DE COMPRAS ( BIENES / SERVICIOS )");
 		tab_compras.setTabla("adq_solicitud_compra", "ide_adsoc", 1);
 		tab_compras.setCampoOrden("ide_adsoc desc");
+		tab_compras.setCondicion("ide_geare="+area.getValor("ide_geare"));
 		tab_compras.getColumna("ide_adtic").setCombo("adq_tipo_contratacion","ide_adtic", "detalle_adtic","");
 		tab_compras.getColumna("ide_coest").setCombo("cont_estado","ide_coest", "detalle_coest","");
-	//	tab_compras.getColumna("ide_coest").setLectura(true);
+		tab_compras.getColumna("ide_coest").setLectura(true);
 		tab_compras.getColumna("ide_coest").setAutoCompletar();
 		tab_compras.getColumna("ide_copag").setCombo("cont_parametros_general","ide_copag", "detalle_copag", "");
-	//	tab_compras.getColumna("ide_copag").setLectura(true);
+		tab_compras.getColumna("ide_copag").setLectura(true);
 		tab_compras.getColumna("ide_copag").setAutoCompletar();
 		tab_compras.getColumna("ide_geedp").setCombo(ser_nomina.servicioEmpleadoContrato("true,false"));
-	//	tab_compras.getColumna("ide_geedp").setLectura(true);
+		tab_compras.getColumna("ide_geedp").setLectura(true);
 		tab_compras.getColumna("ide_geedp").setAutoCompletar();
 		tab_compras.getColumna("ide_tepro").setCombo(ser_Bodega.getProveedor("true,false"));
-	//	tab_compras.getColumna("ide_tepro").setLectura(true);
+		tab_compras.getColumna("ide_tepro").setLectura(true);
 		tab_compras.getColumna("ide_tepro").setAutoCompletar();
 		tab_compras.getColumna("ide_prtra").setCombo(ser_Adquisicion.getTramite("true,false"));
-	//	tab_compras.getColumna("ide_prtra").setLectura(true);
+		tab_compras.getColumna("ide_prtra").setLectura(true);
 		tab_compras.getColumna("ide_prtra").setAutoCompletar();
 		tab_compras.getColumna("ide_geare").setCombo("gen_area", "ide_geare", "detalle_geare", "");
 		tab_compras.getColumna("ide_geare").setAutoCompletar();
@@ -127,11 +134,19 @@ public class pre_compras extends Pantalla{
 		tab_compras.getColumna("proforma_proveedor_adsoc").setVisible(false);
 		tab_compras.getColumna("fecha_proforma_proveedor_adsoc").setVisible(false);
 		tab_compras.getColumna("oferente1_adsoc").setVisible(false);
+		tab_compras.getColumna("fecha_adjudicacion_adsoc").setVisible(false);
+		tab_compras.getColumna("tipo_recepcion_adsoc").setVisible(false);
+		tab_compras.getColumna("ide_tepro").setVisible(false);
+		tab_compras.getColumna("aprobado_adsoc").setVisible(false);
+		tab_compras.getColumna("ide_geedp").setVisible(false);
+		tab_compras.getColumna("ide_geare").setValorDefecto(area.getValor("ide_geare"));
 		tab_compras.getColumna("fecha_registro").setValorDefecto(utilitario.getFechaActual());
 		tab_compras.getColumna("fecha_solicitud_adsoc").setValorDefecto(utilitario.getFechaActual());
 		tab_compras.getColumna("activo_adsoc").setValorDefecto("true");
 		tab_compras.getColumna("activo_adsoc").setLectura(true);
 		tab_compras.getColumna("aprobado_adsoc").setLectura(true);
+		tab_compras.getColumna("ide_geare").setLectura(true);
+
 		tab_compras.getColumna("ide_gtemp").setCombo(ser_nomina.servicioEmpleadosActivos("true,false"));
 		tab_compras.getColumna("ide_gtemp").setLectura(true);
 		tab_compras.getColumna("ide_gtemp").setAutoCompletar();
@@ -243,25 +258,8 @@ public class pre_compras extends Pantalla{
 		set_certificacion.setTitle("Seleccione Certificaciòn");
 		set_certificacion.getBot_aceptar().setMetodo("aceptarCertificacion");
 		set_certificacion.setRadio();
-		agregarComponente(set_certificacion);	
-		
-		
-		Boton bot_cotizacion = new Boton();
-		bot_cotizacion.setValue("Cotizacion");
-		bot_cotizacion.setTitle("COTIZACION");
-		bot_cotizacion.setIcon("ui-icon-person");
-		bot_cotizacion.setMetodo("aceptarCotizacion");
-		bar_botones.agregarBoton(bot_cotizacion);
-		
-		
+		agregarComponente(set_certificacion);		
 			
-		Boton bot_proveedor = new Boton();
-		bot_proveedor.setValue("Proveedor");
-		bot_proveedor.setTitle("PROVEEDOR");
-		bot_proveedor.setIcon("ui-icon-person");
-		bot_proveedor.setMetodo("importarProveedor");
-		bar_botones.agregarBoton(bot_proveedor);
-		
 		set_proveedor.setId("set_proveedor");
 		set_proveedor.setSeleccionTabla(ser_Bodega.getProveedor("null"),"ide_tepro");
 		set_proveedor.getTab_seleccion().getColumna("NOMBRE_TEPRO").setNombreVisual("Nombre Proveedor");
@@ -455,8 +453,12 @@ public class pre_compras extends Pantalla{
 		if(tab_compras.isFocus()){
 		tab_compras.insertar();
 		String ide_gtempxx=ser_seguridad.getUsuario(utilitario.getVariable("ide_usua")).getValor("ide_gtemp");
+		TablaGenerica area = ser_nomina.ideEmpleadoContrato(ide_gtempxx, "true");
+
+		
 		tab_compras.setValor("ide_gtemp",ide_gtempxx );
 		tab_compras.setValor("ide_coest",par_estado_modulo_compra);
+		tab_compras.setValor("ide_geare", area.getValor("ide_geare"));
 		set_tipo_compra.getTab_seleccion().setSql(ser_contabilidad.getModuloParametros("true", par_modulo_adquisicion));
 		set_tipo_compra.getTab_seleccion().ejecutarSql();
 		set_tipo_compra.dibujar();
