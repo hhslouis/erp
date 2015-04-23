@@ -173,7 +173,7 @@ public void actualizarViajero(){
 
 public void modificarViajero(){
 	String str_empleadoActualizado=set_actualizaViajero.getValorSeleccionado();
-   	TablaGenerica tab_empleadoModificado = ser_nomina.ideEmpleadoContrato(str_empleadoActualizado);		
+   	TablaGenerica tab_empleadoModificado = ser_nomina.ideEmpleadoContrato(str_empleadoActualizado,"true");		
     tab_cont_viajeros.setValor("IDE_GEEDP", tab_empleadoModificado.getValor("IDE_GEEDP"));			
 	tab_cont_viajeros.setValor("IDE_GTEMP", tab_empleadoModificado.getValor("IDE_GTEMP"));	
 	tab_cont_viajeros.modificar(tab_cont_viajeros.getFilaActual());
@@ -220,7 +220,7 @@ public void aceptarEmpleado(){
 	String str_seleccionados=set_empleado.getSeleccionados();
 	if(str_seleccionados!=null){
 		//Inserto los empleados seleccionados en la tabla de participantes 
-		TablaGenerica tab_empleado = ser_nomina.ideEmpleadoContrato(str_seleccionados);		
+		TablaGenerica tab_empleado = ser_nomina.ideEmpleadoContrato(str_seleccionados,"true");		
 		
 		//set_empleado.setSeleccionTabla(ser_nomina.servicioEmpleadoContrato("true"),"ide_geedp");
 		
