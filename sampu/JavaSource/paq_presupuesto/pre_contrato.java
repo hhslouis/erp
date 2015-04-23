@@ -231,7 +231,7 @@ public class pre_contrato extends Pantalla {
 			
 	public void modificarAdministrador(){
 		String str_empleadoActualizado=set_actualizar.getValorSeleccionado();
-	   	TablaGenerica tab_empleadoModificadoAdministrador = ser_nomina.ideEmpleadoContrato(str_empleadoActualizado);		
+	   	TablaGenerica tab_empleadoModificadoAdministrador = ser_nomina.ideEmpleadoContrato(str_empleadoActualizado,"true");		
 	    tab_administrador.setValor("IDE_GEEDP", tab_empleadoModificadoAdministrador.getValor("IDE_GEEDP"));			
 	    tab_administrador.setValor("IDE_GTEMP", tab_empleadoModificadoAdministrador.getValor("IDE_GTEMP"));	
 	    tab_administrador.modificar(tab_administrador.getFilaActual());
@@ -260,7 +260,7 @@ public class pre_contrato extends Pantalla {
 		String str_seleccionados=set_empleado.getSeleccionados();
 		if(str_seleccionados!=null){
 			//Inserto los empleados seleccionados en la tabla de resposable d econtratacion 
-			TablaGenerica tab_empleado_responsable = ser_nomina.ideEmpleadoContrato(str_seleccionados);		
+			TablaGenerica tab_empleado_responsable = ser_nomina.ideEmpleadoContrato(str_seleccionados,"true");		
 						
 			System.out.println(" tabla generica"+tab_empleado_responsable.getSql());
 			for(int i=0;i<tab_empleado_responsable.getTotalFilas();i++){
@@ -308,7 +308,7 @@ public class pre_contrato extends Pantalla {
 		String str_seleccionados=set_compareciente.getSeleccionados();
 		if(str_seleccionados!=null){
 			//Inserto los empleados seleccionados en la tabla de resposable d econtratacion 
-			TablaGenerica tab_empleado_responsable = ser_nomina.ideEmpleadoContrato(str_seleccionados);		
+			TablaGenerica tab_empleado_responsable = ser_nomina.ideEmpleadoContrato(str_seleccionados,"true");		
 						
 			System.out.println(" tabla generica"+tab_empleado_responsable.getSql());
 			for(int i=0;i<tab_empleado_responsable.getTotalFilas();i++){
@@ -350,7 +350,7 @@ public class pre_contrato extends Pantalla {
 	
 	public void modificarCompareciente(){
 		String str_empleadoActualizado=set_actualizar_compareciente.getValorSeleccionado();
-	   	TablaGenerica tab_empleadoModificadoCompareciente = ser_nomina.ideEmpleadoContrato(str_empleadoActualizado);		
+	   	TablaGenerica tab_empleadoModificadoCompareciente = ser_nomina.ideEmpleadoContrato(str_empleadoActualizado,"true");		
 	    tab_compareciente.setValor("IDE_GEEDP", tab_empleadoModificadoCompareciente.getValor("IDE_GEEDP"));			
 	    tab_compareciente.setValor("IDE_GTEMP", tab_empleadoModificadoCompareciente.getValor("IDE_GTEMP"));	
 	    tab_compareciente.modificar(tab_compareciente.getFilaActual());
