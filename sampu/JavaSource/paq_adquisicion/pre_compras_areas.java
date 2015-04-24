@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.EJB;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import framework.aplicacion.TablaGenerica;
 import framework.componentes.Boton;
@@ -33,6 +34,10 @@ public class pre_compras_areas extends Pantalla{
 	public static String par_certificacion;
 	public static String par_solicitud;
 	public static String par_empleado_adjudicador;
+	public static String par_empleado_adjudica_infima;
+	public static String par_empleado_adjudica_todos;
+	public static String par_tipo_contrata_infima;
+
 
 	private SeleccionTabla set_tipo_compra=new SeleccionTabla();
 	private SeleccionTabla set_certificacion=new SeleccionTabla();
@@ -92,7 +97,9 @@ public class pre_compras_areas extends Pantalla{
 		par_certificacion=utilitario.getVariable("p_certificacion_adquisicion");
 		par_solicitud=utilitario.getVariable("p_solicitud_pago_adquisicion");
 		par_empleado_adjudicador=utilitario.getVariable("p_empleado_adjudicador");
-
+		par_empleado_adjudica_infima=utilitario.getVariable("p_empleado_adjudica_infima");
+		par_empleado_adjudica_todos=utilitario.getVariable("p_empleado_adjudica_todos");
+		par_tipo_contrata_infima=utilitario.getVariable("p_tipo_contrata_infima");
 		rep_reporte.setId("rep_reporte"); //id
 		rep_reporte.getBot_aceptar().setMetodo("aceptarReporte");//ejecuta el metodo al aceptar reporte
 		agregarComponente(rep_reporte);//agrega el componente a la pantalla
@@ -107,6 +114,8 @@ public class pre_compras_areas extends Pantalla{
 		tab_compras.setCampoOrden("ide_adsoc desc");
 		tab_compras.setCondicion("ide_geare="+area.getValor("ide_geare"));
 		tab_compras.getColumna("ide_adtic").setCombo("adq_tipo_contratacion","ide_adtic", "detalle_adtic","");
+		tab_compras.getColumna("ide_adtic").setRequerida(true);
+		tab_compras.getColumna("ide_adtic").setMetodoChange("aceptaAdjudicador");		
 		tab_compras.getColumna("ide_coest").setCombo("cont_estado","ide_coest", "detalle_coest","");
 		tab_compras.getColumna("ide_coest").setLectura(true);
 		tab_compras.getColumna("ide_coest").setAutoCompletar();
@@ -138,7 +147,7 @@ public class pre_compras_areas extends Pantalla{
 		tab_compras.getColumna("tipo_recepcion_adsoc").setVisible(false);
 		tab_compras.getColumna("ide_tepro").setVisible(false);
 		tab_compras.getColumna("aprobado_adsoc").setVisible(false);
-		tab_compras.getColumna("ide_geedp").setVisible(false);
+		tab_compras.getColumna("aprobado_adsoc").setValorDefecto("false");
 		tab_compras.getColumna("ide_geare").setValorDefecto(area.getValor("ide_geare"));
 		tab_compras.getColumna("fecha_registro").setValorDefecto(utilitario.getFechaActual());
 		tab_compras.getColumna("fecha_solicitud_adsoc").setValorDefecto(utilitario.getFechaActual());
@@ -271,12 +280,6 @@ public class pre_compras_areas extends Pantalla{
 		set_proveedor.setRadio();
 		agregarComponente(set_proveedor);
 		
-		Boton bot_adjudicado = new Boton();
-		bot_adjudicado.setValue("Adjudicador");
-		bot_adjudicado.setTitle("ADJUDICADO");
-		bot_adjudicado.setIcon("ui-icon-person");
-		bot_adjudicado.setMetodo("importarAdjudicado");
-		bar_botones.agregarBoton(bot_adjudicado);
 		
 		set_adjudicado.setId("set_adjudicado");
 		set_adjudicado.setSeleccionTabla(ser_nomina.servicioEmpleadoContratoCodigo("false", "-1"),"ide_geedp");
@@ -291,6 +294,24 @@ public class pre_compras_areas extends Pantalla{
 		set_adjudicado.getBot_aceptar().setMetodo("aceptarAdjudicado");
 		set_adjudicado.setRadio();
 		agregarComponente(set_adjudicado);
+	}
+	public void aceptaAdjudicador(AjaxBehaviorEvent evt){
+		tab_compras.modificar(evt); //Siempre es la primera linea
+		if(tab_compras.getValor("ide_adtic").equals(par_tipo_contrata_infima)){
+			TablaGenerica empleado_adjudica=utilitario.consultar(ser_nomina.servicioEmpleadoContratoCodigo("true", par_empleado_adjudica_infima));
+			
+			tab_compras.setValor("ide_geedp",empleado_adjudica.getValor("IDE_GEEDP"));
+			utilitario.addUpdateTabla(tab_compras, "ide_geedp,", "");
+			
+		}
+		else {
+			TablaGenerica empleado_adjudica=utilitario.consultar(ser_nomina.servicioEmpleadoContratoCodigo("true", par_empleado_adjudica_todos));
+
+			tab_compras.setValor("ide_geedp",empleado_adjudica.getValor("IDE_GEEDP"));
+			utilitario.addUpdateTabla(tab_compras, "ide_geedp,", "");
+			
+		}
+	
 	}
 	public void importarProveedor(){
 		
@@ -450,6 +471,7 @@ public class pre_compras_areas extends Pantalla{
 	@Override
 	public void insertar() {
 		// TODO Auto-generated method stub
+		
 		if(tab_compras.isFocus()){
 		tab_compras.insertar();
 		String ide_gtempxx=ser_seguridad.getUsuario(utilitario.getVariable("ide_usua")).getValor("ide_gtemp");
@@ -465,19 +487,36 @@ public class pre_compras_areas extends Pantalla{
 		utilitario.addUpdate("tab_compras");
 		}
 		else if (tab_detalle_compras.isFocus()){
+			if(tab_compras.getValor("aprobado_adsoc").equals("true")){
+				utilitario.agregarNotificacionInfo("Registro no Editable", "La solicitud de compra seleccionada se encuentra aprobada y no puede ser editada");
+				return;
+			}
 			tab_detalle_compras.insertar();
 		}
 		else if (tab_archivo_compras.isFocus()){
+			if(tab_compras.getValor("aprobado_adsoc").equals("true")){
+				utilitario.agregarNotificacionInfo("Registro no Editable", "La solicitud de compra seleccionada se encuentra aprobada y no puede ser editada");
+				return;
+			}
 			tab_archivo_compras.insertar();
 		}
 		else if (tab_poa_solicitud.isFocus()){
+			if(tab_compras.getValor("aprobado_adsoc").equals("true")){
+				utilitario.agregarNotificacionInfo("Registro no Editable", "La solicitud de compra seleccionada se encuentra aprobada y no puede ser editada");
+				return;
+			}
 			tab_poa_solicitud.insertar();
 		}
 	}
 
 	@Override
 	public void guardar() {
+		
 		// TODO Auto-generated method stub
+		if(tab_compras.getValor("aprobado_adsoc").equals("true")){
+			utilitario.agregarNotificacionInfo("Registro no Editable", "La solicitud de compra seleccionada se encuentra aprobada y no puede ser editada");
+			return;
+		}
 		if(tab_compras.guardar()){
 			if(tab_detalle_compras.guardar()){
 				if(tab_archivo_compras.guardar()){
@@ -490,6 +529,10 @@ public class pre_compras_areas extends Pantalla{
 
 	@Override
 	public void eliminar() {
+		if(tab_compras.getValor("aprobado_adsoc").equals("true")){
+			utilitario.agregarNotificacionInfo("Registro no Editable", "La solicitud de compra seleccionada se encuentra aprobada y no puede ser editada");
+			return;
+		}
 		// TODO Auto-generated method stub
 		utilitario.getTablaisFocus().eliminar();
 	}

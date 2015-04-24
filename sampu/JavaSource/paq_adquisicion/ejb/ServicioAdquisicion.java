@@ -41,11 +41,15 @@ public String getSolicitud (String ide_adsoc){
 		
 	}
 	public  String getCompras(String activo){
-		String tab_compra ="select a.ide_adsoc,a.ide_tepro,nombre_tepro,detalle_adsoc,nro_solicitud_adsoc from adq_solicitud_compra a,tes_proveedor b" +
+		String tab_compra ="select a.ide_adsoc,a.ide_tepro,nro_solicitud_adsoc,detalle_adsoc,nombre_tepro from adq_solicitud_compra a,tes_proveedor b" +
 				" where a.ide_tepro=b.ide_tepro and activo_adsoc in ("+activo+") order by detalle_adsoc";
-		System.out.println("compras"+tab_compra);
 		return tab_compra;	
 	}
+	public  String getComprasCombo(String activo){
+		String tab_compra ="select a.ide_adsoc,(case when nro_solicitud_adsoc is null then 'S/N' else nro_solicitud_adsoc end) as nro_solicitud_adsoc ,detalle_adsoc,fecha_solicitud_adsoc from adq_solicitud_compra a,tes_proveedor b" +
+				" where a.ide_tepro=b.ide_tepro and activo_adsoc in ("+activo+") order by detalle_adsoc";
+		return tab_compra;	
+	}	
 	public String getTramite (String activo){
 		String tab_estado="SELECT a.ide_prtra,fecha_tramite_prtra,numero_oficio_prtra,total_compromiso_prtra " +
 				" FROM pre_tramite a, cont_estado b" +
