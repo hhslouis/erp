@@ -353,6 +353,11 @@ public class Parametros {
         lis_parametros.add(new Parametro("15", "p_certificacion_adquisicion","Indica el estado de la certificacion de  adquisicion ","12","cont_estado","ide_coest", "detalle_coest"));
         lis_parametros.add(new Parametro("15", "p_solicitud_pago_adquisicion","Indica el estado de la solicitud pago adquisicion  ","13","cont_estado","ide_coest", "detalle_coest"));
         lis_parametros.add(new Parametro("15", "p_empleado_adjudicador","Indica el listado de los empleados adjudicadores  ","13","gth_empleado","ide_gtemp", "documento_identidad_gtemp,apellido_paterno_gtemp, apellido_materno_gtemp, primer_nombre_gtemp,segundo_nombre_gtemp"));
+        lis_parametros.add(new Parametro("15", "p_empleado_adjudica_infima","Permite filtrar el empleado responsable de adjudicar Compras por infimas Cuantìas (Coordinador Administrativo)","13","gth_empleado","ide_gtemp", "documento_identidad_gtemp,apellido_paterno_gtemp, apellido_materno_gtemp, primer_nombre_gtemp,segundo_nombre_gtemp"));
+        lis_parametros.add(new Parametro("15", "p_empleado_adjudica_todos","Permite filtrar el empleado responsable de adjudicar Compras que no sean por infimas Cuantìas (Gerente General)","13","gth_empleado","ide_gtemp", "documento_identidad_gtemp,apellido_paterno_gtemp, apellido_materno_gtemp, primer_nombre_gtemp,segundo_nombre_gtemp"));
+        lis_parametros.add(new Parametro("15", "p_tipo_contrata_infima","Define el tipo de contrataciòn que es de tipo infima cuantìa","3","adq_tipo_contratacion","ide_adtic", "detalle_adtic"));
+        //lis_parametros.add(new Parametro("15", "p_estado_pendiente_bodega","","3","adq_tipo_contratacion","ide_adtic", "detalle_adtic"));
+        //lis_parametros.add(new Parametro("15", "p_estado_recepcion_parcial","","3","adq_tipo_contratacion","ide_adtic", "detalle_adtic"));
 
         /*
          * PRESUPUESTO
