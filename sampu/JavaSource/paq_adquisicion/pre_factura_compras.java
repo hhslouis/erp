@@ -1,5 +1,8 @@
 package paq_adquisicion;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ejb.EJB;
 import javax.faces.event.AjaxBehaviorEvent;
 
@@ -8,9 +11,11 @@ import org.primefaces.event.SelectEvent;
 import framework.aplicacion.TablaGenerica;
 import framework.componentes.AutoCompletar;
 import framework.componentes.Boton;
+import framework.componentes.Dialogo;
 import framework.componentes.Division;
 import framework.componentes.Etiqueta;
 import framework.componentes.PanelTabla;
+import framework.componentes.Radio;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import paq_adquisicion.ejb.ServicioAdquisicion;
@@ -23,6 +28,11 @@ public class pre_factura_compras extends Pantalla{
 	private AutoCompletar aut_adq_compra= new AutoCompletar();
 	private SeleccionTabla set_solicitud=new SeleccionTabla();
 	public static double par_iva;
+	private Dialogo dia_recepcion = new Dialogo();
+	private Dialogo dia_aplica_descuento = new Dialogo();
+
+	private	Radio lis_recepcion=new Radio();
+	private	Radio lis_aplica_descuento=new Radio();
 
 	@EJB
 	private ServicioAdquisicion ser_Adquisicion=(ServicioAdquisicion) utilitario.instanciarEJB(ServicioAdquisicion.class);
@@ -38,7 +48,7 @@ public class pre_factura_compras extends Pantalla{
 		tab_adq_factura.setTipoFormulario(true);
 		tab_adq_factura.getGrid().setColumns(4);
 		tab_adq_factura.setCampoOrden("ide_adfac desc");
-		tab_adq_factura.getColumna("ide_adsoc").setCombo(ser_Adquisicion.getCompras("true,false"));
+		tab_adq_factura.getColumna("ide_adsoc").setCombo(ser_Adquisicion.getComprasCombo("true,false"));
 		tab_adq_factura.getColumna("ide_adsoc").setAutoCompletar();
 		tab_adq_factura.getColumna("ide_adsoc").setLectura(true);
 		tab_adq_factura.getColumna("subtotal_adfac").setEtiqueta();
@@ -49,11 +59,28 @@ public class pre_factura_compras extends Pantalla{
 		tab_adq_factura.getColumna("valor_iva_adfac").setEtiqueta();
 		tab_adq_factura.getColumna("porcent_desc_adfac").setMetodoChange("calcularDescuentoPorce");
 		tab_adq_factura.getColumna("valor_iva_adfac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
+		tab_adq_factura.getColumna("porcent_desc_adfac").setVisible(false);
+		tab_adq_factura.getColumna("valor_descuento_adfac").setVisible(false);
+		tab_adq_factura.getColumna("aplica_descuento_adfac").setVisible(false);
+
 		tab_adq_factura.getColumna("valor_descuento_adfac").setMetodoChange("calcularDescuento");
 		tab_adq_factura.getColumna("total_adfac").setEtiqueta();
 		tab_adq_factura.getColumna("total_adfac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_adq_factura.getColumna("activo_adfac").setLectura(true);
 		tab_adq_factura.getColumna("activo_adfac").setValorDefecto("true");
+		 List listay = new ArrayList();
+	       Object filay1[] = {
+	           "1", "DESCUENTO FACTURA"
+	       };
+	       Object filay2[] = {
+	           "0", "DESCUENTO PRODUCTO"
+	       };
+	       
+	       listay.add(filay1);
+	       listay.add(filay2);
+	    tab_adq_factura.getColumna("aplica_descuento_adfac").setRadio(listay, "1");
+	    tab_adq_factura.getColumna("aplica_descuento_adfac").setRadioVertical(true);
+	    tab_adq_factura.getColumna("aplica_descuento_adfac").setLectura(true);
 		tab_adq_factura.dibujar();
 		PanelTabla pat_adq_factura= new PanelTabla();
 		pat_adq_factura.setPanelTabla(tab_adq_factura);
@@ -64,13 +91,16 @@ public class pre_factura_compras extends Pantalla{
 		tab_adq_detalle.getColumna("ide_bomat").setAutoCompletar();
 		tab_adq_detalle.getColumna("aplica_iva_addef").setVisible(false);
 		tab_adq_detalle.getColumna("cantidad_addef").setMetodoChange("calcularDetallle");
-		tab_adq_detalle.getColumna("valor_unitario_addef").setMetodoChange("calcularDetallle");
-		tab_adq_detalle.getColumna("valor_total_addef").setEtiqueta();
-		tab_adq_detalle.getColumna("valor_total_addef").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
+		tab_adq_detalle.getColumna("valor_total_addef").setMetodoChange("calcularDetallle");
+		tab_adq_detalle.getColumna("valor_unitario_addef").setEtiqueta();
+		tab_adq_detalle.getColumna("valor_unitario_addef").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_adq_detalle.getColumna("activo_addef").setLectura(true);
 		tab_adq_detalle.getColumna("activo_addef").setValorDefecto("true");
 		tab_adq_detalle.getColumna("recibido_addef").setValorDefecto("true");
 		tab_adq_detalle.getColumna("recibido_addef").setLectura(true);
+		tab_adq_detalle.getColumna("por_descuento_addef").setVisible(false);
+		tab_adq_detalle.getColumna("valor_descuento_addef").setVisible(false);
+		tab_adq_detalle.getColumna("recibido_addef").setVisible(false);
 
 
 		tab_adq_detalle.dibujar();
@@ -103,8 +133,59 @@ public class pre_factura_compras extends Pantalla{
 		div_division.dividir2(pat_adq_factura, pat_adq_detalle, "50%", "H");
 		agregarComponente(div_division);
 
+		// Inicializo componente dialogo para seleccionar EL TIPO DE RECEPCION
 
+				List lista = new ArrayList();
+				Object fila1[] = {
+						"0", "TOTAL"
+				};
+				Object fila2[] = {
+						"1", "PARCIAL"
+				};
+				lista.add(fila1);
+				lista.add(fila2);
 
+				lis_recepcion.setRadio(lista);
+				lis_recepcion.setVertical();
+				dia_recepcion.setId("dia_recepcion");
+				dia_recepcion.setTitle("SELECCIONE EL TIPO DE RECEPCION");
+				dia_recepcion.getBot_aceptar().setMetodo("aceptaRecepcion");
+				dia_recepcion.getBot_cancelar().setMetodo("cancelarFactura");
+				dia_recepcion.setDialogo(lis_recepcion);
+				dia_recepcion.setHeight("40%");
+				dia_recepcion.setWidth("40%");
+				dia_recepcion.setDynamic(false);
+				agregarComponente(dia_recepcion);
+
+				// Inicializo componente dialogo para seleccionar EL TIPO DE DESCUENTO APLICAR
+
+				List listax = new ArrayList();
+				Object filax1[] = {
+						"0", "DESCUENTO PRODUCTO"
+				};
+				Object filax2[] = {
+						"1", "DESCUENTO FACTURA"
+				};
+				listax.add(filax1);
+				listax.add(filax2);
+
+				lis_aplica_descuento.setRadio(listax);
+				lis_aplica_descuento.setVertical();
+				dia_aplica_descuento.setId("dia_aplica_descuento");
+				dia_aplica_descuento.setTitle("SELECCIONE EL TIPO DE DESCUENTO APLICAR");
+				dia_aplica_descuento.getBot_aceptar().setMetodo("aceptaDescuento");
+				dia_aplica_descuento.getBot_cancelar().setMetodo("cancelarFactura");
+				dia_aplica_descuento.setDialogo(lis_aplica_descuento);
+				dia_aplica_descuento.setHeight("40%");
+				dia_aplica_descuento.setWidth("40%");
+				dia_aplica_descuento.setDynamic(false);
+				agregarComponente(dia_aplica_descuento);
+
+	}
+	public void cancelarFactura(){
+
+		utilitario.agregarMensajeInfo("No se Puede Cancelar", "Inicio un proceso de seleccion de compra que no lo puede cancelar en esta instancia, debe seleccionar una opciòn y continuar");
+		return;
 	}
 	public void importarSolicitudCompra(){
 
@@ -113,7 +194,32 @@ public class pre_factura_compras extends Pantalla{
 		set_solicitud.dibujar();
 
 	}
-
+	public void aceptaRecepcion(){
+		System.out.println("entre acpetar");
+		if(lis_recepcion.getValue() == null){
+			utilitario.agregarMensajeInfo("Recepciòn", "Debe Seleccionar una Opción");
+			return;
+		}
+		else {
+			utilitario.getConexion().ejecutarSql("update adq_solicitud_compra  set tipo_recepcion_adsoc = "+lis_recepcion.getValue()+" where ide_adsoc ="+tab_adq_factura.getValor("ide_adsoc"));
+			tab_adq_factura.ejecutarSql();
+			dia_recepcion.cerrar();
+		}
+	}
+	public void aceptaDescuento(){
+		System.out.println("entre acpetar");
+		if(lis_aplica_descuento.getValue() == null){
+			utilitario.agregarMensajeInfo("Descuento", "Debe Seleccionar una Opción");
+			return;
+		}
+		else {
+			tab_adq_factura.setValor("aplica_descuento_adfac", lis_aplica_descuento.getValue().toString());
+		    utilitario.addUpdate("tab_adq_factura");
+		    tab_adq_factura.guardar();
+		    guardarPantalla();
+		    dia_aplica_descuento.cerrar();
+		}
+	}
 	public void aceptarSolicitudCompra(){
 
 		String str_seleccionado = set_solicitud.getValorSeleccionado();
@@ -123,8 +229,11 @@ public class pre_factura_compras extends Pantalla{
 			tab_adq_factura.setValor("ide_adsoc",str_seleccionado);
 			tab_adq_factura.setValor("detalle_adfac",tab_solicitud.getValor("detalle_adsoc"));
 		}
+		utilitario.addUpdateTabla(tab_adq_factura, "ide_adsoc,detalle_adfac", "");
 		set_solicitud.cerrar();
-		utilitario.addUpdate("tab_adq_factura");
+		tab_adq_factura.guardar();
+		guardarPantalla();
+		dia_recepcion.dibujar();
 	}
 	///CALCULAR 
 	public void calcular(){
@@ -140,18 +249,18 @@ public class pre_factura_compras extends Pantalla{
 
 		try {
 			//Obtenemos el valor
-			dou_valor_unitario_addef=Double.parseDouble(tab_adq_detalle.getValor("valor_unitario_addef"));
+			dou_valor_total_addef=Double.parseDouble(tab_adq_detalle.getValor("valor_total_addef"));
 		} catch (Exception e) {
 		}
 
 		//Calculamos el total
-		dou_valor_total_addef=dou_cantidad_addef*dou_valor_unitario_addef;
+		dou_valor_unitario_addef=dou_valor_total_addef/dou_cantidad_addef;
 
-		//Asignamos el total a la tabla detalle, con 2 decimales
-		tab_adq_detalle.setValor("valor_total_addef",utilitario.getFormatoNumero(dou_valor_total_addef,3));
+		//Asignamos el total a la tabla detalle, con 3 decimales
+		tab_adq_detalle.setValor("valor_unitario_addef",utilitario.getFormatoNumero(dou_valor_unitario_addef,3));
 
 		//Actualizamos el campo de la tabla AJAX
-		utilitario.addUpdateTabla(tab_adq_detalle, "valor_total_addef", "tab_adq_factura");
+		utilitario.addUpdateTabla(tab_adq_detalle, "valor_unitario_addef", "tab_adq_factura");
 		calcularSolicitud();
 
 
@@ -311,6 +420,18 @@ public class pre_factura_compras extends Pantalla{
 	}
 	public void setSet_solicitud(SeleccionTabla set_solicitud) {
 		this.set_solicitud = set_solicitud;
+	}
+	public Dialogo getDia_recepcion() {
+		return dia_recepcion;
+	}
+	public void setDia_recepcion(Dialogo dia_recepcion) {
+		this.dia_recepcion = dia_recepcion;
+	}
+	public Dialogo getDia_aplica_descuento() {
+		return dia_aplica_descuento;
+	}
+	public void setDia_aplica_descuento(Dialogo dia_aplica_descuento) {
+		this.dia_aplica_descuento = dia_aplica_descuento;
 	}
 
 }
