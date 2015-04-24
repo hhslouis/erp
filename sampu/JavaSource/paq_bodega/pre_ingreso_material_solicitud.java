@@ -44,7 +44,7 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 		par_secuencial_modulo=utilitario.getVariable("p_modulo_sec_bod_ingresos");
 
 		Boton bot_material = new Boton();
-		bot_material.setValue("Buscar Solicitud Compra");
+		bot_material.setValue("Buscar Factura Solicitud Compra");
 		bot_material.setTitle("Solicitud Compra");
 		bot_material.setIcon("ui-icon-person");
 		bot_material.setMetodo("importarSolicitud");
@@ -81,7 +81,16 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 				" where a.ide_adsoc=c.ide_adsoc and b.ide_adfac=c.ide_adfac  and d.ide_bomat=b.ide_bomat and a.ide_adsoc=-1 order by codigo_bomat");
 		tab_solicitud.setNumeroTabla(2);
 		tab_solicitud.setCampoPrimaria("ide_addef");
-		
+		tab_solicitud.getColumna("detalle_adsoc").setNombreVisual("JUSTIFICACION DE LA SOLICITUD");
+		tab_solicitud.getColumna("num_factura_adfac").setNombreVisual("NUMERO FACTURA");
+		tab_solicitud.getColumna("valor_adsoc").setNombreVisual("VALOR SOLICITUD");
+		tab_solicitud.getColumna("nro_solicitud_adsoc").setNombreVisual("NRO. SOLICITUD");
+		tab_solicitud.getColumna("valor_total_addef").setNombreVisual("VALOR TOTAL COMPRA");
+		tab_solicitud.getColumna("valor_unitario_addef").setNombreVisual("VALOR UNITARIO");
+		tab_solicitud.getColumna("cantidad_addef").setNombreVisual("CANTIDAD");
+		tab_solicitud.getColumna("codigo_bomat").setNombreVisual("CODIGO MATERIAL");
+		tab_solicitud.getColumna("detalle_bomat").setNombreVisual("DETALLE MATERIAL");
+
 		tab_solicitud.setLectura(true);
 		tab_solicitud.setTipoSeleccion(true);
 		tab_solicitud.dibujar();
@@ -95,7 +104,15 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 		
 	
 		set_solicitud.setId("set_solicitud");
-		set_solicitud.setSeleccionTabla(ser_bodega.getSolicitud("true,false"),"ide_adsoc");
+		set_solicitud.setSeleccionTabla(ser_bodega.getSolicitudFactura("true,false"),"ide_adfac");
+		set_solicitud.getTab_seleccion().getColumna("num_factura_adfac").setNombreVisual("Nro. FACTURA");
+		set_solicitud.getTab_seleccion().getColumna("detalle_adsoc").setNombreVisual("DETALLE COMPRA");
+		set_solicitud.getTab_seleccion().getColumna("nro_solicitud_adsoc").setNombreVisual("Nro. SOLICITUD COMPRA");
+		set_solicitud.getTab_seleccion().getColumna("nombre_tepro").setNombreVisual("PROVEEDOR");
+		set_solicitud.getTab_seleccion().getColumna("ruc_tepro").setNombreVisual("RUC PROVEEDOR");
+		set_solicitud.getTab_seleccion().getColumna("valor_adsoc").setNombreVisual("VALOR COMPRA");
+
+		set_solicitud.getTab_seleccion().getColumna("num_factura_adfac").setFiltro(true);
 		set_solicitud.getTab_seleccion().getColumna("detalle_adsoc").setFiltro(true);
 		set_solicitud.getTab_seleccion().getColumna("nro_solicitud_adsoc").setFiltro(true);
 		set_solicitud.getTab_seleccion().getColumna("nombre_tepro").setFiltro(true);
@@ -146,17 +163,22 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 		tab_ingreso_material.getColumna("numero_ingreso_bobod").setNombreVisual("NUMERO DE INGRESO");
 		tab_ingreso_material.getColumna("existencia_anterior_bobod").setVisible(false);
 		tab_ingreso_material.getColumna("ide_geani").setCombo(ser_contabilidad.getAnioDetalle("true,false","true,false"));
-		   List lista = new ArrayList();
+
+		List lista = new ArrayList();
 	       Object fila1[] = {
 	           "1", "CONSUMO EXTERNO"
 	       };
 	       Object fila2[] = {
 	           "0", "CONSUMO INTERNO"
 	       };
-	       
+	       Object fila3[] = {
+		       "2", "ACTIVOS FIJOS"
+		   };
 	       lista.add(fila1);
 	       lista.add(fila2);
-	       tab_ingreso_material.getColumna("tipo_ingreso_bobod").setRadio(lista, "1");
+	       lista.add(fila3);
+	       
+	       tab_ingreso_material.getColumna("tipo_ingreso_bobod").setRadio(lista, "0");
 	       tab_ingreso_material.getColumna("tipo_ingreso_bobod").setRadioVertical(true);
 		tab_ingreso_material.dibujar();
 		gri_cuerpo.getChildren().add(tab_ingreso_material);
@@ -168,8 +190,7 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 	}
 	
 	public void importarSolicitud(){
-
-		set_solicitud.getTab_seleccion().setSql(ser_bodega.getSolicitud("true"));
+		set_solicitud.getTab_seleccion().setSql(ser_bodega.getSolicitudFactura("true"));
 		set_solicitud.getTab_seleccion().ejecutarSql();
 		set_solicitud.dibujar();
 
@@ -179,7 +200,7 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 		
 		tab_solicitud.setSql("select b.ide_addef,detalle_bomat,num_factura_adfac,valor_adsoc,nro_solicitud_adsoc,valor_total_addef,valor_unitario_addef,cantidad_addef," +
 				" codigo_bomat,detalle_adsoc from adq_solicitud_compra a,adq_detalle_factura b,adq_factura c , bodt_material d" +
-				" where a.ide_adsoc=c.ide_adsoc and b.ide_adfac=c.ide_adfac and recibido_addef=true  and d.ide_bomat=b.ide_bomat and a.ide_adsoc="+set_solicitud.getValorSeleccionado().toString()+" order by codigo_bomat");
+				" where a.ide_adsoc=c.ide_adsoc and b.ide_adfac=c.ide_adfac and recibido_addef=true  and d.ide_bomat=b.ide_bomat and c.ide_adfac="+set_solicitud.getValorSeleccionado().toString()+" order by codigo_bomat");
 		tab_solicitud.ejecutarSql();
 		utilitario.addUpdate("tab_solicitud");
 		set_solicitud.cerrar();
@@ -238,7 +259,10 @@ public void abrirRecibirSolicitud(){
 	tab_ingreso_material.limpiar();
 	tab_ingreso_material.insertar();
 	tab_ingreso_material.setValor("numero_ingreso_bobod", ser_contabilidad.numeroSecuencial(par_secuencial_modulo));
-    utilitario.addUpdateTabla(tab_ingreso_material,"numero_ingreso_bobod","");
+	tab_ingreso_material.setValor("fecha_ingreso_bobod", utilitario.getFechaActual());
+	tab_ingreso_material.setValor("ide_geani",ser_contabilidad.getAnioDetalle("true","false"));
+
+	utilitario.addUpdateTabla(tab_ingreso_material,"numero_ingreso_bobod","");
 
 	//tab_direccion.limpiar();
 	//	tab_direccion.insertar();
@@ -282,10 +306,10 @@ public void  aceptarDialogoSolicitud(){
 		
 		utilitario.getConexion().ejecutarSql("update adq_detalle_factura set recibido_addef= false where ide_addef="+tab_consulta_solicitud.getValor(i,"ide_addef"));
 		
-		String consulta_inserta_bodega="INSERT INTO bodt_bodega(ide_bobod, ide_geani, ide_bomat, ide_tepro, fecha_ingreso_bobod, fecha_compra_bobod, recibido_bobod, " +
+		String consulta_inserta_bodega="INSERT INTO bodt_bodega(ide_bobod, ide_geani, ide_bomat, ide_tepro,marca_bobod,modelo_bobod,serie_bobod,color_bobod, fecha_ingreso_bobod, fecha_compra_bobod, recibido_bobod, " +
 				" cantidad_ingreso_bobod, numero_ingreso_bobod, num_factura_bobod, num_doc_bobod, descripcion_bobod, tipo_ingreso_bobod, " +
 				" valor_unitario_bobod, valor_total_bobod,activo_bobod, ide_adsoc,existencia_anterior_bobod,ide_boinv) VALUES("+ide_inicial+", "+tab_ingreso_material.getValor("ide_geani")+","+tab_consulta_solicitud.getValor(i,"ide_bomat")+"," 
-				+ tab_consulta_solicitud.getValor(i,"ide_tepro")+",'"+tab_ingreso_material.getValor("fecha_ingreso_bobod")+"','"+tab_consulta_solicitud.getValor(i,"fecha_factura_adfac")+"',true,"
+				+ tab_consulta_solicitud.getValor(i,"ide_tepro")+",'"+tab_consulta_solicitud.getValor(i,"marca_addef")+"','"+tab_consulta_solicitud.getValor(i,"modelo_addef")+"','"+tab_consulta_solicitud.getValor(i,"serie_addef")+"','"+tab_consulta_solicitud.getValor(i,"color_addef")+"','"+tab_ingreso_material.getValor("fecha_ingreso_bobod")+"','"+tab_consulta_solicitud.getValor(i,"fecha_factura_adfac")+"',true,"
 				+ tab_consulta_solicitud.getValor(i,"cantidad_addef")+",'"+tab_ingreso_material.getValor("numero_ingreso_bobod")+"','"+tab_consulta_solicitud.getValor(i,"num_factura_adfac")+
 				"','"+tab_ingreso_material.getValor("num_doc_bobod")+"','"+tab_ingreso_material.getValor("descripcion_bobod")+"','"+tab_ingreso_material.getValor("tipo_ingreso_bobod")+
 				"',"+tab_consulta_solicitud.getValor(i,"valor_unitario_addef")+","+tab_consulta_solicitud.getValor(i,"valor_total_addef")+",true,"+tab_consulta_solicitud.getValor(i,"ide_adsoc");
@@ -305,10 +329,17 @@ public void  aceptarDialogoSolicitud(){
 		ide_inicial++;	
 	}
 	utilitario.getConexion().ejecutarSql("update adq_factura set activo_adfac= false where ide_adfac in ( select ide_adfac from adq_factura where not ide_adfac in ("
-			+" select ide_adfac from adq_detalle_factura where recibido_addef=true ) and ide_adsoc="+tab_consulta_solicitud.getValor("ide_adsoc")+"  )");
+			+" select ide_adfac from adq_detalle_factura where recibido_addef=true ) and ide_adfac="+tab_consulta_solicitud.getValor("ide_adfac")+"  )");
+	//validar mediante tabla generica si existe alguna factura activa para no cambiar el estado de la solicitud de compra
+	TablaGenerica estado_factura = utilitario.consultar(ser_bodega.getEstadoFactura(tab_consulta_solicitud.getValor("ide_adsoc"), "true"));
+	if(estado_factura.getTotalFilas()>0){
+		
+	}
+	else {
 	utilitario.getConexion().ejecutarSql("update adq_solicitud_compra set activo_adsoc=false where ide_adsoc in ( select ide_adsoc from adq_factura where not ide_adfac in ("
-+" select ide_adfac from adq_detalle_factura where recibido_addef=true ) and ide_adsoc= "+tab_consulta_solicitud.getValor("ide_adsoc")+")");
-
+    +" select ide_adfac from adq_detalle_factura where recibido_addef=true ) and ide_adsoc= "+tab_consulta_solicitud.getValor("ide_adsoc")+")");
+	}
+	
 	String mensja=ser_contabilidad.guardaSecuencial(tab_ingreso_material.getValor("numero_ingreso_bobod"), par_secuencial_modulo);
 	dia_recibir_solicitud.cerrar();
 	utilitario.agregarMensaje("RECIBIDO", "Se recibio los productos correctamente");

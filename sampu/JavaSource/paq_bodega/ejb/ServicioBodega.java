@@ -269,9 +269,19 @@ public String getSolicitud(String activo){
 			" where a.ide_tepro=b.ide_tepro and activo_adsoc in("+activo+") order by nro_solicitud_adsoc";
 	return tab_solicitud;
 }
+public String getSolicitudFactura(String activo){
+	String tab_solicitud="select c.ide_adfac,(case when num_factura_adfac is null then 'S/D' else num_factura_adfac end) as num_factura_adfac,fecha_factura_adfac,nro_solicitud_adsoc,valor_adsoc,ruc_tepro,nombre_tepro,detalle_adsoc" 
++" from adq_solicitud_compra a , tes_proveedor b, adq_factura c"
++" where a.ide_tepro=b.ide_tepro and a.ide_adsoc = c.ide_adsoc and activo_adfac in("+activo+") order by nro_solicitud_adsoc";
+	return tab_solicitud;
+}
+public String getEstadoFactura(String ide_solicitud_compra,String estado){
+	String tab_solicitud="select ide_adfac,ide_adsoc,activo_adfac from adq_factura where ide_adsoc in ("+ide_solicitud_compra+") and activo_adfac in ("+estado+")";
+	return tab_solicitud;
+}
 public TablaGenerica getTablaGenericaSolicitudCompra(String ide_addef){
-	TablaGenerica tab_solicitud_comp=utilitario.consultar("select b.ide_addef,a.ide_tepro, a.ide_adsoc,detalle_adsoc,num_factura_adfac,valor_adsoc,nro_solicitud_adsoc,valor_total_addef,valor_unitario_addef,cantidad_addef," +
-				" codigo_bomat,detalle_bomat,d.ide_bomat,fecha_factura_adfac from adq_solicitud_compra a,adq_detalle_factura b,adq_factura c , bodt_material d" +
+	TablaGenerica tab_solicitud_comp=utilitario.consultar("select b.ide_addef,b.ide_adfac,a.ide_tepro, a.ide_adsoc,detalle_adsoc,num_factura_adfac,valor_adsoc,nro_solicitud_adsoc,valor_total_addef,valor_unitario_addef,cantidad_addef," +
+				" codigo_bomat,detalle_bomat,d.ide_bomat,fecha_factura_adfac,marca_addef,serie_addef,color_addef,modelo_addef from adq_solicitud_compra a,adq_detalle_factura b,adq_factura c , bodt_material d" +
 				" where a.ide_adsoc=c.ide_adsoc and b.ide_adfac=c.ide_adfac  and d.ide_bomat=b.ide_bomat and  b.ide_addef in ("+ide_addef+") order by codigo_bomat");
 	return tab_solicitud_comp;
 }
