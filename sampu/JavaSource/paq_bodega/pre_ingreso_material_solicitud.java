@@ -163,7 +163,7 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 		tab_ingreso_material.getColumna("numero_ingreso_bobod").setNombreVisual("NUMERO DE INGRESO");
 		tab_ingreso_material.getColumna("existencia_anterior_bobod").setVisible(false);
 		tab_ingreso_material.getColumna("ide_geani").setCombo(ser_contabilidad.getAnioDetalle("true,false","true,false"));
-
+		tab_ingreso_material.getColumna("ide_geani").setAutoCompletar();
 		List lista = new ArrayList();
 	       Object fila1[] = {
 	           "1", "CONSUMO EXTERNO"
@@ -258,11 +258,12 @@ public void abrirRecibirSolicitud(){
 	//Hace aparecer el componente
 	tab_ingreso_material.limpiar();
 	tab_ingreso_material.insertar();
+	TablaGenerica anio_actual= utilitario.consultar(ser_contabilidad.getAnio("true","false"));
 	tab_ingreso_material.setValor("numero_ingreso_bobod", ser_contabilidad.numeroSecuencial(par_secuencial_modulo));
 	tab_ingreso_material.setValor("fecha_ingreso_bobod", utilitario.getFechaActual());
-	tab_ingreso_material.setValor("ide_geani",ser_contabilidad.getAnioDetalle("true","false"));
+	tab_ingreso_material.setValor("ide_geani",anio_actual.getValor("ide_geani"));
 
-	utilitario.addUpdateTabla(tab_ingreso_material,"numero_ingreso_bobod","");
+	utilitario.addUpdateTabla(tab_ingreso_material,"numero_ingreso_bobod,ide_geani,fecha_ingreso_bobod","");
 
 	//tab_direccion.limpiar();
 	//	tab_direccion.insertar();
