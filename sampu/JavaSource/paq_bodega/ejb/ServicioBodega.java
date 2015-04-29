@@ -311,4 +311,8 @@ public String getMaterialBodegaCompras(){
 	String tab_solicitud="select ide_bobod,detalle_bomat, codigo_bomat from bodt_bodega a,bodt_material b where a.ide_bomat = b.ide_bomat and not ide_adsoc is null";
 	return tab_solicitud;
 }
+public String getCodigoMaterial(String cod_material){
+	String tab_solicitud="";
+	return tab_solicitud;
+}
 }

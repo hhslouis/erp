@@ -2,6 +2,7 @@ package paq_bodega;
 
 import javax.ejb.EJB;
 
+import paq_adquisicion.ejb.ServicioAdquisicion;
 import paq_bodega.ejb.ServicioBodega;
 import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_gestion.ejb.ServicioGestion;
@@ -34,6 +35,8 @@ public class pre_egreso_material_solicitud extends Pantalla {
 	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
 	@EJB
 	private ServicioBodega ser_Bodega = (ServicioBodega) utilitario.instanciarEJB(ServicioBodega.class);
+	@EJB
+	private ServicioAdquisicion ser_Adquisicion=(ServicioAdquisicion) utilitario.instanciarEJB(ServicioAdquisicion.class);
 
 
 	public pre_egreso_material_solicitud(){
@@ -55,6 +58,12 @@ public class pre_egreso_material_solicitud extends Pantalla {
 		tab_concepto_egreso.getColumna("gen_ide_geedp").setCombo(ser_nomina.servicioEmpleadoContrato("true"));
 		tab_concepto_egreso.getColumna("gen_ide_geedp2").setCombo(ser_nomina.servicioEmpleadoContrato("true"));
 		tab_concepto_egreso.getColumna("fecha_egreso_bocoe").setValorDefecto(utilitario.getFechaActual());
+		tab_concepto_egreso.getColumna("ide_adsoc").setCombo(ser_Adquisicion.getComprasCombo("true,false"));
+		tab_concepto_egreso.getColumna("ide_adsoc").setAutoCompletar();
+		tab_concepto_egreso.getColumna("ide_adsoc").setLectura(true);
+		tab_concepto_egreso.getColumna("activo_bocoe").setValorDefecto("true");
+		tab_concepto_egreso.getColumna("activo_bocoe").setLectura(true);
+
 		tab_concepto_egreso.agregarRelacion(tab_egreso);
 		tab_concepto_egreso.setTipoFormulario(true);
 		tab_concepto_egreso.getGrid().setColumns(4);	
@@ -76,12 +85,14 @@ public class pre_egreso_material_solicitud extends Pantalla {
 		tab_egreso.getColumna("fecha_egreso_boegr").setLectura(true);
 		tab_egreso.getColumna("cantidad_egreso_boegr").setLectura(true);
 		tab_egreso.getColumna("documento_egreso_boegr").setLectura(true);
+		tab_egreso.getColumna("activo_boegr").setValorDefecto("true");
+
 		tab_egreso.getColumna("activo_boegr").setLectura(true);
 		tab_egreso.getColumna("ide_bobod").setLectura(true);
-
 		tab_egreso.dibujar();
 		PanelTabla pat_egreso=new PanelTabla();
 		pat_egreso.setPanelTabla(tab_egreso);
+		pat_egreso.getMenuTabla().getItem_insertar().setDisabled(true);
 		
 
 
@@ -127,7 +138,15 @@ public class pre_egreso_material_solicitud extends Pantalla {
 	}
 
 	public void importarSolicitud(){
-
+        if(com_anio.getValue()==null){
+           	utilitario.agregarMensajeInfo("No Existe Año", "Debe seleccionar un año");
+            return;
+        	
+        }
+		if(tab_concepto_egreso.getValor("ide_bocoe")==null||tab_concepto_egreso.getValor("ide_bocoe").isEmpty()){
+        	utilitario.agregarMensajeInfo("No existen registros", "Debe existir un concepto de egreso, para proceder a registar los detalles del egreso");
+            return;
+        }
 		set_solicitud.getTab_seleccion().setSql(ser_Bodega.getEgresoSolicitud());
 		set_solicitud.getTab_seleccion().ejecutarSql();
 		set_solicitud.dibujar();
@@ -157,7 +176,11 @@ public class pre_egreso_material_solicitud extends Pantalla {
 			}
 			set_solicitud.cerrar();
 			utilitario.addUpdateTabla(tab_egreso, "fecha_egreso_boegr,ide_bobod,cantidad_egreso_boegr,documento_egreso_boegr", "tab_concepto_egreso");			
-		    tab_egreso.guardar();
+			tab_concepto_egreso.modificar(tab_concepto_egreso.getFilaActual());
+			utilitario.addUpdate("tab_concepto_egreso");	
+			//utilitario.addUpdateTabla(tab_concepto_egreso, "ide_adsoc", "tab_concepto_egreso");			
+
+			tab_egreso.guardar();
 		    tab_concepto_egreso.guardar();
 		    guardarPantalla();
 		}
