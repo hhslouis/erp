@@ -91,7 +91,13 @@ public class pre_egreso_bodega extends Pantalla{
 				" order by detalle_bomat");
 		tab_egreso.setNumeroTabla(1);
 		//tab_egreso.setCampoPrimaria("ide_addef");
-		
+		tab_egreso.getColumna("detalle_bomat").setNombreVisual("NOMBRE DEL MATERIAL");
+		tab_egreso.getColumna("fecha_egreso_boegr").setNombreVisual("FECHA DE EGRESO");
+		tab_egreso.getColumna("cantidad_egreso_boegr").setNombreVisual("CANTIDAD DE EGRESO");
+		tab_egreso.getColumna("documento_egreso_boegr").setNombreVisual("DOCUMENTO DE EGRESO");
+		tab_egreso.getColumna("fecha_compra_bobod").setNombreVisual("FECHA COMPRA");
+		tab_egreso.getColumna("num_factura_bobod").setNombreVisual("NUMERO DE FACTURA");
+		tab_egreso.getColumna("nombre_tepro").setNombreVisual("PROVEEDOR");
 		tab_egreso.setLectura(true);
 		tab_egreso.setTipoSeleccion(true);
 		tab_egreso.dibujar();
