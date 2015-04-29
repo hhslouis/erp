@@ -79,7 +79,7 @@ public class pre_compras extends Pantalla{
 	public pre_compras(){
 		
 		empleado=ser_seguridad.getUsuario(utilitario.getVariable("ide_usua")).getValor("ide_gtemp");
-		TablaGenerica area = ser_nomina.ideEmpleadoContrato(empleado, "true");
+		TablaGenerica area = utilitario.consultar(ser_nomina.servicioEmpleadoContratoCodigo("true", empleado));
 
 		if(empleado==null ||empleado.isEmpty()){
 			utilitario.agregarNotificacionInfo("Mensaje", "No exixte usuario registrado para el registro de compras");
