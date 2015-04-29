@@ -101,7 +101,7 @@ public class pre_contratacion extends Pantalla{
 		tab_poa.getColumna("ide_prfup").setVisible(false);
 		tab_poa.getColumna("ide_prcla").setAncho(25);
 		tab_poa.getColumna("activo_prpoa").setLectura(true);
-		tab_poa.getColumna("activo_prpoa").setValorDefecto("true");
+		tab_poa.getColumna("activo_prpoa").setValorDefecto("false");
 		tab_poa.getColumna("ide_geare").setCombo("gen_area","ide_geare","detalle_geare","");
 		tab_poa.getColumna("presupuesto_inicial_prpoa").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:black");
 		tab_poa.getColumna("presupuesto_inicial_prpoa").setValorDefecto("0.00");
@@ -133,6 +133,8 @@ public class pre_contratacion extends Pantalla{
 		tab_mes.getColumna("ide_gemes").setCombo("select ide_gemes,detalle_gemes from gen_mes order by ide_gemes");
 		tab_mes.getColumna("activo_prpom").setValorDefecto("true");
 		tab_mes.getColumna("activo_prpom").setLectura(true);
+		tab_mes.getColumna("valor_presupuesto_prpom").setMetodoChange("actualizarEjecucionMensual");		
+		tab_mes.setColumnaSuma("valor_presupuesto_prpom");
 		tab_mes.dibujar();
 		PanelTabla pat_panel2 = new PanelTabla();
 		pat_panel2.setPanelTabla(tab_mes);
@@ -185,6 +187,7 @@ public class pre_contratacion extends Pantalla{
 		tab_archivo.getColumna("ide_prcon").setVisible(false);
 		tab_archivo.getColumna("ide_prcop").setVisible(false);
 		tab_archivo.getColumna("ide_prtra").setVisible(false);
+		tab_archivo.getColumna("activo_prarc").setValorDefecto("true");
 		tab_archivo.dibujar();
 		PanelTabla pat_panel5= new PanelTabla();
 		pat_panel5.setPanelTabla(tab_archivo);
@@ -237,6 +240,13 @@ public class pre_contratacion extends Pantalla{
 		inicializarSelResolucion();
 		
 
+	}
+	
+	public void actualizarEjecucionMensual(AjaxBehaviorEvent evt) {
+		tab_mes.modificar(evt); //Siempre es la primera linea
+		tab_mes.sumarColumnas();
+		utilitario.addUpdate("tab_tabulador:tab_mes");
+ 
 	}
 	//valor Financiamiento
 ///// para subir vaslores de un tabla a otra 
@@ -566,7 +576,27 @@ public void aceptarSelResolucion (){
 	@Override
 	public void guardar() {
 		// TODO Auto-generated method stub
-		if (tab_poa.guardar()) {
+		double presupuesto_inicial = Double.parseDouble(tab_poa.getValor("presupuesto_inicial_prpoa"));
+		double presupuesto_codificado = Double.parseDouble(tab_poa.getValor("presupuesto_codificado_prpoa"));
+        double presupuesto_ejecutado = tab_mes.getSumaColumna("valor_presupuesto_prpom");
+		double presupuesto_reformado = Double.parseDouble(tab_poa.getValor("reforma_prpoa"));
+	
+        if(presupuesto_inicial<0){
+        	utilitario.agregarMensajeInfo("Presupuesto Inicial", "EL valor del presupuesto inicial no puede ser negativo");
+            return;
+        }
+        if(presupuesto_reformado !=0){
+        	if(presupuesto_codificado<0){ 
+        	utilitario.agregarMensajeInfo("Reforma Mensual", "No puede reforma con un valor superior al presupuesto inicial asignado");
+            return;
+        	}
+        }
+        if(presupuesto_ejecutado>presupuesto_codificado){
+        	utilitario.agregarMensajeInfo("Ejecuciòn Mensual", "No puede ejecutar un valor superior al presupuesto codificado");
+            return;
+        }
+        
+        if (tab_poa.guardar()) {
 
 			if (tab_mes.guardar()) {
 				if( tab_financiamiento.guardar()){
@@ -584,7 +614,27 @@ public void aceptarSelResolucion (){
 	@Override
 	public void eliminar() {
 		// TODO Auto-generated method stub
-		utilitario.getTablaisFocus().eliminar();
+		if(tab_poa.isFocus()){
+			tab_poa.eliminar();
+		}
+		else if (tab_mes.isFocus()){
+			tab_mes.eliminar();
+			tab_mes.sumarColumnas();
+			utilitario.addUpdate("tab_mes");
+
+
+		}
+		else if (tab_reforma.isFocus()){
+			tab_reforma.eliminar();
+			calcularReforma();
+
+		}
+		else if (tab_financiamiento.isFocus()){
+			tab_financiamiento.eliminar();
+		}
+		else if (tab_archivo.isFocus()){
+			tab_archivo.eliminar();
+		}
 
 	}
 
