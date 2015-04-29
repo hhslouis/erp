@@ -25,5 +25,22 @@ public class ServicioActivos{
 		return tab_custodio;
 		
 	}
-	
+	public String getActivosCodigo(String ide_activo){
+		String tab_custodio ="select * from afi_activo where ide_afact in ("+ide_activo+")";
+		return tab_custodio;		
+	}
+	public String getCustodioCodigo(String ide_activo){
+		String tab_custodio ="select * from afi_custodio where ide_afact in ("+ide_activo+")";
+		return tab_custodio;		
+	}
+	public String getCustodioSecuencial(String ide_activo){
+		String tab_custodio ="select ide_afact,max(nro_secuencial_afcus) as nro_secuencial_afcus, activo_afcus"
++" from ("
++" select a.ide_afact,(case when nro_secuencial_afcus is null then 0 else nro_secuencial_afcus end) as nro_secuencial_afcus,"
++" (case when activo_afcus is null then true else activo_afcus end) as activo_afcus"
++" from afi_activo a"
++" left join afi_custodio b on a.ide_afact = b.ide_afact where a.ide_afact ="+ide_activo
++" ) a group by ide_afact, activo_afcus having activo_afcus = true";
+		return tab_custodio;		
+	}
 }

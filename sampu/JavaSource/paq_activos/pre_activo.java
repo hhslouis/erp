@@ -17,6 +17,7 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
+import paq_activos.ejb.ServicioActivos;
 import paq_bodega.ejb.ServicioBodega;
 import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_nomina.ejb.ServicioNomina;
@@ -63,6 +64,8 @@ public class pre_activo extends Pantalla {
 	private ServicioBodega ser_bodega = (ServicioBodega ) utilitario.instanciarEJB(ServicioBodega.class);
 	@EJB
 	private ServicioContabilidad ser_Contabilidad= (ServicioContabilidad) utilitario.instanciarEJB(ServicioContabilidad.class); 
+	@EJB
+	private ServicioActivos ser_activos = (ServicioActivos) utilitario.instanciarEJB(ServicioActivos.class);
 
 	private StreamedContent codBarras;
 	private GraphicImage giBarra=new GraphicImage();
@@ -78,6 +81,7 @@ public class pre_activo extends Pantalla {
 		agregarComponente(self_reporte);
 		tab_activos_fijos.setId("tab_activos_fijos");
 		tab_activos_fijos.setTabla("afi_activo","ide_afact", 1);
+		tab_activos_fijos.setCampoOrden("ide_afact desc");
 		tab_activos_fijos.getColumna("ide_afubi").setCombo("afi_ubicacion","ide_afubi","detalle_afubi","");
 		tab_activos_fijos.getColumna("ide_aftia").setCombo("afi_tipo_activo","ide_aftia","detalle_aftia","");
 		tab_activos_fijos.getColumna("ide_aftip").setCombo("afi_tipo_propiedad","ide_aftip","detalle_aftip","");
@@ -86,6 +90,10 @@ public class pre_activo extends Pantalla {
 		tab_activos_fijos.getColumna("ide_geare").setCombo("gen_area", "ide_geare", "detalle_geare", "");
 		tab_activos_fijos.getColumna("ide_afacd").setCombo("afi_actividad", "ide_afacd", "detalle_afacd", "");
 		tab_activos_fijos.getColumna("ide_cocac").setCombo(ser_Contabilidad.getCuentaContable("true,false"));
+		tab_activos_fijos.getColumna("ide_cocac").setAutoCompletar();
+		tab_activos_fijos.getColumna("ide_cocac").setRequerida(true);
+		tab_activos_fijos.getColumna("activo_afact").setValorDefecto("true");
+
 		tab_activos_fijos.getColumna("ide_afest").setCombo("afi_estado", "ide_afest", "detalle_afest,porcentaje_afest", "");
 		tab_activos_fijos.getColumna("ide_tepro").setCombo(ser_bodega.getProveedor("true,false"));
 		tab_activos_fijos.getColumna("ide_tepro").setAutoCompletar();
@@ -112,6 +120,7 @@ public class pre_activo extends Pantalla {
 
 		tab_custodio.setId("tab_custodio");
 		tab_custodio.setTabla("afi_custodio","ide_afcus", 2);
+		tab_custodio.setCampoOrden("ide_afcus desc");
 		tab_custodio.getColumna("ide_geedp").setCombo(ser_nomina.servicioEmpleadoContrato("true,false"));
 		tab_custodio.getColumna("ide_geedp").setLectura(true);
 		tab_custodio.getColumna("ide_geedp").setAutoCompletar();
@@ -121,6 +130,9 @@ public class pre_activo extends Pantalla {
 		tab_custodio.getColumna("gen_ide_geedp").setCombo(ser_nomina.servicioEmpleadoContrato("true,false"));
 		tab_custodio.getColumna("gen_ide_geedp").setLectura(true);
 		tab_custodio.getColumna("gen_ide_geedp").setAutoCompletar();
+		tab_custodio.getColumna("cod_barra_afcus").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
+		tab_custodio.getColumna("cod_barra_afcus").setEtiqueta();
+		
 		tab_custodio.getColumna("activo_afcus").setValorDefecto("true");
 		tab_custodio.getColumna("activo_afcus").setLectura(true);
 		tab_custodio.setCampoOrden("activo_afcus desc");
@@ -322,12 +334,23 @@ public class pre_activo extends Pantalla {
 	
 
 	public void importarEmpleado(){
-		/*if (tab_custodio.isEmpty()) {
-			utilitario.agregarMensajeInfo("Debe ingresar un registro en el contrato", "");
+		if (tab_activos_fijos.isEmpty()) {
+			utilitario.agregarMensajeInfo("Activo no registrado", "Para agregar un custodio debe tener registrado un Activo Fijo");
 			return;
 
-		}*/
-
+		}
+		if (tab_activos_fijos.getValor("secuencial_afact") ==null){
+			utilitario.agregarMensajeInfo("Nro. secuencial no registrado", "Para agregar un custodio debe poseer un numero secuencial");
+			return;
+		}
+        TablaGenerica numero_secuencial = utilitario.consultar(ser_activos.getActivosCodigo(tab_activos_fijos.getValor("ide_afact")));
+		TablaGenerica secuencial_custodio=utilitario.consultar(ser_activos.getCustodioSecuencial(tab_activos_fijos.getValor("ide_afact")));
+        Integer num_numero_secuencial = Integer.parseInt(numero_secuencial.getValor("secuencial_afact"));
+        Integer num_secuencial_custodio =  	Integer.parseInt(secuencial_custodio.getValor("nro_secuencial_afcus"))+1;	
+		if(num_secuencial_custodio>num_numero_secuencial){
+			utilitario.agregarMensajeInfo("Numero secuencial en uso", "No se puede agregar un custodio, existe un numero secuencial en uso, si desea cambiar de custodio utilice la opciòn Traspaso de Custodio");
+			return;
+		}
 		set_empleado.getTab_seleccion().setSql(ser_nomina.servicioEmpleadoContrato("true"));
 		set_empleado.getTab_seleccion().ejecutarSql();
 		set_empleado.dibujar();
@@ -337,16 +360,24 @@ public class pre_activo extends Pantalla {
 		if(str_seleccionado!=null){
 			//Inserto los empleados seleccionados en la tabla de resposable d econtratacion 
 			TablaGenerica tab_empleado_responsable = ser_nomina.ideEmpleadoContrato(str_seleccionado,"true");		
+	        TablaGenerica numero_secuencial = utilitario.consultar(ser_activos.getActivosCodigo(tab_activos_fijos.getValor("ide_afact")));
+			TablaGenerica secuencial_custodio=utilitario.consultar(ser_activos.getCustodioSecuencial(tab_activos_fijos.getValor("ide_afact")));
+	        Integer num_numero_secuencial = Integer.parseInt(numero_secuencial.getValor("secuencial_afact"));
+	        Integer num_secuencial_custodio =  	Integer.parseInt(secuencial_custodio.getValor("nro_secuencial_afcus"))+1;	
+            TablaGenerica codigo_cuenta =utilitario.consultar(ser_Contabilidad.getCuentaContableCodigo("true,false", tab_activos_fijos.getValor("ide_cocac")));
 
+	        String codigo_barras =codigo_cuenta.getValor("cue_codigo_remplazado")+"-"+tab_activos_fijos.getValor("ide_afact")+"-"+num_secuencial_custodio;
+		
 			System.out.println(" tabla generica"+tab_empleado_responsable.getSql());
 			for(int i=0;i<tab_empleado_responsable.getTotalFilas();i++){
 				tab_custodio.insertar();
 				tab_custodio.setValor("IDE_GEEDP", tab_empleado_responsable.getValor(i, "IDE_GEEDP"));	
-				
+				tab_custodio.setValor("nro_secuencial_afcus", num_secuencial_custodio+"");
+				tab_custodio.setValor("cod_barra_afcus", codigo_barras);
 
 			}
 			set_empleado.cerrar();
-			utilitario.addUpdate("tab_custodio");			
+			utilitario.addUpdateTabla(tab_custodio, "ide_geedp,nro_secuencial_afcus,cod_barra_afcus", "");			
 		}
 		else{
 			utilitario.agregarMensajeInfo("Debe agregar un Custodio", "");
