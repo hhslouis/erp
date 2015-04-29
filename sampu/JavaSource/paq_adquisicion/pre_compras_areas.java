@@ -80,7 +80,7 @@ public class pre_compras_areas extends Pantalla{
 	public pre_compras_areas(){
 		
 		empleado=ser_seguridad.getUsuario(utilitario.getVariable("ide_usua")).getValor("ide_gtemp");
-		TablaGenerica area = ser_nomina.ideEmpleadoContrato(empleado, "true");
+		TablaGenerica area = utilitario.consultar(ser_nomina.servicioEmpleadoContratoCodigo("true", empleado));
 		System.out.println("empleado"+empleado);
 		
 		if(empleado==null ||empleado.isEmpty()){
@@ -88,7 +88,7 @@ public class pre_compras_areas extends Pantalla{
 			return;
 		}
 		if(area.getValor("ide_geare")==null||area.getValor("ide_geare").isEmpty()){
-			utilitario.agregarNotificacionInfo("Mensaje", "El Usuario asignado no posee un Area asiganada dentro de la Instituciòn");
+			utilitario.agregarNotificacionInfo("Mensaje", "El Usuario asignado no posee un Area asignada dentro de la Instituciòn");
 			return;			
 		}
 		par_modulo_adquisicion =utilitario.getVariable("p_modulo_adquisicion");
@@ -475,8 +475,7 @@ public class pre_compras_areas extends Pantalla{
 		if(tab_compras.isFocus()){
 		tab_compras.insertar();
 		String ide_gtempxx=ser_seguridad.getUsuario(utilitario.getVariable("ide_usua")).getValor("ide_gtemp");
-		TablaGenerica area = ser_nomina.ideEmpleadoContrato(ide_gtempxx, "true");
-
+		TablaGenerica area = utilitario.consultar(ser_nomina.servicioEmpleadoContratoCodigo("true", empleado));
 		
 		tab_compras.setValor("ide_gtemp",ide_gtempxx );
 		tab_compras.setValor("ide_coest",par_estado_modulo_compra);
