@@ -45,8 +45,13 @@ public String getSolicitud (String ide_adsoc){
 				" where a.ide_tepro=b.ide_tepro and activo_adsoc in ("+activo+") order by detalle_adsoc";
 		return tab_compra;	
 	}
+	public  String getComprasCodigo(String ide_adsoc){
+		String tab_compra ="select a.ide_adsoc,a.ide_tepro,nro_solicitud_adsoc,detalle_adsoc,nombre_tepro from adq_solicitud_compra a,tes_proveedor b" +
+				" where a.ide_tepro=b.ide_tepro and  a.ide_adsoc in ("+ide_adsoc+") order by detalle_adsoc";
+		return tab_compra;	
+	}
 	public  String getComprasCombo(String activo){
-		String tab_compra ="select a.ide_adsoc,(case when nro_solicitud_adsoc is null then 'S/N' else nro_solicitud_adsoc end) as nro_solicitud_adsoc ,detalle_adsoc,fecha_solicitud_adsoc from adq_solicitud_compra a,tes_proveedor b" +
+		String tab_compra ="select a.ide_adsoc,(case when nro_solicitud_adsoc is null then 'S/N' else nro_solicitud_adsoc end) as nro_solicitud_adsoc ,nombre_tepro,fecha_solicitud_adsoc from adq_solicitud_compra a,tes_proveedor b" +
 				" where a.ide_tepro=b.ide_tepro and activo_adsoc in ("+activo+") order by detalle_adsoc";
 		return tab_compra;	
 	}	

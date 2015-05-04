@@ -97,6 +97,15 @@ public class pre_factura_compras extends Pantalla{
 		tab_adq_detalle.getColumna("activo_addef").setLectura(true);
 		tab_adq_detalle.getColumna("activo_addef").setValorDefecto("true");
 		tab_adq_detalle.getColumna("recibido_addef").setValorDefecto("true");
+		tab_adq_detalle.getColumna("marca_addef").setValorDefecto("S/M");
+		tab_adq_detalle.getColumna("serie_addef").setValorDefecto("S/S");
+		tab_adq_detalle.getColumna("color_addef").setValorDefecto("S/C");
+		tab_adq_detalle.getColumna("modelo_addef").setValorDefecto("S/M");
+		tab_adq_detalle.getColumna("marca_addef").setRequerida(true);
+		tab_adq_detalle.getColumna("serie_addef").setRequerida(true);
+		tab_adq_detalle.getColumna("color_addef").setRequerida(true);
+		tab_adq_detalle.getColumna("modelo_addef").setRequerida(true);
+
 		tab_adq_detalle.getColumna("recibido_addef").setLectura(true);
 		tab_adq_detalle.getColumna("por_descuento_addef").setVisible(false);
 		tab_adq_detalle.getColumna("valor_descuento_addef").setVisible(false);
@@ -223,7 +232,7 @@ public class pre_factura_compras extends Pantalla{
 	public void aceptarSolicitudCompra(){
 
 		String str_seleccionado = set_solicitud.getValorSeleccionado();
-		TablaGenerica tab_solicitud=ser_Adquisicion.getTablaGenericaSolicitud(str_seleccionado);
+		TablaGenerica tab_solicitud=utilitario.consultar(ser_Adquisicion.getComprasCodigo(str_seleccionado));
 		if (str_seleccionado!=null){
 			tab_adq_factura.insertar();
 			tab_adq_factura.setValor("ide_adsoc",str_seleccionado);
@@ -395,8 +404,16 @@ public class pre_factura_compras extends Pantalla{
 
 	@Override
 	public void eliminar() {
-		utilitario.getTablaisFocus().eliminar();
-
+		if(tab_adq_factura.isFocus()){
+			if(tab_adq_detalle.getTotalFilas()>0){
+				utilitario.agregarMensajeError("No se puede borrar", "El presente registro no se puede borrar existen detalles de factura");
+				return;
+			}
+			tab_adq_factura.eliminar();
+		}
+		if(tab_adq_detalle.isFocus()){
+		 tab_adq_detalle.eliminar();	
+		}
 	}
 
 	public Tabla getTab_adq_factura() {
