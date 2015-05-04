@@ -141,6 +141,54 @@ public String getCertificacion(String activo){
 	return tab_certificacion;
 	
 }
-
+/**
+ * Metodo que devuelve el POA a ser aprobado para la generacion del Presupuesto Inicial de Gastos
+ * @param estado recibe el o los estados true y false, ejemplo: true o false
+ * @param ide_geani recibe el año para filtar el POA 
+ * @return String SQL POA
+ */
+public String getPoaPorAprobarse(String estado,String ide_geani){
+ 
+ String tab_presupesto="select ide_prpoa,a.ide_prcla,a.ide_prfup,presupuesto_inicial_prpoa,codigo_clasificador_prcla,codigo_subactividad,descripcion_clasificador_prcla,"
++" detalle_subactividad,detalle_actividad,d.ide_geani,detalle_geani"
++" from pre_poa a"
++" left join ( "
++" select a.ide_prfup,codigo_subactividad,detalle_subactividad,subactividad,detalle_actividad,actividad,"
++" detalle_producto,producto,detalle_proyecto,proyecto,detalle_programa ,programa"
++" from ("
++" select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_subactividad,detalle_prfup as detalle_subactividad,detalle_prnfp as subactividad"
++" from pre_funcion_programa a, pre_nivel_funcion_programa b"
++" where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =5"
++" ) a , ("
++" select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_actividad,detalle_prfup as detalle_actividad,detalle_prnfp as actividad"
++" from pre_funcion_programa a, pre_nivel_funcion_programa b"
++" where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =4"
++" ) b, ("
++" select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_producto,detalle_prfup as detalle_producto,detalle_prnfp as producto"
++" from pre_funcion_programa a, pre_nivel_funcion_programa b"
++" where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =3"
++" ) c, ("
++" select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_proyecto,detalle_prfup as detalle_proyecto,detalle_prnfp as proyecto"
++" from pre_funcion_programa a, pre_nivel_funcion_programa b"
++" where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =2"
++" ) d, ("
++" select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_programa,detalle_prfup as detalle_programa,detalle_prnfp as programa"
++" from pre_funcion_programa a, pre_nivel_funcion_programa b"
++" where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =1"
++" ) e"
++" where a.pre_ide_prfup = b.ide_prfup"
++" and b.pre_ide_prfup = c.ide_prfup"
++" and c.pre_ide_prfup = d.ide_prfup"
++" and d.pre_ide_prfup = e.ide_prfup"
+ +" ) b on a.ide_prfup = b.ide_prfup"
++" left join pre_clasificador c on a.ide_prcla = c.ide_prcla" 
++" left join ( select a.ide_geani,ide_prfup,detalle_geani from cont_vigente a, gen_anio b where  a.ide_geani = b.ide_geani" 
++" and not ide_prfup is null order by detalle_geani desc"
+  +" ) d on a.ide_prfup = d.ide_prfup"
++" where activo_prpoa in ("+estado+") and ide_prpro is null and d.ide_geani ="+ide_geani
++" order by codigo_clasificador_prcla,codigo_subactividad";
+ 	 return tab_presupesto;
+		 
+}
 
 }
