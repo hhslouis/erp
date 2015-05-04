@@ -7,6 +7,7 @@ import framework.aplicacion.TablaGenerica;
 import framework.componentes.Boton;
 import framework.componentes.BotonesCombo;
 import framework.componentes.Combo;
+import framework.componentes.Confirmar;
 import framework.componentes.Dialogo;
 import framework.componentes.Division;
 import framework.componentes.Etiqueta;
@@ -20,15 +21,21 @@ import paq_bodega.ejb.ServicioBodega;
 import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_sistema.aplicacion.Pantalla;
 
+/*
+ * La presente clase permite hacer la recepcion de los activos fijos egresados de bodega, para que el material 
+ * pueda cumplir con las condiciones para ser recibidas por bodega el tipo de ingreso a bodega del material
+ * debe ser tipo activo fijo ( BBDD tabla: bodt_bodega campo: tipo_ingreso_bobod=2) es asi tambien que en la BBDD
+ * en la tabla bodt_egreso y bodt_concepto_egreso el campo activo debe poseer el valor de true, ya que
+ * si tiene el valor false indica que el material ya fue ingresado a activos fijos.
+ */
 public class pre_egreso_bodega extends Pantalla{
 	private Tabla tab_egreso= new Tabla();
-	private Tabla tab_activos_fijos= new Tabla();
 	private SeleccionTabla set_egreso = new SeleccionTabla();
-	private Dialogo dia_recibir_activo=new Dialogo();
-	private Dialogo dia_ingreso=new Dialogo();
 	private int int_maximo_detalle=-1;
 	private Texto tex_maximo=new Texto();
 	private Combo com_anio=new Combo();
+	private Confirmar con_guardar=new Confirmar();
+	
 
 
 
@@ -41,23 +48,24 @@ public class pre_egreso_bodega extends Pantalla{
 	
 	
 	public pre_egreso_bodega(){
+		
+		bar_botones.limpiar();
 		com_anio.setCombo(ser_contabilidad.getAnioDetalle("true,false","true,false"));
-		com_anio.setMetodo("seleccionaElAnio");
 		bar_botones.agregarComponente(new Etiqueta("Seleccione El Año:"));
 		bar_botones.agregarComponente(com_anio);
 		
-		
-		Boton bot_importar= new Boton();
-		bot_importar.setValue("Buscar Solicitud Egreso");
-		bot_importar.setMetodo("importar");
-		bar_botones.agregarBoton(bot_importar);
-
-		
-		Boton bot_egreso=new Boton();
+		Boton bot_egreso = new Boton();
+		bot_egreso.setValue("Buscar Egresos de Bodega");
+		bot_egreso.setTitle("EGRESOS DE BODEGA");
 		bot_egreso.setIcon("ui-icon-person");
-		bot_egreso.setValue("Recibir Activo");
-		bot_egreso.setMetodo("importarDialogoActivo");
+		bot_egreso.setMetodo("importarEgreso");
 		bar_botones.agregarBoton(bot_egreso);
+		
+		Boton bot_recibir_activo=new Boton();
+		bot_recibir_activo.setIcon("ui-icon-person");
+		bot_recibir_activo.setValue("Recibir Activo");
+		bot_recibir_activo.setMetodo("recibirActivo");
+		bar_botones.agregarBoton(bot_recibir_activo);
 
 		BotonesCombo boc_seleccion_inversa = new BotonesCombo();
 		ItemMenu itm_todas = new ItemMenu();
@@ -80,17 +88,15 @@ public class pre_egreso_bodega extends Pantalla{
 		
 		//////egreso
 		tab_egreso.setId("tab_egreso");
-		tab_egreso.setSql("select c.ide_boegr,detalle_bomat,fecha_egreso_boegr," +
-				" cantidad_egreso_boegr,documento_egreso_boegr," +
-				" fecha_compra_bobod,num_factura_bobod,b.ide_tepro,nombre_tepro" +
-				" from bodt_material a,bodt_bodega b,bodt_egreso c,tes_proveedor d" +
-				" where a.ide_bomat = b.ide_bomat" +
-				" and b.ide_boinv = c.ide_boinv" +
-				" and b.ide_tepro = d.ide_tepro" +
-				" and b.ide_geani = -1" +
-				" order by detalle_bomat");
+		tab_egreso.setSql(ser_bodega.getMaterialesPorEgreso("-1", "true,false"));
 		tab_egreso.setNumeroTabla(1);
-		//tab_egreso.setCampoPrimaria("ide_addef");
+		tab_egreso.setCampoPrimaria("ide_boegr");
+		tab_egreso.getColumna("codigo_bomat").setNombreVisual("CODIGO DEL MATERIAL");
+		tab_egreso.getColumna("descripcion_bobod").setNombreVisual("DETALLE DE INGRESO BODEGA");
+		tab_egreso.getColumna("marca_bobod").setNombreVisual("MARCA");
+		tab_egreso.getColumna("modelo_bobod").setNombreVisual("MODELO");
+		tab_egreso.getColumna("serie_bobod").setNombreVisual("SERIE");
+		tab_egreso.getColumna("color_bobod").setNombreVisual("COLOR");
 		tab_egreso.getColumna("detalle_bomat").setNombreVisual("NOMBRE DEL MATERIAL");
 		tab_egreso.getColumna("fecha_egreso_boegr").setNombreVisual("FECHA DE EGRESO");
 		tab_egreso.getColumna("cantidad_egreso_boegr").setNombreVisual("CANTIDAD DE EGRESO");
@@ -98,80 +104,54 @@ public class pre_egreso_bodega extends Pantalla{
 		tab_egreso.getColumna("fecha_compra_bobod").setNombreVisual("FECHA COMPRA");
 		tab_egreso.getColumna("num_factura_bobod").setNombreVisual("NUMERO DE FACTURA");
 		tab_egreso.getColumna("nombre_tepro").setNombreVisual("PROVEEDOR");
+		tab_egreso.getColumna("ide_bocoe").setVisible(false);
+		tab_egreso.getColumna("ide_tepro").setVisible(false);
+
 		tab_egreso.setLectura(true);
 		tab_egreso.setTipoSeleccion(true);
 		tab_egreso.dibujar();
 		PanelTabla pat_panel=new PanelTabla();
 		pat_panel.getChildren().add(boc_seleccion_inversa);
 		pat_panel.setPanelTabla(tab_egreso);
+		pat_panel.getMenuTabla().getItem_formato().setDisabled(true);
 
 		Division div_division=new Division();
 		div_division.dividir1(pat_panel);
 		agregarComponente(div_division);
-		///dialogo1
-		dia_ingreso.setId("dia_ingreso");
-		dia_ingreso.setTitle("EGRESO BODEGA");
-		dia_ingreso.setWidth("30%");
-		dia_ingreso.setHeight("23%");		
-		dia_ingreso.getBot_aceptar().setMetodo("aceptarEgreso");	
-		
-		Grid gri_grid=new Grid();
-		gri_grid.setStyle("height:" + (dia_ingreso.getAltoPanel()-10) + "px;overflow: auto;display: block;");
-		gri_grid.setColumns(1);
-		gri_grid.setWidth("98%");
-		gri_grid.getChildren().add(new Etiqueta("Ingrese el número de egreso de bodega"));
-		tex_maximo.setStyle("width:98%");
-		gri_grid.getChildren().add(tex_maximo);		
-		dia_ingreso.setDialogo(gri_grid);		
-		agregarComponente(dia_ingreso);
 		
 		
-		///dialogo 2 
 		
-		////selecion tabla
-		dia_recibir_activo.setId("dia_recibir_activo");
-		dia_recibir_activo.setTitle("RECIBIR ACTIVO");
-		dia_recibir_activo.setWidth("45%");
-		dia_recibir_activo.setHeight("45%");
-		Grid gri_cuerpo=new Grid();
+		set_egreso.setId("set_egreso");
+		set_egreso.setSeleccionTabla(ser_bodega.getEgresoBodegaActivos("-1"),"ide_bocoe");
+		set_egreso.getTab_seleccion().getColumna("numero_egreso_bocoe").setNombreVisual("Nro. EGRESO BODEGA");
+		set_egreso.getTab_seleccion().getColumna("fecha_egreso_bocoe").setNombreVisual("FECHA EGRESO");
+		set_egreso.getTab_seleccion().getColumna("uso_bocoe").setNombreVisual("USO");
+		set_egreso.getTab_seleccion().getColumna("numero_egreso_bocoe").setFiltro(true);
+		set_egreso.getTab_seleccion().getColumna("fecha_egreso_bocoe").setFiltro(true);
+		set_egreso.getTab_seleccion().getColumna("uso_bocoe").setFiltro(true);
+		set_egreso.getTab_seleccion().getColumna("uso_bocoe").setLongitud(100);
 		
-		tab_activos_fijos.setId("tab_activos_fijos");
-		tab_activos_fijos.setTabla("afi_activo","ide_afact", 2);
-		tab_activos_fijos.getColumna("ide_afubi").setVisible(false);
-		tab_activos_fijos.getColumna("ide_aftia").setVisible(false);
-		tab_activos_fijos.getColumna("ide_aftip").setVisible(false);
-		tab_activos_fijos.getColumna("ide_afseg").setVisible(false);
-		tab_activos_fijos.getColumna("ide_afnoa").setVisible(false);
-		tab_activos_fijos.getColumna("ide_geare").setVisible(false);
-		tab_activos_fijos.getColumna("ide_afacd").setVisible(false);
-		tab_activos_fijos.getColumna("ide_cocac").setVisible(false);
-		tab_activos_fijos.getColumna("ide_afest").setVisible(false);
-		tab_activos_fijos.getColumna("ide_tepro").setVisible(false);
-		tab_activos_fijos.getColumna("foto_bien_afact").setVisible(false);
-		tab_activos_fijos.getColumna("valor_unitario_afact").setVisible(false);
-		tab_activos_fijos.getColumna("cantidad_afact").setVisible(false);
-		tab_activos_fijos.getColumna("valor_neto_afact").setVisible(false);
-		tab_activos_fijos.getColumna("valor_neto_afact").setVisible(false);
-		tab_activos_fijos.getColumna("valor_compra_afact").setVisible(false);
-		tab_activos_fijos.getColumna("secuencial_afact").setVisible(false);
-		tab_activos_fijos.setTipoFormulario(true);
-		tab_activos_fijos.getGrid().setColumns(4);
-		gri_cuerpo.getChildren().add(tab_activos_fijos);
-		
-		dia_recibir_activo.getBot_aceptar().setMetodo("aceptarDialogoActivo");
 
-		dia_recibir_activo.setDialogo(gri_cuerpo);
-		agregarComponente(dia_recibir_activo);
+		set_egreso.getBot_aceptar().setMetodo("aceptarEgreso");
+		set_egreso.getTab_seleccion().ejecutarSql();
+		set_egreso.setRadio();
+		agregarComponente(set_egreso);
+		
+		con_guardar.setId("con_guardar");
+		con_guardar.setMessage("ESTA SEGURO DE INGRESAR LOS MATERIALES SELECCIONADOS AL INVENTARIO DE ACTIVOS FIJOS");
+		con_guardar.setTitle("CONFIRMACION DE INGRESO");
+
+		agregarComponente(con_guardar);
+
 
 			
 	}
 	///////EGRESO BODEGA
-	public void seleccionaElAnio (){
+	public void importarEgreso (){
 		if(com_anio.getValue()!=null){
-			tab_egreso.setCondicion("ide_geani="+com_anio.getValue());
-			tab_egreso.ejecutarSql();
-			//tab_mes.ejecutarValorForanea(tab_poa.getValorSeleccionado());
-
+			set_egreso.getTab_seleccion().setSql(ser_bodega.getEgresoBodegaActivos(com_anio.getValue().toString()));
+			set_egreso.getTab_seleccion().ejecutarSql();
+			set_egreso.dibujar();
 		}
 		else{
 			utilitario.agregarMensajeInfo("Selecione un año", "");
@@ -179,73 +159,75 @@ public class pre_egreso_bodega extends Pantalla{
 		}
 	}
 	
-	public void importar(){
-		if(com_anio.getValue()==null){
-			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
+	public void recibirActivo(){
+		
+		if(tab_egreso.getTotalFilas()==0){
+			utilitario.agregarMensaje("No existen Registros", "Envie a buscar un egreso de bodega");
 			return;
 		}
-		if(tab_egreso.isEmpty()){
+		if (tab_egreso.getListaFilasSeleccionadas().size()==0){
+			utilitario.agregarMensajeInfo("Seleccione un registro", "Debe seleccionar al menos un registro");
+			return;
+		}
+		String str_seleccionados=tab_egreso.getFilasSeleccionadas();
+		System.out.println(" probando el str_Selccionado "+str_seleccionados);
+		if(str_seleccionados!=null || !str_seleccionados.isEmpty()){
 			
-			//if(getMaximoSecuencialEmpleados()==0 && int_maximo_detalle==-1){
-				if(dia_ingreso.isVisible()){
-					if(tex_maximo.getValue()!=null && !tex_maximo.getValue().toString().isEmpty()){
-						try {
-							int_maximo_detalle=Integer.parseInt(tex_maximo.getValue().toString());
-						} catch (Exception e) {
-							// TODO: handle exception
-						}
-						dia_ingreso.cerrar();
-					}
-					else{
-						utilitario.agregarMensajeInfo("Debe ingresar un valor en el campo de texto", "");
-						return;
-					}
-				}else{
-					dia_ingreso.dibujar();	
-					return;
-				}			
+			if (!con_guardar.isVisible()){
+				// dibuja dialogo de confirmacion de recepcion de activjvos fijos
+				con_guardar.setMessage("ESTA SEGURO DE INGRESAR LOS MATERIALES SELECCIONADOS AL INVENTARIO DE ACTIVOS FIJOS");
+				con_guardar.setTitle("CONFIRMACION DE INGRESO");
+				con_guardar.getBot_aceptar().setMetodo("recibirActivo");
+				con_guardar.dibujar();
+				utilitario.addUpdate("con_guardar");
+			}else{
+				con_guardar.cerrar();
+			
+			TablaGenerica material_egreso=utilitario.consultar(ser_bodega.getMaterialesEgresoCodigo(str_seleccionados, "true,false"));
+			utilitario.getConexion().ejecutarSql("DELETE from SIS_BLOQUEO where upper(TABLA_BLOQ) like 'afi_activo'");
+			TablaGenerica valor=utilitario.consultar(ser_contabilidad.servicioCodigoMaximo("afi_activo", "ide_afact"));
+			ide_inicial=Long.parseLong(valor.getValor("codigo"));
+			for(int i=0;i<material_egreso.getTotalFilas();i++){
+				System.out.println(" entwr e afor 0"+i);
+				utilitario.getConexion().ejecutarSql("insert into afi_activo (ide_afact,marca_afact,serie_afact,modelo_afact,color_afact,cantidad_afact,valor_unitario_afact,egreso_bodega_afact,"
+						+" fecha_alta_afact,valor_neto_afact,valor_compra_afact,activo_afact,secuencial_afact,ide_boegr)"
+						+" values ("+ide_inicial+",'"+material_egreso.getValor(i, "marca_bobod")+"','"+material_egreso.getValor(i, "serie_bobod")+"','"+material_egreso.getValor(i, "modelo_bobod")+"','"+material_egreso.getValor(i, "color_bobod")
+						+"',"+material_egreso.getValor(i, "cantidad_egreso_boegr")+","+material_egreso.getValor(i, "valor_unitario_bobod")+",'"+material_egreso.getValor(i, "documento_egreso_boegr")+"','"+material_egreso.getValor(i, "fecha_compra_bobod")
+						+"',"+material_egreso.getValor(i, "valor_unitario_bobod")+","+material_egreso.getValor(i, "valor_total_bobod")+",true,"+material_egreso.getValor(i, "cantidad_egreso_boegr")+","+material_egreso.getValor(i, "ide_boegr")+");");		
+				utilitario.getConexion().ejecutarSql("update bodt_egreso set activo_boegr=false where ide_boegr="+material_egreso.getValor(i, "ide_boegr"));
+				// revisa si existe detalle de materiales por reciobir si no existe actualiza la cabecera del egreso con estado false
+				TablaGenerica revisar_materiales =utilitario.consultar(" select * from bodt_egreso where ide_bocoe in (select ide_bocoe from bodt_egreso where ide_boegr="+material_egreso.getValor(i, "ide_boegr")+") and activo_boegr=true");
+				if(revisar_materiales.getTotalFilas()>0){
+				}
+				else{
+					utilitario.getConexion().ejecutarSql("update bodt_concepto_egreso set activo_bocoe=false where ide_bocoe in (select ide_bocoe from bodt_egreso where ide_boegr="+material_egreso.getValor(i, "ide_boegr")+") ");
+				}
 			}
+			tab_egreso.ejecutarSql();
+			utilitario.addUpdate("tab_egreso");
+			}
+		}
+		else{
+			utilitario.agregarMensajeInfo("Debe seleccionar almenos un registro", "");
+			return;		
+		}
+		
+
 	}
 	
 	
 ////aceptar
 	
 	public void aceptarEgreso() {
-		tab_egreso.setSql("select c.ide_boegr,detalle_bomat,fecha_egreso_boegr," +
-				" cantidad_egreso_boegr,documento_egreso_boegr," +
-				" fecha_compra_bobod,num_factura_bobod,b.ide_tepro,nombre_tepro" +
-				" from bodt_material a,bodt_bodega b,bodt_egreso c,tes_proveedor d" +
-				" where a.ide_bomat = b.ide_bomat" +
-				" and b.ide_boinv = c.ide_boinv" +
-				" and b.ide_tepro = d.ide_tepro" +
-				" and b.ide_geani = " +com_anio.getValue()+
-				" and documento_egreso_boegr='"+tex_maximo.getValue()+"'"+
-				" order by detalle_bomat");
+		String str_seleccionados=set_egreso.getValorSeleccionado();
+		tab_egreso.setSql(ser_bodega.getMaterialesPorEgreso(str_seleccionados, "true"));
 		tab_egreso.ejecutarSql();
 		tab_egreso.imprimirSql();
-		dia_ingreso.cerrar();
+		set_egreso.cerrar();
 	}
 	
-	//////recibir avtivo
-	public void importarDialogoActivo(){
-		//Hace aparecer el componente
-		if(com_anio.getValue()==null){
-			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
-			return;
-		}
-			tab_activos_fijos.limpiar();
-			tab_activos_fijos.insertar();
-			//tab_direccion.limpiar();
-		//	tab_direccion.insertar();
-			dia_recibir_activo.dibujar();
-		}
-		
 
-	//long ide_inicial=0;
-	public void aceptarDialogoActivo() {
-		
-	}
-		
+
 	
 	
 	
@@ -315,25 +297,19 @@ public void seleccionarNinguna() {
 	public void setTab_egreso(Tabla tab_egreso) {
 		this.tab_egreso = tab_egreso;
 	}
-
-	public Dialogo getDia_ingreso() {
-		return dia_ingreso;
+	public SeleccionTabla getSet_egreso() {
+		return set_egreso;
+	}
+	public void setSet_egreso(SeleccionTabla set_egreso) {
+		this.set_egreso = set_egreso;
+	}
+	public Confirmar getCon_guardar() {
+		return con_guardar;
+	}
+	public void setCon_guardar(Confirmar con_guardar) {
+		this.con_guardar = con_guardar;
 	}
 
-	public void setDia_ingreso(Dialogo dia_ingreso) {
-		this.dia_ingreso = dia_ingreso;
-	}
-	public Tabla getTab_activos_fijos() {
-		return tab_activos_fijos;
-	}
-	public void setTab_activos_fijos(Tabla tab_activos_fijos) {
-		this.tab_activos_fijos = tab_activos_fijos;
-	}
-	public Dialogo getDia_recibir_activo() {
-		return dia_recibir_activo;
-	}
-	public void setDia_recibir_activo(Dialogo dia_recibir_activo) {
-		this.dia_recibir_activo = dia_recibir_activo;
-	}
+	
 
 }
