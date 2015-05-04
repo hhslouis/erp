@@ -275,6 +275,40 @@ public String getSolicitudFactura(String activo){
 +" where a.ide_tepro=b.ide_tepro and a.ide_adsoc = c.ide_adsoc and activo_adfac in("+activo+") order by nro_solicitud_adsoc";
 	return tab_solicitud;
 }
+public String getEgresoBodegaActivos(String ide_geani){
+	String tab_solicitud="select ide_bocoe,numero_egreso_bocoe,fecha_egreso_bocoe,uso_bocoe"
++" from bodt_concepto_egreso where activo_bocoe = true and ide_bocoe  in ("
++" select ide_bocoe from bodt_egreso where ide_bobod in ("
++" select ide_bobod from bodt_bodega where tipo_ingreso_bobod=2 and ide_geani = "+ide_geani
++" ) group by ide_bocoe ) order by numero_egreso_bocoe desc";
+	return tab_solicitud;
+}
+public String getMaterialesPorEgreso(String ide_bocoe,String estado){
+	String tab_solicitud="select c.ide_boegr,ide_bocoe,documento_egreso_boegr,codigo_bomat,detalle_bomat,fecha_egreso_boegr,"
++" cantidad_egreso_boegr,fecha_compra_bobod,num_factura_bobod,descripcion_bobod,marca_bobod,"
++" modelo_bobod,serie_bobod,color_bobod, b.ide_tepro,nombre_tepro"
++" from bodt_material a,bodt_bodega b,bodt_egreso c,tes_proveedor d"
++" where a.ide_bomat = b.ide_bomat"
++" and b.ide_bobod = c.ide_bobod"
++" and b.ide_tepro = d.ide_tepro"
++" and ide_bocoe in ( "+ide_bocoe+" ) "
++" and activo_boegr in ("+estado+" )" 
++" order by detalle_bomat";
+	return tab_solicitud;
+}
+
+public String getMaterialesEgresoCodigo(String ide_boegr,String estado){
+	String tab_solicitud="select c.ide_boegr,ide_bocoe,documento_egreso_boegr,codigo_bomat,detalle_bomat,fecha_egreso_boegr,"
++" cantidad_egreso_boegr,fecha_compra_bobod,num_factura_bobod,descripcion_bobod,marca_bobod,"
++" modelo_bobod,serie_bobod,color_bobod, b.ide_tepro,nombre_tepro,valor_unitario_bobod,valor_total_bobod"
++" from bodt_material a,bodt_bodega b,bodt_egreso c,tes_proveedor d"
++" where a.ide_bomat = b.ide_bomat"
++" and b.ide_bobod = c.ide_bobod"
++" and b.ide_tepro = d.ide_tepro"
++" and c.ide_boegr in ( "+ide_boegr+" ) "
++" order by detalle_bomat";
+	return tab_solicitud;
+}
 public String getEstadoFactura(String ide_solicitud_compra,String estado){
 	String tab_solicitud="select ide_adfac,ide_adsoc,activo_adfac from adq_factura where ide_adsoc in ("+ide_solicitud_compra+") and activo_adfac in ("+estado+")";
 	return tab_solicitud;
@@ -296,7 +330,7 @@ public TablaGenerica getTablaGenericaMaterial(String ide_bomat){
 	return tab_solicitud_comp;
 }
 public String getEgresoSolicitud(){
-	String tab_solicitud="select a.ide_adsoc,num_factura_bobod as numero_factura,num_doc_bobod as ingreso_bodega,detalle_adsoc as detalle_compra,"
+	String tab_solicitud="select a.ide_adsoc,num_factura_bobod as numero_factura,numero_ingreso_bobod as ingreso_bodega,num_doc_bobod as documento_ingreso_bodega,detalle_adsoc as detalle_compra,"
 +" nro_solicitud_adsoc as numero_solicitud_compra,valor_adsoc as valor_compra,nombre_tepro as proveedor,ruc_tepro as ruc_proveedor" 
 +" from adq_solicitud_compra a , tes_proveedor b,("
 +" select ide_adsoc,num_factura_bobod,num_doc_bobod from bodt_bodega where activo_bobod =true  group by ide_adsoc,num_doc_bobod,num_factura_bobod"

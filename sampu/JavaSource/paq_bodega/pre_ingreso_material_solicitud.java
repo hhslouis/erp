@@ -41,6 +41,7 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
 	
 	public pre_ingreso_material_solicitud() {
+		bar_botones.limpiar();
 		par_secuencial_modulo=utilitario.getVariable("p_modulo_sec_bod_ingresos");
 
 		Boton bot_material = new Boton();
@@ -76,8 +77,8 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 		boc_seleccion_inversa.agregarBoton(itm_niguna);
 
 		tab_solicitud.setId("tab_solicitud");
-		tab_solicitud.setSql("select b.ide_addef,detalle_adsoc,num_factura_adfac,valor_adsoc,nro_solicitud_adsoc,valor_total_addef,valor_unitario_addef,cantidad_addef," +
-				" codigo_bomat,detalle_bomat from adq_solicitud_compra a,adq_detalle_factura b,adq_factura c , bodt_material d" +
+		tab_solicitud.setSql("select b.ide_addef,detalle_bomat,codigo_bomat,num_factura_adfac,valor_adsoc,nro_solicitud_adsoc,valor_total_addef,valor_unitario_addef,cantidad_addef," +
+				" detalle_adsoc from adq_solicitud_compra a,adq_detalle_factura b,adq_factura c , bodt_material d" +
 				" where a.ide_adsoc=c.ide_adsoc and b.ide_adfac=c.ide_adfac  and d.ide_bomat=b.ide_bomat and a.ide_adsoc=-1 order by codigo_bomat");
 		tab_solicitud.setNumeroTabla(2);
 		tab_solicitud.setCampoPrimaria("ide_addef");
@@ -97,6 +98,7 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 		PanelTabla pat_panel=new PanelTabla();
 		pat_panel.getChildren().add(boc_seleccion_inversa);
 		pat_panel.setPanelTabla(tab_solicitud);
+		pat_panel.getMenuTabla().getItem_formato().setDisabled(true);
 
 		Division div_division=new Division();
 		div_division.dividir1(pat_panel);
@@ -118,6 +120,8 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 		set_solicitud.getTab_seleccion().getColumna("nombre_tepro").setFiltro(true);
 		set_solicitud.getTab_seleccion().getColumna("ruc_tepro").setFiltro(true);
 		set_solicitud.getTab_seleccion().getColumna("valor_adsoc").setFiltro(true);
+		set_solicitud.getTab_seleccion().getColumna("num_factura_adfac").setLongitud(2);
+
 		set_solicitud.getBot_aceptar().setMetodo("aceptarSolicitud");
 		set_solicitud.getTab_seleccion().ejecutarSql();
 		set_solicitud.setRadio();
@@ -198,8 +202,8 @@ public class pre_ingreso_material_solicitud extends Pantalla{
 
 	public  void aceptarSolicitud(){
 		
-		tab_solicitud.setSql("select b.ide_addef,detalle_bomat,num_factura_adfac,valor_adsoc,nro_solicitud_adsoc,valor_total_addef,valor_unitario_addef,cantidad_addef," +
-				" codigo_bomat,detalle_adsoc from adq_solicitud_compra a,adq_detalle_factura b,adq_factura c , bodt_material d" +
+		tab_solicitud.setSql("select b.ide_addef,detalle_bomat,codigo_bomat,num_factura_adfac,valor_adsoc,nro_solicitud_adsoc,valor_total_addef,valor_unitario_addef,cantidad_addef," +
+				" detalle_adsoc from adq_solicitud_compra a,adq_detalle_factura b,adq_factura c , bodt_material d" +
 				" where a.ide_adsoc=c.ide_adsoc and b.ide_adfac=c.ide_adfac and recibido_addef=true  and d.ide_bomat=b.ide_bomat and c.ide_adfac="+set_solicitud.getValorSeleccionado().toString()+" order by codigo_bomat");
 		tab_solicitud.ejecutarSql();
 		utilitario.addUpdate("tab_solicitud");

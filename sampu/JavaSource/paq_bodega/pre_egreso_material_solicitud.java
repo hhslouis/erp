@@ -112,6 +112,7 @@ public class pre_egreso_material_solicitud extends Pantalla {
 		set_solicitud.getBot_aceptar().setMetodo("aceptarSolicitud");
 		set_solicitud.getTab_seleccion().getColumna("numero_factura").setFiltro(true);
 		set_solicitud.getTab_seleccion().getColumna("ingreso_bodega").setFiltro(true);
+		set_solicitud.getTab_seleccion().getColumna("ingreso_bodega").setFiltro(true);
 		set_solicitud.getTab_seleccion().getColumna("detalle_compra").setFiltro(true);
 		set_solicitud.getTab_seleccion().getColumna("numero_solicitud_compra").setFiltro(true);		
 		set_solicitud.getTab_seleccion().ejecutarSql();
