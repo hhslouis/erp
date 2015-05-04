@@ -74,6 +74,7 @@ public class pre_ingreso_material extends Pantalla{
 
 		tab_bodega.setId("tab_bodega");  
 		tab_bodega.setTabla("bodt_bodega","ide_bobod", 1);	
+		tab_bodega.setCampoOrden("ide_bobod desc");
 		tab_bodega.getColumna("ide_geani").setVisible(false);
 		tab_bodega.getColumna("ide_tepro").setCombo(ser_Bodega.getProveedor("true,false"));
 		tab_bodega.getColumna("ide_tepro").setAutoCompletar();
@@ -102,10 +103,14 @@ public class pre_ingreso_material extends Pantalla{
 	       Object fila7[] = {
 	           "1", "CONSUMO EXTERNO"
 	       };
-	       
+	       Object fila8[] = {
+		        "2", "ACTIVOS FIJOS"
+		    };
 	       listax.add(fila6);
 	       listax.add(fila7);
-	    tab_bodega.getColumna("tipo_ingreso_bobod").setRadio(listax, "1");
+	       listax.add(fila8);
+	       
+	    tab_bodega.getColumna("tipo_ingreso_bobod").setRadio(listax, "0");
 	    tab_bodega.getColumna("tipo_ingreso_bobod").setRadioVertical(true);
 		
 		
