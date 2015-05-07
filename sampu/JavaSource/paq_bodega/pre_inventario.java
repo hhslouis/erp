@@ -295,7 +295,9 @@ public void aceptarReporte(){
 		}
 		else if(set_reporte_inventario.isVisible()) {
 			
-			if(set_reporte_inventario.getListaSeleccionados().size()>0){	
+			if(set_reporte_inventario.getListaSeleccionados().size()>0){
+				ser_Bodega.matrizKardexInventarios(set_reporte_inventario.getSeleccionados());
+				
 				p_parametros.put("pide_boinv",set_reporte_inventario.getSeleccionados());
 				p_parametros.put("titulo","TARJETA KARDEX DE INVENTARIOS");
 				self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());

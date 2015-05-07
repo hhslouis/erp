@@ -333,7 +333,7 @@ public String getEgresoSolicitud(){
 	String tab_solicitud="select a.ide_adsoc,num_factura_bobod as numero_factura,numero_ingreso_bobod as ingreso_bodega,num_doc_bobod as documento_ingreso_bodega,detalle_adsoc as detalle_compra,"
 +" nro_solicitud_adsoc as numero_solicitud_compra,valor_adsoc as valor_compra,nombre_tepro as proveedor,ruc_tepro as ruc_proveedor" 
 +" from adq_solicitud_compra a , tes_proveedor b,("
-+" select ide_adsoc,num_factura_bobod,num_doc_bobod from bodt_bodega where activo_bobod =true  group by ide_adsoc,num_doc_bobod,num_factura_bobod"
++" select ide_adsoc,num_factura_bobod,num_doc_bobod,numero_ingreso_bobod from bodt_bodega where activo_bobod =true  group by ide_adsoc,num_doc_bobod,num_factura_bobod,numero_ingreso_bobod"
 +" ) c where a.ide_tepro=b.ide_tepro and a.ide_adsoc = c.ide_adsoc order by num_doc_bobod";
 	return tab_solicitud;
 }
