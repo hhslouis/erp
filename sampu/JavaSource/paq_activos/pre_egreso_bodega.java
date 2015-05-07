@@ -202,13 +202,14 @@ public class pre_egreso_bodega extends Pantalla{
 				else{
 					utilitario.getConexion().ejecutarSql("update bodt_concepto_egreso set activo_bocoe=false where ide_bocoe in (select ide_bocoe from bodt_egreso where ide_boegr="+material_egreso.getValor(i, "ide_boegr")+") ");
 				}
+				ide_inicial++;
 			}
 			tab_egreso.ejecutarSql();
 			utilitario.addUpdate("tab_egreso");
 			}
 		}
 		else{
-			utilitario.agregarMensajeInfo("Debe seleccionar almenos un registro", "");
+			utilitario.agregarMensajeInfo("Debe seleccionar al menos un registro", "");
 			return;		
 		}
 		
