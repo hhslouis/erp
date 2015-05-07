@@ -43,7 +43,9 @@ public class pre_catalogo_cuenta extends Pantalla{
 	  	tab_tipo_catalogo_cuenta.getColumna("ide_cogrc").setCombo("cont_grupo_cuenta","ide_cogrc","detalle_cogrc", "");
 	  	tab_tipo_catalogo_cuenta.getColumna("ide_botip").setCombo("bodt_tipo_producto", "ide_botip", "detalle_botip", "");
 	  	tab_tipo_catalogo_cuenta.getColumna("nivel_cocac").setCombo(utilitario.getListaGruposNivelCuenta());
-	  // para contruir los radios
+	  	tab_tipo_catalogo_cuenta.getColumna("grupo_nivel_cocac").setVisible(false);
+
+	  	// para contruir los radios
 	   List lista = new ArrayList();
        Object fila1[] = {
            "1", "APERTURA"
