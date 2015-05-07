@@ -462,6 +462,7 @@ public class pre_compras extends Pantalla{
 	// TODO Auto-generated method stub
 	rep_reporte.dibujar();
 	}
+    
 	public void aceptarReporte(){
 		if(rep_reporte.getReporteSelecionado().equals("Solicitud Compra")){
 			System.out.println("entra reporte");
@@ -475,13 +476,44 @@ public class pre_compras extends Pantalla{
 				p_parametros.put("titulo","SOLICITUD DE COMPRA");
 				p_parametros.put("ide_adsoc",Integer.parseInt(tab_compras.getValor("ide_adsoc")));
 				System.out.println("entra reporte a imporimir xxx "+p_parametros.toString());
-				
+				System.out.println("otro parametyro "+rep_reporte.getPath());
+		
 				self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
 				self_reporte.dibujar();
 
 			}
 		}
+		else {
+			utilitario.agregarMensajeInfo("Seleccionar Opciòn", "Debe seleccionar al menos un reporte para imprimir");
+		}
 	}
+	
+    /*
+	public void aceptarReporte(){
+		if(rep_reporte.getReporteSelecionado().equals("Plan Operativo Anual (POA)")){
+			if (rep_reporte.isVisible()){
+				
+				p_parametros=new HashMap();		
+				rep_reporte.cerrar();
+				p_parametros.clear();
+				
+			}
+		
+					p_parametros.put("ide_prpoa","6,7,8,9,10");
+					p_parametros.put("titulo","Plan Operativo Anual (POA) ");
+					p_parametros.put("ide_geani", Integer.parseInt("7"));
+					self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
+				   self_reporte.dibujar();
+						
+			}
+			else{
+				utilitario.agregarMensajeInfo("No se puede continuar", "No ha Seleccionado Ningun Registro");
+
+			}
+		
+			
+	}
+	*/
 	@Override
 	public void insertar() {
 		// TODO Auto-generated method stub
