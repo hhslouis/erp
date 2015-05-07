@@ -1086,33 +1086,33 @@ public class Utilitario extends Framework {
 		
 		List lista=new ArrayList();
 		Object fila1[] = {
-				"T","TITULO"
+				"1","TITULO"
 		};
 		
 		Object fila2[] = {
-				"G","GRUPO"
+				"2","GRUPO"
 					
 		};
 		Object fila3[]={
-				"S","SUBGRUPO"
+				"3","SUBGRUPO"
 				
 		};
 		
 		Object fila4[]={
-				"1","CUENTA NIVEL1"
+				"4","CUENTA NIVEL 1"
 				
 				
 		};
 		
 		Object fila5[]={
-				"2","CUENTA NIVEL 2"
+				"5","CUENTA NIVEL 2"
 				
 		};
 		Object fila6[]={
-				"3","CUENTA NIVEL 3"
+				"6","CUENTA NIVEL 3"
 		};
 		Object fila7[]={
-				"4","CUENTA NIVEL 4"
+				"7","CUENTA NIVEL 4"
 				
 		};
 		lista.add(fila1);
