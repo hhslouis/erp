@@ -359,6 +359,7 @@ public class Parametros {
         //lis_parametros.add(new Parametro("15", "p_estado_pendiente_bodega","","3","adq_tipo_contratacion","ide_adtic", "detalle_adtic"));
         //lis_parametros.add(new Parametro("15", "p_estado_recepcion_parcial","","3","adq_tipo_contratacion","ide_adtic", "detalle_adtic"));
 
+ 
         /*
          * PRESUPUESTO
          * */
@@ -371,6 +372,12 @@ public class Parametros {
         lis_parametros.add(new Parametro("16", "p_modulo_estado_comprometido","Indica el modulo que pertenece el comprometido ","21","cont_estado","ide_coest","detalle_coest"));
         lis_parametros.add(new Parametro("16", "p_modulo_estado_comprometido","Indica el modulo que pertenece el comprometido ","21","cont_estado","ide_coest","detalle_coest"));
         lis_parametros.add(new Parametro("16", "p_sub_actividad","Indica el nombre sub actividad para ","5","pre_nivel_funcion_programa","ide_prnfp","detalle_prnfp"));
+
+        /*
+         *  Contabilidad = 17
+         * */
+        lis_parametros.add(new Parametro("17", "p_tipo_asiento_inicial", "Indica  el codigo del tipo de asiento inicial", "4","cont_tipo_asiento","ide_cotia","detalle_cotia"));
+        
 
         /*
          * TESORERIA=18
