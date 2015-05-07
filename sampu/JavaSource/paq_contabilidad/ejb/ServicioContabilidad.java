@@ -50,6 +50,11 @@ public String getAnio (String activo, String bloqueado ){
 	return tab_anio;
 
 	}
+public String getMes (String estado ){
+	String tab_anio= "select ide_gemes,detalle_gemes from gen_mes where activo_gemes in ("+estado+") order by ide_gemes";
+	return tab_anio;
+
+	}
 public TablaGenerica getTablaAnio (String activo, String bloqueado ){
 	TablaGenerica tab_anio= utilitario.consultar("select ide_geani,detalle_geani from gen_anio " +
 			" where activo_geani in ("+activo+") " +
@@ -214,6 +219,17 @@ public String servicioCatalogoCuentaAnio (String estado, String ide_geani){
 			" and activo_cocac in ("+estado+")order by cue_codigo_cocac";
 	return catalogo_cuenta_anio;
 }
+
+/**
+ * Metodo que devuelve la Cuenta Cantable para cargar en los combos
+ * @return String SQL Cuenta Contable 
+ */
+public String servicioCatalogoCuentaCombo (){
+	
+	String catalogo_cuenta_anio="select a.ide_cocac,cue_codigo_cocac,cue_descripcion_cocac " +
+			" from cont_catalogo_cuenta a order by cue_codigo_cocac";
+	return catalogo_cuenta_anio;
+}
 public String getInventario(String ide_geani,String carga,String material){
 	
 	String tab_inventario="SELECT ide_boinv,codigo_bomat,detalle_bomat, detalle_geani,ingreso_material_boinv,egreso_material_boinv,existencia_inicial_boinv,costo_anterior_boinv," +
@@ -270,5 +286,142 @@ public String guardaSecuencial(String secuencial_vigente,String modulo){
 	System.out.println("update gen_modulo_secuencial set numero_secuencial_gemos="+nuevo_valor+" where ide_gemod="+modulo);
 	return mensaje;
 }
+/**
+ * Metodo que permite generar el balance inicial
+ * @param ide_geani recibe el año fiscal para la generaciòn del balance inicial
+ */
+public void generarBalanceInicial(String ide_geani,String ide_movimiento){
+	TablaGenerica anio = utilitario.consultar("select * from gen_anio where ide_geani ="+ide_geani);
+	utilitario.getConexion().ejecutarSql("delete from cont_balance_inicial where ide_geani="+ide_geani);
+	utilitario.getConexion().ejecutarSql("insert into cont_balance_inicial (ide_cobai,ide_cocac,ide_geani,valor_debe_cobai,valor_haber_cobai,valor_descripcion_cobai,activo_cobai)"
++" select row_number() over(order by a.ide_cocac) + (select (case when max(ide_cobai) is null then 0 else max(ide_cobai) end) as codigo from cont_balance_inicial) as codigo, a.ide_cocac,"
++" ide_geani,0 as debe,0 as haber,'BALANCE INICIAL '||"+anio.getValor("detalle_geani")+" as detalle,false from cont_catalogo_cuenta a, cont_vigente b where a.ide_cocac= b.ide_cocac and ide_geani ="+ide_geani+" group by a.ide_cocac,ide_geani");
+	
+	TablaGenerica actualiza_cuenta=utilitario.consultar(sumaDebeHaberCuentaContable(ide_movimiento));
+	for (int i=0;i<actualiza_cuenta.getTotalFilas();i++){
+	utilitario.getConexion().ejecutarSql(updateBalanceInicial(actualiza_cuenta.getValor(i,"debe"),actualiza_cuenta.getValor(i,"haber"),actualiza_cuenta.getValor(i,"ide_cocac"),ide_geani));
+	}
+	
+	TablaGenerica nivel_maximo = utilitario.consultar(nivelMaximoCuentaContable());
+	Integer contador = Integer.parseInt(nivel_maximo.getValor("nivel"));
+	while (contador>1){
+		TablaGenerica suma_balance=utilitario.consultar("select con_ide_cocac,sum(valor_debe_cobai) as debe,sum(valor_haber_cobai) as haber from ("
+				+" select  a.ide_cocac,ide_geani,valor_debe_cobai,valor_haber_cobai,con_ide_cocac" 
+				+" from cont_balance_inicial a, cont_catalogo_cuenta b where a.ide_cocac= b.ide_cocac and  ide_geani="+ide_geani+" and nivel_cocac="+contador
+				+" ) a group by con_ide_cocac");
+		for(int i=0;i<suma_balance.getTotalFilas();i++){
+			utilitario.getConexion().ejecutarSql(updateBalanceInicial(suma_balance.getValor(i,"debe"), suma_balance.getValor(i,"debe"), suma_balance.getValor(i, "con_ide_cocac"), ide_geani));
+		}
+	   -- contador ; 
+	}
+	
+}
+
+/**
+ * Metodo que devuelve el sql para actualizar el balance inicial
+ * @param valor_debe recibe el valor al debe que va a ser actualizado
+ * @param valor_haber recibe el valor al haber que va a ser actualizado
+ * @param ide_cocac recibe ide de la cuenta contable a ser actualizado
+ * @param ide_geani recibe el año fiscal
+ * @return String sql para actualizar balance inicial
+ */
+public String updateBalanceInicial(String valor_debe,String valor_haber,String ide_cocac,String ide_geani){
+	    String sql="update cont_balance_inicial"
+				+" set valor_debe_cobai ="+valor_debe+","
+				+" valor_haber_cobai ="+valor_haber+" where ide_cocac ="+ide_cocac+" and ide_geani="+ide_geani; 
+		return sql;
+}
+
+/**
+ * Metodo que devuelve la suma del debe y el haber por cuenta contable y movimientos contables
+ * @param ide_movimiento recibe el codigo del asiento contable
+ * @return String suma debe y haber por cuenta contable
+ */
+public String sumaDebeHaberCuentaContable(String ide_movimiento){
+	    String sql="select ide_cocac,sum (debe_codem) as debe,sum(haber_codem) as haber from ("
++" select ide_cocac,debe_codem,haber_codem from cont_detalle_movimiento where ide_comov in ("+ide_movimiento+")"
++" ) a group by ide_cocac"; 
+		return sql;
+}
+
+/**
+ * Metodo que devuelve el codigo maximo del nivel de cuenta contable
+ * @return String nivel maximo
+ */
+public String nivelMaximoCuentaContable(){
+	    String sql="select 1 as codigo, max(nivel_cocac) as nivel from cont_catalogo_cuenta"; 
+		return sql;
+}
+/**
+ * Metodo que devuelve los periodos contables por año vigente
+ * @param ide_geani recibe el codigo del año fiscal
+ * @return String sql de los movimientos contables
+ */
+public String getMovimientosContables(String ide_geani,String ide_cotia,String ide_cotim){
+	    String sql="select ide_comov,nro_comprobante_comov,mov_fecha_comov,detalle_comov,ide_geani,ide_gemes from cont_movimiento where ide_geani ="+ide_geani+" and ide_cotia in ("+ide_cotia+") and ide_cotim in ("+ide_cotim+") order by nro_comprobante_comov desc,mov_fecha_comov desc"; 
+		return sql;
+}
+/**
+ * Metodo que devuelve los asientos contables con las respectivas sumas al debe y al haber
+ * @return String sql de los movimientos contables
+ */
+public String getMovimientosContablesSumaDebeHaber(String ide_geani,String ide_gemes, String estado,String ide_cotia){
+	    String sql="select a.ide_comov,nro_comprobante_comov,mov_fecha_comov,detalle_comov,"
++" (case when debe is  null then 0 else debe end) as debe,(case when haber is null then 0 else haber end) as haber,"
++" (case when debe is  null then 0 else debe end) - (case when haber is null then 0 else haber end) as diferencia,"
++" (case when b.ide_comov is null then 0 else 1 end ) as detalle_asiento"
++" from cont_movimiento a"
++" left join ( select sum(debe_codem) as debe, sum(haber_codem) as haber,ide_comov" 
++" from cont_detalle_movimiento group by ide_comov  ) b on  a.ide_comov = b.ide_comov"
++" where  ide_geani = "+ide_geani+" and ide_gemes in ("+ide_gemes+") and activo_comov in ("+estado+") and not ide_cotia= "+ide_cotia
++" order by nro_comprobante_comov desc,mov_fecha_comov desc"; 
+	    System.out.println("cargfando para mayorizar "+sql);
+		return sql;
+}
+
+/**
+ * Metodo que permite generar el balance de comprobaciòn
+ * @param ide_geani recibe el año fiscal para la generaciòn del balance inicial
+ * @param ide_geani recibe el año fiscal para la generaciòn del balance inicial
+ */
+/*
+public void generarBalanceComprobacion(String ide_geani,String ide_gemes,String ide_cotia){
+	TablaGenerica anio = utilitario.consultar("select * from gen_anio where ide_geani ="+ide_geani);
+	utilitario.getConexion().ejecutarSql("delete from cont_balance_comprobacion where ide_geani="+ide_geani);
+	utilitario.getConexion().ejecutarSql("insert into cont_balance_comprobacion (ide_cobac,ide_cocac,ide_geani,debe1_cobac,haber1_cobac,debe2_cobac,haber2_cobac,debe3_cobac,haber3_cobac"
++" ,debe4_cobac,haber4_cobac,debe5_cobac,haber5_cobac,debe6_cobac,haber6_cobac,debe7_cobac,haber7_cobac,debe8_cobac,haber8_cobac,debe9_cobac,haber9_cobac"
++" ,debe10_cobac,haber10_cobac,debe11_cobac,haber11_cobac,debe12_cobac,haber12_cobac)"
++" select row_number() over(order by a.ide_cocac) + (select (case when max(ide_cobac) is null then 0 else max(ide_cobac) end) as codigo from cont_balance_comprobacion) as codigo,"
++" a.ide_cocac,a.ide_geani,0 as debe1, 0 as haber1,0 as debe2, 0 as haber2,0 as debe3, 0 as haber3,0 as debe4, 0 as haber4,0 as debe5, 0 as haber5"
++" ,0 as debe6, 0 as haber6,0 as debe7, 0 as haber7,0 as debe8, 0 as haber8,0 as debe9, 0 as haber9,0 as debe10, 0 as haber10"
++" ,0 as debe11, 0 as haber11,0 as debe12, 0 as haber12"
++" from ( select a.ide_cocac,ide_geani "
++" from cont_catalogo_cuenta a, cont_vigente b where a.ide_cocac= b.ide_cocac" 
++" and ide_geani ="+ide_geani+" group by a.ide_cocac,ide_geani ) a"
++" left join cont_balance_comprobacion b on a.ide_cocac = b.ide_cocac and a.ide_geani = b.ide_geani"
++" where b.ide_cocac is null");
+	
+	TablaGenerica consulta_movimiento =utilitario.consultar("");
+	TablaGenerica actualiza_cuenta=utilitario.consultar(sumaDebeHaberCuentaContable(ide_movimiento));
+	for (int i=0;i<actualiza_cuenta.getTotalFilas();i++){
+	utilitario.getConexion().ejecutarSql(updateBalanceInicial(actualiza_cuenta.getValor(i,"debe"),actualiza_cuenta.getValor(i,"haber"),actualiza_cuenta.getValor(i,"ide_cocac"),ide_geani));
+	}
+	
+	TablaGenerica nivel_maximo = utilitario.consultar(nivelMaximoCuentaContable());
+	Integer contador = Integer.parseInt(nivel_maximo.getValor("nivel"));
+	while (contador>1){
+		TablaGenerica suma_balance=utilitario.consultar("select con_ide_cocac,sum(valor_debe_cobai) as debe,sum(valor_haber_cobai) as haber from ("
+				+" select  a.ide_cocac,ide_geani,valor_debe_cobai,valor_haber_cobai,con_ide_cocac" 
+				+" from cont_balance_inicial a, cont_catalogo_cuenta b where a.ide_cocac= b.ide_cocac and  ide_geani="+ide_geani+" and nivel_cocac="+contador
+				+" ) a group by con_ide_cocac");
+		for(int i=0;i<suma_balance.getTotalFilas();i++){
+			utilitario.getConexion().ejecutarSql(updateBalanceInicial(suma_balance.getValor(i,"debe"), suma_balance.getValor(i,"debe"), suma_balance.getValor(i, "con_ide_cocac"), ide_geani));
+		}
+	   -- contador ; 
+	}
+	
+}
+
+*/
 }
 
