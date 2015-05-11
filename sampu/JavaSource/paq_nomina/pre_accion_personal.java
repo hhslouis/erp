@@ -1277,7 +1277,7 @@ public void cambiarPartida(){
 				List lis_finiquito=new ArrayList();		
 				lis_finiquito=utilitario.getConexion().consultar("SELECT finiquito_contrato_geaed FROM gen_accion_empleado_depa where ide_geaed in (select ide_geaed from  gen_accion_motivo_empleado where ide_geame="+tab_deta_empleado_depar.getValor("IDE_GEAME")+")");
 				if(lis_finiquito.get(0)!=null && !lis_finiquito.get(0).toString().isEmpty()){
-					if(lis_finiquito.get(0).toString().equals("1")){				
+					if(lis_finiquito.get(0).toString().equals("true")){				
 						cal_terminacion.setValue(null);
 						are_tex_observacion.setValue(null);
 						dia_terminacion.getBot_aceptar().setMetodo("cargarFechaTerminacion");
