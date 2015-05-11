@@ -20,6 +20,7 @@ public class pre_partida_presupuestaria extends Pantalla {
         tab_tabla.setTabla("GEN_PARTIDA_PRESUPUESTARIA", "IDE_GEPAP", 1);
         tab_tabla.getColumna("ACTIVO_GEPAP").setCheck();
         tab_tabla.getColumna("ACTIVO_GEPAP").setValorDefecto("TRUE");
+        tab_tabla.getColumna("ide_prasp").setVisible(false);
         tab_tabla.dibujar();
         PanelTabla pat_panel = new PanelTabla();
         pat_panel.setPanelTabla(tab_tabla);
