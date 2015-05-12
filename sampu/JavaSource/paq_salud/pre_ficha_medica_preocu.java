@@ -97,6 +97,7 @@ public class pre_ficha_medica_preocu extends Pantalla {
 		tab_ficha_medica.getColumna("IDE_USUA").setCombo("SIS_USUARIO", "IDE_USUA", "NOM_USUA", "");
 		tab_ficha_medica.getColumna("ide_saapp").setCombo("sao_actitud_preocupacional", "ide_saapp", "detalle_saapp", "");
 		tab_ficha_medica.getColumna("ide_coest").setCombo(ser_contabilidad.getModuloEstados("true", "13"));
+		tab_ficha_medica.getColumna("ide_coest").setVisible(false);
 		tab_ficha_medica.getColumna("IDE_USUA").setAutoCompletar();
 		tab_ficha_medica.getColumna("IDE_USUA").setLectura(true);
 		tab_ficha_medica.getColumna("IDE_USUA").setValorDefecto(utilitario.getVariable("ide_usua"));
@@ -135,7 +136,7 @@ public class pre_ficha_medica_preocu extends Pantalla {
 		tab_ficha_medica.getColumna("FRE_RESPIRATORIA_SAFIM").setRequerida(true);
 		tab_ficha_medica.getColumna("SUBSECUENTE_SAFIM ").setRequerida(true);
 		tab_ficha_medica.getColumna("TALLA_SAFIM").setRequerida(true);
-		tab_ficha_medica.getColumna("PULSO_SAFIM").setRequerida(true);
+		tab_ficha_medica.getColumna("PULSO_SAFIM").setVisible(false);
 		tab_ficha_medica.getColumna("FRE_CARDIACA_SAFIM").setRequerida(true);		
 		tab_ficha_medica.getColumna("IDE_SAESP").setRequerida(true);
 		tab_ficha_medica.getColumna("IMC_SAFIM").setRequerida(true);
@@ -174,6 +175,7 @@ public class pre_ficha_medica_preocu extends Pantalla {
 		tab_receta_medica.getColumna("ACTIVO_SAREM").setValorDefecto("true");
 		tab_receta_medica.getColumna("IDE_SAMED").setCombo("SAO_MEDICACION", "IDE_SAMED", "DETALLE_SAMED", "");
 		tab_receta_medica.getColumna("IDE_SAMED").setAutoCompletar();
+		tab_receta_medica.getColumna("IDE_SAMED").setVisible(false);
 
 		tab_receta_medica.getColumna("IDE_SAMED").setRequerida(true);
 		tab_receta_medica.getColumna("CANTIDAD_SAREM").setRequerida(true);
@@ -193,7 +195,7 @@ public class pre_ficha_medica_preocu extends Pantalla {
 		tab_ficha_diagnostico.getColumna("ACTIVO_SAFID").setValorDefecto("true");
 		tab_ficha_diagnostico.getColumna("IDE_SARED").setCombo("SAO_REGISTRO_DIAGNOSTICO", "IDE_SARED", "DETALLE_SARED", "");
 		tab_ficha_diagnostico.getColumna("IDE_SARED").setAutoCompletar();
-		tab_ficha_diagnostico.getColumna("IDE_SARED").setRequerida(true);
+		tab_ficha_diagnostico.getColumna("IDE_SARED").setVisible(false);
 		tab_ficha_diagnostico.dibujar();
 
 		PanelTabla pat_panel3=new PanelTabla();
@@ -208,7 +210,7 @@ public class pre_ficha_medica_preocu extends Pantalla {
 		tab_ficha_examenes.getColumna("ACTIVO_SAFIE").setValorDefecto("true");
 		tab_ficha_examenes.getColumna("IDE_SAEXA").setCombo("SAO_EXAMENES", "IDE_SAEXA", "DETALLE_SAEXA", "");
 		tab_ficha_examenes.getColumna("IDE_SAEXA").setAutoCompletar();
-		tab_ficha_examenes.getColumna("IDE_SAEXA").setRequerida(true);
+		tab_ficha_examenes.getColumna("IDE_SAEXA").setVisible(false);
 		tab_ficha_examenes.dibujar();
 
 		PanelTabla pat_panel4=new PanelTabla();
@@ -223,7 +225,7 @@ public class pre_ficha_medica_preocu extends Pantalla {
 		tab_ficha_motivo_consulta.getColumna("ACTIVO_SAFMC").setValorDefecto("true");
 		tab_ficha_motivo_consulta.getColumna("IDE_SAMOC").setCombo("SAO_MOTIVO_CONSULTA", "IDE_SAMOC", "DETALLE_SAMOC", "");
 		tab_ficha_motivo_consulta.getColumna("IDE_SAMOC").setAutoCompletar();
-		tab_ficha_motivo_consulta.getColumna("IDE_SAMOC").setRequerida(true);
+		tab_ficha_motivo_consulta.getColumna("IDE_SAMOC").setVisible(false);
 		tab_ficha_motivo_consulta.dibujar();
 
 		PanelTabla pat_panel5=new PanelTabla();
