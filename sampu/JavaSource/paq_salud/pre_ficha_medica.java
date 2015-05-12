@@ -150,7 +150,7 @@ public class pre_ficha_medica extends Pantalla {
 		tab_ficha_medica.getColumna("ANIO_EDAD_SAFIM").setLectura(true);
 		tab_ficha_medica.getColumna("ANIO_EDAD_SAFIM").setEtiqueta();
 		tab_ficha_medica.getColumna("TALLA_SAFIM").setRequerida(true);
-		tab_ficha_medica.getColumna("PULSO_SAFIM").setRequerida(true);
+		tab_ficha_medica.getColumna("PULSO_SAFIM").setVisible(false);
 		tab_ficha_medica.getColumna("FRE_CARDIACA_SAFIM").setRequerida(true);		
 		tab_ficha_medica.getColumna("IDE_SAESP").setRequerida(true);
 		tab_ficha_medica.getColumna("MES_EDAD_SAFIM").setLectura(true);
@@ -189,6 +189,7 @@ public class pre_ficha_medica extends Pantalla {
 		tab_receta_medica.getColumna("ACTIVO_SAREM").setValorDefecto("true");
 		tab_receta_medica.getColumna("IDE_SAMED").setCombo("SAO_MEDICACION", "IDE_SAMED", "DETALLE_SAMED", "");
 		tab_receta_medica.getColumna("IDE_SAMED").setAutoCompletar();
+		tab_receta_medica.getColumna("IDE_SAMED").setVisible(false);
 
 		tab_receta_medica.getColumna("IDE_SAMED").setRequerida(true);
 		tab_receta_medica.getColumna("CANTIDAD_SAREM").setRequerida(true);
@@ -209,6 +210,7 @@ public class pre_ficha_medica extends Pantalla {
 		tab_ficha_diagnostico.getColumna("IDE_SARED").setCombo("SAO_REGISTRO_DIAGNOSTICO", "IDE_SARED", "DETALLE_SARED", "");
 		tab_ficha_diagnostico.getColumna("IDE_SARED").setAutoCompletar();
 		tab_ficha_diagnostico.getColumna("IDE_SARED").setRequerida(true);
+		tab_ficha_diagnostico.getColumna("IDE_SARED").setVisible(false);
 		tab_ficha_diagnostico.dibujar();
 
 		PanelTabla pat_panel3=new PanelTabla();
@@ -224,6 +226,7 @@ public class pre_ficha_medica extends Pantalla {
 		tab_ficha_examenes.getColumna("IDE_SAEXA").setCombo("SAO_EXAMENES", "IDE_SAEXA", "DETALLE_SAEXA", "");
 		tab_ficha_examenes.getColumna("IDE_SAEXA").setAutoCompletar();
 		tab_ficha_examenes.getColumna("IDE_SAEXA").setRequerida(true);
+		tab_ficha_examenes.getColumna("IDE_SAEXA").setVisible(false);
 		tab_ficha_examenes.dibujar();
 
 		PanelTabla pat_panel4=new PanelTabla();
@@ -239,6 +242,7 @@ public class pre_ficha_medica extends Pantalla {
 		tab_ficha_motivo_consulta.getColumna("IDE_SAMOC").setCombo("SAO_MOTIVO_CONSULTA", "IDE_SAMOC", "DETALLE_SAMOC", "");
 		tab_ficha_motivo_consulta.getColumna("IDE_SAMOC").setAutoCompletar();
 		tab_ficha_motivo_consulta.getColumna("IDE_SAMOC").setRequerida(true);
+		tab_ficha_motivo_consulta.getColumna("IDE_SAMOC").setVisible(false);
 		tab_ficha_motivo_consulta.dibujar();
 
 		PanelTabla pat_panel5=new PanelTabla();
@@ -406,7 +410,6 @@ public class pre_ficha_medica extends Pantalla {
 		if (aut_empleado.getValor()!=null){
 			if(validarFichaMedica()){
 				if (tab_ficha_medica.guardar()){	
-					if(validarRecetaMedica()){
 						if(tab_receta_medica.guardar()){					
 							if(validarDiagnostico()){
 								if (tab_ficha_diagnostico.guardar()){
@@ -427,7 +430,6 @@ public class pre_ficha_medica extends Pantalla {
 									}
 								}
 							}
-						}
 					}
 				}
 			}
@@ -684,10 +686,6 @@ public class pre_ficha_medica extends Pantalla {
 				utilitario.agregarMensajeInfo("No se puede guardar", "Debe ingresar la Talla ");
 				return false;
 			}
-			if(tab_ficha_medica.getValor("PULSO_SAFIM")==null || tab_ficha_medica.getValor("PULSO_SAFIM").isEmpty()){
-				utilitario.agregarMensajeInfo("No se puede guardar", "Debe ingresar el Pulso ");
-				return false;
-			}
 			if(tab_ficha_medica.getValor("FRE_CARDIACA_SAFIM")==null || tab_ficha_medica.getValor("FRE_CARDIACA_SAFIM").isEmpty()){
 				utilitario.agregarMensajeInfo("No se puede guardar", "Debe ingresar la Frecuencia Cardiaca ");
 				return false;
@@ -725,23 +723,6 @@ public class pre_ficha_medica extends Pantalla {
 		return true;
 	}
 
-	public boolean validarRecetaMedica(){
-		if(tab_receta_medica.isFilaInsertada()){
-			if(tab_receta_medica.getValor("IDE_SAMED")==null || tab_receta_medica.getValor("IDE_SAMED").isEmpty()){
-				utilitario.agregarMensajeInfo("No se puede guardar", "Debe ingresar La Medicación ");
-				return false;
-			}
-			if(tab_receta_medica.getValor("CANTIDAD_SAREM")==null || tab_receta_medica.getValor("CANTIDAD_SAREM").isEmpty()){
-				utilitario.agregarMensajeInfo("No se puede guardar", "Debe ingresar la Cantidad ");
-				return false;
-			}
-			if(tab_receta_medica.getValor("INDICACION_SAREM")==null || tab_receta_medica.getValor("INDICACION_SAREM").isEmpty()){
-				utilitario.agregarMensajeInfo("No se puede guardar", "Debe ingresar la Indicación ");
-				return false;
-			}
-		}
-		return true;
-	}
 	public boolean validarDiagnostico(){
 		if(tab_ficha_diagnostico.isFilaInsertada()){
 			if(tab_ficha_diagnostico.isFilaInsertada()){
