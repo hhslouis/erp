@@ -200,7 +200,25 @@ public TablaGenerica getTablaCatalogoCuentaAnio (String estado,String ide_geani)
 			"  from cont_catalogo_cuenta a,cont_vigente b,gen_anio c "+
 			" where a.ide_cocac = b.ide_cocac" +
 			" and b.ide_geani= c.ide_geani and b.ide_geani =("+ide_geani+")" +
-			" and activo_coca in ("+estado+")order by cue_codigo_cocac");
+			" and activo_cocac in ("+estado+")order by cue_codigo_cocac");
+	return tab_catalogo_cuenta_anio;
+	
+	
+}
+/**
+ * Metodo que devuelve la Cuenta Cantable por los años vigentes
+ * @param estado recibe el o los estados true y false, ejemplo: true o false
+ * @param ide_geani recibe el año de las cuentas contables 
+ * @return String Cuenta Contable 
+ */
+public String getCatalogoCuentaAnio (String estado,String ide_geani){
+	
+	String tab_catalogo_cuenta_anio="select a.ide_cocac,cue_codigo_cocac,cue_descripcion_cocac," +
+			"detalle_geani" +
+			"  from cont_catalogo_cuenta a,cont_vigente b,gen_anio c "+
+			" where a.ide_cocac = b.ide_cocac" +
+			" and b.ide_geani= c.ide_geani and b.ide_geani =("+ide_geani+")" +
+			" and activo_cocac in ("+estado+")order by cue_codigo_cocac";
 	return tab_catalogo_cuenta_anio;
 	
 	
@@ -385,6 +403,7 @@ public String getMovimientosContablesSumaDebeHaber(String ide_geani,String ide_g
  * @param ide_geani recibe el año fiscal para la generaciòn del balance inicial
  */
 /*
+ * 
 public void generarBalanceComprobacion(String ide_geani,String ide_gemes,String ide_cotia){
 	TablaGenerica anio = utilitario.consultar("select * from gen_anio where ide_geani ="+ide_geani);
 	utilitario.getConexion().ejecutarSql("delete from cont_balance_comprobacion where ide_geani="+ide_geani);
