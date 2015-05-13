@@ -191,7 +191,6 @@ public class pre_ficha_medica extends Pantalla {
 		tab_receta_medica.getColumna("IDE_SAMED").setAutoCompletar();
 		tab_receta_medica.getColumna("IDE_SAMED").setVisible(false);
 
-		tab_receta_medica.getColumna("IDE_SAMED").setRequerida(true);
 		tab_receta_medica.getColumna("CANTIDAD_SAREM").setRequerida(true);
 		tab_receta_medica.getColumna("INDICACION_SAREM").setRequerida(true);
 
@@ -209,7 +208,6 @@ public class pre_ficha_medica extends Pantalla {
 		tab_ficha_diagnostico.getColumna("ACTIVO_SAFID").setValorDefecto("true");
 		tab_ficha_diagnostico.getColumna("IDE_SARED").setCombo("SAO_REGISTRO_DIAGNOSTICO", "IDE_SARED", "DETALLE_SARED", "");
 		tab_ficha_diagnostico.getColumna("IDE_SARED").setAutoCompletar();
-		tab_ficha_diagnostico.getColumna("IDE_SARED").setRequerida(true);
 		tab_ficha_diagnostico.getColumna("IDE_SARED").setVisible(false);
 		tab_ficha_diagnostico.dibujar();
 
@@ -225,7 +223,6 @@ public class pre_ficha_medica extends Pantalla {
 		tab_ficha_examenes.getColumna("ACTIVO_SAFIE").setValorDefecto("true");
 		tab_ficha_examenes.getColumna("IDE_SAEXA").setCombo("SAO_EXAMENES", "IDE_SAEXA", "DETALLE_SAEXA", "");
 		tab_ficha_examenes.getColumna("IDE_SAEXA").setAutoCompletar();
-		tab_ficha_examenes.getColumna("IDE_SAEXA").setRequerida(true);
 		tab_ficha_examenes.getColumna("IDE_SAEXA").setVisible(false);
 		tab_ficha_examenes.dibujar();
 
@@ -241,7 +238,6 @@ public class pre_ficha_medica extends Pantalla {
 		tab_ficha_motivo_consulta.getColumna("ACTIVO_SAFMC").setValorDefecto("true");
 		tab_ficha_motivo_consulta.getColumna("IDE_SAMOC").setCombo("SAO_MOTIVO_CONSULTA", "IDE_SAMOC", "DETALLE_SAMOC", "");
 		tab_ficha_motivo_consulta.getColumna("IDE_SAMOC").setAutoCompletar();
-		tab_ficha_motivo_consulta.getColumna("IDE_SAMOC").setRequerida(true);
 		tab_ficha_motivo_consulta.getColumna("IDE_SAMOC").setVisible(false);
 		tab_ficha_motivo_consulta.dibujar();
 
@@ -256,7 +252,6 @@ public class pre_ficha_medica extends Pantalla {
 		tab_ficha_anamnesis.getColumna("ACTIVO_SAFIA").setCheck();
 		tab_ficha_anamnesis.getColumna("ACTIVO_SAFIA").setValorDefecto("true");
 		tab_ficha_anamnesis.getColumna("IDE_SAANA").setCombo("SAO_ANAMNESIS", "IDE_SAANA", "DETALLE_SAANA", "");
-		tab_ficha_anamnesis.getColumna("IDE_SAANA").setRequerida(true);
 		tab_ficha_anamnesis.getColumna("DETALLE_SAFIA").setRequerida(true);
 		tab_ficha_anamnesis.dibujar();
 
@@ -408,28 +403,20 @@ public class pre_ficha_medica extends Pantalla {
 	@Override
 	public void guardar() {		
 		if (aut_empleado.getValor()!=null){
-			if(validarFichaMedica()){
 				if (tab_ficha_medica.guardar()){	
 						if(tab_receta_medica.guardar()){					
-							if(validarDiagnostico()){
 								if (tab_ficha_diagnostico.guardar()){
-									if(validarExamenes()){
 										if(tab_ficha_examenes.guardar()){
-											if(validarMotivoConsulta()){
 												if (tab_ficha_motivo_consulta.guardar()) {
-													if(validarAnamnesis()){
 														if (tab_ficha_anamnesis.guardar()) {
 															if(tab_codigo_sie.guardar()){
 															guardarPantalla();
 															}
 														}	
 													}
-												}
-											}
-										}
-									}
-								}
-							}
+												}				
+								
+							
 					}
 				}
 			}
