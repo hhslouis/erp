@@ -249,7 +249,7 @@ public void seleccionarNinguna() {
 		tab_traspaso.setSql("select detalle_afact,b.ide_afcus,serie_afact,modelo_afact,marca_afact,cod_barra_afcus,numero_acta_afcus," +
 				 "fecha_entrega_afcus,apellido_paterno_gtemp,apellido_materno_gtemp,primer_nombre_gtemp,segundo_nombre_gtemp " +
 				 "from afi_activo a,afi_custodio b, gen_empleados_departamento_par c, gth_empleado d where a.ide_afact=b.ide_afact " + 
-				 " and b.ide_geedp=c.ide_geedp and c.ide_geedp="+aut_empleado.getValor()+" and c.ide_gtemp=d.ide_gtemp and activo_afcus=true order by fecha_entrega_afcus desc");
+				 " and b.ide_geedp=c.ide_geedp and c.ide_gtemp="+aut_empleado.getValor()+" and c.ide_gtemp=d.ide_gtemp and activo_afcus=true order by fecha_entrega_afcus desc");
         tab_traspaso.imprimirSql();
 		tab_traspaso.ejecutarSql();
 		utilitario.addUpdate("tab_traspaso");
