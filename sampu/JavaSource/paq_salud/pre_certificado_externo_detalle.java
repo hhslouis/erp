@@ -69,8 +69,7 @@ public class pre_certificado_externo_detalle extends Pantalla {
 		tab_tabla2.getColumna("ACTIVO_SADCE").setValorDefecto("true");
 		tab_tabla2.getColumna("IDE_SACET").setCombo("SAO_CERTIFCADO_TIPO", "IDE_SACET", "DETALLE_SACET", "");
 		tab_tabla2.getColumna("IDE_SACET").setAutoCompletar();
-		tab_tabla2.getColumna("ARCHIVO_SADCE").setUpload("nueva_carpeta");
-		tab_tabla2.getColumna("ARCHIVO_SADCE").setImagen("", "");
+		tab_tabla2.getColumna("ARCHIVO_SADCE").setUpload("salud");
 		tab_tabla2.dibujar();
 		PanelTabla pat_panel2 = new PanelTabla();
 		pat_panel2.setPanelTabla(tab_tabla2);
@@ -146,6 +145,8 @@ public class pre_certificado_externo_detalle extends Pantalla {
 		ide_geedp_activo=ser_gestion.getIdeContratoActivo(aut_empleado.getValor());
 		tab_tabla1.setCondicion("IDE_GEEDP="+aut_empleado.getValor());
 		tab_tabla1.ejecutarSql();
+		tab_tabla2.ejecutarValorForanea(tab_tabla1.getValorSeleccionado());
+
 	}
 
 	public void limpiar() {
