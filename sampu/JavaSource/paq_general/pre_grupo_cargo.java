@@ -98,7 +98,6 @@ public class pre_grupo_cargo extends Pantalla {
 		tab_tabla1.getColumna("ACTIVO_GEGRO").setValorDefecto("true");
 		tab_tabla1.getColumna("DETALLE_GEGRO").setRequerida(true);
 		tab_tabla1.getColumna("SIGLAS_GEGRO").setRequerida(true);
-		tab_tabla1.onSelect("seleccionarTabla1");
 		tab_tabla1.agregarRelacion(tab_grupo_minimo_seleccion);
 		tab_tabla1.agregarRelacion(tab_grupo_factor);
 		tab_tabla1.agregarRelacion(tab_factor_ponederacion);
