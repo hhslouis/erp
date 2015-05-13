@@ -1,7 +1,8 @@
-package paq_contabilidad;
+ package paq_contabilidad;
 
 import javax.ejb.EJB;
 
+import framework.aplicacion.TablaGenerica;
 import framework.componentes.Arbol;
 import framework.componentes.Boton;
 import framework.componentes.Combo;
@@ -24,7 +25,7 @@ public class pre_flujo_efectivo extends Pantalla{
 	
 	public pre_flujo_efectivo (){
 		com_anio.setCombo(ser_contabilidad.getAnioDetalle("true,false","true,false"));		
-		com_anio.setMetodo("seleccionaElAnio");
+		//com_anio.setMetodo("seleccionaElAnio");
 		bar_botones.agregarComponente(new Etiqueta("Seleccione El Año:"));
 		bar_botones.agregarComponente(com_anio);
 		
@@ -73,45 +74,38 @@ public class pre_flujo_efectivo extends Pantalla{
 		agregarComponente(sel_catalogo);
 		
 	}
-	public void aceptarCatalogo(){
-		String str_seleccionados=sel_catalogo.getValorSeleccionado();
-		if(str_seleccionados!=null){
-			//Inserto los empleados seleccionados en la tabla de resposable d econtratacion 
-			//TablaGenerica tab_empleado_responsable = ser_empleado.servicioEmpleadosActivos());		
-			tab_flujo_efectivo.setValor("ide_cofle",str_seleccionados);			
-			
-			sel_catalogo.cerrar();		
-			tab_flujo_efectivo.modificar(tab_flujo_efectivo.getFilaActual());
-			utilitario.addUpdate("tab_flujo_efectivo");
-			tab_flujo_efectivo.guardar();
-			guardarPantalla();
-		}
-		else{
-			utilitario.agregarMensajeInfo("Debe seleccionar almenos un registro", "");
-		}
-	}
-	
 public void agregarCuentaContable(){
-	if(com_anio.getValue()!=null){
+	if(com_anio.getValue()==null){
+       	utilitario.agregarMensajeInfo("No Existe Año", "Debe seleccionar un año");
+        return;
+    	
+    }
 		sel_catalogo.getTab_seleccion().setSql(ser_contabilidad.getCatalogoCuentaAnio("true", com_anio.getValue().toString()));
+		sel_catalogo.setRadio();
 		sel_catalogo.getTab_seleccion().ejecutarSql();
-		sel_catalogo.dibujar();
+		sel_catalogo.dibujar();	
+		
+	}
+public void aceptarCatalogo(){
+	
+	String str_seleccionados=sel_catalogo.getValorSeleccionado();
+	TablaGenerica catalogo_cuentas = utilitario.consultar(ser_contabilidad.getCuentaContableCodigo("true,false", str_seleccionados));
+	if(str_seleccionados!=null){
+		//Inserto los empleados seleccionados en la tabla de resposable d econtratacion 
+		//TablaGenerica tab_empleado_responsable = ser_empleado.servicioEmpleadosActivos());		
+		tab_flujo_efectivo.setValor("ide_cocac",str_seleccionados);			
+		tab_flujo_efectivo.setValor("descripcion_cuenta_cofle",catalogo_cuentas.getValor("cue_descripcion_cocac"));			
+		tab_flujo_efectivo.setValor("codigo_cuenta_cofle",catalogo_cuentas.getValor("cue_codigo_cocac"));			
+		sel_catalogo.cerrar();		
+		tab_flujo_efectivo.modificar(tab_flujo_efectivo.getFilaActual());
+		utilitario.addUpdate("tab_flujo_efectivo");
+		tab_flujo_efectivo.guardar();
+		guardarPantalla();
+			
 	}
 	else{
-		utilitario.agregarMensajeInfo("Selecione un año", "");
-
+		utilitario.agregarMensajeInfo("Debe seleccionar al menos un registro", "");
 	}
-		
-	}
-public void seleccionaElAnio (){
-	if(com_anio.getValue()==null){
-		utilitario.agregarMensajeInfo("Selecione un Año", "");
-		return;			
-
-	}
-			
-		
-	
 }
 	@Override
 	public void insertar() {
