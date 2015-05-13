@@ -82,6 +82,8 @@ public class pre_ficha_medica extends Pantalla {
 		agregarComponente(rep_reporte);
 
 		sef_reporte.setId("sef_reporte");
+		
+
 		agregarComponente(sef_reporte);
 
 		// autocompletar empleado
@@ -563,6 +565,8 @@ public class pre_ficha_medica extends Pantalla {
 						p_parametros.put("titulo", "DETALLE FICHA MEDICA POR EMPLEADO");
 						sef_reporte.setSeleccionFormatoReporte(p_parametros, rep_reporte.getPath());				
 						sef_reporte.dibujar();
+						sef_reporte.getGri_cuerpo().getChildren().get(0).getChildren().remove(4);
+						sef_reporte.getGri_cuerpo().getChildren().get(0).getChildren().remove(3);
 						
 					}
 				}else{
