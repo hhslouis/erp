@@ -5341,6 +5341,29 @@ System.out.println("sql getSqlEmpleadosRol..."+sql);
 		return tab_empleadoContrato;
 	}	
 	
+	public String ideEmpleadoSubrogacion(String sql_adicional){
+		String tab_empleadoContrato="select b.ide_geedp,documento_identidad_gtemp,"
++" apellido_paterno_gtemp||' '||(case when apellido_materno_gtemp is null then '' else apellido_materno_gtemp end)||' '||primer_nombre_gtemp"
++" ||' '||(case when segundo_nombre_gtemp is null then '' else segundo_nombre_gtemp end) as empleado,codigo_partida_gepap,"
++" fecha_ingreso_gtemp, titulo_cargo_gepgc,detalle_geare as proceso,detalle_gedep as sub_proceso,"
++" detalle_gegro as grupo_ocupacional,rmu_geedp,detalle_gttem,detalle_gttco,nom_sucu as lugar_trabajo,codigo_sbs_gtgen as genero,"
++" (case when discapacitado_gtemp = true then 'SI' else 'NO' end) as discapacitado,fecha_nacimiento_gtemp,observacion_geedp"
++" from gth_empleado a,gen_empleados_departamento_par b, gen_partida_presupuestaria c,gen_partida_grupo_cargo d,gen_area e,"
++" gen_departamento f,gen_grupo_ocupacional g,gth_tipo_empleado h,gth_tipo_contrato i,sis_sucursal j,gth_genero k"
++" where a.ide_gtemp = b.ide_gtemp"
++" and activo_geedp = true"
++" and b.ide_gepgc = d.ide_gepgc"
++" and c.ide_gepap = d.ide_gepap"
++" and d.ide_geare = e.ide_geare"
++" and d.ide_gedep = f.ide_gedep"
++" and d.ide_gegro = g.ide_gegro"
++" and d.ide_gttem =h.ide_gttem"
++" and b.ide_gttco = i.ide_gttco"
++" and a.ide_gtgen = k.ide_gtgen "+sql_adicional
++" and d.ide_sucu = j.ide_sucu"
++" order by empleado";
+		return tab_empleadoContrato;
+	}
 	/**Busca un rubro dentro de un tipo de Nomina 
 	 * @param IDE_NRDTN  Tipo de Nomina
 	 * @param IDE_NRRUB   Rubro
