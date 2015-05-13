@@ -536,7 +536,8 @@ public class pre_ficha_medica_preocu extends Pantalla {
 						p_parametros.put("titulo", "DETALLE FICHA MEDICA POR EMPLEADO");
 						sef_reporte.setSeleccionFormatoReporte(p_parametros, rep_reporte.getPath());				
 						sef_reporte.dibujar();
-						
+						sef_reporte.getGri_cuerpo().getChildren().get(0).getChildren().remove(4);
+						sef_reporte.getGri_cuerpo().getChildren().get(0).getChildren().remove(3);						
 					}
 				}else{
 					utilitario.agregarMensajeInfo("No se puede continuar", "No contiene Ficha Medica");
