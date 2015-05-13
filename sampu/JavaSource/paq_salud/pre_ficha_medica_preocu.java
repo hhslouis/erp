@@ -101,6 +101,7 @@ public class pre_ficha_medica_preocu extends Pantalla {
 		tab_ficha_medica.getColumna("IDE_USUA").setAutoCompletar();
 		tab_ficha_medica.getColumna("IDE_USUA").setLectura(true);
 		tab_ficha_medica.getColumna("IDE_USUA").setValorDefecto(utilitario.getVariable("ide_usua"));
+		tab_ficha_medica.getColumna("mes_edad_safim").setVisible(false);
 		tab_ficha_medica.getColumna("TALLA_SAFIM").setMascara("9.99");
 		tab_ficha_medica.getColumna("TALLA_SAFIM").setMetodoChange("calcularMasaCorporal");
 		tab_ficha_medica.getColumna("PESO_SAFIM").setMetodoChange("calcularMasaCorporal");
@@ -157,7 +158,7 @@ public class pre_ficha_medica_preocu extends Pantalla {
 		tab_ficha_medica.agregarRelacion(tab_ficha_motivo_consulta);
 		tab_ficha_medica.agregarRelacion(tab_ficha_anamnesis);	
 		tab_ficha_medica.agregarRelacion(tab_codigo_sie);
-		tab_ficha_medica.setCondicion("IDE_GTEMP=-1");		
+		tab_ficha_medica.setCondicion("tipo_empleado_safim = 1");		
 		tab_ficha_medica.dibujar();
 
 		PanelTabla pat_panel1=new PanelTabla();
