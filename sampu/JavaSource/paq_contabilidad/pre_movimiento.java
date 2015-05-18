@@ -124,6 +124,9 @@ public class pre_movimiento extends Pantalla{
 	@Override
 	public void guardar() {
 		// TODO Auto-generated method stub
+		if(tab_movimiento.getValor("activo_comov").equals("true")){
+			utilitario.agregarMensajeInfo("Registro no Editable", "El asiento se encuentra mayorizado no se puede modificar");
+		}
 		if (tab_movimiento.guardar()){
 			tab_detalle_movimiento.guardar();
 
