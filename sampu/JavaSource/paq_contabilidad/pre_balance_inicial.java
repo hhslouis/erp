@@ -117,7 +117,6 @@ public class pre_balance_inicial extends Pantalla{
 		if(str_seleccionados!=null || !str_seleccionados.isEmpty()){
 			
 			if (!con_guardar.isVisible()){
-				set_asiento_contable.cerrar();
 				// dibuja dialogo de confirmacion de recepcion de activjvos fijos
 				con_guardar.setMessage("ESTA SEGURO DE GENERAR EL BALANCE INICIAL");
 				con_guardar.setTitle("CONFIRMACION DE CALCULO");
@@ -125,6 +124,7 @@ public class pre_balance_inicial extends Pantalla{
 				con_guardar.dibujar();
 				utilitario.addUpdate("con_guardar");
 			}else{
+				set_asiento_contable.cerrar();
 				con_guardar.cerrar();
 				ser_contabilidad.generarBalanceInicial(com_anio.getValue().toString(), str_seleccionados);
 				}
