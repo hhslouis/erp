@@ -350,6 +350,23 @@ public String updateBalanceInicial(String valor_debe,String valor_haber,String i
 		return sql;
 }
 
+
+/**
+ * Metodo que devuelve el sql para actualizar el balance de comprobacion
+ * @param valor_debe recibe el valor al debe que va a ser actualizado
+ * @param valor_haber recibe el valor al haber que va a ser actualizado
+ * @param ide_cocac recibe ide de la cuenta contable a ser actualizado
+ * @param ide_geani recibe el año fiscal
+ * @param ide_gemes recibe el mes
+ * @return String sql para actualizar balance comprobacion
+ */
+public String updateBalanceComprobacion(String valor_debe,String valor_haber,String ide_cocac,String ide_geani,String ide_gemes){
+	    String sql="update cont_balance_comprobacion"
+				+" set debe"+ide_gemes+"_cobac ="+valor_debe+","
+				+" haber"+ide_gemes+"_cobac ="+valor_haber+" where ide_cocac ="+ide_cocac+" and ide_geani="+ide_geani; 
+	System.out.println("actualizo balance "+sql);
+	    return sql;
+}
 /**
  * Metodo que devuelve la suma del debe y el haber por cuenta contable y movimientos contables
  * @param ide_movimiento recibe el codigo del asiento contable
@@ -359,6 +376,7 @@ public String sumaDebeHaberCuentaContable(String ide_movimiento){
 	    String sql="select ide_cocac,sum (debe_codem) as debe,sum(haber_codem) as haber from ("
 +" select ide_cocac,debe_codem,haber_codem from cont_detalle_movimiento where ide_comov in ("+ide_movimiento+")"
 +" ) a group by ide_cocac"; 
+	    System.out.println("imprimo para mayorizar "+sql);
 		return sql;
 }
 
@@ -402,45 +420,106 @@ public String getMovimientosContablesSumaDebeHaber(String ide_geani,String ide_g
  * @param ide_geani recibe el año fiscal para la generaciòn del balance inicial
  * @param ide_geani recibe el año fiscal para la generaciòn del balance inicial
  */
-/*
- * 
+
+ 
 public void generarBalanceComprobacion(String ide_geani,String ide_gemes,String ide_cotia){
 	TablaGenerica anio = utilitario.consultar("select * from gen_anio where ide_geani ="+ide_geani);
-	utilitario.getConexion().ejecutarSql("delete from cont_balance_comprobacion where ide_geani="+ide_geani);
-	utilitario.getConexion().ejecutarSql("insert into cont_balance_comprobacion (ide_cobac,ide_cocac,ide_geani,debe1_cobac,haber1_cobac,debe2_cobac,haber2_cobac,debe3_cobac,haber3_cobac"
-+" ,debe4_cobac,haber4_cobac,debe5_cobac,haber5_cobac,debe6_cobac,haber6_cobac,debe7_cobac,haber7_cobac,debe8_cobac,haber8_cobac,debe9_cobac,haber9_cobac"
-+" ,debe10_cobac,haber10_cobac,debe11_cobac,haber11_cobac,debe12_cobac,haber12_cobac)"
-+" select row_number() over(order by a.ide_cocac) + (select (case when max(ide_cobac) is null then 0 else max(ide_cobac) end) as codigo from cont_balance_comprobacion) as codigo,"
-+" a.ide_cocac,a.ide_geani,0 as debe1, 0 as haber1,0 as debe2, 0 as haber2,0 as debe3, 0 as haber3,0 as debe4, 0 as haber4,0 as debe5, 0 as haber5"
-+" ,0 as debe6, 0 as haber6,0 as debe7, 0 as haber7,0 as debe8, 0 as haber8,0 as debe9, 0 as haber9,0 as debe10, 0 as haber10"
-+" ,0 as debe11, 0 as haber11,0 as debe12, 0 as haber12"
-+" from ( select a.ide_cocac,ide_geani "
-+" from cont_catalogo_cuenta a, cont_vigente b where a.ide_cocac= b.ide_cocac" 
-+" and ide_geani ="+ide_geani+" group by a.ide_cocac,ide_geani ) a"
-+" left join cont_balance_comprobacion b on a.ide_cocac = b.ide_cocac and a.ide_geani = b.ide_geani"
-+" where b.ide_cocac is null");
+	utilitario.getConexion().ejecutarSql("delete from cont_balance_comprobacion where ide_geani="+ide_geani+"; ");
 	
-	TablaGenerica consulta_movimiento =utilitario.consultar("");
-	TablaGenerica actualiza_cuenta=utilitario.consultar(sumaDebeHaberCuentaContable(ide_movimiento));
-	for (int i=0;i<actualiza_cuenta.getTotalFilas();i++){
-	utilitario.getConexion().ejecutarSql(updateBalanceInicial(actualiza_cuenta.getValor(i,"debe"),actualiza_cuenta.getValor(i,"haber"),actualiza_cuenta.getValor(i,"ide_cocac"),ide_geani));
+	String inserta_balance_comprobacion="insert into cont_balance_comprobacion (ide_cobac,ide_cocac,ide_geani,debe1_cobac,haber1_cobac,debe2_cobac,haber2_cobac,debe3_cobac,haber3_cobac"
+			+" ,debe4_cobac,haber4_cobac,debe5_cobac,haber5_cobac,debe6_cobac,haber6_cobac,debe7_cobac,haber7_cobac,debe8_cobac,haber8_cobac,debe9_cobac,haber9_cobac"
+			+" ,debe10_cobac,haber10_cobac,debe11_cobac,haber11_cobac,debe12_cobac,haber12_cobac)"
+			+" select row_number() over(order by a.ide_cocac) + (select (case when max(ide_cobac) is null then 0 else max(ide_cobac) end) as codigo from cont_balance_comprobacion) as codigo,"
+			+" a.ide_cocac,a.ide_geani,0 as debe1, 0 as haber1,0 as debe2, 0 as haber2,0 as debe3, 0 as haber3,0 as debe4, 0 as haber4,0 as debe5, 0 as haber5"
+			+" ,0 as debe6, 0 as haber6,0 as debe7, 0 as haber7,0 as debe8, 0 as haber8,0 as debe9, 0 as haber9,0 as debe10, 0 as haber10"
+			+" ,0 as debe11, 0 as haber11,0 as debe12, 0 as haber12"
+			+" from ( select a.ide_cocac,ide_geani "
+			+" from cont_catalogo_cuenta a, cont_vigente b where a.ide_cocac= b.ide_cocac" 
+			+" and ide_geani ="+ide_geani+" group by a.ide_cocac,ide_geani ) a"
+			+" left join cont_balance_comprobacion b on a.ide_cocac = b.ide_cocac and a.ide_geani = b.ide_geani"
+			+" where b.ide_cocac is null;";
+			
+	utilitario.getConexion().ejecutarSql(inserta_balance_comprobacion);
+	TablaGenerica consulta_movimiento =utilitario.consultar("select * from cont_movimiento where ide_gemes ="+ide_gemes+" and ide_geani="+ide_geani+" and not ide_cotia in ("+ide_cotia+")");
+	TablaGenerica consulta_cuadre_asientos=utilitario.consultar(getMovimientosContablesSumaDebeHaber(ide_geani, ide_gemes, "false", ide_cotia));
+	consulta_cuadre_asientos.imprimirSql();
+	double debe=0;
+	double haber=0;
+	
+	
+	for (int i=0;i<consulta_cuadre_asientos.getTotalFilas();i++){
+		// tabla generica permite consultar las sumas de 
+
+		debe=Double.parseDouble(consulta_cuadre_asientos.getValor(i,"debe"));
+	    haber=Double.parseDouble(consulta_cuadre_asientos.getValor(i,"haber"));
+	    
+		if(debe==haber){
+			System.out.println("entro actualizar los asientos "+consulta_cuadre_asientos.getValor(i, "ide_comov"));
+		utilitario.getConexion().ejecutarSql("update cont_movimiento set activo_comov=true where ide_comov ="+consulta_cuadre_asientos.getValor(i,"ide_comov"));	
+		}			
+	}
+	
+	//
+	TablaGenerica consulta_cuentas_actualizar_balance = utilitario.consultar(sumaDebeHaberCuentaContable("select ide_comov from cont_movimiento where ide_gemes ="+ide_gemes+" and ide_geani="+ide_geani+" and not ide_cotia in ("+ide_cotia+") and activo_comov=true "));
+	consulta_cuentas_actualizar_balance.imprimirSql();
+	for (int j=0;j<consulta_cuentas_actualizar_balance.getTotalFilas();j++){
+		utilitario.getConexion().ejecutarSql(updateBalanceComprobacion(consulta_cuentas_actualizar_balance.getValor(j,"debe"), consulta_cuentas_actualizar_balance.getValor(j, "haber"), consulta_cuentas_actualizar_balance.getValor(j,"ide_cocac"), ide_geani, ide_gemes));
 	}
 	
 	TablaGenerica nivel_maximo = utilitario.consultar(nivelMaximoCuentaContable());
 	Integer contador = Integer.parseInt(nivel_maximo.getValor("nivel"));
 	while (contador>1){
-		TablaGenerica suma_balance=utilitario.consultar("select con_ide_cocac,sum(valor_debe_cobai) as debe,sum(valor_haber_cobai) as haber from ("
-				+" select  a.ide_cocac,ide_geani,valor_debe_cobai,valor_haber_cobai,con_ide_cocac" 
-				+" from cont_balance_inicial a, cont_catalogo_cuenta b where a.ide_cocac= b.ide_cocac and  ide_geani="+ide_geani+" and nivel_cocac="+contador
-				+" ) a group by con_ide_cocac");
-		for(int i=0;i<suma_balance.getTotalFilas();i++){
-			utilitario.getConexion().ejecutarSql(updateBalanceInicial(suma_balance.getValor(i,"debe"), suma_balance.getValor(i,"debe"), suma_balance.getValor(i, "con_ide_cocac"), ide_geani));
-		}
+		/* TablaGenerica suma_balance=utilitario.consultar("select con_ide_cocac,sum(debe) as debe,sum(haber) as haber from ("
++" select  a.ide_cocac,ide_geani,debe"+ide_gemes+"_cobac as debe,haber"+ide_gemes+"_cobac as haber,con_ide_cocac"
++" from cont_balance_comprobacion a, cont_catalogo_cuenta b where a.ide_cocac= b.ide_cocac and  ide_geani="+ide_geani+" and nivel_cocac="+contador
++" ) a group by con_ide_cocac");
+		
+		System.out.println("va siguiente sistem ");
+		suma_balance.imprimirSql();
+		for(int k=0;k<suma_balance.getTotalFilas();k++){
+			utilitario.getConexion().ejecutarSql(updateBalanceComprobacion(suma_balance.getValor(k,"debe"), suma_balance.getValor(k, "haber"), suma_balance.getValor(k,"ide_cocac"), ide_geani, ide_gemes));
+		}*/
+		utilitario.getConexion().ejecutarSql("update cont_balance_comprobacion"
++" set debe"+ide_gemes+"_cobac =debe,"
++" haber"+ide_gemes+"_cobac =haber "
++" from ("
++" select con_ide_cocac,sum(debe) as debe,sum(haber) as haber from ("
++" select  a.ide_cocac,ide_geani,debe"+ide_gemes+"_cobac as debe,haber"+ide_gemes+"_cobac as haber,con_ide_cocac"
++" from cont_balance_comprobacion a, cont_catalogo_cuenta b where a.ide_cocac= b.ide_cocac and  ide_geani="+ide_geani+" and nivel_cocac="+contador
++" ) a group by con_ide_cocac"
++" )  a"
++" where cont_balance_comprobacion.ide_cocac = a.con_ide_cocac");
 	   -- contador ; 
 	}
 	
 }
 
-*/
+public void desmayorizaAsientos(String ide_geani,String ide_gemes){
+	utilitario.getConexion().ejecutarSql("update cont_movimiento set activo_comov=false where ide_geani="+ide_geani+" and ide_gemes ="+ide_gemes);
+}
+/**
+ * Metodo que devuelve el Mayor Analitico
+ * @param fecha_inicial
+ * @para fecha_final
+ * @return String sql de los movimientos contables
+ */
+public String getMayorAnalitico(String fecha_inicial,String fecha_final,String ide_cocac){
+	    String sql="select a.ide_comov,mov_fecha_comov,detalle_comov,nro_comprobante_comov,"
++" cue_codigo_cocac,cue_descripcion_cocac,debe_codem,haber_codem,detalle_gemes,estado"
++" from ("
++" select ide_comov,mov_fecha_comov,detalle_comov,nro_comprobante_comov,detalle_gemes,"
++" (case when activo_comov = false then 'NO MAYORIZADO' else 'MAYORIZADO' end) as estado"
++" from cont_movimiento a, gen_mes b where a.ide_gemes = b.ide_gemes"
++" ) a"
++" left join ("
++" select ide_comov,debe_codem,haber_codem,cue_codigo_cocac,cue_descripcion_cocac,b.ide_cocac"
++" from cont_detalle_movimiento a, cont_catalogo_cuenta b"
++" where a.ide_cocac = b.ide_cocac"
++" ) b on a.ide_comov = b.ide_comov"
++" where mov_fecha_comov between '"+fecha_inicial+"' and '"+fecha_final+"'"
++" and ide_cocac IN ("+ide_cocac+")"
++" order by cue_codigo_cocac,mov_fecha_comov,nro_comprobante_comov"; 
+		return sql;
+}
 }
 
