@@ -41,7 +41,8 @@ public class pre_mayoriza_desmayoriza extends Pantalla{
 	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
 
 	public pre_mayoriza_desmayoriza() {
-		par_tipo_asiento_inicial =utilitario.getVariable("p_tipo_asiento_inicial");
+		// Este parametro contiene el el tipo siento inicial de apertura
+		par_tipo_asiento_inicial =utilitario.getVariable("p_tipo_asiento_inicial"); 
 		
 		bar_botones.limpiar();
 		com_anio.setCombo(ser_contabilidad.getAnioDetalle("true,false","true,false"));		
@@ -137,13 +138,35 @@ public class pre_mayoriza_desmayoriza extends Pantalla{
 				bot_actualizar.setIcon("ui-icon-person");
 				bot_actualizar.setValue("Mayorizar");
 				bot_actualizar.setMetodo("generarBalanceComprobacion");
+				bar_botones.agregarBoton(bot_actualizar);				
 				con_guardar.setId("con_guardar");
 				con_guardar.setMessage("ESTA SEGURO DE MAYORIZAR Y GENERAR EL BALANCE INICIAL");
 				con_guardar.setTitle("CONFIRMACION DE CALCULO");
 				agregarComponente(con_guardar);
 		
+				Boton bot_desmayoriza=new Boton();
+				bot_desmayoriza.setIcon("ui-icon-person");
+				bot_desmayoriza.setValue("Desmayorizar");
+				bot_desmayoriza.setMetodo("desmayoriza");
+				bar_botones.agregarBoton(bot_desmayoriza);		
 	}
 
+	public void desmayoriza(){
+		if (com_anio.getValue()==null){
+			utilitario.agregarMensajeInfo("Debe seleccionar un registro", "Seleccione un año");
+			return;	
+		}
+			else if(com_mes.getValue() != null){
+				
+				ser_contabilidad.desmayorizaAsientos(com_anio.getValue().toString(), com_mes.getValue().toString());
+				utilitario.agregarMensajeInfo("Desmayorizado", "Asientos desmayorizados");
+
+			}
+			else{
+				utilitario.agregarMensajeInfo("Debe seleccionar un registro", "Seleccione un mes");
+				return;		
+			}
+	}
 	public void generarBalanceComprobacion(){
 	
 	if (com_anio.getValue()==null){
@@ -153,15 +176,16 @@ public class pre_mayoriza_desmayoriza extends Pantalla{
 		else if(com_mes.getValue() != null){
 			
 			if (!con_guardar.isVisible()){
-				con_guardar.setMessage("ESTA SEGURO DE MAYORIZAR Y GENERAR EL BALANCE INICIAL");
+				con_guardar.setMessage("ESTA SEGURO DE MAYORIZAR Y GENERAR EL BALANCE DE COMPROBACION");
 				con_guardar.setTitle("CONFIRMACION DE CALCULO");
 				con_guardar.getBot_aceptar().setMetodo("generarBalanceComprobacion");
 				con_guardar.dibujar();
 				utilitario.addUpdate("con_guardar");
 			}else{
 				con_guardar.cerrar();
-				//ser_contabilidad.generarBalanceInicial(com_anio.getValue().toString(), str_seleccionados);
-				}
+				ser_contabilidad.generarBalanceComprobacion(com_anio.getValue().toString(), com_mes.getValue().toString(), par_tipo_asiento_inicial);
+			    utilitario.agregarMensajeInfo("Se Mayorizo", "Se mayorizo y genero el balance de comprobaciòn");	
+			}
 		}
 		else{
 			utilitario.agregarMensajeInfo("Debe seleccionar un registro", "Seleccione un mes");
