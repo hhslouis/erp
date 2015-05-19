@@ -70,7 +70,6 @@ public class pre_certificado_externo extends Pantalla {
 		tab_tabla2.setId("tab_tabla2");
 		tab_tabla2.setIdCompleto("tab_tabulador:tab_tabla2");
 		tab_tabla2.setTabla("SAO_DETALLE_CERT_EXTERNO","IDE_SADCE", 2);
-		tab_tabla2.setCondicion("IDE_SADCE=-1");
 		tab_tabla2.getColumna("IDE_SACET").setCombo("SAO_CERTIFCADO_TIPO", "IDE_SACET","DETALLE_SACET", "");
 		tab_tabla2.getColumna("ARCHIVO_SADCE").setUpload("logos");
        	tab_tabla2.getColumna("ARCHIVO_SADCE").setImagen("128", "128");
