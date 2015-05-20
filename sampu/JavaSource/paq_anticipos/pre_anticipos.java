@@ -796,7 +796,7 @@ public class pre_anticipos extends Pantalla {
 
 		tab_anticipo_abonos.setId("tab_anticipo_abonos");
 		tab_anticipo_abonos.setTabla("NRH_ANTICIPO_ABONO", "IDE_NRANA", 11);
-		tab_anticipo_abonos.getColumna("ACTIVO_NRANA").setValorDefecto("1");
+		tab_anticipo_abonos.getColumna("ACTIVO_NRANA").setValorDefecto("true");
 		tab_anticipo_abonos.getColumna("ACTIVO_NRANA").setVisible(false);
 		tab_anticipo_abonos.getColumna("IDE_NRANT").setVisible(false);
 		tab_anticipo_abonos.getColumna("IDE_GEINS").setCombo("GEN_INSTITUCION", "IDE_GEINS", "DETALLE_GEINS", "IDE_GETII="+utilitario.getVariable("p_gen_tipo_institucion_financiera"));		
