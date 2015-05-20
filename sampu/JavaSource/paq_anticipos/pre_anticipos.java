@@ -410,12 +410,15 @@ public class pre_anticipos extends Pantalla {
 		tab_anticipo_interes.getColumna("AMORTIZACION_NRANI").setNombreVisual("AMORTIZACION CADA (Dias)");
 		tab_anticipo_interes.getColumna("TASA_INTERES_NRANI").setMetodoChange("calcularTasaEfectiva");
 		tab_anticipo_interes.getColumna("TASA_INTERES_NRANI").setValorDefecto(utilitario.getVariable("p_tasa_interes"));
+		tab_anticipo_interes.getColumna("TASA_INTERES_NRANI").setVisible(false);
 		tab_anticipo_interes.getColumna("AMORTIZACION_NRANI").setMetodoChange("calcularTasaEfectiva");
 		tab_anticipo_interes.getColumna("TASA_EFECTIVA_NRANI").setValorDefecto(utilitario.getVariable("p_tasa_interes_efectiva"));
 		tab_anticipo_interes.getColumna("TASA_EFECTIVA_NRANI").setLectura(true);
+		tab_anticipo_interes.getColumna("TASA_EFECTIVA_NRANI").setVisible(false);
 		tab_anticipo_interes.getColumna("AMORTIZACION_NRANI").setLectura(true);
 		tab_anticipo_interes.getColumna("PLAZO_NRANI").setLectura(true);
 		tab_anticipo_interes.getColumna("MES_GRACIA_NRANI").setValorDefecto("0");
+		tab_anticipo_interes.getColumna("MES_GRACIA_NRANI").setVisible(false);
 		tab_anticipo_interes.agregarRelacion(tab_amortizacion);
 		tab_anticipo_interes.setTipoFormulario(true);
 		tab_anticipo_interes.getGrid().setColumns(8);
