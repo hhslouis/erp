@@ -460,7 +460,7 @@ public class pre_empleado extends Pantalla {
 		tab_empleado_departamento_dia.getColumna("IDE_GEGRO").setCombo("GEN_GRUPO_OCUPACIONAL", "IDE_GEGRO", "DETALLE_GEGRO", "");
 		//tab_empleado_departamento_dia.getColumna("FECHA_GEEDP").setValorDefecto(utilitario.getFechaActual());***
 		tab_empleado_departamento_dia.getColumna("FECHA_GEEDP").setMetodoChange("mismaFecha");
-		tab_empleado_departamento_dia.getColumna("FECHA_FINCTR_GEEDP").setMetodoChange("sumarFechas");
+		tab_empleado_departamento_dia.getColumna("FECHA_FINCTR_GEEDP").setMetodoChange("sumarFecha");
 		tab_empleado_departamento_dia.getColumna("IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL","IDE_GECAF","DETALLE_GECAF","");	
 		tab_empleado_departamento_dia.getColumna("IDE_GECAF").setBuscarenCombo(true);
 		tab_empleado_departamento_dia.getColumna("GEN_IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL", "IDE_GECAF", "DETALLE_GECAF", "");
@@ -508,7 +508,7 @@ public class pre_empleado extends Pantalla {
 		
 		//// campos ocultos en dialogo contratación
 		tab_empleado_departamento_dia.getColumna("IDE_GEGRO").setVisible(false);
-		tab_empleado_departamento_dia.getColumna("IDE_GECAF").setVisible(false);
+		tab_empleado_departamento_dia.getColumna("encargado_subrogado_geedp").setVisible(false);
 		tab_empleado_departamento_dia.getColumna("IDE_SUCU").setVisible(false);
 		tab_empleado_departamento_dia.getColumna("IDE_GEARE").setVisible(false);
 		tab_empleado_departamento_dia.getColumna("IDE_GEDEP").setVisible(false);
