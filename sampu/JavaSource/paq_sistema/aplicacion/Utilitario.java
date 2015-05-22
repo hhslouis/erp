@@ -927,11 +927,15 @@ public class Utilitario extends Framework {
 	 * @return
 	 */
 	public double getDiferenciaHoras(Date fechaInicio, Date fechaFin) {
+		System.out.println("recibo lo siguiuente "+fechaInicio+" fecha_fin "+fechaFin);
 		double tiempoInicial = fechaInicio.getTime();
+		System.out.println("tiempo_inicial "+tiempoInicial);
+
 		double tiempoFinal = fechaFin.getTime();
 		double dou_resta = tiempoFinal - tiempoInicial;
 		//el metodo getTime te devuelve en mili segundos para saberlo en mins debes hacer
 		dou_resta = dou_resta / (1000 * 3600);
+		System.out.println(" devuelvo metodo diferencia "+dou_resta);
 		return dou_resta;
 	}
 
@@ -1124,6 +1128,47 @@ public class Utilitario extends Framework {
 		lista.add(fila7);
 		return lista;
 		}
+	
+public List getListaGruposNivelPresupuesto(){
+		
+		List lista=new ArrayList();
+		Object fila1[] = {
+				"1","1"
+		};
+		
+		Object fila2[] = {
+				"2","2"
+					
+		};
+		Object fila3[]={
+				"3","3"
+				
+		};
+		
+		Object fila4[]={
+				"4","4"
+				
+				
+		};
+		
+		Object fila5[]={
+				"5","5"
+				
+		};
+		Object fila6[]={
+				"6","6"
+		};
+		
+		lista.add(fila1);
+		lista.add(fila2);
+		lista.add(fila3);
+		lista.add(fila4);
+		lista.add(fila5);
+		lista.add(fila6);
+		return lista;
+		}
+
+	
 	}
 	
 
