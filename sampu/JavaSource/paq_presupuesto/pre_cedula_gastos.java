@@ -104,7 +104,7 @@ public class pre_cedula_gastos extends Pantalla{
 		}
 		
 			
-			tab_balance_inicial.setCondicion("ide_geani="+com_anio.getValue()+" and tipo_prcla = 0 and ide_prcla in (select ide_prcla from pre_clasificador where nivel_prcla between "+com_nivel_cuenta_inicial.getValue()+" and "+com_nivel_cuenta_final.getValue()+")");
+			tab_balance_inicial.setCondicion("ide_geani="+com_anio.getValue()+"  and ide_prcla in (select ide_prcla from pre_clasificador where nivel_prcla between "+com_nivel_cuenta_inicial.getValue()+" and "+com_nivel_cuenta_final.getValue()+" and tipo_prcla = 0 )");
 			tab_balance_inicial.ejecutarSql();
 			utilitario.addUpdate("tab_balance_inicial");
 		
