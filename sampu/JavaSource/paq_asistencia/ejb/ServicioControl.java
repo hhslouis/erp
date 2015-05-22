@@ -33,9 +33,9 @@ public class ServicioControl {
 	public TablaGenerica getEmpleadosControlAsistencia(String fecha){
 		TablaGenerica tab_emple=utilitario.consultar("select  ide_geedp,TARJETA_MARCACION_GTEMP,fecha_evento_cobim,TO_CHAR(fecha_evento_cobim ,'YYYY-MM-DD') AS FECHA_MARCACION, TO_CHAR(fecha_evento_cobim ,'HH24:Mi:SS') AS HORA_MARCACION, EVENTO_RELOJ_COBIM,IDE_SUCU,IDE_GTGRE " +
 				"	from ( select ide_geedp,documento_identidad_gtemp,TARJETA_MARCACION_GTEMP,IDE_SUCU,IDE_GTGRE " +
-				"	from  gth_empleado a, gen_empleados_departamento_par b where a.ide_gtemp = b.ide_gtemp and activo_geedp=1 " +
+				"	from  gth_empleado a, gen_empleados_departamento_par b where a.ide_gtemp = b.ide_gtemp and activo_geedp=true " +
 				"	and not ide_geedp in ( 	select ide_geedp from asi_permisos_vacacion_hext where to_date('"+utilitario.getFormatoFecha(fecha)+"','yyyy-mm-dd') between fecha_desde_aspvh and fecha_hasta_aspvh and ide_geest=1 ) " +
-				"and control_asiStencia_geedp=1 ) a 	left join con_biometrico_marcaciones b on a.TARJETA_MARCACION_GTEMP =RTRIM( b.ide_persona_cobim) " +
+				"and control_asiStencia_geedp=true ) a 	left join con_biometrico_marcaciones b on a.TARJETA_MARCACION_GTEMP =RTRIM( b.ide_persona_cobim) " +
 				"		and to_char(b.fecha_evento_cobim,'yyyy-mm-dd') = '"+utilitario.getFormatoFecha(fecha)+"' 	order by ide_geedp,EVENTO_RELOJ_COBIM,fecha_evento_cobim");		
 		return tab_emple;
 	}
@@ -94,7 +94,7 @@ public class ServicioControl {
 		int int_num_dia=utilitario.getNumeroDiasSemana(utilitario.getFecha(fecha));		
 		//1) Busco en la tabla de horariosGrupo
 
-		//System.out.println(tab_horariosGrupo.getTotalFilas()+"   "+ lis_marcaciones.size() );
+		System.out.println("horarios "+tab_horariosGrupo.getTotalFilas()+"   "+ lis_marcaciones.size() );
 		for(int indice_marcacion=0;indice_marcacion<lis_marcaciones.size();indice_marcacion++){			
 			String[] str_fila=lis_marcaciones.get(indice_marcacion);
 
@@ -113,10 +113,14 @@ public class ServicioControl {
 							if(str_fila[6]!=null){
 								String str_hora_marcof=	utilitario.getFormatoHora(str_fila[6]);
 								//Exitio inicio y fin de la marcacion								
-								//System.out.println("ENCONTRO HORARIO MARCACION       "+str_hora_inicio+"     "+str_hora_fin+"  ... vs  ...  "+str_hora_marcoi+"    "+str_hora_marcof+"   ===  "+str_fila[1] +"  ..///// timpo almuerzo ===   "+tab_horariosGrupo.getValor(i,"minuto_almuerzo_gtgre") +"     /////  "+str_fila[8]);								
+								System.out.println("ENCONTRO HORARIO MARCACION       "+str_hora_inicio+"     "+str_hora_fin+"  ... vs  ...  "+str_hora_marcoi+"    "+str_hora_marcof+"   ===  "+str_fila[1] +"  ..///// timpo almuerzo ===   "+tab_horariosGrupo.getValor(i,"minuto_almuerzo_gtgre") +"     /////  "+str_fila[8]);								
 								//Valida con la entrada (1)
-								if(str_fila[8]!=null &&str_fila[8].equals("1")){									
-									double dou_diferencia=utilitario.getDiferenciaHoras(utilitario.getHora(str_hora_inicio), utilitario.getHora(str_hora_marcoi));
+								if(str_fila[8]!=null &&str_fila[8].equals("1")){
+									System.out.println("entre al str ");
+
+									double dou_diferencia= 0 ; //utilitario.getDiferenciaHoras(utilitario.getHora(str_hora_inicio), utilitario.getHora(str_hora_marcoi));
+									System.out.println("difenercia de horario "+dou_diferencia);
+									
 									tab_valida_asistencia.insertar();
 									tab_valida_asistencia.setValor("IDE_GEEDP", str_fila[0]);
 									tab_valida_asistencia.setValor("FECHA_MARCACION_ASVAA", fecha);
@@ -124,7 +128,7 @@ public class ServicioControl {
 									tab_valida_asistencia.setValor("DIFERENCIA_ASVAA",dou_diferencia +"");
 									tab_valida_asistencia.setValor("EVENTO_ASVAA", str_fila[7]);
 									tab_valida_asistencia.setValor("ACTIVO_ASVAA", "true");
-									tab_valida_asistencia.setValor("IMPORTO_ASVAA", "false");
+									tab_valida_asistencia.setValor("IMPORTO_ASVAA", "1");
 
 									//Aplica la toleracia
 									double dou_tolerancia=0;										
@@ -141,8 +145,8 @@ public class ServicioControl {
 										tab_valida_asistencia.setValor("NOVEDAD_ASVAA", "false");
 									}
 									//Salida
-									double dou_salida=utilitario.getDiferenciaHoras(utilitario.getHora(str_hora_fin), utilitario.getHora(str_hora_marcof));
-
+									double dou_salida= 0; //utilitario.getDiferenciaHoras(utilitario.getHora(str_hora_fin), utilitario.getHora(str_hora_marcof));
+									System.out.println("salida del diferencia "+dou_salida);
 									tab_valida_asistencia.setValor("HORA_MARCA_SALIDA_ASVAA", str_hora_marcof);
 									tab_valida_asistencia.setValor("DIFERENCIA_SALIDA_ASVAA",dou_salida +"");
 									//solo si no tiene novedad en la entrado verifico q no tenga novedad en la salida
@@ -163,7 +167,7 @@ public class ServicioControl {
 								}												
 								else if(str_fila[8]!=null &&str_fila[8].equals("2")){
 									//Valida con la salida (2)
-									double dou_total_almuerzo=utilitario.getDiferenciaHoras(utilitario.getHora(str_hora_marcoi), utilitario.getHora(str_hora_marcof));
+									double dou_total_almuerzo=0; //utilitario.getDiferenciaHoras(utilitario.getHora(str_hora_marcoi), utilitario.getHora(str_hora_marcof));
 									double dou_tiempo_almuerzo=0;
 									try {										
 										dou_tiempo_almuerzo=Double.parseDouble(tab_horariosGrupo.getValor(i,"minuto_almuerzo_gtgre"));										
@@ -181,7 +185,7 @@ public class ServicioControl {
 									tab_valida_asistencia.setValor("EVENTO_ASVAA", str_fila[7]);
 									tab_valida_asistencia.setValor("ACTIVO_ASVAA", "true");
 									tab_valida_asistencia.setValor("HORA_MARCA_SALIDA_ASVAA", str_hora_marcof);
-									tab_valida_asistencia.setValor("IMPORTO_ASVAA", "false");
+									tab_valida_asistencia.setValor("IMPORTO_ASVAA", "0");
 
 									if(dou_tiempo_almuerzo>0){
 										//se paso del tiempo de almuerzo 
@@ -194,7 +198,7 @@ public class ServicioControl {
 								}
 								else {
 									//Resta los dos tiempos de las marcaciones
-									double dou_total_tiempo=utilitario.getDiferenciaHoras(utilitario.getHora(str_hora_marcoi), utilitario.getHora(str_hora_marcof));									
+									double dou_total_tiempo=0; //utilitario.getDiferenciaHoras(utilitario.getHora(str_hora_marcoi), utilitario.getHora(str_hora_marcof));									
 									tab_valida_asistencia.insertar();
 									tab_valida_asistencia.setValor("IDE_GEEDP", str_fila[0]);
 									tab_valida_asistencia.setValor("FECHA_MARCACION_ASVAA", fecha);
@@ -204,7 +208,7 @@ public class ServicioControl {
 									tab_valida_asistencia.setValor("ACTIVO_ASVAA", "true");
 									tab_valida_asistencia.setValor("NOVEDAD_ASVAA", "true");
 									tab_valida_asistencia.setValor("HORA_MARCA_SALIDA_ASVAA", str_hora_marcof);
-									tab_valida_asistencia.setValor("IMPORTO_ASVAA", "false");
+									tab_valida_asistencia.setValor("IMPORTO_ASVAA", "0");
 									//	System.out.println("DIFERENCIA MARCACIÓN =======  "+dou_total_tiempo);									
 								}
 							}
@@ -218,7 +222,7 @@ public class ServicioControl {
 								tab_valida_asistencia.setValor("EVENTO_ASVAA", "UNA SOLA MARCACIÓN "+str_fila[7]);
 								tab_valida_asistencia.setValor("ACTIVO_ASVAA", "true");
 								tab_valida_asistencia.setValor("NOVEDAD_ASVAA", "true");
-								tab_valida_asistencia.setValor("IMPORTO_ASVAA", "false");
+								tab_valida_asistencia.setValor("IMPORTO_ASVAA", "0");
 
 							}
 							break;
@@ -239,7 +243,7 @@ public class ServicioControl {
 					tab_valida_asistencia.setValor("EVENTO_ASVAA", "NO ENCONTRO HORARIO "+str_fila[7]);
 					tab_valida_asistencia.setValor("ACTIVO_ASVAA", "true");
 					tab_valida_asistencia.setValor("NOVEDAD_ASVAA", "true");
-					tab_valida_asistencia.setValor("IMPORTO_ASVAA", "false");
+					tab_valida_asistencia.setValor("IMPORTO_ASVAA", "0");
 				}
 
 			}
@@ -263,7 +267,7 @@ public class ServicioControl {
 					tab_valida_asistencia.setValor("EVENTO_ASVAA", "NO MARCO");												
 					tab_valida_asistencia.setValor("ACTIVO_ASVAA", "true");
 					tab_valida_asistencia.setValor("NOVEDAD_ASVAA", "true");
-					tab_valida_asistencia.setValor("IMPORTO_ASVAA", "false");
+					tab_valida_asistencia.setValor("IMPORTO_ASVAA", "0");
 				}								
 			}
 		}
@@ -277,7 +281,7 @@ public class ServicioControl {
 		tab_valida_asistencia=new TablaGenerica();
 		tab_valida_asistencia.setTabla("ASI_VALIDA_ASISTENCIA", "IDE_ASVAA", -1);
 		tab_valida_asistencia.setCondicion("IDE_ASVAA=-1");
-		tab_valida_asistencia.getColumna("VERIFICADO_ASVAA").setValorDefecto("1");
+		tab_valida_asistencia.getColumna("VERIFICADO_ASVAA").setValorDefecto("true");
 		tab_valida_asistencia.ejecutarSql();	
 		//Recoore mientras la fecha inicial sea menor que la fecha fin		
 		while (fechaFin.equals(fecha) || utilitario.isFechaMayor(utilitario.getFecha(fechaFin), utilitario.getFecha(fecha))){
@@ -481,7 +485,7 @@ public class ServicioControl {
 					tab_deta_novedad.setValor("NOMINA_ASNOD", "0");
 					tab_deta_novedad.setValor("VACACIONES_ASNOD", "0");
 					tab_deta_novedad.setValor("OBSERVACION_ASNOD", tab_marc.getValor(i, "EVENTO_ASVAA"));
-					tab_deta_novedad.setValor("ACTIVO_ASNOD", "1");
+					tab_deta_novedad.setValor("ACTIVO_ASNOD", "true");
 					if(tab_marc.getValor(i, "HORA_MARCACION_ASVAA")!=null){
 						tab_deta_novedad.setValor("HORA_INICIO_ASNOD", tab_marc.getValor(i, "HORA_MARCACION_ASVAA"));	
 					}
@@ -520,7 +524,7 @@ public class ServicioControl {
 						tab_deta_novedad.setValor("NOMINA_ASNOD", "0");
 						tab_deta_novedad.setValor("VACACIONES_ASNOD", "0");
 						tab_deta_novedad.setValor("OBSERVACION_ASNOD", tab_marc.getValor(i, "EVENTO_ASVAA"));
-						tab_deta_novedad.setValor("ACTIVO_ASNOD", "1");
+						tab_deta_novedad.setValor("ACTIVO_ASNOD", "true");
 						if(tab_marc.getValor(i, "HORA_MARCACION_ASVAA")!=null){
 							tab_deta_novedad.setValor("HORA_INICIO_ASNOD", tab_marc.getValor(i, "HORA_MARCACION_ASVAA"));	
 						}
@@ -543,7 +547,7 @@ public class ServicioControl {
 						tab_deta_novedad.setValor("NOMINA_ASNOD", "0");
 						tab_deta_novedad.setValor("VACACIONES_ASNOD", "0");
 						tab_deta_novedad.setValor("OBSERVACION_ASNOD", tab_marc.getValor(i, "EVENTO_ASVAA"));
-						tab_deta_novedad.setValor("ACTIVO_ASNOD", "1");
+						tab_deta_novedad.setValor("ACTIVO_ASNOD", "true");
 						if(tab_marc.getValor(i, "HORA_MARCACION_ASVAA")!=null){
 							tab_deta_novedad.setValor("HORA_INICIO_ASNOD", tab_marc.getValor(i, "HORA_MARCACION_ASVAA"));	
 						}
@@ -567,7 +571,7 @@ public class ServicioControl {
 						tab_deta_novedad.setValor("NOMINA_ASNOD", "0");
 						tab_deta_novedad.setValor("VACACIONES_ASNOD", "0");
 						tab_deta_novedad.setValor("OBSERVACION_ASNOD", tab_marc.getValor(i, "EVENTO_ASVAA"));
-						tab_deta_novedad.setValor("ACTIVO_ASNOD", "1");
+						tab_deta_novedad.setValor("ACTIVO_ASNOD", "true");
 						if(tab_marc.getValor(i, "HORA_MARCACION_ASVAA")!=null){
 							tab_deta_novedad.setValor("HORA_INICIO_ASNOD", tab_marc.getValor(i, "HORA_MARCACION_ASVAA"));	
 						}
