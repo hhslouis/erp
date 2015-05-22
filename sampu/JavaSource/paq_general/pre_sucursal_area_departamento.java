@@ -47,14 +47,21 @@ public class pre_sucursal_area_departamento extends Pantalla {
 				"ORDER BY DETALLE_GEARE ASC, DETALLE_GEDEP ASC");
 		tab_area_dep.setCampoPrimaria("IDE_GEDEP");
 		tab_area_dep.setNumeroTabla(1);
+		tab_area_dep.getColumna("DETALLE_GEARE").setNombreVisual("PROCESO");
+		tab_area_dep.getColumna("DETALLE_GEDEP").setNombreVisual("SUB - PROCESO");
+		
 		tab_area_dep.getColumna("DETALLE_GEARE").setFiltro(true);
 		tab_area_dep.getColumna("DETALLE_GEDEP").setFiltro(true);
+		tab_area_dep.getColumna("IDE_GEARE").setVisible(false);
 		tab_area_dep.getColumna("IDE_GEDEP").setVisible(false);
+
 		tab_area_dep.setLectura(true);
 		tab_area_dep.setRows(10);
 		tab_area_dep.onSelect("filtrarDepartamentoSucursal");
 		tab_area_dep.dibujar();
 		PanelTabla pat_panel2 = new PanelTabla(); 
+		pat_panel2.getMenuTabla().getItem_formato().setDisabled(true);
+
 		pat_panel2.setPanelTabla(tab_area_dep);
 		
 
@@ -76,7 +83,7 @@ public class pre_sucursal_area_departamento extends Pantalla {
 		tab_tabla1.dibujar();
 		tab_tabla1.getColumna("IDE_SUCU").setExterna(false);
 		PanelTabla pat_panel1 = new PanelTabla();
-		pat_panel1.setMensajeWarn("DEPARTAMENTOS SUCURSAL");
+		pat_panel1.setMensajeWarn("SUB - PROCESO SUCURSAL");
 		pat_panel1.setPanelTabla(tab_tabla1);
 
 
