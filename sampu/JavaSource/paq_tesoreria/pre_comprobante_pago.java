@@ -112,6 +112,8 @@ public class pre_comprobante_pago extends Pantalla {
          tab_detalle_movimiento.getColumna("ide_prcla").setAutoCompletar();
          tab_detalle_movimiento.getColumna("ide_prpro").setCombo("pre_programa", "ide_prpro", "cod_programa_prpro", "");
          tab_detalle_movimiento.getColumna("ide_cocac").setCombo(ser_contabilidad.servicioCatalogoCuentasTransaccion());
+         tab_detalle_movimiento.getColumna("ide_cocac").setAutoCompletar();
+
          tab_detalle_movimiento.getColumna("activo_codem").setLectura(true);
          tab_detalle_movimiento.getColumna("activo_codem").setValorDefecto("true");
          tab_detalle_movimiento.getColumna("haber_codem").setMetodoChange("calcularTotal");            
@@ -296,6 +298,8 @@ public class pre_comprobante_pago extends Pantalla {
          TablaGenerica tab_tramite=ser_Presupuesto.getTablaGenericaTramite(str_seleccionado);
          if (str_seleccionado!=null){
              tab_comprobante.insertar();
+             tab_detalle_movimiento.limpiar();
+             tab_detalle_movimiento.setColumnaSuma("haber_codem,debe_codem"); 
              tab_comprobante.setValor("ide_prtra",tab_tramite.getValor("ide_prtra"));
          }
          set_tramite.cerrar();
