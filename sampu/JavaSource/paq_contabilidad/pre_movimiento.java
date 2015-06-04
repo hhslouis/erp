@@ -55,7 +55,7 @@ public class pre_movimiento extends Pantalla{
 		tab_detalle_movimiento.getColumna("ide_prcla").setCombo(ser_Presupuesto.getCatalogoPresupuestario("true,false"));
 		tab_detalle_movimiento.getColumna("ide_prcla").setAutoCompletar();
 		tab_detalle_movimiento.getColumna("ide_prpro").setCombo("pre_programa", "ide_prpro", "cod_programa_prpro", "");
-		tab_detalle_movimiento.getColumna("ide_cocac").setCombo(ser_contabilidad.servicioCatalogoCuentasTransaccion());
+		tab_detalle_movimiento.getColumna("ide_cocac").setCombo(ser_contabilidad.servicioCatalogoCuentaCombo());
 		tab_detalle_movimiento.getColumna("ide_cocac").setAutoCompletar();
 		tab_detalle_movimiento.getColumna("activo_codem").setLectura(true);
 		tab_detalle_movimiento.getColumna("activo_codem").setValorDefecto("true");
