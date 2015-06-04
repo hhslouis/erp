@@ -154,7 +154,6 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 
 		set_poa.getBot_aceptar().setMetodo("aceptarPoa");
 		//set_poa.setRadio();
-		set_poa.getBot_aceptar().setMetodo("aceptarPoa");
 		agregarComponente(set_poa);
 
 	}
@@ -180,10 +179,17 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 		} catch (Exception e) {
 		}
 		
+        TablaGenerica saldo_poa = utilitario.consultar(ser_presupuesto.getSaldoPoa(tab_poa_certificacion.getValor("ide_prpoa")));
+		String saldo_poa_str = saldo_poa.getValor("saldo_poa");
+		Double dou_saldo_poa =Double.parseDouble(saldo_poa_str);
+		
 		////suma la los mismos valores
 		String valorcert=tab_poa_certificacion.getSumaColumna("valor_certificado_prpoc")+"";
 		dou_valor_certif=Double.parseDouble(valorcert);
-		
+		if(dou_valor_certif > dou_saldo_poa || dou_saldo_poa <=0 ){
+			utilitario.agregarNotificacionInfo("Valor Excedido", "Valor de la certificacion por POA excede su saldo, es un avalor negativo o valor cero verifique");
+			return;
+		}
 		///valor disponible
 		dou_valor_disponible=dou_valor_certif-dou_valor_liberado;
 				
@@ -223,19 +229,21 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 	}
 
 	public  void aceptarPoa(){
-		String str_seleccionados= set_poa.getValorSeleccionado();
+		String str_seleccionados= set_poa.getSeleccionados();
 
 		if (str_seleccionados!=null){
 			TablaGenerica tab_poa = ser_presupuesto.getTablaGenericaPoa(str_seleccionados);		
-			for(int i=0;i<tab_poa.getTotalFilas();i++){	
+			for(int i=0;i<tab_poa.getTotalFilas();i++){
+				TablaGenerica saldo_poa=utilitario.consultar(ser_presupuesto.getSaldoPoa(tab_poa.getValor( i,"ide_prpoa")));
 				tab_poa_certificacion.insertar();
-				tab_poa_certificacion.setValor("ide_prpoa", tab_poa.getValor( "ide_prpoa"));
+				tab_poa_certificacion.setValor("ide_prpoa", tab_poa.getValor( i,"ide_prpoa"));
+				tab_poa_certificacion.setValor("valor_certificado_prpoc", saldo_poa.getValor("saldo_poa"));
 			}
 			set_poa.cerrar();
 			utilitario.addUpdate("tab_poa_certificacion");
 		}
 		else{
-			utilitario.agregarMensajeInfo("Debe seleccionar almenos un registro", "");
+			utilitario.agregarMensajeInfo("Debe seleccionar al menos un registro", "");
 		}
 	
 	}
