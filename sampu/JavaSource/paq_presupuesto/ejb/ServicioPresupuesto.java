@@ -124,6 +124,14 @@ public TablaGenerica getTablaGenericaPoa(String ide_prpoa) {
 	return tab_poa;
 	
 }
+public String getSaldoPoa(String ide_prpoa){
+	String tab_programa=("select a.ide_prpoa,presupuesto_codificado_prpoa - (case when valor_certificado_prpoc is null then 0 else valor_certificado_prpoc end) as saldo_poa"
++" from pre_poa a"
++" left join (select sum(valor_certificado_prpoc) as valor_certificado_prpoc,ide_prpoa from pre_poa_certificacion group by ide_prpoa) b on a.ide_prpoa = b.ide_prpoa"
++" where a.ide_prpoa = "+ide_prpoa);
+	return tab_programa;
+	
+}
 public String getPrograma (String activo){
 	String tab_programa=("select  ide_prpro,cod_programa_prpro from pre_programa" +
 			" where activo_prpro in ("+activo+") order by cod_programa_prpro");

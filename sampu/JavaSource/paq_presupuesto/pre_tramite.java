@@ -390,8 +390,28 @@ public void importarPeticionario(){
 			return;
 		
 		}
+		if(tab_tramite.isFocus()){
+			String ide_gtempxx=ser_seguridad.getUsuario(utilitario.getVariable("ide_usua")).getValor("ide_gtemp");
+			tab_tramite.setValor("ide_coest", par_estado);
+			tab_tramite.setValor("ide_geani", com_anio.getValue()+"");
+			tab_tramite.setValor("ide_gtemp",ide_gtempxx );
+			set_tramite.getTab_seleccion().setSql(ser_contabilidad.getModuloParametros("true", par_tramite));
+			set_tramite.getTab_seleccion().ejecutarSql();
+			set_tramite.dibujar();
+			utilitario.addUpdate("tab_tramite");
+			tab_tramite.insertar();
+		}
+		else if(tab_poa_tramite.isFocus()){
+			tab_poa_tramite.insertar();
+		}
+		else if(tab_archivo.isFocus()){
+			tab_archivo.insertar();
+		}
+		else if(tab_documento.isFocus()){
+			tab_documento.insertar();
+		}
+			/*
 		String ide_gtempxx=ser_seguridad.getUsuario(utilitario.getVariable("ide_usua")).getValor("ide_gtemp");
-		utilitario.getTablaisFocus().insertar();
 		tab_tramite.setValor("ide_coest", par_estado);
 		tab_tramite.setValor("ide_geani", com_anio.getValue()+"");
 		tab_tramite.setValor("ide_gtemp",ide_gtempxx );
@@ -399,7 +419,7 @@ public void importarPeticionario(){
 		set_tramite.getTab_seleccion().ejecutarSql();
 		set_tramite.dibujar();
 		utilitario.addUpdate("tab_tramite");
-
+*/
 	}
 
 	@Override
