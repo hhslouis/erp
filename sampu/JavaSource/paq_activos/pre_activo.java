@@ -22,7 +22,7 @@ import paq_bodega.ejb.ServicioBodega;
 import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_nomina.ejb.ServicioNomina;
 import paq_sistema.aplicacion.Pantalla;
-import portal.entidades.SisTabla;
+//import portal.entidades.SisTabla;
 
 import com.lowagie.text.pdf.Barcode128;
 
