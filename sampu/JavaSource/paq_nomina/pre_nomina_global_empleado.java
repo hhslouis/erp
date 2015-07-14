@@ -53,10 +53,7 @@ import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import framework.componentes.Texto;
 
-/**
- *
- * @author Diego
- */
+
 public class pre_nomina_global_empleado extends Pantalla {
 
 
@@ -782,8 +779,8 @@ public class pre_nomina_global_empleado extends Pantalla {
 				"from ( " +
 				"SELECT " +
 				"SUCU.IDE_SUCU,EMP.IDE_GTEMP,sucu.nom_sucu as sucursal,dep.detalle_gedep as departamento, " +
-				"EMP.APELLIDO_PATERNO_GTEMP ||' '|| EMP.APELLIDO_MATERNO_GTEMP ||' '|| " +
-				"EMP.PRIMER_NOMBRE_GTEMP ||' '||EMP.SEGUNDO_NOMBRE_GTEMP AS EMPLEADO, " +
+				"EMP.APELLIDO_PATERNO_GTEMP ||' '|| (case when EMP.APELLIDO_MATERNO_GTEMP is null then '' else EMP.APELLIDO_MATERNO_GTEMP end) ||' '|| " +
+				"EMP.PRIMER_NOMBRE_GTEMP ||' '||(case when EMP.SEGUNDO_NOMBRE_GTEMP is null then '' else EMP.SEGUNDO_NOMBRE_GTEMP end) AS EMPLEADO, " +
 				"EMP.DOCUMENTO_IDENTIDAD_GTEMP AS CEDULA, " +
 				"funcional.detalle_gecaf as cargo, " +
 				"contrato.detalle_gttco as contrato, " +
@@ -822,8 +819,8 @@ public class pre_nomina_global_empleado extends Pantalla {
 	public String getSqlNominaGlobalEmpleados(String IDE_NRDTN,String IDE_GEPRO,String IDE_NRRUB){
 		String str_sql="SELECT SUCU.IDE_SUCU,EMP.IDE_GTEMP, " +
 				"sucu.nom_sucu as sucursal,dep.detalle_gedep as departamento, "+
-				"EMP.APELLIDO_PATERNO_GTEMP ||' '|| EMP.APELLIDO_MATERNO_GTEMP ||' '|| " +
-				"EMP.PRIMER_NOMBRE_GTEMP ||' '||EMP.SEGUNDO_NOMBRE_GTEMP AS EMPLEADO, " +
+				"EMP.APELLIDO_PATERNO_GTEMP ||' '|| (case when EMP.APELLIDO_MATERNO_GTEMP is null then '' else EMP.APELLIDO_MATERNO_GTEMP end) ||' '|| " +
+				"EMP.PRIMER_NOMBRE_GTEMP ||' '||(case when EMP.SEGUNDO_NOMBRE_GTEMP is null then '' else EMP.SEGUNDO_NOMBRE_GTEMP end) AS EMPLEADO, " +
 				"EMP.DOCUMENTO_IDENTIDAD_GTEMP AS CEDULA, " +
 				"funcional.detalle_gecaf as cargo, "+
 				"CONTRATO.detalle_gttco as contrato, "+
