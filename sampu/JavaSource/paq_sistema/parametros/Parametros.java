@@ -151,8 +151,9 @@ public class Parametros {
         lis_parametros.add(new Parametro("3", "p_nrh_rubro_valor_provision_fondos_reserva", "Indica el rubro con el valor acumulado de los fondos de reserva iess", "120","NRH_RUBRO", "IDE_NRRUB", "DETALLE_NRRUB"));
         lis_parametros.add(new Parametro("3", "p_nrh_rubro_descuento_nomina", "Indica el rubro Decimo Tercer Sueldo para el (Rol) ", "48","NRH_RUBRO", "IDE_NRRUB", "DETALLE_NRRUB"));
         lis_parametros.add(new Parametro("3", "p_nrh_rubro_acumula_decimos", "Indica el rubro para saber si un empleado acumula los decimos true=acumula, false=no acumula ", "330","NRH_RUBRO", "IDE_NRRUB", "DETALLE_NRRUB"));
-        lis_parametros.add(new Parametro("3", "p_nrh_rubro_base_imponible_mes_anterior", "Indica el rubro para importar el sueldo base del mes anterior ", "329","NRH_RUBRO", "IDE_NRRUB", "DETALLE_NRRUB"));
-       
+        lis_parametros.add(new Parametro("3", "p_nrh_rubro_base_imponible_mes_anterior", "Indica el rubro donde se va a importar el sueldo base del mes anterior ", "329","NRH_RUBRO", "IDE_NRRUB", "DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("3", "p_nrh_rubro_imponible_mes_anterior", "Indica el rubro para del mes anteriro que se toma para el nuevo rubro ", "329","NRH_RUBRO", "IDE_NRRUB", "DETALLE_NRRUB"));
+      
         lis_parametros.add(new Parametro("3", "p_nrh_trubro_egreso_informativo", "Indica el tipo de rubro Egreso Informativo (Tipo Rol) ", "2","NRH_TIPO_RUBRO", "IDE_NRTIR", "DETALLE_NRTIR"));
         lis_parametros.add(new Parametro("3", "p_nrh_trubro_ingreso_informativo", "Indica el tipo de rubro Ingreso Informativo (Tipo Rol) ", "3","NRH_TIPO_RUBRO", "IDE_NRTIR", "DETALLE_NRTIR"));
         lis_parametros.add(new Parametro("3", "p_nrh_trubro_informativo", "Indica el tipo de rubro Informativo (Tipo Rol) ", "4","NRH_TIPO_RUBRO", "IDE_NRTIR", "DETALLE_NRTIR"));
