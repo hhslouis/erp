@@ -27,6 +27,8 @@ public class pre_periodo_rol extends Pantalla {
         tab_tabla.getColumna("IDE_GEANI").setCombo("GEN_ANIO", "IDE_GEANI", "DETALLE_GEANI", "");
         tab_tabla.getColumna("IDE_GEANI").setMetodoChange("cargarMes");
         tab_tabla.getColumna("IDE_GEMES").setCombo("SELECT a.IDE_GEMES,a.DETALLE_GEMES FROM GEN_MES a, GEN_PERIODO b WHERE a.IDE_GEMES=b.IDE_GEMES and b.IDE_GEANI="+tab_tabla.getValor("IDE_GEANI"));                        
+        tab_tabla.getColumna("GEN_IDE_GEPRO").setCombo("select ide_gepro,fecha_inicial_gepro,fecha_final_gepro,detalle_periodo_gepro from gen_perido_rol order by fecha_inicial_gepro desc");                        
+
         tab_tabla.setTipoFormulario(true);
         tab_tabla.dibujar();
         PanelTabla pat_panel = new PanelTabla();
