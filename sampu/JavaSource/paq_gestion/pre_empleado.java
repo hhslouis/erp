@@ -5557,14 +5557,18 @@ public void mismaFecha(AjaxBehaviorEvent evt){
 			for (int j = 0; j < tab_deducibles.getTotalFilas(); j++) {
 				if (tab_sri_gastos_deducible.getValor(i,"IDE_SRDED").equalsIgnoreCase(tab_deducibles.getValor(j, "IDE_SRDED"))){
 					double dou_gasto_ded=0;
-					double dou_gasto_ded_max=0;
+					double dou_gasto_ded_max=0; 
 					try {
 						dou_gasto_ded=Double.parseDouble(tab_sri_gastos_deducible.getValor(i,"VALOR_DEDUCIBLE_SRDEE"));
+					
+					//System.out.println(" deducible gastos "+dou_gasto_ded);
 					} catch (Exception e) {
 						// TODO: handle exception
 					}
 					try {
 						dou_gasto_ded_max=Double.parseDouble(tab_deducibles.getValor(j, "valor_maximo"));
+						//System.out.println(" deducible gastos maximo "+dou_gasto_ded_max);
+
 					} catch (Exception e) {
 						// TODO: handle exception
 					}
