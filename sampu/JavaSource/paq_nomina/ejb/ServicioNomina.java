@@ -3647,8 +3647,8 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 					return RMU;
 				}
 			}
-
-
+///////// me inciada que si paso del primer dia la persona cobra honorarios.
+					/*
 			if (fecha_contrato!=null && !fecha_contrato.isEmpty()){
 				int int_mes_rol=utilitario.getMes(fecha_final_gepro);
 				int int_mes_contrato=utilitario.getMes(fecha_contrato);
@@ -3661,6 +3661,7 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 					return "0";
 				}
 			}
+			*/
 			return RMU;
 		}						
 		else if(ide_nrrub.equals(P_NRH_RUBRO_RMU_HONORARIOS)){					
