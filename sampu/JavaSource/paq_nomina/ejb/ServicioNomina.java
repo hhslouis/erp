@@ -1861,7 +1861,7 @@ public class ServicioNomina {
 			BigDecimal big_irm=new BigDecimal(dou_irm);
 			big_irm=big_irm.setScale(2, RoundingMode.HALF_UP);
 
-			if (ide_geedp.equalsIgnoreCase("123")){
+			if (ide_geedp.equalsIgnoreCase("38")){
 				System.out.println("t. rec antes "+dou_tot_recibir);
 				System.out.println("t. egr antes "+dou_tot_egresos);
 				System.out.println("imp antes "+dou_irm);
@@ -2059,7 +2059,7 @@ public class ServicioNomina {
 
 
 
-				if (ide_geedp.equalsIgnoreCase("3")){
+				if (ide_geedp.equalsIgnoreCase("38")){
 					System.out.println("IDE GEEDP EMPLEADO ***** "+ide_geedp);
 
 					System.out.println("total ing proyectado "+dou_tot_ing_proy);
@@ -3698,10 +3698,20 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 
 		// importa si acumula o no fondos de reserva
 		else if (ide_nrrub.equalsIgnoreCase(P_NRH_RUBRO_ACUMULA_FONDOS)){
+			System.out.println("acumlo fondos reserva"+acumula_fondos);
+
 			if (acumula_fondos==null
 					|| acumula_fondos.isEmpty()){
 				return "0";
 			}
+			else if (acumula_fondos.equals("true")){
+				return "1";
+			}
+			else if (acumula_fondos.equals("false")){
+				return "0";
+			}
+			System.out.println("retorna acumlo fondos reserva"+acumula_fondos);
+
 			return acumula_fondos;
 		}
 		
@@ -5446,37 +5456,38 @@ System.out.println("sql getSqlEmpleadosRol..."+sql);
 	 * @return TablaGenerica del detalle del rubro
 	 */
 	public TablaGenerica getDetalleRubro(String IDE_NRDTN,String IDE_NRRUB,String IDE_GEREG){
+		/*
 		System.out.println("SN C_PARAMETROS getDetalleRubro IDE_NRDTN..."+IDE_NRDTN);
 		System.out.println("SN C_PARAMETROS getDetalleRubro IDE_NRRUB..."+IDE_NRRUB);
 		System.out.println("SN C_PARAMETROS getDetalleRubro IDE_GEREG..."+IDE_GEREG);
-		
+		*/
 		
 		if (IDE_NRDTN==null || IDE_NRDTN.isEmpty()){
-			System.out.println("SN C_PARAMETROS getDetalleRubro IDE_NRDTN == A NULL..."+IDE_NRDTN);
+			//System.out.println("SN C_PARAMETROS getDetalleRubro IDE_NRDTN == A NULL..."+IDE_NRDTN);
 			
 			IDE_NRDTN="-1";
-			System.out.println("SN C_PARAMETROS getDetalleRubro IDE_NRDTN -1..."+IDE_NRDTN);
+			//System.out.println("SN C_PARAMETROS getDetalleRubro IDE_NRDTN -1..."+IDE_NRDTN);
 			
 		}
 		if (IDE_NRRUB==null || IDE_NRRUB.isEmpty()){
-			System.out.println("SN C_PARAMETROS getDetalleRubro IDE_NRRUB == A NULL..."+IDE_NRRUB);
+			//System.out.println("SN C_PARAMETROS getDetalleRubro IDE_NRRUB == A NULL..."+IDE_NRRUB);
 			
 			IDE_NRRUB="-1";
-			System.out.println("SN C_PARAMETROS getDetalleRubro IDE_NRRUB -1..."+IDE_NRRUB);
+			//System.out.println("SN C_PARAMETROS getDetalleRubro IDE_NRRUB -1..."+IDE_NRRUB);
 			
 		}
 		if (IDE_GEREG==null || IDE_GEREG.isEmpty()){
-			System.out.println("SN C_PARAMETROS getDetalleRubro IDE_GEREG == A NULL..."+IDE_GEREG);
+			//System.out.println("SN C_PARAMETROS getDetalleRubro IDE_GEREG == A NULL..."+IDE_GEREG);
 			
 			IDE_GEREG="-1";
-			System.out.println("SN C_PARAMETROS getDetalleRubro IDE_GEREG -1..."+IDE_GEREG);
+			//System.out.println("SN C_PARAMETROS getDetalleRubro IDE_GEREG -1..."+IDE_GEREG);
 			
 		}
 
 
 		TablaGenerica tab_detalle_rubro=utilitario.consultar("select * from NRH_DETALLE_RUBRO " +
 				"WHERE IDE_NRDTN="+IDE_NRDTN+" AND IDE_NRRUB="+IDE_NRRUB+" AND IDE_GEREG="+IDE_GEREG );
-		System.out.println("SN SQL getDetalleRubro tab_detalle_rubro DESPUES DE LOS NULL ..."+tab_detalle_rubro.getSql());
+		//System.out.println("SN SQL getDetalleRubro tab_detalle_rubro DESPUES DE LOS NULL ..."+tab_detalle_rubro.getSql());
 		
 
 		return tab_detalle_rubro;
