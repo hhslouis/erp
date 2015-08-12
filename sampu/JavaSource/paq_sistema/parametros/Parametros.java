@@ -153,6 +153,10 @@ public class Parametros {
         lis_parametros.add(new Parametro("3", "p_nrh_rubro_acumula_decimos", "Indica el rubro para saber si un empleado acumula los decimos true=acumula, false=no acumula ", "330","NRH_RUBRO", "IDE_NRRUB", "DETALLE_NRRUB"));
         lis_parametros.add(new Parametro("3", "p_nrh_rubro_base_imponible_mes_anterior", "Indica el rubro donde se va a importar el sueldo base del mes anterior ", "329","NRH_RUBRO", "IDE_NRRUB", "DETALLE_NRRUB"));
         lis_parametros.add(new Parametro("3", "p_nrh_rubro_imponible_mes_anterior", "Indica el rubro para del mes anteriro que se toma para el nuevo rubro ", "329","NRH_RUBRO", "IDE_NRRUB", "DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("3", "p_nrh_rubro_fondreser_acum_ante", "Indica el rubro fondos de reserva acumulado a ser importado para la nomina vigente", "136","NRH_RUBRO", "IDE_NRRUB", "DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("3", "p_nrh_rubro_fondreser_nomi_ante", "Indica el rubro fondos de reserva pago en nomina a ser importado para la nomina vigente", "29","NRH_RUBRO", "IDE_NRRUB", "DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("3", "p_nrh_rubro_fondreser_acum_pago", "Indica el rubro fondos de reserva acumulados con el cual se va a pagar en la nomina vigente", "338","NRH_RUBRO", "IDE_NRRUB", "DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("3", "p_nrh_rubro_fondreser_nomi_pago", "Indica el rubro fondos de reserva en nomina con el cual se va a pagar en la nomina vigente", "339","NRH_RUBRO", "IDE_NRRUB", "DETALLE_NRRUB"));
       
         lis_parametros.add(new Parametro("3", "p_nrh_trubro_egreso_informativo", "Indica el tipo de rubro Egreso Informativo (Tipo Rol) ", "2","NRH_TIPO_RUBRO", "IDE_NRTIR", "DETALLE_NRTIR"));
         lis_parametros.add(new Parametro("3", "p_nrh_trubro_ingreso_informativo", "Indica el tipo de rubro Ingreso Informativo (Tipo Rol) ", "3","NRH_TIPO_RUBRO", "IDE_NRTIR", "DETALLE_NRTIR"));
