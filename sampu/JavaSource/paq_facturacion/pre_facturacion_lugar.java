@@ -184,7 +184,7 @@ public class pre_facturacion_lugar extends Pantalla{
 		bot_limpiar.setIcon("ui-icon-cancel");
 		bot_limpiar.setMetodo("limpiar");
 		String condicion="select ide_bogrm from fac_venta_lugar a, fac_usuario_lugar b where a.ide_falug=b.ide_falug and ide_usua in ("+utilitario.getVariable("ide_usua")+")";
-		System.out.println(" gfgfgf "+condicion);
+	//	System.out.println(" gfgfgf "+condicion);
 		aut_factura.setId("aut_factura");     
 		aut_factura.setAutoCompletar(ser_facturacion.getDatosFactura("0",condicion)); //1 carga todos, 0 carga por grupos enviados
 		aut_factura.setMetodoChange("seleccionoAutocompletar"); //ejecuta el metodo seleccionoAutocompletar
