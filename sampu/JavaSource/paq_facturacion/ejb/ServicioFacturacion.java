@@ -60,7 +60,7 @@ public class ServicioFacturacion {
 							tab_datos_factura +=" and b.ide_bogrm in ("+grupoMaterial+") ";
 						}
 						tab_datos_factura += " order by autorizacion_sri_bogrm";
-						System.out.println("datos factura");
+						//System.out.println("datos factura");
 						return tab_datos_factura;
 	}
 	 public String getCabeceraFactura(String grupos,String cliente){
