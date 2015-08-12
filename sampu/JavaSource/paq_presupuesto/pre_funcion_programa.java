@@ -187,7 +187,7 @@ public void validaSubActividad(AjaxBehaviorEvent evt){
 			return;
 		}
 		
-		if(tab_funcion_programa.isFocus()){
+		else if(tab_funcion_programa.isFocus()){
 			
 		
 		System.out.println("vine por otro lado ");
@@ -224,17 +224,7 @@ public void validaSubActividad(AjaxBehaviorEvent evt){
 		}
 		}
 		
-		if (tab_funcion_programa.guardar()) {
-			if (tab_vigente.guardar()) {
-				guardarPantalla();
-				//Actualizar el arbol
-				arb_funcion_programa.ejecutarSql();
-				utilitario.addUpdate("arb_funcion_programa");
-				
-				
-			}
-			
-		}
+		
 	}
 
 
