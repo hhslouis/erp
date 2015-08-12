@@ -54,6 +54,10 @@ public class ServicioNomina {
 	public static String P_NRH_ACUMULA_DECIMOS="";
 	public static String P_NRH_BASE_IMPONIBLE_MES_ANTERIOR="";
 	public static String P_NRH_RUBRO_IMPONIBLE_MES_ANTERIOR="";
+	public static String P_NRH_RUBRO_FONRESERV_ACUM_ANT="";
+	public static String P_NRH_RUBRO_FONRESERV_NOM_ANT="";
+	public static String P_NRH_RUBRO_FONRESERV_ACUM_PAGO="";
+	public static String P_NRH_RUBRO_FONRESERV_NOM_PAGO="";
 
 
 
@@ -280,7 +284,7 @@ public class ServicioNomina {
 		"WHERE ACTIVO_GEPRO=true ORDER BY mes.IDE_GEMES ASC "; 
 
 
-		System.out.println("imprimiendo combo de periodos "+sql_combo_gepro);
+		//System.out.println("imprimiendo combo de periodos "+sql_combo_gepro);
 		return sql_combo_gepro;
 	}
 
@@ -296,7 +300,7 @@ public class ServicioNomina {
 				"INNER JOIN GEN_MES MES ON MES.IDE_GEMES=PER.IDE_GEMES " +
 				"INNER JOIN GEN_ANIO ANI ON ANI.IDE_GEANI=PER.IDE_GEANI WHERE ACTIVO_GEPRO=true "+
 				"ORDER BY mes.IDE_GEMES ASC";
-		System.out.println("SM sql sql_combo_gepro  "+sql_combo_gepro);
+		//System.out.println("SM sql sql_combo_gepro  "+sql_combo_gepro);
 		return sql_combo_gepro;
 	}
 
@@ -1343,7 +1347,7 @@ public class ServicioNomina {
        System.out.println(" recivo parametro de entrada getTipoNomina...  " + IDE_NRTIN);
 		if (IDE_NRTIN != null && !IDE_NRTIN.isEmpty()){
 			TablaGenerica tab_tn=utilitario.consultar("select * from NRH_TIPO_NOMINA where IDE_NRTIN="+IDE_NRTIN);
-			 System.out.println(" ejecuto sql.DDDDD.. " + tab_tn.getSql());
+			// System.out.println(" ejecuto sql.DDDDD.. " + tab_tn.getSql());
 			return tab_tn;
 		}
 		return null;
@@ -1850,6 +1854,10 @@ public class ServicioNomina {
 			double dou_tot_recibir=0;
 			double dou_tot_egresos=0;
 			double dou_irm=0;
+			if (ide_geedp.equalsIgnoreCase("93")){
+				System.out.println("edad "+tab_aportaciones_empleados.getValor(i,"EDAD"));
+				
+			}
 			try {
 				dou_tot_recibir=Double.parseDouble(tab_aportaciones_empleados.getValor(i, "TOT_RECIBIR"));
 				dou_tot_egresos=Double.parseDouble(tab_aportaciones_empleados.getValor(i, "TOT_EGRESOS"));
@@ -1861,10 +1869,11 @@ public class ServicioNomina {
 			BigDecimal big_irm=new BigDecimal(dou_irm);
 			big_irm=big_irm.setScale(2, RoundingMode.HALF_UP);
 
-			if (ide_geedp.equalsIgnoreCase("38")){
+			if (ide_geedp.equalsIgnoreCase("93")){
 				System.out.println("t. rec antes "+dou_tot_recibir);
 				System.out.println("t. egr antes "+dou_tot_egresos);
 				System.out.println("imp antes "+dou_irm);
+				System.out.println("ide_geedp "+ide_geedp);
 			}
 
 			if (dou_irm<=0){
@@ -1953,16 +1962,20 @@ public class ServicioNomina {
 
 
 				// verificao si el empleado es de tercera edad o discapacitado y aplico el factor multiplicador
-				int int_edad=0;
+				double int_edad=0;
 				try {
-					int_edad=Integer.parseInt(edad);
+					int_edad=Double.parseDouble(edad);
+					
 				} catch (Exception e) {
 					// TODO: handle exception
+						System.out.println("entro exception "+int_edad+ " error "+e );
 				}
 				double dou_deduccion_gasto_discapacitado=0;
-				if ((discapacitado_gtemp!=null && !discapacitado_gtemp.isEmpty() 
-						&& discapacitado_gtemp.equalsIgnoreCase("1")) || int_edad>=65){
+				
+					if ((discapacitado_gtemp!=null && !discapacitado_gtemp.isEmpty() 
+						&& discapacitado_gtemp.equalsIgnoreCase("true")) || int_edad>=65){
 					// CALCULO DE DEDUCCION DE GASTOS PARA DISCAPACITADO
+						
 					int factor_multi_disc=1;
 					try {
 						factor_multi_disc=Integer.parseInt(utilitario.getVariable("p_factor_multiplicador_renta_discapacitados"));	
@@ -1979,26 +1992,38 @@ public class ServicioNomina {
 					} catch (Exception e) {
 						// TODO: handle exception
 					}
+					/*
+					if (ide_geedp.equalsIgnoreCase("93")){
 
-					//				System.out.println("ide geedp "+ide_geedp);
-					//				System.out.println("porcentaje discapacidad "+porcentaje_discapacidad);
-					//				System.out.println("edad "+edad);
-					//				System.out.println("minimo excedente * factor multiplicador "+dou_deduccion_gasto_discapacitado);
-
-
+									System.out.println("ide geedp "+ide_geedp);
+									System.out.println("porcentaje discapacidad "+porcentaje_discapacidad);
+									System.out.println("edad "+edad);
+									System.out.println("minimo excedente * factor multiplicador "+dou_deduccion_gasto_discapacitado);
+						}
+					*/
 					TablaGenerica tab_btd=utilitario.consultar("select * from SRI_BENEFICIO_TRIBUTARIO_DISC " +
-							"where "+porcentaje_discapacidad+" BETWEEN GRADO_INICIAL_SRBTD and GRADO_FINAL_SRBTD");				
+							"where "+porcentaje_discapacidad+" BETWEEN GRADO_INICIAL_SRBTD and GRADO_FINAL_SRBTD");	
+					/*
+							if (ide_geedp.equalsIgnoreCase("93")){
+
+								System.out.println("sql porcentaje de discapacidad  ");
+								tab_btd.imprimirSql();
+							}
+							*/
 
 					if (tab_btd.getTotalFilas()>0){
 						try {
 							porcentaje_beneficio_aplica=Double.parseDouble(tab_btd.getValor("PORCENTAJE_APLICA_SRBTD"));	
 						} catch (Exception e) {
 							// TODO: handle exception
+							System.out.println("entre exception porcentaje beneficio "+e);
 						}
 					}
-					//				System.out.println("porcentaje beneficio aplica "+porcentaje_beneficio_aplica);
+						//			System.out.println("porcentaje beneficio aplica "+porcentaje_beneficio_aplica);
 
 					dou_deduccion_gasto_discapacitado=(dou_deduccion_gasto_discapacitado*porcentaje_beneficio_aplica)/100;
+					//System.out.println("beneficio dou_deduccion_gastos "+dou_deduccion_gastos);
+					//System.out.println("beneficio dou_deduccion_gasto_discapacitado "+dou_deduccion_gasto_discapacitado);
 
 					// sumo a la deduccion de gastos mas la deduccion de gastos de discapacitado o tercera edad segun la ley 
 					dou_deduccion_gastos=dou_deduccion_gastos+dou_deduccion_gasto_discapacitado;
@@ -2059,8 +2084,9 @@ public class ServicioNomina {
 
 
 
-				if (ide_geedp.equalsIgnoreCase("38")){
+				if (ide_geedp.equalsIgnoreCase("93")){
 					System.out.println("IDE GEEDP EMPLEADO ***** "+ide_geedp);
+					System.out.println("edad ***** "+edad);
 
 					System.out.println("total ing proyectado "+dou_tot_ing_proy);
 					System.out.println("total ing mensual "+dou_tot_ing_mensual);
@@ -2592,6 +2618,9 @@ public class ServicioNomina {
 		P_NRH_ACUMULA_DECIMOS=utilitario.getVariable("p_nrh_rubro_acumula_decimos");		
 		P_NRH_BASE_IMPONIBLE_MES_ANTERIOR=utilitario.getVariable("p_nrh_rubro_base_imponible_mes_anterior");
 		P_NRH_RUBRO_IMPONIBLE_MES_ANTERIOR=utilitario.getVariable("p_nrh_rubro_imponible_mes_anterior");
+		P_NRH_RUBRO_FONRESERV_ACUM_PAGO=utilitario.getVariable("p_nrh_rubro_fondreser_acum_pago");
+		P_NRH_RUBRO_FONRESERV_NOM_PAGO=utilitario.getVariable("p_nrh_rubro_fondreser_nomi_pago");	
+
 		tab_deta_rubros_rol=getDetalleRubrosRolVacia();
 	}
 
@@ -2629,6 +2658,8 @@ public class ServicioNomina {
 			P_NRH_RUBRO_DIAS_PEND_VACACION=utilitario.getVariable("p_nrh_rubro_dias_pendientes_vacacion");
 			P_NRH_ACUMULA_DECIMOS=utilitario.getVariable("p_nrh_rubro_acumula_decimos");		
 			P_NRH_BASE_IMPONIBLE_MES_ANTERIOR=utilitario.getVariable("p_nrh_rubro_base_imponible_mes_anterior");
+			P_NRH_RUBRO_FONRESERV_ACUM_PAGO=utilitario.getVariable("p_nrh_rubro_fondreser_acum_pago");
+			P_NRH_RUBRO_FONRESERV_NOM_PAGO=utilitario.getVariable("p_nrh_rubro_fondreser_nomi_pago");	
 
 			String ide_geedp="";
 			String ide_gtemp="";
@@ -2645,7 +2676,9 @@ public class ServicioNomina {
 			String fecha_fin_subrogacion="";
 			String base_imponible_mes_anterior="";
 			String dias_pendientes_vacacion;
-			System.out.println("sql emp "+tab_empleados_departamento.getSql());
+			String fondo_reserva_acum_pago="";
+			String fondo_reserva_nom_pago="";
+			//System.out.println("sql emp "+tab_empleados_departamento.getSql());
 
 			String IDE_NRTIN="";
 			try {
@@ -2676,7 +2709,7 @@ public class ServicioNomina {
 				acumula_decimos=tab_empleados_departamento.getValor(i,"ACUMULA_DECIMO_GTEMP");
 				//++++pilas aqui enviar parametro para calculo del decimo y ruro anterior
 				// calculamos el rol del empleado
-				calcularRolIndividual(tab_rubros,ide_gtemp, ide_geedp, ide_nrrol, fecha_ingreso, fecha_contrato,IDE_GEREG,RMU, acumula_fondos, ide_gepro, fecha_inicial_gepro, fecha_final_gepro, fecha_subroga,fecha_fin_subrogacion,RMU_CARGO_SUBROGA,ajuste_sueldo,fecha_ajuste,dias_pendientes_vacacion,ide_inicial,nro_dias_comercial,IDE_NRTIN,acumula_decimos,base_imponible_mes_anterior);
+				calcularRolIndividual(tab_rubros,ide_gtemp, ide_geedp, ide_nrrol, fecha_ingreso, fecha_contrato,IDE_GEREG,RMU, acumula_fondos, ide_gepro, fecha_inicial_gepro, fecha_final_gepro, fecha_subroga,fecha_fin_subrogacion,RMU_CARGO_SUBROGA,ajuste_sueldo,fecha_ajuste,dias_pendientes_vacacion,ide_inicial,nro_dias_comercial,IDE_NRTIN,acumula_decimos,base_imponible_mes_anterior,fondo_reserva_acum_pago,fondo_reserva_nom_pago);
 				ide_inicial=ide_inicial+tab_rubros.getTotalFilas();
 
 			}
@@ -2755,6 +2788,8 @@ public class ServicioNomina {
 			P_NRH_RUBRO_DIAS_PEND_VACACION=utilitario.getVariable("p_nrh_rubro_dias_pendientes_vacacion");
 			P_NRH_ACUMULA_DECIMOS=utilitario.getVariable("p_nrh_rubro_acumula_decimos");		
 			P_NRH_BASE_IMPONIBLE_MES_ANTERIOR=utilitario.getVariable("p_nrh_rubro_base_imponible_mes_anterior");
+			P_NRH_RUBRO_FONRESERV_ACUM_PAGO=utilitario.getVariable("p_nrh_rubro_fondreser_acum_pago");
+			P_NRH_RUBRO_FONRESERV_NOM_PAGO=utilitario.getVariable("p_nrh_rubro_fondreser_nomi_pago");	
 
 			String ide_geedp="";
 			String ide_gtemp="";
@@ -2771,6 +2806,8 @@ public class ServicioNomina {
 			String fecha_fin_subrogacion="";
 			String dias_pendientes_vacacion;
 			String base_imponible_mes_anterior="";
+			String fondo_reserva_acum_pago="";
+			String fondo_reserva_nom_pago="";
 			System.out.println("sql emp "+tab_empleados_departamento.getSql());
 
 			String IDE_NRTIN="";
@@ -2802,7 +2839,7 @@ public class ServicioNomina {
 				dias_pendientes_vacacion=tab_empleados_departamento.getValor(i,"DIAS_VACACION");
 
 				// calculamos el rol del empleado
-				calcularRolIndividualLiquidacion(tab_rubros,ide_gtemp, ide_geedp, ide_nrrol, fecha_ingreso, fecha_contrato,IDE_GEREG,RMU, acumula_fondos, ide_gepro, fecha_inicial_gepro, fecha_final_gepro, fecha_subroga,fecha_fin_subrogacion,RMU_CARGO_SUBROGA,ajuste_sueldo,fecha_ajuste,dias_pendientes_vacacion,ide_inicial,nro_dias_comercial,IDE_NRTIN,acumula_decimos,base_imponible_mes_anterior);
+				calcularRolIndividualLiquidacion(tab_rubros,ide_gtemp, ide_geedp, ide_nrrol, fecha_ingreso, fecha_contrato,IDE_GEREG,RMU, acumula_fondos, ide_gepro, fecha_inicial_gepro, fecha_final_gepro, fecha_subroga,fecha_fin_subrogacion,RMU_CARGO_SUBROGA,ajuste_sueldo,fecha_ajuste,dias_pendientes_vacacion,ide_inicial,nro_dias_comercial,IDE_NRTIN,acumula_decimos,base_imponible_mes_anterior,fondo_reserva_acum_pago,fondo_reserva_nom_pago);
 				ide_inicial=ide_inicial+tab_rubros.getTotalFilas();
 
 			}
@@ -2947,6 +2984,8 @@ public class ServicioNomina {
 		P_NRH_RUBRO_DIAS_PEND_VACACION=utilitario.getVariable("p_nrh_rubro_dias_pendientes_vacacion");
 		P_NRH_ACUMULA_DECIMOS=utilitario.getVariable("p_nrh_rubro_acumula_decimos");		
 		P_NRH_BASE_IMPONIBLE_MES_ANTERIOR=utilitario.getVariable("p_nrh_rubro_base_imponible_mes_anterior");
+		P_NRH_RUBRO_FONRESERV_ACUM_PAGO=utilitario.getVariable("p_nrh_rubro_fondreser_acum_pago");
+		P_NRH_RUBRO_FONRESERV_NOM_PAGO=utilitario.getVariable("p_nrh_rubro_fondreser_nomi_pago");	
 
 		System.out.println("generar decimos");
 		System.out.println("sql rubros "+tab_rubros.getSql());
@@ -2996,7 +3035,7 @@ public class ServicioNomina {
 
 
 		// insertarmos todos los rubros del empleado e importamos los valores unicamente de los rubros de forma de calculo (IMPORTADO)
-		insertarDetallesRolEmpleado(ide_geedp, ide_nrrol, tab_rubros,false, boo_tiene_anticipos, IDE_GEREG,RMU, acumula_fondos, fecha_ingreso, fecha_contrato, ide_gepro, fecha_inicial_gepro, fecha_final_gepro,"","","","","",dias_pend_vacacion,nro_dias_comercial,false,"","");
+		insertarDetallesRolEmpleado(ide_geedp, ide_nrrol, tab_rubros,false, boo_tiene_anticipos, IDE_GEREG,RMU, acumula_fondos, fecha_ingreso, fecha_contrato, ide_gepro, fecha_inicial_gepro, fecha_final_gepro,"","","","","",dias_pend_vacacion,nro_dias_comercial,false,"","","","");
 
 		int indice=tab_rubros.getTotalFilas();
 
@@ -3169,7 +3208,8 @@ public class ServicioNomina {
 		P_NRH_RUBRO_DIAS_PEND_VACACION=utilitario.getVariable("p_nrh_rubro_dias_pendientes_vacacion");
 		P_NRH_ACUMULA_DECIMOS=utilitario.getVariable("p_nrh_rubro_acumula_decimos");		
 		P_NRH_BASE_IMPONIBLE_MES_ANTERIOR=utilitario.getVariable("p_nrh_rubro_base_imponible_mes_anterior");
-
+		P_NRH_RUBRO_FONRESERV_ACUM_PAGO=utilitario.getVariable("p_nrh_rubro_fondreser_acum_pago");
+		P_NRH_RUBRO_FONRESERV_NOM_PAGO=utilitario.getVariable("p_nrh_rubro_fondreser_nomi_pago");	
 
 
 		String ide_geedp="";
@@ -3187,7 +3227,8 @@ public class ServicioNomina {
 		String fecha_fin_subrogacion="";
 		String dias_pendientes_vacacion="";
 		String base_imponible_mes_anterior="";
-
+		String fondo_reserva_acum_pago="";
+		String fondo_reserva_nom_pago="";
 
 
 		TablaGenerica tab_rub_faltantes=getRubrosFaltantes(str_ide_nrrol);
@@ -3259,7 +3300,7 @@ public class ServicioNomina {
 			// calculamos el rol del empleado 
 			long ini=System.currentTimeMillis();
 			//			System.out.println("ide geedp "+ide_geedp+" indice ultimo detalle "+indice_ultimo_detalle+" det rol "+tab_drol.getSql());
-			calcularRolIndividual(tab_drol, ide_gtemp,ide_geedp, str_ide_nrrol, fecha_ingreso, fecha_contrato, IDE_GEREG,RMU, acumula_fondos, ide_gepro, fecha_ini_gepro, fecha_fin_gepro,fecha_subroga,fecha_fin_subrogacion,RMU_CARGO_SUBROGA,ajuste_sueldo,fecha_ajuste,dias_pendientes_vacacion,nro_dias_comercial_nrtit,IDE_NRTIN,acumula_decimos,base_imponible_mes_anterior);
+			calcularRolIndividual(tab_drol, ide_gtemp,ide_geedp, str_ide_nrrol, fecha_ingreso, fecha_contrato, IDE_GEREG,RMU, acumula_fondos, ide_gepro, fecha_ini_gepro, fecha_fin_gepro,fecha_subroga,fecha_fin_subrogacion,RMU_CARGO_SUBROGA,ajuste_sueldo,fecha_ajuste,dias_pendientes_vacacion,nro_dias_comercial_nrtit,IDE_NRTIN,acumula_decimos,base_imponible_mes_anterior,fondo_reserva_acum_pago,fondo_reserva_nom_pago);
 			long fin=System.currentTimeMillis();
 		}
 
@@ -3375,6 +3416,9 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 		P_NRH_RUBRO_DIAS_PEND_VACACION=utilitario.getVariable("p_nrh_rubro_dias_pendientes_vacacion");
 		P_NRH_ACUMULA_DECIMOS=utilitario.getVariable("p_nrh_rubro_acumula_decimos");		
 		P_NRH_BASE_IMPONIBLE_MES_ANTERIOR=utilitario.getVariable("p_nrh_rubro_base_imponible_mes_anterior");
+		P_NRH_RUBRO_FONRESERV_ACUM_PAGO=utilitario.getVariable("p_nrh_rubro_fondreser_acum_pago");
+		P_NRH_RUBRO_FONRESERV_NOM_PAGO=utilitario.getVariable("p_nrh_rubro_fondreser_nomi_pago");	
+		
 
 		tab_deta_rubros_rol=getDetalleRubrosRolVacia();
 
@@ -3393,6 +3437,8 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 		String fecha_fin_subrogacion="";
 		String dias_pendientes_vacacion="";
 		String base_imponible_mes_anterior="";
+		String fondo_reserva_acum_pago="";
+		String fondo_reserva_nom_pago="";
 
 		TablaGenerica tab_rub_faltantes=getRubrosFaltantes(str_ide_nrrol,str_ide_geedp);
 		if (tab_rub_faltantes.getTotalFilas()>0){
@@ -3453,7 +3499,7 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 
 			// calculamos el rol del empleado 
 			long ini=System.currentTimeMillis();
-			calcularRolIndividual(tab_drol, ide_gtemp,ide_geedp, str_ide_nrrol, fecha_ingreso, fecha_contrato, IDE_GEREG,RMU, acumula_fondos, ide_gepro, fecha_ini_gepro, fecha_fin_gepro,fecha_subroga,fecha_fin_subrogacion,RMU_CARGO_SUBROGA,ajuste_sueldo,fecha_ajuste,dias_pendientes_vacacion,nro_dias_comercial_nrtit,IDE_NRTIN,acumula_decimos,base_imponible_mes_anterior);
+			calcularRolIndividual(tab_drol, ide_gtemp,ide_geedp, str_ide_nrrol, fecha_ingreso, fecha_contrato, IDE_GEREG,RMU, acumula_fondos, ide_gepro, fecha_ini_gepro, fecha_fin_gepro,fecha_subroga,fecha_fin_subrogacion,RMU_CARGO_SUBROGA,ajuste_sueldo,fecha_ajuste,dias_pendientes_vacacion,nro_dias_comercial_nrtit,IDE_NRTIN,acumula_decimos,base_imponible_mes_anterior,fondo_reserva_acum_pago,fondo_reserva_nom_pago);
 			long fin=System.currentTimeMillis();
 
 		}
@@ -3492,7 +3538,7 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 
 	int indice_detalle=0;
 
-	public void calcularRolIndividual(TablaGenerica tab_det_rol,String ide_gtemp,String ide_geedp,String ide_nrrol,String fecha_ingreso,String fecha_contrato,String IDE_GEREG,String RMU,String acumula_fondos,String ide_gepro,String fecha_inicial_gepro,String fecha_final_gepro,String fecha_subroga,String fecha_fin_subroga,String RMU_CARGO_SUBROGA,String ajuste_sueldo,String fecha_ajuste_sueldo,String dias_pend_vacacion,int nro_comercial_nrtit,String ide_nrtin,String acumula_decimo,String base_imponible_mes_anterior){
+	public void calcularRolIndividual(TablaGenerica tab_det_rol,String ide_gtemp,String ide_geedp,String ide_nrrol,String fecha_ingreso,String fecha_contrato,String IDE_GEREG,String RMU,String acumula_fondos,String ide_gepro,String fecha_inicial_gepro,String fecha_final_gepro,String fecha_subroga,String fecha_fin_subroga,String RMU_CARGO_SUBROGA,String ajuste_sueldo,String fecha_ajuste_sueldo,String dias_pend_vacacion,int nro_comercial_nrtit,String ide_nrtin,String acumula_decimo,String base_imponible_mes_anterior,String fondo_reserva_acum_pago, String fondo_reserva_nom_pago){
 
 		boolean boo_tiene_anticipos=false;
 		tab_cuotas=serv_anticipo.getCuotasAnticipoPorPagarEmpleado(ide_gtemp, ide_gepro);
@@ -3508,10 +3554,10 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 
 		if (ide_nrtin.equalsIgnoreCase(utilitario.getVariable("p_nrh_tipo_nomina_liquidacion"))){
 			// insertarmos todos los rubros del empleado e importamos los valores unicamente de los rubros de forma de calculo (IMPORTADO)
-			actualizarDetallesRolEmpleado(ide_geedp, ide_nrrol, tab_det_rol, boo_tiene_beneficio_guarderia, boo_tiene_anticipos, IDE_GEREG,RMU, acumula_fondos, fecha_ingreso, fecha_contrato, ide_gepro, fecha_inicial_gepro, fecha_final_gepro,fecha_subroga,fecha_fin_subroga,RMU_CARGO_SUBROGA,ajuste_sueldo,fecha_ajuste_sueldo,dias_pend_vacacion,nro_comercial_nrtit,true,acumula_decimo,base_imponible_mes_anterior);
+			actualizarDetallesRolEmpleado(ide_geedp, ide_nrrol, tab_det_rol, boo_tiene_beneficio_guarderia, boo_tiene_anticipos, IDE_GEREG,RMU, acumula_fondos, fecha_ingreso, fecha_contrato, ide_gepro, fecha_inicial_gepro, fecha_final_gepro,fecha_subroga,fecha_fin_subroga,RMU_CARGO_SUBROGA,ajuste_sueldo,fecha_ajuste_sueldo,dias_pend_vacacion,nro_comercial_nrtit,true,acumula_decimo,base_imponible_mes_anterior,fondo_reserva_acum_pago,fondo_reserva_nom_pago);
 		}else{
 			// insertarmos todos los rubros del empleado e importamos los valores unicamente de los rubros de forma de calculo (IMPORTADO)
-			actualizarDetallesRolEmpleado(ide_geedp, ide_nrrol, tab_det_rol, boo_tiene_beneficio_guarderia, boo_tiene_anticipos, IDE_GEREG,RMU, acumula_fondos, fecha_ingreso, fecha_contrato, ide_gepro, fecha_inicial_gepro, fecha_final_gepro,fecha_subroga,fecha_fin_subroga,RMU_CARGO_SUBROGA,ajuste_sueldo,fecha_ajuste_sueldo,dias_pend_vacacion,nro_comercial_nrtit,false,acumula_decimo,base_imponible_mes_anterior);
+			actualizarDetallesRolEmpleado(ide_geedp, ide_nrrol, tab_det_rol, boo_tiene_beneficio_guarderia, boo_tiene_anticipos, IDE_GEREG,RMU, acumula_fondos, fecha_ingreso, fecha_contrato, ide_gepro, fecha_inicial_gepro, fecha_final_gepro,fecha_subroga,fecha_fin_subroga,RMU_CARGO_SUBROGA,ajuste_sueldo,fecha_ajuste_sueldo,dias_pend_vacacion,nro_comercial_nrtit,false,acumula_decimo,base_imponible_mes_anterior,fondo_reserva_acum_pago,fondo_reserva_nom_pago);
 		}
 
 
@@ -3572,7 +3618,7 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 	}
 
 	String str_ide_nramo_descontar="";
-	public String importarRubro(String ide_geedp,String ide_nrrub,boolean boo_tiene_beneficio_guarderia,boolean boo_tiene_anticipos,String IDE_GEREG,String RMU,String acumula_fondos,String fecha_ingreso,String fecha_contrato,String ide_gepro,String fecha_inicial_gepro,String fecha_final_gepro,String dias_antiguedad,String fecha_subrogacion,String fecha_fin_subrogacion,String RMU_CARGO_SUBROGA,String ajuste_sueldo,String fecha_ajuste_sueldo,String dias_pendientes_vacacion,int NRO_DIAS_COMERCIAL_NRTIT,boolean es_liquidacion,String acumula_decimo,String base_imponible_mes_anterior){
+	public String importarRubro(String ide_geedp,String ide_nrrub,boolean boo_tiene_beneficio_guarderia,boolean boo_tiene_anticipos,String IDE_GEREG,String RMU,String acumula_fondos,String fecha_ingreso,String fecha_contrato,String ide_gepro,String fecha_inicial_gepro,String fecha_final_gepro,String dias_antiguedad,String fecha_subrogacion,String fecha_fin_subrogacion,String RMU_CARGO_SUBROGA,String ajuste_sueldo,String fecha_ajuste_sueldo,String dias_pendientes_vacacion,int NRO_DIAS_COMERCIAL_NRTIT,boolean es_liquidacion,String acumula_decimo,String base_imponible_mes_anterior,String fondo_reserva_acum_pago,String fondo_reserva_nom_pago){
 
 		// importacion beneficios de guarderia
 		if (boo_tiene_beneficio_guarderia){
@@ -3698,7 +3744,7 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 
 		// importa si acumula o no fondos de reserva
 		else if (ide_nrrub.equalsIgnoreCase(P_NRH_RUBRO_ACUMULA_FONDOS)){
-			System.out.println("acumlo fondos reserva"+acumula_fondos);
+			//System.out.println("acumlo fondos reserva"+acumula_fondos);
 
 			if (acumula_fondos==null
 					|| acumula_fondos.isEmpty()){
@@ -3710,14 +3756,14 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 			else if (acumula_fondos.equals("false")){
 				return "0";
 			}
-			System.out.println("retorna acumlo fondos reserva"+acumula_fondos);
+			//System.out.println("retorna acumlo fondos reserva"+acumula_fondos);
 
 			return acumula_fondos;
 		}
 		
 		// importa si acumula decimo tercero
 		else if (ide_nrrub.equalsIgnoreCase(P_NRH_ACUMULA_DECIMOS)){
-			System.out.println("acumlo decimo"+acumula_decimo);
+			//System.out.println("acumlo decimo"+acumula_decimo);
 			if (acumula_decimo==null
 					|| acumula_decimo.isEmpty()){
 				return "0";
@@ -3734,24 +3780,64 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 					TablaGenerica valor_base_mes_anterior=utilitario.consultar("select a.ide_nrrol,a.ide_gepro,valor_nrdro from nrh_rol a, nrh_detalle_rol b"
 							+" where a.ide_nrrol=b.ide_nrrol and ide_gepro="+rol_anterior.getValor("gen_ide_gepro")+" and ide_geedp = "+ide_geedp+" and ide_nrder in (select ide_nrder from nrh_detalle_rubro where ide_nrrub="+utilitario.getVariable("p_nrh_rubro_imponible_mes_anterior")+")");
 					
-					System.out.println("imporatndo perido rol mes anterior");
+					//System.out.println("imporatndo perido rol mes anterior");
 					rol_anterior.imprimirSql();
-					System.out.println("imporatndo valor mes anterior");
+					//System.out.println("imporatndo valor mes anterior");
 					valor_base_mes_anterior.imprimirSql();
 					if(valor_base_mes_anterior.getTotalFilas()>0){
 						base_imponible_mes_anterior=valor_base_mes_anterior.getValor("valor_nrdro");
-
-						System.out.println("valor vbase "+base_imponible_mes_anterior);
+						//System.out.println("valor vbase "+base_imponible_mes_anterior);
 
 						return base_imponible_mes_anterior;
 					}
 					else {
 						base_imponible_mes_anterior="0";
-						System.out.println("valor vbasexxx "+base_imponible_mes_anterior);
 
 						return base_imponible_mes_anterior;
 					}
 		}
+		
+		
+		// importa los fondos de reserva acumuados del mes anterior
+				else if (ide_nrrub.equalsIgnoreCase(P_NRH_RUBRO_FONRESERV_ACUM_PAGO)){
+							TablaGenerica rol_anterior=utilitario.consultar("select * from gen_perido_rol where ide_gepro="+ide_gepro);
+							TablaGenerica valor_base_mes_anterior=utilitario.consultar("select a.ide_nrrol,a.ide_gepro,valor_nrdro from nrh_rol a, nrh_detalle_rol b"
+									+" where a.ide_nrrol=b.ide_nrrol and ide_gepro="+rol_anterior.getValor("gen_ide_gepro")+" and ide_geedp = "+ide_geedp+" and ide_nrder in (select ide_nrder from nrh_detalle_rubro where ide_nrrub="+utilitario.getVariable("p_nrh_rubro_fondreser_acum_ante")+")");
+							
+							//rol_anterior.imprimirSql();
+							
+							if(valor_base_mes_anterior.getTotalFilas()>0){
+								fondo_reserva_acum_pago=valor_base_mes_anterior.getValor("valor_nrdro");
+								//System.out.println("valor vbase "+base_imponible_mes_anterior);
+
+								return fondo_reserva_acum_pago;
+							}
+							else {
+								fondo_reserva_acum_pago="0";
+
+								return fondo_reserva_acum_pago;
+							}
+				}
+
+//importa fondos de reserva nomina del mes anterior
+		else if (ide_nrrub.equalsIgnoreCase(P_NRH_RUBRO_FONRESERV_NOM_PAGO)){
+					TablaGenerica rol_anterior=utilitario.consultar("select * from gen_perido_rol where ide_gepro="+ide_gepro);
+					TablaGenerica valor_base_mes_anterior=utilitario.consultar("select a.ide_nrrol,a.ide_gepro,valor_nrdro from nrh_rol a, nrh_detalle_rol b"
+							+" where a.ide_nrrol=b.ide_nrrol and ide_gepro="+rol_anterior.getValor("gen_ide_gepro")+" and ide_geedp = "+ide_geedp+" and ide_nrder in (select ide_nrder from nrh_detalle_rubro where ide_nrrub="+utilitario.getVariable("p_nrh_rubro_fondreser_nomi_ante")+")");
+					
+					if(valor_base_mes_anterior.getTotalFilas()>0){
+						fondo_reserva_nom_pago=valor_base_mes_anterior.getValor("valor_nrdro");
+						//System.out.println("valor vbase "+base_imponible_mes_anterior);
+
+						return fondo_reserva_nom_pago;
+					}
+					else {
+						fondo_reserva_nom_pago="0";
+
+						return fondo_reserva_nom_pago;
+					}
+		}
+
 		// importa numero dias ajuste sueldo
 		else if(ide_nrrub.equals(P_NRH_RUBRO_DIAS_AJUSTE_SUELDO)){	 
 			int int_dias_ajuste=0;
@@ -3936,7 +4022,7 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 		return fecha;
 	}
 
-	public void insertarDetallesRolEmpleado(String ide_geedp,String ide_nrrol,TablaGenerica tab_rubros,boolean boo_tiene_beneficio_guarderia,boolean boo_tiene_anticipos,String IDE_GEREG,String RMU,String acumula_fondos,String fecha_ingreso,String fecha_contrato,String ide_gepro,String fecha_inicial_gepro,String fecha_final_gepro,String fecha_subroga,String fecha_fin_subroga,String RMU_CARGO_SUBROGA,String ajuste_sueldo,String fecha_ajuste_sueldo,String dias_pendientes_vacacion,int nro_dias_comercial_nrtit,boolean es_liquidacion,String acumula_decimos,String base_imponible_mes_anterior){
+	public void insertarDetallesRolEmpleado(String ide_geedp,String ide_nrrol,TablaGenerica tab_rubros,boolean boo_tiene_beneficio_guarderia,boolean boo_tiene_anticipos,String IDE_GEREG,String RMU,String acumula_fondos,String fecha_ingreso,String fecha_contrato,String ide_gepro,String fecha_inicial_gepro,String fecha_final_gepro,String fecha_subroga,String fecha_fin_subroga,String RMU_CARGO_SUBROGA,String ajuste_sueldo,String fecha_ajuste_sueldo,String dias_pendientes_vacacion,int nro_dias_comercial_nrtit,boolean es_liquidacion,String acumula_decimos,String base_imponible_mes_anterior,String fondo_reserva_acum_pago,String fondo_reserva_nom_pago){
 
 		int dias_antiguedad=Integer.parseInt(getTotalDiasLaborados(fecha_ingreso,fecha_final_gepro));
 		int anio=utilitario.getAnio(fecha_inicial_gepro);
@@ -4032,7 +4118,7 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 			tab_deta_rubros_rol.setValor("IDE_NRROL",ide_nrrol);
 			tab_deta_rubros_rol.setValor("ORDEN_CALCULO_NRDRO",tab_rubros.getValor(j, "ORDEN_NRDER"));
 			if(tab_rubros.getValor(j, "IDE_NRFOC").equalsIgnoreCase(P_NRH_RUBRO_IMPORTADO)){
-				String str_valor=importarRubro(ide_geedp, tab_rubros.getValor(j, "IDE_NRRUB"), boo_tiene_beneficio_guarderia, boo_tiene_anticipos, IDE_GEREG,RMU, acumula_fondos, fecha_ingreso, fecha_contrato, ide_gepro, fecha_inicial_gepro, fecha_final_gepro, dias_antiguedad+"",fecha_subroga,fecha_fin_subroga,RMU_CARGO_SUBROGA,ajuste_sueldo,fecha_ajuste_sueldo,dias_pendientes_vacacion,nro_dias_comercial_nrtit,es_liquidacion,acumula_decimos,base_imponible_mes_anterior);
+				String str_valor=importarRubro(ide_geedp, tab_rubros.getValor(j, "IDE_NRRUB"), boo_tiene_beneficio_guarderia, boo_tiene_anticipos, IDE_GEREG,RMU, acumula_fondos, fecha_ingreso, fecha_contrato, ide_gepro, fecha_inicial_gepro, fecha_final_gepro, dias_antiguedad+"",fecha_subroga,fecha_fin_subroga,RMU_CARGO_SUBROGA,ajuste_sueldo,fecha_ajuste_sueldo,dias_pendientes_vacacion,nro_dias_comercial_nrtit,es_liquidacion,acumula_decimos,base_imponible_mes_anterior,fondo_reserva_acum_pago,fondo_reserva_nom_pago);
 				tab_deta_rubros_rol.setValor("VALOR_NRDRO",str_valor);				
 			}
 		}
@@ -4040,7 +4126,7 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 
 	int indice_ultimo_detalle=0;
 	int total_filas_insertadas=0;
-	public void actualizarDetallesRolEmpleado(String ide_geedp,String ide_nrrol,TablaGenerica tab_det_rol,boolean boo_tiene_beneficio_guarderia,boolean boo_tiene_anticipos,String IDE_GEREG,String RMU,String acumula_fondos,String fecha_ingreso,String fecha_contrato,String ide_gepro,String fecha_inicial_gepro,String fecha_final_gepro,String fecha_subroga,String fecha_fin_subroga,String RMU_cARGO_SUBROGA,String ajuste_sueldo,String fecha_ajuste_sueldo,String dias_pend_vacacion,int nro_comercial_nrtit,boolean es_liquidacion,String acumula_decimo,String base_imponible_mes_anterior){
+	public void actualizarDetallesRolEmpleado(String ide_geedp,String ide_nrrol,TablaGenerica tab_det_rol,boolean boo_tiene_beneficio_guarderia,boolean boo_tiene_anticipos,String IDE_GEREG,String RMU,String acumula_fondos,String fecha_ingreso,String fecha_contrato,String ide_gepro,String fecha_inicial_gepro,String fecha_final_gepro,String fecha_subroga,String fecha_fin_subroga,String RMU_cARGO_SUBROGA,String ajuste_sueldo,String fecha_ajuste_sueldo,String dias_pend_vacacion,int nro_comercial_nrtit,boolean es_liquidacion,String acumula_decimo,String base_imponible_mes_anterior,String fondo_reserva_acum_pago, String fondo_reserva_nom_pago){
 
 		int dias_antiguedad=Integer.parseInt(getTotalDiasLaborados(fecha_ingreso,fecha_final_gepro));
 		int anio=utilitario.getAnio(fecha_inicial_gepro);
@@ -4133,7 +4219,7 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 				tab_deta_rubros_rol.setValor("IDE_NRROL",ide_nrrol);
 				tab_deta_rubros_rol.setValor("ORDEN_CALCULO_NRDRO",tab_det_rol.getValor(j, "ORDEN_NRDER"));
 				if(tab_det_rol.getValor(j, "IDE_NRFOC").equalsIgnoreCase(P_NRH_RUBRO_IMPORTADO)){
-					String str_valor=importarRubro(ide_geedp, tab_det_rol.getValor(j, "IDE_NRRUB"), boo_tiene_beneficio_guarderia, boo_tiene_anticipos, IDE_GEREG,RMU, acumula_fondos, fecha_ingreso, fecha_contrato, ide_gepro, fecha_inicial_gepro, fecha_final_gepro, dias_antiguedad+"",fecha_subroga,fecha_fin_subroga,RMU_cARGO_SUBROGA,ajuste_sueldo,fecha_ajuste_sueldo,dias_pend_vacacion,nro_comercial_nrtit,es_liquidacion,acumula_decimo,base_imponible_mes_anterior);
+					String str_valor=importarRubro(ide_geedp, tab_det_rol.getValor(j, "IDE_NRRUB"), boo_tiene_beneficio_guarderia, boo_tiene_anticipos, IDE_GEREG,RMU, acumula_fondos, fecha_ingreso, fecha_contrato, ide_gepro, fecha_inicial_gepro, fecha_final_gepro, dias_antiguedad+"",fecha_subroga,fecha_fin_subroga,RMU_cARGO_SUBROGA,ajuste_sueldo,fecha_ajuste_sueldo,dias_pend_vacacion,nro_comercial_nrtit,es_liquidacion,acumula_decimo,base_imponible_mes_anterior,fondo_reserva_acum_pago,fondo_reserva_nom_pago);
 					tab_deta_rubros_rol.setValor("VALOR_NRDRO",str_valor);
 
 				}else if(tab_det_rol.getValor(j, "IDE_NRFOC").equalsIgnoreCase(P_NRH_RUBRO_FORMULA)
@@ -4213,7 +4299,7 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 	TablaGenerica tab_cuotas=new TablaGenerica();
 	TablaGenerica tab_det_fac_gua=new TablaGenerica();
 
-	public void calcularRolIndividual(TablaGenerica tab_rubros,String ide_gtemp,String ide_geedp,String ide_nrrol,String fecha_ingreso,String fecha_contrato,String IDE_GEREG,String RMU,String acumula_fondos,String ide_gepro,String fecha_inicial_gepro,String fecha_final_gepro,String fecha_subroga,String fecha_fin_subroga,String RMU_CARGO_SUBROGA,String ajuste_sueldo,String fecha_ajuste_sueldo,String dias_pendientes_vacacion,Long ide_inicial,int nro_dias_comercial,String IDE_NRTIN,String acumula_decimo,String base_imponible_mes_anterior){
+	public void calcularRolIndividual(TablaGenerica tab_rubros,String ide_gtemp,String ide_geedp,String ide_nrrol,String fecha_ingreso,String fecha_contrato,String IDE_GEREG,String RMU,String acumula_fondos,String ide_gepro,String fecha_inicial_gepro,String fecha_final_gepro,String fecha_subroga,String fecha_fin_subroga,String RMU_CARGO_SUBROGA,String ajuste_sueldo,String fecha_ajuste_sueldo,String dias_pendientes_vacacion,Long ide_inicial,int nro_dias_comercial,String IDE_NRTIN,String acumula_decimo,String base_imponible_mes_anterior,String fondo_reserva_acum_pago, String fondo_reserva_nom_pago){
 
 		boolean boo_tiene_anticipos=false;
 		tab_cuotas=serv_anticipo.getCuotasAnticipoPorPagarEmpleado(ide_gtemp, ide_gepro);
@@ -4228,7 +4314,7 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 		}
 
 		// insertarmos todos los rubros del empleado e importamos los valores unicamente de los rubros de forma de calculo (IMPORTADO)
-		insertarDetallesRolEmpleado(ide_geedp, ide_nrrol, tab_rubros, boo_tiene_beneficio_guarderia, boo_tiene_anticipos, IDE_GEREG,RMU, acumula_fondos, fecha_ingreso, fecha_contrato, ide_gepro, fecha_inicial_gepro, fecha_final_gepro,fecha_subroga,fecha_fin_subroga,RMU_CARGO_SUBROGA,ajuste_sueldo,fecha_ajuste_sueldo,dias_pendientes_vacacion,nro_dias_comercial,false,acumula_decimo,base_imponible_mes_anterior);
+		insertarDetallesRolEmpleado(ide_geedp, ide_nrrol, tab_rubros, boo_tiene_beneficio_guarderia, boo_tiene_anticipos, IDE_GEREG,RMU, acumula_fondos, fecha_ingreso, fecha_contrato, ide_gepro, fecha_inicial_gepro, fecha_final_gepro,fecha_subroga,fecha_fin_subroga,RMU_CARGO_SUBROGA,ajuste_sueldo,fecha_ajuste_sueldo,dias_pendientes_vacacion,nro_dias_comercial,false,acumula_decimo,base_imponible_mes_anterior,fondo_reserva_acum_pago,fondo_reserva_nom_pago);
 
 
 
@@ -4293,7 +4379,7 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 
 	}
 
-	public void calcularRolIndividualLiquidacion(TablaGenerica tab_rubros,String ide_gtemp,String ide_geedp,String ide_nrrol,String fecha_ingreso,String fecha_contrato,String IDE_GEREG,String RMU,String acumula_fondos,String ide_gepro,String fecha_inicial_gepro,String fecha_final_gepro,String fecha_subroga,String fecha_fin_subroga,String RMU_CARGO_SUBROGA,String ajuste_sueldo,String fecha_ajuste_sueldo,String dias_pendientes_vacacion,Long ide_inicial,int nro_dias_comercial,String ide_nrtin,String acumula_decimos,String base_imponible_mes_anterior){
+	public void calcularRolIndividualLiquidacion(TablaGenerica tab_rubros,String ide_gtemp,String ide_geedp,String ide_nrrol,String fecha_ingreso,String fecha_contrato,String IDE_GEREG,String RMU,String acumula_fondos,String ide_gepro,String fecha_inicial_gepro,String fecha_final_gepro,String fecha_subroga,String fecha_fin_subroga,String RMU_CARGO_SUBROGA,String ajuste_sueldo,String fecha_ajuste_sueldo,String dias_pendientes_vacacion,Long ide_inicial,int nro_dias_comercial,String ide_nrtin,String acumula_decimos,String base_imponible_mes_anterior,String fondo_reserva_acum_pago, String fondo_reserva_nom_pago){
 
 		boolean boo_tiene_anticipos=false;
 		tab_cuotas=serv_anticipo.getCuotasAnticipoPorPagarEmpleado(ide_gtemp, ide_gepro);
@@ -4308,7 +4394,7 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 		}
 
 		// insertarmos todos los rubros del empleado e importamos los valores unicamente de los rubros de forma de calculo (IMPORTADO)
-		insertarDetallesRolEmpleado(ide_geedp, ide_nrrol, tab_rubros, boo_tiene_beneficio_guarderia, boo_tiene_anticipos, IDE_GEREG,RMU, acumula_fondos, fecha_ingreso, fecha_contrato, ide_gepro, fecha_inicial_gepro, fecha_final_gepro,fecha_subroga,fecha_fin_subroga,RMU_CARGO_SUBROGA,ajuste_sueldo,fecha_ajuste_sueldo,dias_pendientes_vacacion,nro_dias_comercial,true,acumula_decimos,base_imponible_mes_anterior);
+		insertarDetallesRolEmpleado(ide_geedp, ide_nrrol, tab_rubros, boo_tiene_beneficio_guarderia, boo_tiene_anticipos, IDE_GEREG,RMU, acumula_fondos, fecha_ingreso, fecha_contrato, ide_gepro, fecha_inicial_gepro, fecha_final_gepro,fecha_subroga,fecha_fin_subroga,RMU_CARGO_SUBROGA,ajuste_sueldo,fecha_ajuste_sueldo,dias_pendientes_vacacion,nro_dias_comercial,true,acumula_decimos,base_imponible_mes_anterior,fondo_reserva_acum_pago,fondo_reserva_nom_pago);
 
 		int indice=tab_rubros.getTotalFilas();
 
@@ -4519,7 +4605,7 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 				"EMP.SEGUNDO_NOMBRE_GTEMP,EDP.IDE_SUCU,EDP.IDE_GTEMP, " +
 				"EDP.IDE_GTTEM " +
 				"ORDER BY EMP.APELLIDO_PATERNO_GTEMP ASC";
-System.out.println("sql getSqlEmpleadosRol..."+sql);
+//System.out.println("sql getSqlEmpleadosRol..."+sql);
 		return sql;
 	}
 
@@ -5231,11 +5317,11 @@ System.out.println("sql getSqlEmpleadosRol..."+sql);
 	 * @return si no existe datos retorna null 
 	 */
 	public TablaGenerica getDetalleRubro(String ide_nrder){
-		System.out.println("SN C_PARAMETRO getDetalleRubro ide_nrder... "+ide_nrder);
+		//System.out.println("SN C_PARAMETRO getDetalleRubro ide_nrder... "+ide_nrder);
 		TablaGenerica tab_dru=utilitario.consultar("select * from NRH_DETALLE_RUBRO where IDE_NRDER="+ide_nrder+" ");
-		System.out.println(" ");
+		//System.out.println(" ");
 		
-		System.out.println("SN sql getDetalleRubro tab_dru ... "+tab_dru.getSql());
+		//System.out.println("SN sql getDetalleRubro tab_dru ... "+tab_dru.getSql());
 		
 		if (tab_dru.getTotalFilas()>0){			
 			return tab_dru;			
@@ -5363,10 +5449,10 @@ System.out.println("sql getSqlEmpleadosRol..."+sql);
 	 * @return TablaGenerica del detalle del rubro
 	 */
 	public TablaGenerica getDetalleRubro(String IDE_NRDTN,String IDE_NRRUB){
-		System.out.println("SN getDetalleRubro C_PARAMETRO  IDE_NRRUB...  "+IDE_NRRUB);
+		//System.out.println("SN getDetalleRubro C_PARAMETRO  IDE_NRRUB...  "+IDE_NRRUB);
 		TablaGenerica tab_detalle_rubro=utilitario.consultar("select * from NRH_DETALLE_RUBRO " +
 				"WHERE IDE_NRDTN="+IDE_NRDTN+" AND IDE_NRRUB="+IDE_NRRUB);
-		System.out.println("SN SQL getDetalleRubro tab_detalle_rubro...  "+tab_detalle_rubro.getSql());
+		//System.out.println("SN SQL getDetalleRubro tab_detalle_rubro...  "+tab_detalle_rubro.getSql());
 		return tab_detalle_rubro;
 
 	}
