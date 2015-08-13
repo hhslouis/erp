@@ -5,6 +5,10 @@
 package paq_sistema.aplicacion;
 
 import framework.aplicacion.Framework;
+
+import java.net.URL;
+import java.net.URLConnection;
+
 import framework.aplicacion.TablaGenerica;
 import framework.componentes.BuscarTabla;
 import framework.componentes.FormatoTabla;
@@ -14,8 +18,10 @@ import framework.componentes.Notificacion;
 import framework.componentes.SeleccionArchivo;
 import framework.componentes.Tabla;
 import framework.componentes.TerminalTabla;
+
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
@@ -40,12 +46,17 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.push.PushContext;
 import org.primefaces.push.PushContextFactory;
 import org.primefaces.util.Constants;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
@@ -918,7 +929,95 @@ public class Utilitario extends Framework {
 			fc.responseComplete();
 		}
 	}
+	public void crearArchivo(File[] archivos, String nombrearchivo) throws Exception {
+		//http://www.devtroce.com/2010/06/25/comprimir-y-descomprir-archivos-zip-con-java/
+		int BUFFER_SIZE = 1024;
+		// objetos en memoria
+		FileInputStream fis = null;
+		if (nombrearchivo.indexOf(".txt") < 0) {
+			nombrearchivo.concat(".txt");
+		}
+		FacesContext fc = FacesContext.getCurrentInstance();
+		ExternalContext ec = fc.getExternalContext();
+		HttpServletResponse resp = (HttpServletResponse) ec.getResponse();
+		resp.addHeader("Content-Disposition", "attachment; filename=\"" + nombrearchivo + "\"");
 
+		// buffer
+		byte[] buffer = new byte[BUFFER_SIZE];
+		try {
+		    ServletOutputStream out = resp.getOutputStream(); 
+
+			// fichero comprimido
+			for (File pFile : archivos) {
+				// fichero a comprimir
+				fis = new FileInputStream(pFile);
+				int len = 0;
+				// zippear
+				while ((len = fis.read(buffer, 0, BUFFER_SIZE)) != -1) {
+					out.write(buffer, 0, len);
+				}
+			}
+			// volcar la memoria al disco
+			out.flush();
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			// cerramos los files
+			fis.close();
+			fc.getApplication().getStateManager().saveView(fc);
+			fc.responseComplete();
+		}
+	}
+
+	/**
+	 * Crea un archivo comprimido de varios archivo
+	 *
+	 * @param archivos arreglo de File con el numero de archivos
+	 * @param nombrearchivo nombre del archivo comprimido
+	 */
+	public void downloadArchivo(String nombre_archivo) throws IOException {
+		 System.out.println("llega el archivo "+nombre_archivo);
+		
+		 String archivo = "http://localhost:8082/sampu/"+nombre_archivo;
+		 File ficheroXLS = new File(archivo);
+		 System.out.println("path "+ficheroXLS.getPath());
+		 //System.out.println("path cano "+ficheroXLS.getCanonicalPath());
+		 System.out.println("path absolute "+ficheroXLS.getAbsolutePath());
+
+		 FacesContext ctx = FacesContext.getCurrentInstance();
+		 FileInputStream fis = new FileInputStream(ficheroXLS);
+		 byte[] bytes = new byte[2048];
+		 int read = 0;
+
+		 if (!ctx.getResponseComplete()) {
+		    String fileName = ficheroXLS.getName(); 
+		    //String contentType = "application/vnd.ms-excel";
+		    URL u = new URL("file:"+ficheroXLS);
+		    URLConnection uc = u.openConnection();
+		    String type = uc.getContentType();
+		    
+		   // System.out.println("Content type of file '"+ficheroXLS+"' is "+type);
+		    String contentType = type;
+		    HttpServletResponse response =
+		    (HttpServletResponse) ctx.getExternalContext().getResponse();
+
+		    response.setContentType(contentType);
+
+		    response.setHeader("Content-Disposition",
+		                       "attachment;filename=\"" + fileName + "\"");
+
+		    ServletOutputStream out = response.getOutputStream(); 
+
+		    while ((read = fis.read(bytes)) != -1) {
+		         out.write(bytes, 0, read);
+		    }
+
+		    out.flush();
+		    out.close();
+		    ctx.responseComplete();
+		    }
+	    }  
+	
 	/**
 	 * Retorna la diferencia en horas entre dos horas
 	 *
