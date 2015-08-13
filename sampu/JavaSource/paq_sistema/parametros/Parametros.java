@@ -350,6 +350,14 @@ public class Parametros {
          * */
         lis_parametros.add(new Parametro("14", "p_valor_interes_mora_nd", "Indica  el valor para el calculo de interes de mora en las notas de debito", "9.33"));
         lis_parametros.add(new Parametro("14", "p_dias_calculo_interes_mora_nd", "Indica  el numero de dias vigentes de una factura como pazo para su cancelacion a partir de ese dia se genera una nota de debito", "10"));
+        lis_parametros.add(new Parametro("14", "p_fac_nombre_archivo_banco", "Indica el nombre del archivo con el cual se descargara para enviar al banco", "BancoPacifico"));
+        lis_parametros.add(new Parametro("14", "p_fac_localidad_archivo_banco", "Indica la localidad para generar el archivo de envio al banco", "5"));
+        lis_parametros.add(new Parametro("14", "p_fac_transaccion_archivo_banco", "Indica la transaccion para generar el archivo de envio al banco", "OCP"));
+        lis_parametros.add(new Parametro("14", "p_fac_codservicio_archivo_banco", "Indica el codigo de servicio para generar el archivo de envio al banco", "ZG"));
+        lis_parametros.add(new Parametro("14", "p_fac_referencia_archivo_banco", "Indica la referencia para generar el archivo de envio al banco", "REFERENCIA"));
+        lis_parametros.add(new Parametro("14", "p_fac_formapago_archivo_banco", "Indica la forma de pago de servicio para generar el archivo de envio al banco", "RE"));
+        lis_parametros.add(new Parametro("14", "p_fac_moneda_archivo_banco", "Indica la moneda para generar el archivo de envio al banco", "USD"));
+
         /*
          *  ADQUISISCIONES = 15
          * */
