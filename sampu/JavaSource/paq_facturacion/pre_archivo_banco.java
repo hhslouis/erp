@@ -91,17 +91,28 @@ public class pre_archivo_banco extends Pantalla {
 		bot_limpiar.setMetodo("limpiar");
 		bar_botones.agregarBoton(bot_limpiar);
 		
+		Boton bot_generar= new Boton();
+		bot_generar.setValue("Generar Archivo Transferencia");
+		bot_generar.setMetodo("generarArchivo");
+		bot_generar.setAjax(false);
+		bar_botones.agregarBoton(bot_generar);
+		
         tab_tabla.setId("tab_tabla");
-        tab_tabla.setSql("SELECT row_number() over( order by secuencial_fafac) as orden,substring(secuencial_fafac from 9 for 7) as secuencial,fecha_transaccion_fafac, ruc_comercial_recli,rpad(razon_social_recli,30,' ') as rpad,base_aprobada_fafac, valor_iva_fafac, total_fafac,"
-+" detalle_bogrm"
+        tab_tabla.setSql("select orden,secuencial,fecha_transaccion_fafac, ruc_comercial_recli,rpad,base_aprobada_fafac, valor_iva_fafac, total_fafac,detalle_bogrm,doc_identidad,"
++" repeat ('0',(15 - length (tot_sin_punto)))||tot_sin_punto as valor_sin_punto,repeat ('0',(15 - length (secuencial)))||secuencial as factura_sin_punto,repeat ('0',(13 - length (ruc_comercial_recli)))||ruc_comercial_recli as ruc_sin_punto"
++" from ("
++" SELECT row_number() over( order by secuencial_fafac) as orden,substring(secuencial_fafac from 9 for 7) as secuencial,fecha_transaccion_fafac, ruc_comercial_recli,rpad(razon_social_recli,30,' ') as rpad,base_aprobada_fafac, valor_iva_fafac, total_fafac,"
++" detalle_bogrm,replace(total_fafac||'','.','') as tot_sin_punto, ( case when ide_gttdi = 1  then 'P' when ide_gttdi= 2 then 'R' when ide_gttdi= 3 then 'C' end) as doc_identidad"
 +" FROM fac_factura fac"
 +" join rec_clientes cli on cli.ide_recli=fac.ide_recli"
 +" join (select ide_fadaf, detalle_bogrm from fac_datos_factura a, bodt_grupo_material b where a.ide_bogrm = b.ide_bogrm) b on fac.ide_fadaf = b.ide_fadaf"
 +" where ide_coest=2 "
-+" and activo_fafac=true "
++" and activo_fafac=true" 
 +" and ide_tetid=4 "
-+" and cli.ide_recli=-1 "
-+" order by secuencial_fafac");
++" and cli.ide_recli=-1" 
++" order by secuencial_fafac"
++" ) a"
++" order by secuencial");
         tab_tabla.getColumna("rpad").setNombreVisual("RAZON SOCIAL");
         tab_tabla.getColumna("detalle_bogrm").setNombreVisual("SERVICIO");
         
@@ -118,8 +129,11 @@ public class pre_archivo_banco extends Pantalla {
     }
     public void seleccionaOpcion (){
 		
-		String sql ="SELECT row_number() over( order by secuencial_fafac) as orden,substring(secuencial_fafac from 9 for 7) as secuencial,fecha_transaccion_fafac, ruc_comercial_recli,rpad(razon_social_recli,30,' ') as rpad,base_aprobada_fafac, valor_iva_fafac, total_fafac,"
-				+" detalle_bogrm"
+		String sql ="select orden,secuencial,fecha_transaccion_fafac, ruc_comercial_recli,rpad,base_aprobada_fafac, valor_iva_fafac, total_fafac,detalle_bogrm,doc_identidad,"
+				+" repeat ('0',(15 - length (tot_sin_punto)))||tot_sin_punto as valor_sin_punto,repeat ('0',(15 - length (secuencial)))||secuencial as factura_sin_punto,repeat ('0',(13 - length (ruc_comercial_recli)))||ruc_comercial_recli as ruc_sin_punto"
+				+" from ("
+				+" SELECT row_number() over( order by secuencial_fafac) as orden,substring(secuencial_fafac from 9 for 7) as secuencial,fecha_transaccion_fafac, ruc_comercial_recli,rpad(razon_social_recli,30,' ') as rpad,base_aprobada_fafac, valor_iva_fafac, total_fafac,"
+				+" detalle_bogrm,replace(total_fafac||'','.','') as tot_sin_punto, ( case when ide_gttdi = 1  then 'P' when ide_gttdi= 2 then 'R' when ide_gttdi= 3 then 'C' end) as doc_identidad"
 				+" FROM fac_factura fac"
 				+" join rec_clientes cli on cli.ide_recli=fac.ide_recli"
 				+" join (select ide_fadaf, detalle_bogrm from fac_datos_factura a, bodt_grupo_material b where a.ide_bogrm = b.ide_bogrm) b on fac.ide_fadaf = b.ide_fadaf"
@@ -130,7 +144,9 @@ public class pre_archivo_banco extends Pantalla {
 				sql+=" and fac.ide_fadaf ="+com_anio.getValue();	
 				}
 				sql+=" and fecha_transaccion_fafac between '"+cal_fecha_inicial.getFecha()+"' and '"+cal_fecha_final.getFecha()+"'";
-				sql+=" order by secuencial_fafac";
+				sql+=" order by secuencial_fafac"
+				+" ) a"
+				+" order by secuencial";
 		System.out.println("actualiza archvo "+sql);
 		tab_tabla.setSql(sql);
 		tab_tabla.ejecutarSql();
@@ -150,45 +166,50 @@ public class pre_archivo_banco extends Pantalla {
 		//Crear objeto FileWriter que sera el que nos ayude a escribir sobre archivo
 		try {
 			//StringBuilder str_spi=new StringBuilder();
-			String str_nombre_archivo=tab_tabla1.getValor("FECHA_SPTRA");
-
+			String str_nombre_archivo=utilitario.getVariable("p_fac_nombre_archivo_banco");
+			String str_localidad=utilitario.getVariable("p_fac_localidad_archivo_banco");
+			String str_transaccion =utilitario.getVariable("p_fac_transaccion_archivo_banco");
+			String str_codservicio=utilitario.getVariable("p_fac_codservicio_archivo_banco");
+			String str_referencia=utilitario.getVariable("p_fac_referencia_archivo_banco");
+			String str_formapago=utilitario.getVariable("p_fac_formapago_archivo_banco");
+			String str_moneda=utilitario.getVariable("p_fac_moneda_archivo_banco");
+			String str_tipo_cueta="  ";
+			String str_numero_cuenta="        ";
+			String str_referencia_blanco="   ";
+			String str_localidad_cheque="  ";
+			String str_agencia_cheque="  ";
+			String str_telefono="";
+					
+			
 			ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
 			String fileName= str_nombre_archivo+utilitario.getFechaActual(); //utilitario.getNombreMes(utilitario.getMes(str_fecha_hora))+utilitario.getAnio(str_fecha_hora);
 			String path= extContext.getRealPath("/");			
 
 			File archivotxt=new File(path+fileName.concat(".txt"));
 			BufferedWriter escribir=new BufferedWriter(new FileWriter(archivotxt)); 
-
-			str_fecha_hora=str_dia+"/"+str_mes+"/"+utilitario.getAnio(str_fecha_hora);
-			str_fecha_hora=str_fecha_hora.concat(" ").concat(tab_tabla1.getValor("HORA_SPTRA"));			
-			StringBuilder str_cabecera=new StringBuilder(str_fecha_hora).append(",");		
-			str_cabecera.append(tab_tabla1.getValor("SECUECIAL_SPI_SPTRA")).append(",");
-			str_cabecera.append(tab_tabla2.getTotalFilas()).append(",");
-			str_cabecera.append(utilitario.getFormatoNumero(dou_total)).append(",");
-			str_cabecera.append(utilitario.getVariable("p_sri_control_spi")).append(",");
-			str_cabecera.append(str_cuenta_banco);		
-			//str_spi.append(str_cabecera);
-			escribir.write(str_cabecera.toString());	
-			tab_tabla2.ejecutarSql();			
-			for(int i=0;i<tab_tabla2.getTotalFilas();i++){
+	
+			tab_tabla.ejecutarSql();			
+			for(int i=0;i<tab_tabla.getTotalFilas();i++){
 		//		str_spi.append("\r\n");
 				StringBuilder str_detalle=new StringBuilder();
-				str_detalle.append(str_fecha_hora).append(",");			
-				str_detalle.append(tab_tabla2.getValor(i, "SECUENCIAL_SPTRD")).append(",");
-				str_detalle.append(tab_tabla2.getValor(i, "COD_ORIGEN_PAGO_SPTRD")).append(",");
-				str_detalle.append(tab_tabla2.getValor(i, "CODIGO_MONEDA_SPTRD")).append(",");
-				str_detalle.append(utilitario.getFormatoNumero(tab_tabla2.getValor(i, "MONTO_TRANSFERIDO_SPTRD"))).append(",");
-				str_detalle.append(tab_tabla2.getValor(i, "COD_CONCEPTO_PAGO_SPTRD")).append(",");
-				str_detalle.append(tab_tabla2.getValor(i, "COD_BANCO_SPTRD")).append(",");				
-				str_detalle.append(str_cuenta_banco).append(",");
-				str_detalle.append(str_tipo_cuenta_banco).append(",");
-				str_detalle.append(str_institucion).append(",");
-				str_detalle.append(str_localidad).append(",");
-				str_detalle.append(tab_tabla2.getValor(i, "NRO_CUENTA_SPTRD")).append(",");
-				str_detalle.append(tab_tabla2.getValor(i, "TIPO_CUENTA_SPTRD")).append(",");
-				str_detalle.append(tab_tabla2.getValor(i, "EMPLEADO_SPTRD")).append(",");
-				str_detalle.append(str_detalle_archivo).append(",");
-				str_detalle.append(tab_tabla2.getValor(i, "CEDULA_SPTRD"));	
+				str_detalle.append(str_localidad);			
+				str_detalle.append(str_transaccion);
+				str_detalle.append(str_codservicio);
+				str_detalle.append(str_tipo_cueta);
+				str_detalle.append(str_numero_cuenta);
+				str_detalle.append(tab_tabla.getValor(i, "valor_sin_punto"));
+				str_detalle.append(tab_tabla.getValor(i, "factura_sin_punto"));
+				str_detalle.append(str_referencia).append(str_referencia_blanco);
+				str_detalle.append(str_formapago);
+				str_detalle.append(str_moneda);
+				str_detalle.append(tab_tabla.getValor(i, "rpad"));
+				str_detalle.append(str_localidad_cheque);
+				str_detalle.append(str_agencia_cheque);
+				str_detalle.append(tab_tabla.getValor(i, "doc_identidad"));
+				str_detalle.append(tab_tabla.getValor(i, "ruc_sin_punto"));
+				str_detalle.append(str_telefono);
+
+
 				String str_spi_encr="";
 				try {
 					 str_spi_encr=str_detalle.toString();
@@ -208,16 +229,11 @@ public class pre_archivo_banco extends Pantalla {
 					// TODO: handle exception
 				}				
 				//str_spi.append(str_spi_encr);
+				escribir.write(str_spi_encr.toString());
 				escribir.newLine();
-				escribir.write(str_spi_encr.toString());				
+
 			}
 			escribir.close();
-			Encriptar encriptar=new Encriptar();
-
-			
-			File archivomd5=new File(path+fileName.concat(".md5"));
-			
-			//String str_spi_encr=str_spi.toString();
 			String str_spi_encr="";
 			BufferedReader entrada;
 			try {
@@ -235,11 +251,8 @@ public class pre_archivo_banco extends Pantalla {
 			}
 			
 			
-			escribir=new BufferedWriter(new FileWriter(archivomd5));
 			System.out.println("str spi "+str_spi_encr.toString());
-			escribir.write(encriptar.getEncriptar(str_spi_encr).concat(" *").concat(fileName).concat(".txt"));
-			escribir.close();					
-			utilitario.crearArchivoZIP(new File[]{archivotxt,archivomd5}, fileName.concat(".zip"));						
+			utilitario.crearArchivo(new File[]{archivotxt}, fileName.concat(".txt"));						
 		} catch (Exception e) {
 			// TODO: handle exception
 			utilitario.crearError("xxx", "xxss", e);
