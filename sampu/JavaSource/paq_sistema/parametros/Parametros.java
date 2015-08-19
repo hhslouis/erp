@@ -357,6 +357,11 @@ public class Parametros {
         lis_parametros.add(new Parametro("14", "p_fac_referencia_archivo_banco", "Indica la referencia para generar el archivo de envio al banco", "REFERENCIA"));
         lis_parametros.add(new Parametro("14", "p_fac_formapago_archivo_banco", "Indica la forma de pago de servicio para generar el archivo de envio al banco", "RE"));
         lis_parametros.add(new Parametro("14", "p_fac_moneda_archivo_banco", "Indica la moneda para generar el archivo de envio al banco", "USD"));
+        lis_parametros.add(new Parametro("14", "p_modulo_facturacion","Indica el modulo que pertenece a facturacion","14","gen_modulo","ide_gemod","detalle_gemod"));
+        lis_parametros.add(new Parametro("14", "p_notadecredito_anulado","Indica el estado anulado de la nota de credito","14","cont_estado","ide_coest","detalle_coest"));
+        lis_parametros.add(new Parametro("14", "p_notadecredito_emitido","Indica el estado emitido de la nota de credito","14","cont_estado","ide_coest","detalle_coest"));
+        lis_parametros.add(new Parametro("14", "p_factura_anulado","Indica el estado anulado de la factura","14","cont_estado","ide_coest","detalle_coest"));
+        lis_parametros.add(new Parametro("14", "p_factura_emitido","Indica el estado emitido de la factura","14","cont_estado","ide_coest","detalle_coest"));
 
         /*
          *  ADQUISISCIONES = 15
