@@ -1,6 +1,7 @@
 package paq_nomina;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,19 @@ import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.faces.event.AjaxBehaviorEvent;
+
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+
+
+import net.sf.jasperreports.engine.JRExporter;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.engine.util.JRLoader;
+
 
 import jxl.Sheet;
 import jxl.Workbook;
@@ -2674,97 +2688,151 @@ String ide_gepro=ser_nomina.getPeriodosRol(str_fecha_ini, str_fecha_fin);
 		this.sel_sucursal = sel_sucursal;
 	}			
 
-	public void seleccionarEnviar(){				
-		if(sel_tab_tipo_nomina.isVisible())	{				
-			try {
-				if(sel_tab_tipo_nomina.getValorSeleccionado()!=null && !sel_tab_tipo_nomina.getValorSeleccionado().isEmpty()){						
-					p_parametros.put("IDE_NRDTN",Integer.parseInt(ser_nomina.getRol(sel_tab_tipo_nomina.getValorSeleccionado()).getValor("IDE_NRDTN")));
-					sel_tab_empleados.setSql(ser_nomina.getSqlEmpleadosRol(sel_tab_tipo_nomina.getValorSeleccionado()));
-					sel_tab_empleados.getBot_aceptar().setMetodo("seleccionarEnviar");
-					sel_tab_tipo_nomina.cerrar();
-					
-					sel_tab_empleados.dibujar();						
-				}else{						
-					utilitario.agregarMensajeInfo("No se puede continuar", "No ha seleccionado ningun Tipo de Nomina");
-				}								
-			} catch (Exception e) {
-				utilitario.agregarMensajeInfo("No se puede continuar", "No ha seleccionado ningun Tipo de Nomina");
-			}
-		}
-		else if(sel_tab_empleados.isVisible()){
+	 public void seleccionarEnviar(){                                
+         if(sel_tab_tipo_nomina.isVisible())     {                               
+                 try {
+                         if(sel_tab_tipo_nomina.getValorSeleccionado()!=null && !sel_tab_tipo_nomina.getValorSeleccionado().isEmpty()){                                          
+                                 p_parametros.put("IDE_NRDTN",Long.parseLong(ser_nomina.getRol(sel_tab_tipo_nomina.getValorSeleccionado()).getValor("IDE_NRDTN")));
+                                 sel_tab_empleados.setSql(ser_nomina.getSqlEmpleadosRol(sel_tab_tipo_nomina.getValorSeleccionado()));
+                                 sel_tab_empleados.getBot_aceptar().setMetodo("seleccionarEnviar");
+                                 sel_tab_tipo_nomina.cerrar();
 
-			if (sel_tab_empleados.getSeleccionados()!=null && !sel_tab_empleados.getSeleccionados().isEmpty()) {
+                                 sel_tab_empleados.dibujar();                                            
+                         }else{                                          
+                                 utilitario.agregarMensajeInfo("No se puede continuar", "No ha seleccionado ningun Tipo de Nomina");
+                         }                                                               
+                 } catch (Exception e) {
+                         utilitario.agregarMensajeInfo("No se puede continuar", "No ha seleccionado ningun Tipo de Nomina");
+                 }
+         }
+         else if(sel_tab_empleados.isVisible()){
 
-				//Busco los correos de los empleados seleccionados
-				StringBuilder str_ide=new StringBuilder();
-				int int_num_col_idegtemp=sel_tab_empleados.getTab_seleccion().getNumeroColumna("IDE_GTEMP");
+                 if (sel_tab_empleados.getSeleccionados()!=null && !sel_tab_empleados.getSeleccionados().isEmpty()) {
 
-				for (Fila filaActual:sel_tab_empleados.getTab_seleccion().getSeleccionados()) {
-					if(str_ide.toString().isEmpty()==false){
-						str_ide.append(",");
-					}
-					str_ide.append(filaActual.getCampos()[int_num_col_idegtemp]);
-				}							
-				TablaGenerica tab_correos =ser_empleado.getCorreoEmpleados(str_ide.toString());						
-				StringBuilder str_resultado=new StringBuilder(getFormatoInformacion("TOTAL DE EMPLEADOS PARA ENVIAR CORREO ELECTRÓNICO : "+sel_tab_empleados.getTab_seleccion().getSeleccionados().length));
-				EnviarCorreo env_enviar = new EnviarCorreo();
-				String str_asunto="DETALLE DE NÓMINA";
-				//Proceso de enviar a cada empleado				
-				GenerarReporte ger = new GenerarReporte();						
-				for (Fila filaActual:sel_tab_empleados.getTab_seleccion().getSeleccionados()) {
+                         //Busco los correos de los empleados seleccionados
+                         StringBuilder str_ide=new StringBuilder();
+                         int int_num_col_idegtemp=sel_tab_empleados.getTab_seleccion().getNumeroColumna("IDE_GTEMP");
 
-					for (int j = 0; j <tab_correos.getTotalFilas(); j++) {
-						//Busca el correo
-						if(filaActual.getCampos()[int_num_col_idegtemp].toString().equals(tab_correos.getValor(j,"IDE_GTEMP"))){
-							//Encontro el correo
-							String str_mail=tab_correos.getValor(j,"DETALLE_GTCOR");
-							if(str_mail==null || str_mail.isEmpty()){
-								//No existe correo del empleado configurado para las notificaciones
-								str_resultado.append(getFormatoError("El empleado : "+filaActual.getCampos()[2]+" No tiene configurado correo electrónico para notificaciones" ));
-								//str_mail="hhsoul_louis@hotmail.com";
-								continue;
-							}
-							StringBuilder str_mensaje=new StringBuilder().append("<p>Generado: ").append(utilitario.getFechaLarga(utilitario.getFechaActual())).append(" Hora : ").append(utilitario.getHoraActual()).append("</p>");
-							str_mensaje.append("<p>Señor(a): ").append(filaActual.getCampos()[2]).append("</p>");
-							str_mensaje.append("<p>Para su conocimiento, le adjuntamos un archivo pdf con el detalle de la nómina generada por el Sistema de Gestíon de Talento Humano. </p>");
-							//Mismo proceso de llamar a reporte boleta individual
-							p_parametros.put("IDE_GEEDP", filaActual.getCampos()[0].toString());            
-							p_parametros.put("titulo", " BOLETA DE PAGO");
-							p_parametros.put("IDE_NRTIR",utilitario.getVariable("p_nrh_trubro_egreso")+","+utilitario.getVariable("p_nrh_trubro_ingreso"));
-							p_parametros.put("par_total_recibir",Integer.parseInt(utilitario.getVariable("p_nrh_rubro_valor_recibir")));
-							p_parametros.put("par_total_ingresos",Integer.parseInt(utilitario.getVariable("p_nrh_rubro_total_ingresos")));
-							p_parametros.put("par_total_egresos",Integer.parseInt(utilitario.getVariable("p_nrh_rubro_total_egresos")));							File fil_rol=ger.generar(p_parametros, "/reportes/rep_rol_de_pagos/rep_n_rol_pagos.jasper");
-							List<File> lis_file = new ArrayList<File>();
-							lis_file.add(fil_rol);
-							String str_msj= env_enviar.agregarCorreo(str_mail, str_asunto, str_mensaje.toString(), lis_file);
-							if(str_msj.isEmpty()==false){
-								//Fallo el envio de coorreo
-								str_resultado.append(getFormatoError("No se puede enviar el correo a "+str_mail+" motivo: "+str_msj));
-							}
-							tab_correos.getFilas().remove(j);
-							break;
-						}
-					}
+                         for (Fila filaActual:sel_tab_empleados.getTab_seleccion().getSeleccionados()) {
+                                 if(str_ide.toString().isEmpty()==false){
+                                         str_ide.append(",");
+                                 }
+                                 str_ide.append(filaActual.getCampos()[int_num_col_idegtemp]);
+                         }
+                         TablaGenerica tab_correos =ser_empleado.getCorreoEmpleados(str_ide.toString());                                         
+                         StringBuilder str_resultado=new StringBuilder(getFormatoInformacion("TOTAL DE EMPLEADOS PARA ENVIAR CORREO ELECTRÓNICO : "+sel_tab_empleados.getTab_seleccion().getSeleccionados().length));
+                         EnviarCorreo env_enviar = new EnviarCorreo();
+                         String str_asunto="DETALLE DE NÓMINA";
+                         //Proceso de enviar a cada empleado                             
+                         GenerarReporte ger = new GenerarReporte();                                              
+                         for (Fila filaActual:sel_tab_empleados.getTab_seleccion().getSeleccionados()) {
+
+                                 for (int j = 0; j <tab_correos.getTotalFilas(); j++) {
+                                         //Busca el correo
+                                         if(filaActual.getCampos()[int_num_col_idegtemp].toString().equals(tab_correos.getValor(j,"IDE_GTEMP"))){
+                                                 //Encontro el correo
+                                                 String str_mail=tab_correos.getValor(j,"DETALLE_GTCOR");
+                                                 if(str_mail==null || str_mail.isEmpty()){
+                                                         //No existe correo del empleado configurado para las notificaciones
+                                                         str_resultado.append(getFormatoError("El empleado : "+filaActual.getCampos()[2]+" No tiene configurado correo electrónico para notificaciones" ));
+                                                         //str_mail="hhsoul_louis@hotmail.com";
+                                                         continue;
+                                                 }
+                                                 StringBuilder str_mensaje=new StringBuilder().append("<p>Generado: ").append(utilitario.getFechaLarga(utilitario.getFechaActual())).append(" Hora : ").append(utilitario.getHoraActual()).append("</p>");
+                                                 str_mensaje.append("<p>Señor(a): ").append(filaActual.getCampos()[2]).append("</p>");
+                                                 str_mensaje.append("<p>Para su conocimiento, le adjuntamos un archivo pdf con el detalle de la nómina generada por el Sistema de Gestíon de Talento Humano. </p>");
+                                                 //Mismo proceso de llamar a reporte boleta individual
+                                                 
+                                                 p_parametros.put("IDE_GEEDP", filaActual.getCampos()[0].toString());            
+                                                 p_parametros.put("titulo", " BOLETA DE PAGO");
+                                                 p_parametros.put("IDE_NRTIR",utilitario.getVariable("p_nrh_trubro_egreso")+","+utilitario.getVariable("p_nrh_trubro_ingreso"));
+                                                 p_parametros.put("par_total_recibir",Integer.parseInt(utilitario.getVariable("p_nrh_rubro_valor_recibir")));
+                                                 p_parametros.put("par_total_ingresos",Integer.parseInt(utilitario.getVariable("p_nrh_rubro_total_ingresos")));
+                                                 p_parametros.put("par_total_egresos",Integer.parseInt(utilitario.getVariable("p_nrh_rubro_total_egresos")));                                                    
+
+                                                 File fil_rol=generar(p_parametros, "/reportes/rep_rol_de_pagos/rep_n_rol_pagos.jasper",filaActual.getCampos()[0].toString());
+                                                 List<File> lis_file = new ArrayList<File>();
+                                                 lis_file.add(fil_rol);
+                                                 String str_msj= env_enviar.agregarCorreo(str_mail, str_asunto, str_mensaje.toString(), lis_file);
+
+                                                 if(str_msj.isEmpty()==false){
+                                                         //Fallo el envio de coorreo
+                                                         str_resultado.append(getFormatoError("No se puede enviar el correo a "+str_mail+" motivo: "+str_msj));
+                                                 }
+                                            tab_correos.getFilas().remove(j);
+
+                                                 break;
+                                         }
+                                 }
 
 
-				}
-				sel_tab_empleados.cerrar();
+                         }
+                         sel_tab_empleados.cerrar();
 
-				String str_mensaje=env_enviar.enviarTodos();
-				if(str_mensaje.isEmpty()==false){
-					str_resultado.append(getFormatoError(str_mensaje));
-				}
+                         String str_mensaje=env_enviar.enviarTodos();
+                         System.out.println("DFJ****   "+str_mensaje);
+                         if(str_mensaje.isEmpty()==false){
+                                 str_resultado.append(getFormatoError(str_mensaje));
+                         }
 
-				edi_msj.setValue(str_resultado);
-				dia_resumen.dibujar();
+                         edi_msj.setValue(str_resultado);
+                         dia_resumen.dibujar();
 
-			}else{
-				utilitario.agregarMensajeInfo("No se puede continuar", "No ha seleccionado ningun Empleado");
-			}					
+                 }else{
+                         utilitario.agregarMensajeInfo("No se puede continuar", "No ha seleccionado ningun Empleado");
+                 }                                       
 
-		}
+         }
 
-	}
+ }
+
+
+ public File generar(Map parametros, String reporte,String IDE_EMPL) {     
+         try {           
+                 FacesContext fc = FacesContext.getCurrentInstance();    
+                 ExternalContext ec = fc.getExternalContext();  
+                 JasperPrint jasperPrint=null;
+                 try {
+                         
+                         InputStream fis = ec.getResourceAsStream(reporte);
+                         JasperReport jasperReport = (JasperReport) JRLoader.loadObject(fis);
+                         
+                         try {
+                         parametros.put("ide_empr", Integer.parseInt(utilitario.getVariable("ide_empr")));
+                         } catch (Exception e) {
+                         }
+                         try {
+                         parametros.put("ide_sucu", Integer.parseInt(utilitario.getVariable("ide_sucu")));
+                         } catch (Exception e) {
+                         }
+
+                         try {
+                         parametros.put("usuario", Integer.parseInt(utilitario.getVariable("ide_usua")));
+                         } catch (Exception e) {
+                         }
+
+                         parametros.put("SUBREPORT_DIR", utilitario.getURL());
+                         
+                         jasperPrint = JasperFillManager.fillReport(
+                         jasperReport, parametros, utilitario.getConexion().getConnection());
+                         
+                         } catch (Exception e) {
+                         System.out.println("error ejecutar" + e.getMessage());
+                         }
+                 
+                 JRExporter exporter = new JRPdfExporter();         
+                 exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);    
+                 File fil_reporte = new File(ec.getRealPath("/reportes/rol_"+IDE_EMPL+ ".pdf"));          
+                 exporter.setParameter(JRExporterParameter.OUTPUT_FILE, fil_reporte);        
+                 exporter.exportReport();                        
+                 return fil_reporte;     
+                 } catch (Exception ex) {         
+                         System.out.println("error" + ex.getMessage());        
+                         ex.printStackTrace();     
+                         }    
+         return null;    
+         }
+
 
 
 
