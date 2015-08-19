@@ -15,7 +15,6 @@ import framework.aplicacion.TablaGenerica;
 public class ServicioFacturacion {
 	private Utilitario utilitario=new Utilitario();
 
-
 	public String getClientes(String matrizSucursal ){
 	    String tab_cliente="select a.ide_recli, ruc_comercial_recli,nombre_comercial_recli," +
 	            "  nro_establecimiento_recli, codigo_zona_recli, " +
