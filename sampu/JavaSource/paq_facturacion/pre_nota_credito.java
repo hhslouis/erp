@@ -15,6 +15,7 @@ import framework.componentes.Reporte;
 import framework.componentes.SeleccionFormatoReporte;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
+import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_facturacion.ejb.ServicioFacturacion;
 import paq_sistema.aplicacion.Pantalla;
 
@@ -23,6 +24,12 @@ public class pre_nota_credito extends Pantalla {
 	private SeleccionTabla set_factura = new SeleccionTabla();
 	private SeleccionTabla set_actualizarfactura=new SeleccionTabla();
 	private Confirmar con_guardar = new Confirmar();
+	public static String p_modulo_facturacion;
+	public static String p_notadecredito_anulado;
+	public static String p_notadecredito_emitido;
+	public static String p_factura_anulado;
+	public static String p_factura_emitido;
+	
 	//REPORTE
 	private Map p_parametros = new HashMap();
 	private Reporte rep_reporte = new Reporte();
@@ -35,8 +42,18 @@ public class pre_nota_credito extends Pantalla {
 	
 	@EJB
 	private ServicioFacturacion ser_Facturacion = (ServicioFacturacion) utilitario.instanciarEJB(ServicioFacturacion.class);
+	
+	@EJB
+	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
+
 
 	public pre_nota_credito(){
+		p_modulo_facturacion=utilitario.getVariable("p_modulo_facturacion");
+		p_notadecredito_anulado=utilitario.getVariable("p_notadecredito_anulado");
+		p_notadecredito_emitido=utilitario.getVariable("p_notadecredito_emitido");
+		p_factura_anulado=utilitario.getVariable("p_factura_anulado");
+		p_factura_emitido=utilitario.getVariable("p_factura_emitido");
+		
 		rep_reporte.setId("rep_reporte"); //id
 		rep_reporte.getBot_aceptar().setMetodo("aceptarReporte");//ejecuta el metodo al aceptar reporte
 		agregarComponente(rep_reporte);//agrega el componente a la pantalla
@@ -52,7 +69,9 @@ public class pre_nota_credito extends Pantalla {
 		tab_nota_credito.getColumna("ide_fafac").setCombo(ser_Facturacion.getCabeceraFactura("1",""));
 		tab_nota_credito.getColumna("ide_fafac").setAutoCompletar();
 		tab_nota_credito.getColumna("ide_fafac").setLectura(true);
-		tab_nota_credito.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
+		
+		tab_nota_credito.getColumna("ide_coest").setCombo(ser_contabilidad.getModuloEstados("true", p_modulo_facturacion));
+		
 		tab_nota_credito.getColumna("valor_referencial_fanoc").setMetodoChange("calcular");		
 		tab_nota_credito.getColumna("iva_fanoc").setEtiqueta();
 		tab_nota_credito.getColumna("iva_fanoc").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
@@ -63,6 +82,7 @@ public class pre_nota_credito extends Pantalla {
 		tab_nota_credito.dibujar();
 		PanelTabla pat_nota_credito=new PanelTabla();
 		pat_nota_credito.setPanelTabla(tab_nota_credito);
+		
 
 		Division div_division=new Division();
 		div_division.dividir1(pat_nota_credito);
@@ -224,8 +244,25 @@ public class pre_nota_credito extends Pantalla {
 		@Override
 		public void guardar() {
 			// TODO Auto-generated method stub
+			
+			String sql="";
+			
 			tab_nota_credito.guardar();
 			guardarPantalla();
+			
+			if(p_notadecredito_emitido.equals(tab_nota_credito.getValor("ide_coest")) ) {
+				
+				sql="update fac_factura set ide_coest ="+ p_factura_anulado + " where ide_fafac = "+ tab_nota_credito.getValor("ide_fafac");
+				utilitario.getConexion().ejecutarSql(sql);
+				System.out.println(" entre nota de c emitida"+sql);
+				
+			
+			}else if (p_notadecredito_anulado.equals(tab_nota_credito.getValor("ide_coest"))){
+				sql="update fac_factura set ide_coest ="+ p_factura_emitido + " where ide_fafac = "+ tab_nota_credito.getValor("ide_fafac");
+				utilitario.getConexion().ejecutarSql(sql);	
+				System.out.println(" entre nota de c anulado"+sql);
+			
+			}
 
 		}
 
