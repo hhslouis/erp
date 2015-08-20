@@ -3,7 +3,6 @@ package paq_facturacion.ejb;
 import javax.ejb.Stateless;
 
 import paq_sistema.aplicacion.Utilitario;
-
 import framework.aplicacion.TablaGenerica;
 
 
@@ -14,6 +13,7 @@ import framework.aplicacion.TablaGenerica;
 
 public class ServicioFacturacion {
 	private Utilitario utilitario=new Utilitario();
+
 
 	public String getClientes(String matrizSucursal ){
 	    String tab_cliente="select a.ide_recli, ruc_comercial_recli,nombre_comercial_recli," +
@@ -87,5 +87,27 @@ public class ServicioFacturacion {
 		            " LEFT JOIN rec_cliente_direccion b on a.ide_recli=b.ide_recli where MATRIZ_SUCURSAL_RECLI in ("+matrizSucursal+")" +
 		                " ORDER BY  nombre_comercial_recli";
 		    return tab_cliente;
+		}
+	 /**Busca clientes con factura para validar documento de Pagos Banco Pacifico
+		 * @param campo cedula del campo al que se realizara la busqueda
+		 * @param valor factuta de la busqueda
+		 * @return
+		 */
+		public TablaGenerica getDatosClienteFactura(String cedula,String factura){
+			return utilitario.consultar("select orden,secuencial,fecha_transaccion_fafac, ruc_comercial_recli,rpad,base_aprobada_fafac, valor_iva_fafac, total_fafac,detalle_bogrm,doc_identidad,"
++" repeat ('0',(15 - length (tot_sin_punto)))||tot_sin_punto as valor_sin_punto,repeat ('0',(15 - length (secuencial)))||secuencial as factura_sin_punto,repeat ('0',(13 - length (ruc_comercial_recli)))||ruc_comercial_recli as ruc_sin_punto,repeat ('0',(7 - length (nuevo_iva)))||nuevo_iva as iva_sin_punto"
++" from ("
++" SELECT row_number() over( order by secuencial_fafac) as orden,substring(secuencial_fafac from 9 for 7) as secuencial,fecha_transaccion_fafac, ruc_comercial_recli,rpad(razon_social_recli,30,' ') as rpad,base_aprobada_fafac, valor_iva_fafac, total_fafac,"
++" detalle_bogrm,replace(round(total_fafac,2)||'','.','') as tot_sin_punto, ( case when ide_gttdi = 1  then 'P' when ide_gttdi= 2 then 'R' when ide_gttdi= 3 then 'C' end) as doc_identidad,replace((round(valor_iva_fafac,2))||'','.','') as nuevo_iva "
++" FROM fac_factura fac"
++" join rec_clientes cli on cli.ide_recli=fac.ide_recli"
++" join (select ide_fadaf, detalle_bogrm from fac_datos_factura a, bodt_grupo_material b where a.ide_bogrm = b.ide_bogrm) b on fac.ide_fadaf = b.ide_fadaf"
++" where ide_coest=2" 
++" and activo_fafac=true"
++" and ide_tetid=4 "
++" and ruc_comercial_recli = '"+cedula+"'"
++" order by secuencial_fafac"
++" ) a"
++" where repeat ('0',(15 - length (secuencial)))||secuencial = '"+factura+"'");
 		}
 }
