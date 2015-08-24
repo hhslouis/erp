@@ -98,6 +98,7 @@ public class pre_grupo_cargo extends Pantalla {
 		tab_tabla1.getColumna("ACTIVO_GEGRO").setValorDefecto("true");
 		tab_tabla1.getColumna("DETALLE_GEGRO").setRequerida(true);
 		tab_tabla1.getColumna("SIGLAS_GEGRO").setRequerida(true);
+		tab_tabla1.onSelect("seleccionarTabla1");
 		tab_tabla1.agregarRelacion(tab_grupo_minimo_seleccion);
 		tab_tabla1.agregarRelacion(tab_grupo_factor);
 		tab_tabla1.agregarRelacion(tab_factor_ponederacion);
@@ -116,7 +117,7 @@ public class pre_grupo_cargo extends Pantalla {
 		tab_tabla2.getColumna("ACTIVO_GEGRC").setCheck();
 		tab_tabla2.getColumna("ACTIVO_GEGRC").setValorDefecto("true");
 		tab_tabla2.getColumna("IDE_GEGRO").setLectura(true);
-		tab_tabla2.getColumna("IDE_GEGRO").setVisible(false);
+		//tab_tabla2.getColumna("IDE_GEGRO").setVisible(false);
 		tab_tabla2.getColumna("IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL",
 				"IDE_GECAF", "DETALLE_GECAF,SIGLAS_GECAF", "");
 		tab_tabla2.setValidarInsertar(true);// Para que solo inserte de una en
