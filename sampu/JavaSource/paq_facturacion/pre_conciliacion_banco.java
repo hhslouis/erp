@@ -20,6 +20,7 @@ import javax.faces.context.FacesContext;
 import jxl.Sheet;
 import jxl.Workbook;
 
+import org.apache.poi.hssf.record.formula.functions.Replace;
 import org.primefaces.event.FileUploadEvent;
 
 import paq_facturacion.ejb.ServicioFacturacion;
@@ -70,26 +71,10 @@ public class pre_conciliacion_banco extends Pantalla {
 		bar_botones.agregarComponente(upl_archivo);
 		
         tab_tabla.setId("tab_tabla");
-        tab_tabla.setSql("select orden,secuencial,fecha_transaccion_fafac, ruc_comercial_recli,rpad,base_aprobada_fafac, valor_iva_fafac, total_fafac,detalle_bogrm,doc_identidad,"
-+" repeat ('0',(15 - length (tot_sin_punto)))||tot_sin_punto as valor_sin_punto,repeat ('0',(15 - length (secuencial)))||secuencial as factura_sin_punto,repeat ('0',(13 - length (ruc_comercial_recli)))||ruc_comercial_recli as ruc_sin_punto,repeat ('0',(7 - length (nuevo_iva)))||nuevo_iva as iva_sin_punto"
-+" from ("
-+" SELECT row_number() over( order by secuencial_fafac) as orden,substring(secuencial_fafac from 9 for 7) as secuencial,fecha_transaccion_fafac, ruc_comercial_recli,rpad(razon_social_recli,30,' ') as rpad,base_aprobada_fafac, valor_iva_fafac, total_fafac,"
-+" detalle_bogrm,replace(round(total_fafac,2)||'','.','') as tot_sin_punto, ( case when ide_gttdi = 1  then 'P' when ide_gttdi= 2 then 'R' when ide_gttdi= 3 then 'C' end) as doc_identidad,replace((round(valor_iva_fafac,2))||'','.','') as nuevo_iva "
-+" FROM fac_factura fac"
-+" join rec_clientes cli on cli.ide_recli=fac.ide_recli"
-+" join (select ide_fadaf, detalle_bogrm from fac_datos_factura a, bodt_grupo_material b where a.ide_bogrm = b.ide_bogrm) b on fac.ide_fadaf = b.ide_fadaf"
-+" where ide_coest=2 "
-+" and activo_fafac=true" 
-+" and ide_tetid=4 "
-+" and cli.ide_recli=-1" 
-+" order by secuencial_fafac"
-+" ) a"
-+" order by secuencial");
-        tab_tabla.getColumna("rpad").setNombreVisual("RAZON SOCIAL");
-        tab_tabla.getColumna("detalle_bogrm").setNombreVisual("SERVICIO");
-        
-        tab_tabla.setLectura(true);
-        tab_tabla.setRows(20);
+        tab_tabla.setTabla("fac_factura", "ide_fafac", 1);
+        tab_tabla.setCondicion("1=1 ");
+        tab_tabla.setCampoOrden("ide_fafac limit 500");
+        tab_tabla.setRows(500);
         tab_tabla.dibujar();
         PanelTabla pat_panel = new PanelTabla();
         pat_panel.setPanelTabla(tab_tabla);
@@ -269,7 +254,10 @@ public class pre_conciliacion_banco extends Pantalla {
 				str_msg_info+=getFormatoInformacion("El archivo "+upl_archivo.getNombreReal()+" contiene "+int_fin+" filas");
 
 				lis_importa=new ArrayList<String[]>();
-
+				int total_tabla= tab_tabla.getRowCount();
+				System.out.println("valor de la tabal "+total_tabla+" valor impreso"+tab_tabla.getValor(1, "ide_fafac"));
+				for(int k=0; k< tab_tabla.getTotalFilas();k ++){
+				
 				for (int i = 0; i < int_fin; i++) {
 					//codigo tercero remplaza a str_cedula permite leer el codigo de la factutra
 					String str_codigo_tercero = hoja.getCell(4, i).getContents();	
@@ -286,13 +274,18 @@ public class pre_conciliacion_banco extends Pantalla {
 						str_msg_erro+=getFormatoError("El documento de Identidad: "+str_cedula_cliente+" no se encuentra registrado en la base de datos, fila "+(i+1));
 					}
 					
+					String str_valor_conciliar = hoja.getCell(3, i).getContents();
 					String str_valor = hoja.getCell(19, i).getContents();
+					double double_valor_conciliar= Double.parseDouble(str_valor_conciliar.replace(",", "."));
 					System.out.println("imprimo valro a conciliar "+str_valor);
-			
-		
+					tab_tabla.insertar();
+					tab_tabla.setValor(0, "valor_conciliado_fafac", double_valor_conciliar+"");
 
 				}
 				
+				}
+				utilitario.addUpdate("tab_tabla");;
+
 			} catch (Exception e) {
 				// TODO: handle exception
 			}	
