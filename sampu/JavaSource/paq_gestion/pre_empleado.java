@@ -2268,7 +2268,7 @@ public class pre_empleado extends Pantalla {
 		tab_empleado.getColumna("IDE_GTTDI").setCombo("GTH_TIPO_DOCUMENTO_IDENTIDAD", "IDE_GTTDI", "DETALLE_GTTDI", "");
 		tab_empleado.getColumna("IDE_GTESC").setCombo("GTH_ESTADO_CIVIL", "IDE_GTESC", "DETALLE_GTESC", "");
 		tab_empleado.getColumna("IDE_GEDIP").setCombo(ser_gestion.getSqlDivisionPoliticaCiudad());
-		//tab_empleado.getColumna("IDE_GEDIP").setAutoCompletar();
+		tab_empleado.getColumna("IDE_GEDIP").setAutoCompletar();
 		//tab_empleado.getColumna("IDE_GTTIS").setCombo("GTH_TIPO_SANGRE", "IDE_GTTIS", "DETALLE_GTTIS", "");
 		//tab_empleado.getColumna("IDE_GTNAC").setCombo("GTH_NACIONALIDAD", "IDE_GTNAC", "DETALLE_GTNAC", "");
 		tab_empleado.getColumna("IDE_GTNAC").setValorDefecto(par_nacionalidad);
@@ -2337,7 +2337,7 @@ public class pre_empleado extends Pantalla {
 		tab_direccion.getColumna("GTH_IDE_GTEMP").setVisible(false);
 		tab_direccion.getColumna("IDE_GEDIP").setCombo(ser_gestion.getSqlDivisionPoliticaCiudad());
 
-		//tab_direccion.getColumna("IDE_GEDIP").setAutoCompletar();
+		tab_direccion.getColumna("IDE_GEDIP").setAutoCompletar();
 		//tab_direccion.getColumna("IDE_GEDIP").setEstilo("width:200px");
 		tab_direccion.getColumna("IDE_GEDIP").setAncho(200);
 		tab_direccion.getColumna("IDE_GTEMP").setValorDefecto(aut_empleado.getValor());
@@ -2836,7 +2836,7 @@ public void mismaFecha(AjaxBehaviorEvent evt){
 			tab_direccion.getColumna("ACTIVO_GTDIR").setCheck();
 			tab_direccion.getColumna("NOTIFICACION_GTDIR").setCheck();
 			tab_direccion.getColumna("IDE_GEDIP").setCombo(ser_gestion.getSqlDivisionPoliticaCiudad());
-			//tab_direccion.getColumna("IDE_GEDIP").setAutoCompletar();
+			tab_direccion.getColumna("IDE_GEDIP").setAutoCompletar();
 			tab_direccion.getColumna("IDE_GTEMP").setVisible(false);
 			tab_direccion.getColumna("GTH_IDE_GTEMP").setVisible(false);
 			tab_direccion.getColumna("IDE_GTNEE").setVisible(false);
@@ -3303,7 +3303,7 @@ public void mismaFecha(AjaxBehaviorEvent evt){
 			tab_educacion.getColumna("IDE_GEDIP").setVisible(false);
 			tab_educacion.getColumna("ANIO_GRADO_GTEDE").setMascara("9999");
 			tab_educacion.getColumna("ANIO_GRADO_GTEDE").setNombreVisual("AÑO GRADO");
-			//tab_educacion.getColumna("IDE_GEDIP").setAutoCompletar();
+			tab_educacion.getColumna("IDE_GEDIP").setAutoCompletar();
 			tab_educacion.getColumna("IDE_GTEMP").setValorDefecto(aut_empleado.getValor());
 			tab_educacion.getColumna("IDE_GTEMP").setVisible(false);
 			tab_educacion.getColumna("ANIO_GTEDE").setVisible(false);
@@ -3378,7 +3378,7 @@ public void mismaFecha(AjaxBehaviorEvent evt){
 			//tab_capacitacion.getColumna("IDE_GEINS").setAutoCompletar();
 			tab_capacitacion.getColumna("IDE_GEDIP").setCombo(ser_gestion.getSqlDivisionPoliticaCiudad());
 			tab_capacitacion.getColumna("IDE_GEDIP").setVisible(false);
-			//tab_capacitacion.getColumna("IDE_GEDIP").setAutoCompletar();
+			tab_capacitacion.getColumna("IDE_GEDIP").setAutoCompletar();
 			tab_capacitacion.getColumna("IDE_GETPR").setCombo("GEN_TIPO_PERIODO", "IDE_GETPR", "DETALLE_GETPR", "");
 			tab_capacitacion.getColumna("IDE_GETPR").setVisible(false);
 			tab_capacitacion.getColumna("IDE_GTEMP").setValorDefecto(aut_empleado.getValor());
@@ -3576,7 +3576,7 @@ public void mismaFecha(AjaxBehaviorEvent evt){
 			tab_direccion.getColumna("NOTIFICACION_GTDIR").setCheck();
 			tab_direccion.getColumna("IDE_GEDIP").setCombo(ser_gestion.getSqlDivisionPoliticaCiudad());
 			tab_direccion.getColumna("IDE_GEDIP").setVisible(false);
-			//tab_direccion.getColumna("IDE_GEDIP").setAutoCompletar();
+			tab_direccion.getColumna("IDE_GEDIP").setAutoCompletar();
 			//tab_direccion.getColumna("IDE_GEDIP").setLongitud(250);
 			tab_direccion.getColumna("IDE_GTEMP").setVisible(false);
 			tab_direccion.getColumna("GTH_IDE_GTEMP").setVisible(false);
