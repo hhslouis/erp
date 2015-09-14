@@ -12,60 +12,17 @@
 		<defaultValueExpression><![CDATA["8,9"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[select * from afi_custodio  where ide_afcus in ($P!{pide_barras})]]>
+		<![CDATA[select ide_afcus,detalle_afnoa,cod_barra_afcus from afi_activo a,afi_custodio b, afi_nombre_activo c where a.ide_afact = b.ide_afact and a.ide_afnoa = c.ide_afnoa and ide_afcus in ($P!{pide_barras})]]>
 	</queryString>
 	<field name="ide_afcus" class="java.lang.Long">
 		<fieldDescription><![CDATA[Define la clave primaria de la tabla afi_activo.]]></fieldDescription>
 	</field>
-	<field name="ide_afact" class="java.lang.Long">
-		<fieldDescription><![CDATA[Define la clave primaria de la tabla afi_activo.]]></fieldDescription>
-	</field>
-	<field name="ide_geedp" class="java.lang.Long">
-		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_empleados_departamento_par, valor entero generado.]]></fieldDescription>
-	</field>
-	<field name="detalle_afcus" class="java.lang.String">
-		<fieldDescription><![CDATA[detalle_afcus]]></fieldDescription>
-	</field>
-	<field name="fecha_entrega_afcus" class="java.sql.Date">
-		<fieldDescription><![CDATA[fecha_entrega_afcus]]></fieldDescription>
-	</field>
-	<field name="fecha_descargo_afcus" class="java.sql.Date">
-		<fieldDescription><![CDATA[fecha_descargo_afcus]]></fieldDescription>
-	</field>
-	<field name="numero_acta_afcus" class="java.lang.String">
-		<fieldDescription><![CDATA[numero_acta_afcus]]></fieldDescription>
-	</field>
-	<field name="razon_descargo_afcus" class="java.lang.String">
-		<fieldDescription><![CDATA[razon_descargo_afcus]]></fieldDescription>
+	<field name="detalle_afnoa" class="java.lang.String">
+		<fieldDescription><![CDATA[detalle_afnoa]]></fieldDescription>
 	</field>
 	<field name="cod_barra_afcus" class="java.lang.String">
 		<fieldDescription><![CDATA[cod_barra_afcus]]></fieldDescription>
 	</field>
-	<field name="nro_secuencial_afcus" class="java.lang.Long">
-		<fieldDescription><![CDATA[nro_secuencial_afcus]]></fieldDescription>
-	</field>
-	<field name="activo_afcus" class="java.lang.Boolean">
-		<fieldDescription><![CDATA[Define el estado del registro si se encuentra activo o inactivo.]]></fieldDescription>
-	</field>
-	<field name="usuario_ingre" class="java.lang.String">
-		<fieldDescription><![CDATA[Este campo define el ultimo usuario que realiza la actualizacion del registro.]]></fieldDescription>
-	</field>
-	<field name="fecha_ingre" class="java.sql.Date">
-		<fieldDescription><![CDATA[Este campo define la fecha que se realizo el ingreso por primera ves el registro.]]></fieldDescription>
-	</field>
-	<field name="hora_ingre" class="java.sql.Time">
-		<fieldDescription><![CDATA[Este campo define la ultima hora que el usuario realiza la actualizacion del registro.]]></fieldDescription>
-	</field>
-	<field name="usuario_actua" class="java.lang.String">
-		<fieldDescription><![CDATA[Este campo define el ultimo usuario que realiza la actualizacion del registro.]]></fieldDescription>
-	</field>
-	<field name="fecha_actua" class="java.sql.Date">
-		<fieldDescription><![CDATA[Este campo define la ultima fecha que realiza la actualizacion del registro.]]></fieldDescription>
-	</field>
-	<field name="hora_actua" class="java.sql.Time">
-		<fieldDescription><![CDATA[Este campo define la hora que se realizo el ingreso por primera ves el registro.]]></fieldDescription>
-	</field>
-	<field name="gen_ide_geedp" class="java.lang.Long"/>
 	<variable name="test" class="java.lang.String" resetType="None">
 		<variableExpression><![CDATA["test"]]></variableExpression>
 		<initialValueExpression><![CDATA["test"]]></initialValueExpression>
@@ -98,17 +55,24 @@
 				<text><![CDATA[EMGIRS-EP]]></text>
 			</staticText>
 			<componentElement>
-				<reportElement uuid="5128391f-8d2c-495d-b5df-ab5090f04c89" x="0" y="20" width="136" height="26" isPrintInFirstWholeBand="true"/>
+				<reportElement uuid="5128391f-8d2c-495d-b5df-ab5090f04c89" x="0" y="32" width="136" height="26" isPrintInFirstWholeBand="true"/>
 				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barWidth="0">
 					<jr:codeExpression><![CDATA[$F{cod_barra_afcus}]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
 			<textField>
-				<reportElement uuid="b87c9783-0253-459a-9dd7-35dcf24c9b0b" x="23" y="46" width="100" height="20"/>
+				<reportElement uuid="b87c9783-0253-459a-9dd7-35dcf24c9b0b" x="23" y="56" width="100" height="14"/>
 				<textElement textAlignment="Center">
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cod_barra_afcus}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="bfcfae3d-e68d-438f-a094-483568d9b760" x="9" y="18" width="127" height="14"/>
+				<textElement textAlignment="Center">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{detalle_afnoa}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
