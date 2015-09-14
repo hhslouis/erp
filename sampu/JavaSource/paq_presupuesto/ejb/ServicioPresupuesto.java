@@ -98,6 +98,25 @@ public String getPoa (String ide_geani){
 			" left join gen_area g on a.ide_geare=g.ide_geare where a.ide_geani= "+ide_geani+" order by codigo_subactividad,a.ide_prpoa");
 		return tab_poa;
 }  
+public String getPoaNombre (String ide_geani){
+	String tab_poa=("select a.ide_prpoa,'Partida Presupuestaria:   '||codigo_clasificador_prcla as codigo_clasificador_prcla,'	|	Codigo SUB-ACTIVIDAD:	'||codigo_subactividad as codigo_subactividad,'		|	Programa: 	'||detalle_programa as detalle_programa,'	|	Proyecto: 	'||detalle_proyecto as detalle_proyecto,'	|	Producto: 	'||detalle_producto as detalle_producto,"
+			+" '	|	Nombre Cuenta Presupuestaria: 	'||descripcion_clasificador_prcla as descripcion_clasificador_prcla,'	|	Actividad:	 '||detalle_actividad as detalle_actividad,'	|	Sub Actividad:	'||detalle_subactividad as detalle_subactividad"
+			+" from pre_poa a left join  gen_anio b on a.ide_geani= b.ide_geani left join pre_clasificador c on a.ide_prcla = c.ide_prcla left join" 
+			+" (select a.ide_prfup,codigo_subactividad,detalle_subactividad,subactividad,detalle_actividad,actividad,detalle_producto,producto,detalle_proyecto,"
+			+" proyecto,detalle_programa ,programa from (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_subactividad,detalle_prfup as detalle_subactividad,"
+			+" detalle_prnfp as subactividad from pre_funcion_programa a, pre_nivel_funcion_programa b where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =5) a , "
+			+" (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_actividad,detalle_prfup as detalle_actividad,detalle_prnfp as actividad"
+			+" from pre_funcion_programa a, pre_nivel_funcion_programa b where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =4) b, "
+			+" (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_producto,detalle_prfup as detalle_producto,detalle_prnfp as producto"
+			+" from pre_funcion_programa a, pre_nivel_funcion_programa b where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =3 ) c, "
+			+" (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_proyecto,detalle_prfup as detalle_proyecto,detalle_prnfp as proyecto"
+			+" from pre_funcion_programa a, pre_nivel_funcion_programa b where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =2) d, "
+			+" (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_programa,detalle_prfup as detalle_programa,detalle_prnfp as programa"
+			+" from pre_funcion_programa a, pre_nivel_funcion_programa b where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =1) e where a.pre_ide_prfup = b.ide_prfup"
+			+" and b.pre_ide_prfup = c.ide_prfup and c.pre_ide_prfup = d.ide_prfup and d.pre_ide_prfup = e.ide_prfup ) f on a.ide_prfup = f.ide_prfup"
+			+" left join gen_area g on a.ide_geare=g.ide_geare where a.ide_geani in ("+ide_geani+") ");
+		return tab_poa;
+} 
 public String getPoaTodos (){
 	String tab_poa=("select a.ide_prpoa,codigo_clasificador_prcla,codigo_subactividad,detalle_subactividad,descripcion_clasificador_prcla from pre_poa a" +
 			" left join  gen_anio b on a.ide_geani= b.ide_geani left join pre_clasificador c on a.ide_prcla = c.ide_prcla left join " +
@@ -116,6 +135,43 @@ public String getPoaTodos (){
 			" left join gen_area g on a.ide_geare=g.ide_geare  order by codigo_subactividad,a.ide_prpoa");
 
 		return tab_poa;
+}
+public String getPoaSaldosFuenteFinanciamiento(String ide_geani){
+	String sql="select row_number() over(order by a.ide_prpoa,b.ide_prfuf) as codigo,a.ide_prpoa,b.ide_prfuf,detalle_prfuf,valor_asignado,valor_reformado,valor_saldo_fuente,"
+			+" codigo_clasificador_prcla,codigo_subactividad,detalle_subactividad,descripcion_clasificador_prcla,"
+			+" detalle_proyecto,detalle_producto,detalle_actividad,fecha_inicio_prpoa,fecha_fin_prpoa,num_resolucion_prpoa,"
+			+" presupuesto_inicial_prpoa,presupuesto_codificado_prpoa,reforma_prpoa,detalle_geani,detalle_geare,detalle_programa"
+			+" from ("
+			+" select a.ide_prpoa,codigo_clasificador_prcla,codigo_subactividad,detalle_programa,detalle_subactividad,descripcion_clasificador_prcla,programa,"
+			+" detalle_proyecto,proyecto,detalle_producto,producto,detalle_actividad,actividad,"
+			+" subactividad,fecha_inicio_prpoa,fecha_fin_prpoa,num_resolucion_prpoa,presupuesto_inicial_prpoa,"
+			+" presupuesto_codificado_prpoa,reforma_prpoa,detalle_geani,detalle_geare"
+			+" from pre_poa a left join  gen_anio b on a.ide_geani= b.ide_geani left join pre_clasificador c on a.ide_prcla = c.ide_prcla left join" 
+			+" (select a.ide_prfup,codigo_subactividad,detalle_subactividad,subactividad,detalle_actividad,actividad,detalle_producto,producto,detalle_proyecto,"
+			+" proyecto,detalle_programa ,programa from (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_subactividad,detalle_prfup as detalle_subactividad,"
+			+" detalle_prnfp as subactividad from pre_funcion_programa a, pre_nivel_funcion_programa b where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =5) a ," 
+			+" (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_actividad,detalle_prfup as detalle_actividad,detalle_prnfp as actividad"
+			+" from pre_funcion_programa a, pre_nivel_funcion_programa b where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =4) b, "
+			+" (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_producto,detalle_prfup as detalle_producto,detalle_prnfp as producto"
+			+" from pre_funcion_programa a, pre_nivel_funcion_programa b where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =3 ) c, "
+			+" (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_proyecto,detalle_prfup as detalle_proyecto,detalle_prnfp as proyecto"
+			+" from pre_funcion_programa a, pre_nivel_funcion_programa b where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =2) d, "
+			+" (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_programa,detalle_prfup as detalle_programa,detalle_prnfp as programa"
+			+" from pre_funcion_programa a, pre_nivel_funcion_programa b where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =1) e where a.pre_ide_prfup = b.ide_prfup"
+			+" and b.pre_ide_prfup = c.ide_prfup and c.pre_ide_prfup = d.ide_prfup and d.pre_ide_prfup = e.ide_prfup ) f on a.ide_prfup = f.ide_prfup"
+			+" left join gen_area g on a.ide_geare=g.ide_geare where a.ide_geani="+ide_geani+" order by codigo_subactividad,a.ide_prpoa" 
+			+" ) a left join ("
+			+" select a.ide_prpoa,a.ide_prfuf,detalle_prfuf,valor_asignado,(case when valor_reformado is null then 0 else valor_reformado end) as valor_reformado,"
+			+" valor_asignado - (case when valor_reformado is null then 0 else valor_reformado end) as valor_saldo_fuente"
+			+" from ("
+			+" select ide_prpoa,a.ide_prfuf,detalle_prfuf,sum(valor_financiamiento_prpof ) as valor_asignado"
+			+" from pre_poa_financiamiento a, pre_fuente_financiamiento b where a.ide_prfuf = b.ide_prfuf group by ide_prpoa,a.ide_prfuf,detalle_prfuf"
+			+" ) a left join ("
+			+" select ide_prpoa,ide_prfuf,sum(valor_reformado_prprf) as valor_reformado from pre_poa_reforma_fuente group by ide_prpoa,ide_prfuf"
+			+" ) b on a.ide_prpoa = b.ide_prpoa and a.ide_prfuf = b.ide_prfuf"
+			+" ) b on a.ide_prpoa = b.ide_prpoa"
+			+" order by codigo_subactividad";
+	return sql;	
 }
 public TablaGenerica getTablaGenericaPoa(String ide_prpoa) {
 	TablaGenerica tab_poa=utilitario.consultar("select ide_prpoa,b.ide_prcla,b.codigo_clasificador_prcla,b.descripcion_clasificador_prcla,presupuesto_codificado_prpoa " +

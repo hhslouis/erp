@@ -139,6 +139,7 @@ public class pre_funcion_programa extends Pantalla {
 				tab_funcion_programa.setValor("detalle_prfup", sub_actividad.getValor("detalle_prsua"));
 				tab_funcion_programa.setValor("codigo_prfup",nuevo_codigo);
 				//Actualiza 
+				tab_funcion_programa.modificar(tab_funcion_programa.getFilaActual());
 				utilitario.addUpdate("tab_funcion_programa");//actualiza mediante ajax el objeto tab_poa
 				set_sub_actividad.cerrar();
 			}
@@ -172,7 +173,6 @@ public void validaSubActividad(AjaxBehaviorEvent evt){
 		// TODO Auto-generated method stub
 		
 		if(tab_funcion_programa.isEmpty()){
-			System.out.println("entre porqu no hay nada");
 			if (tab_funcion_programa.guardar()) {
 				if (tab_vigente.guardar()) {
 					guardarPantalla();
@@ -188,36 +188,48 @@ public void validaSubActividad(AjaxBehaviorEvent evt){
 		}
 		
 		else if(tab_funcion_programa.isFocus()){
-			
-		
-		System.out.println("vine por otro lado ");
-       
-		TablaGenerica nivel_funcion=utilitario.consultar("select * from pre_nivel_funcion_programa where ide_prnfp ="+tab_funcion_programa.getValor("ide_prnfp"));
-		int nivelpadre =0;
-		if(tab_funcion_programa.getValor("pre_ide_prfup").equals("")){
-			nivelpadre=0;
-		}
-		else {
-		TablaGenerica nivel_funcion_padre=utilitario.consultar("select * from pre_nivel_funcion_programa where ide_prnfp in (select ide_prnfp from pre_funcion_programa where ide_prfup="+tab_funcion_programa.getValor("pre_ide_prfup")+")");
-		nivelpadre=Integer.parseInt(nivel_funcion_padre.getValor("ide_prnfp"));
-		} 
-		int nivel = Integer.parseInt(nivel_funcion.getValor("ide_prnfp"));	
-		 
-		int nivel_restado=nivel-1;
-		if(nivel_restado==nivelpadre)
-		{	
-		
-		if (tab_funcion_programa.guardar()) {
-			if (tab_vigente.guardar()) {
-				guardarPantalla();
-				//Actualizar el arbol
-				arb_funcion_programa.ejecutarSql();
-				utilitario.addUpdate("arb_funcion_programa");
-				
-				
+			TablaGenerica nivel_funcion=utilitario.consultar("select * from pre_nivel_funcion_programa where ide_prnfp ="+tab_funcion_programa.getValor("ide_prnfp"));
+			int nivelpadre =0;
+			//System.out.println("antes del if tab_fiuncion_programa "+tab_funcion_programa.getValor("pre_ide_prfup"));
+			if(tab_funcion_programa.getValor("pre_ide_prfup")==null){
+				//System.out.println(" iifff antes del if tab_fiuncion_programa "+tab_funcion_programa.getValor("pre_ide_prfup"));
+
+				nivelpadre=0;
 			}
+			else {
+				
+				if(tab_funcion_programa.getValor("pre_ide_prfup").isEmpty()){
+					//System.out.println(" despues iifff antes del if tab_fiuncion_programa "+tab_funcion_programa.getValor("pre_ide_prfup"));
+
+					nivelpadre=0;
+				}
+				else {
+				//System.out.println("else antes del if tab_fiuncion_programa "+tab_funcion_programa.getValor("pre_ide_prfup"));
+
+				TablaGenerica nivel_funcion_padre=utilitario.consultar("select * from pre_nivel_funcion_programa where ide_prnfp in (select ide_prnfp from pre_funcion_programa where ide_prfup="+tab_funcion_programa.getValor("pre_ide_prfup")+")");
+				nivelpadre=Integer.parseInt(nivel_funcion_padre.getValor("ide_prnfp"));
+				}
+			} 
+			int nivel = Integer.parseInt(nivel_funcion.getValor("ide_prnfp"));	
+
+			int nivel_restado=nivel-1;
+			//System.out.println("nivel estado "+nivel_restado+" nivel padre "+nivelpadre);
+
+			if(nivel_restado==nivelpadre)
+			{	
+
+				if (tab_funcion_programa.guardar()) {
+					if (tab_vigente.guardar()) {
+						//System.out.println(" entre aguardar ");
+						guardarPantalla();
+						//Actualizar el arbol
+						arb_funcion_programa.ejecutarSql();
+						utilitario.addUpdate("arb_funcion_programa");
+				
+				
+					}
 			
-		}
+				}
 		}
 		else {
 			utilitario.agregarMensajeError("No se puede Guardar", "Revice el nivel jerarquico para la creaciòn del presente registro");
@@ -232,7 +244,9 @@ public void validaSubActividad(AjaxBehaviorEvent evt){
 	public void eliminar() {
 		// TODO Auto-generated method stub
 		utilitario.getTablaisFocus().eliminar();
-		
+		tab_funcion_programa.guardar();
+		tab_vigente.guardar();
+		guardarPantalla();
 	}
 	
 	public Tabla getTab_funcion_programa() {

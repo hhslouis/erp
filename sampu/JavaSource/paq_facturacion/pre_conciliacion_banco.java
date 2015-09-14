@@ -10,7 +10,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -20,7 +26,7 @@ import javax.faces.context.FacesContext;
 import jxl.Sheet;
 import jxl.Workbook;
 
-import org.apache.poi.hssf.record.formula.functions.Replace;
+import org.apache.poi.hssf.util.HSSFColor.TAN;
 import org.primefaces.event.FileUploadEvent;
 
 import paq_facturacion.ejb.ServicioFacturacion;
@@ -30,11 +36,12 @@ import framework.componentes.Boton;
 import framework.componentes.Calendario;
 import framework.componentes.Combo;
 import framework.componentes.Division;
-import framework.componentes.Encriptar;
 import framework.componentes.Etiqueta;
+import framework.componentes.Grid;
 import framework.componentes.PanelTabla;
 import framework.componentes.Radio;
 import framework.componentes.Tabla;
+import framework.componentes.Texto;
 import framework.componentes.Upload;
 
 /**
@@ -50,7 +57,8 @@ public class pre_conciliacion_banco extends Pantalla {
 	private Calendario cal_fecha_final = new Calendario();
 	private Radio rad_imprimir= new Radio();
 	private Upload upl_archivo=new Upload();
-	private List<String[]> lis_importa=null; //Guardo los empleados y el valor del rubro
+	private Tabla tab_cliente = new Tabla();
+	private Texto txt_documento_banco = new Texto();
 
 
 	@EJB
@@ -58,7 +66,46 @@ public class pre_conciliacion_banco extends Pantalla {
 
     public pre_conciliacion_banco() { 
     	
-    	bar_botones.limpiar();
+    	//bar_botones.limpiar();
+    	Grid gri_formulario = new Grid();
+    	gri_formulario.setColumns(4);
+    	
+  	
+    	gri_formulario.getChildren().add(new Etiqueta("Fecha Inicial :"));
+		cal_fecha_inicial.setFechaActual();
+    	gri_formulario.getChildren().add(cal_fecha_inicial);
+
+    	gri_formulario.getChildren().add(new Etiqueta("Fecha Final :"));
+		cal_fecha_final.setFechaActual();
+    	gri_formulario.getChildren().add(cal_fecha_final);
+    	
+    	gri_formulario.getChildren().add(new Etiqueta("Documento Bancario :"));
+    	txt_documento_banco.setId("txt_documento_banco");
+		txt_documento_banco.setSize(50);
+		txt_documento_banco.setMetodoChange("cambiatexto");
+    	gri_formulario.getChildren().add(txt_documento_banco);		
+		List lista = new ArrayList();
+	       Object fila1[] = {
+	           "0", "NO CONCILIADO"
+	       };
+	       Object fila2[] = {
+	           "1", "CONCILIADO"
+	       };
+	       
+	       lista.add(fila1);
+	       lista.add(fila2);
+	       rad_imprimir.setId("rad_imprimir");
+	       rad_imprimir.setRadio(lista);
+	       rad_imprimir.setValue(fila2);
+//	       bar_botones.agregarComponente(rad_imprimir);
+	    	gri_formulario.getChildren().add(rad_imprimir);
+		
+		Boton bot_filtrar = new Boton();
+		bot_filtrar.setValue("Actualizar");
+		bot_filtrar.setMetodo("actualizarLista");
+		bot_filtrar.setIcon("ui-icon-refresh");
+//		bar_botones.agregarBoton(bot_filtrar);
+    	gri_formulario.getChildren().add(bot_filtrar);
 	
 		upl_archivo.setId("upl_archivo");
 		upl_archivo.setMetodo("validarArchivo");
@@ -68,15 +115,62 @@ public class pre_conciliacion_banco extends Pantalla {
 		upl_archivo.setAllowTypes("/(\\.|\\/)(xls)$/");
 		upl_archivo.setUploadLabel("Validar");
 		upl_archivo.setCancelLabel("Cancelar Seleccion");
-		bar_botones.agregarComponente(upl_archivo);
+//		bar_botones.agregarComponente(upl_archivo);
+    	gri_formulario.setFooter(upl_archivo);
 		
-        tab_tabla.setId("tab_tabla");
-        tab_tabla.setTabla("fac_factura", "ide_fafac", 1);
-        tab_tabla.setCondicion("1=1 ");
-        tab_tabla.setCampoOrden("ide_fafac limit 500");
-        tab_tabla.setRows(500);
-        tab_tabla.dibujar();
+    	
+    	
+    	
+    	tab_tabla.setId("tab_tabla");
+    	tab_tabla.setTabla("fac_factura", "ide_fafac", 1);
+    	tab_tabla.setCampoOrden("ide_fafac limit 2000");
+    	tab_tabla.setCondicion("ide_fafac=-1");
+//    	tab_tabla.setCondicion("not conciliado_fafac is true");
+    	tab_tabla.getColumna("ide_comov").setVisible(false);
+    	tab_tabla.getColumna("ide_gtemp").setVisible(false);
+    	tab_tabla.getColumna("ide_tedar").setVisible(false);
+    	tab_tabla.getColumna("ide_retip").setVisible(false);
+    	tab_tabla.getColumna("ide_tetid").setVisible(false);
+    	tab_tabla.getColumna("ide_geins").setVisible(false);
+    	tab_tabla.getColumna("fecha_vencimiento_fafac").setVisible(false);
+    	tab_tabla.getColumna("fecha_emision_fafac").setVisible(false);
+    	tab_tabla.getColumna("direccion_fafac").setVisible(false);
+    	tab_tabla.getColumna("observacion_fafac").setVisible(false);
+    	tab_tabla.getColumna("base_no_iva_fafac").setVisible(false);
+    	tab_tabla.getColumna("base_cero_fafac").setVisible(false);
+    	tab_tabla.getColumna("razon_anulado_fafac").setVisible(false);
+    	tab_tabla.getColumna("fecha_anulado_fafac").setVisible(false);
+    	tab_tabla.getColumna("ide_falug").setVisible(false);
+    	tab_tabla.getColumna("codigo_faclinea_fafac").setVisible(false);
+    	tab_tabla.getColumna("responsable_faclinea_fafac").setVisible(false);
+    	tab_tabla.getColumna("num_comprobante_fafac").setVisible(false);
+    	tab_tabla.getColumna("ide_fadaf").setVisible(false);
+    	tab_tabla.getColumna("ide_coest").setVisible(false);
+    	tab_tabla.getColumna("secuencial_fafac").setLectura(true);
+    	tab_tabla.getColumna("base_aprobada_fafac").setLectura(true);
+    	tab_tabla.getColumna("valor_iva_fafac").setLectura(true);
+    	tab_tabla.getColumna("total_fafac").setLectura(true);
+    	//tab_tabla.getColumna("conciliado_fafac").setLectura(true);
+    	tab_tabla.getColumna("activo_fafac").setLectura(true);
+    	tab_tabla.getColumna("factura_fisica_fafac").setLectura(true);
+    	tab_tabla.getColumna("fecha_transaccion_fafac").setLectura(true);
+
+    	tab_tabla.getColumna("ide_recli").setCombo(ser_facturacion.getClientes("0,1"));
+    	tab_tabla.getColumna("ide_recli").setAutoCompletar();
+    	tab_tabla.getColumna("ide_recli").setLectura(true);
+    	tab_tabla.getColumna("con_ide_coest").setCombo("select ide_coest,detalle_coest from cont_estado");
+    	tab_tabla.getColumna("con_ide_coest").setAutoCompletar();
+    	tab_tabla.getColumna("con_ide_coest").setLectura(true);
+    	tab_tabla.getColumna("ide_recli").setLongitud(200);
+    	//tab_tabla.getColumna("ide_fadaf").setCombo(ser_facturacion.getDatosFactura("1",""));
+    	//tab_tabla.getColumna("ide_fadaf").setAutoCompletar();
+    	//tab_tabla.getColumna("ide_fadaf").setLectura(true);
+    	//tab_tabla.setRows(200);
+    	//tab_tabla.setLectura(true);
+    	tab_tabla.dibujar();
+    	
         PanelTabla pat_panel = new PanelTabla();
+        pat_panel.setHeader(gri_formulario);
         pat_panel.setPanelTabla(tab_tabla);
 
         Division div_division = new Division();
@@ -84,6 +178,23 @@ public class pre_conciliacion_banco extends Pantalla {
         div_division.dividir1(pat_panel);
         agregarComponente(div_division);
     }
+    
+	public void actualizarLista(){
+		if (cal_fecha_inicial.getValue() != null && cal_fecha_final.getValue() != null
+				) {
+			if (rad_imprimir.getValue().equals("0")){
+			tab_tabla.setCondicion(" not conciliado_fafac is true  and fecha_transaccion_fafac between '"+cal_fecha_inicial.getFecha()+"' and '"+cal_fecha_final.getFecha()+"' ");	
+			}
+			else if (rad_imprimir.getValue().equals("1")){
+			tab_tabla.setCondicion(" conciliado_fafac is true  and fecha_transaccion_fafac between '"+cal_fecha_inicial.getFecha()+"' and '"+cal_fecha_final.getFecha()+"' ");	
+			}
+			tab_tabla.ejecutarSql();
+		}
+		else {
+			utilitario.agregarMensajeInfo("Filtros no válidos","Debe ingresar los fitros Rangos de fechas");
+		}		
+	}
+    
     public void seleccionaOpcion (){
 		
 		String sql ="select orden,secuencial,fecha_transaccion_fafac, ruc_comercial_recli,rpad,base_aprobada_fafac, valor_iva_fafac, total_fafac,detalle_bogrm,doc_identidad,"
@@ -225,7 +336,9 @@ public class pre_conciliacion_banco extends Pantalla {
 		tab_tabla.limpiar();	
 		utilitario.addUpdate("tab_tabla");// limpia y refresca el autocompletar
 	}
-
+	public void cambiatexto() {
+	utilitario.agregarMensajeInfo("Documento Bancario", txt_documento_banco.getValue()+"");	
+	}
 	/**
 	 * Valida el archivo para que pueda importar un rubro a la nomina
 	 * @param evt
@@ -237,6 +350,13 @@ public class pre_conciliacion_banco extends Pantalla {
 			String str_msg_adve="";
 			String str_msg_erro="";
 			double dou_tot_valor_imp=0;
+			
+			if(txt_documento_banco.getValue().equals("")){
+				utilitario.agregarMensajeInfo("No se puede conciliar el Archivo", "Favor Ingrese el numero del documento de conciliacion");
+				return;
+			}
+			
+			System.out.println("valor del texto "+txt_documento_banco.getValue());
 			try {
 				//Válido que el rubro seleccionado este configurado en los tipo de nomina
 
@@ -253,38 +373,66 @@ public class pre_conciliacion_banco extends Pantalla {
 
 				str_msg_info+=getFormatoInformacion("El archivo "+upl_archivo.getNombreReal()+" contiene "+int_fin+" filas");
 
-				lis_importa=new ArrayList<String[]>();
 				int total_tabla= tab_tabla.getRowCount();
-				System.out.println("valor de la tabal "+total_tabla+" valor impreso"+tab_tabla.getValor(1, "ide_fafac"));
+				//System.out.println("valor de la tabal "+total_tabla+" valor impreso"+tab_tabla.getValor(1, "ide_fafac"));
 				for(int k=0; k< tab_tabla.getTotalFilas();k ++){
-				
+					// extraigo los datos de la factura
+					TablaGenerica tab_factura=ser_facturacion.getDatosClienteFactura(tab_tabla.getValor(k, "ide_fafac"));
+
 				for (int i = 0; i < int_fin; i++) {
 					//codigo tercero remplaza a str_cedula permite leer el codigo de la factutra
 					String str_codigo_tercero = hoja.getCell(4, i).getContents();	
 					str_codigo_tercero=str_codigo_tercero.trim(); 
 					String str_cedula_cliente =hoja.getCell(32, i).getContents();
 					str_cedula_cliente = str_cedula_cliente.trim();
-					
-					System.out.println("imprimo valor celda factura "+str_codigo_tercero+"  numero d ecedula" +str_cedula_cliente);
-					
-					TablaGenerica tab_factura=ser_facturacion.getDatosClienteFactura(str_cedula_cliente, str_codigo_tercero);
-
-					if(tab_factura.isEmpty() ){
-						//No existe el documento en la tabla de tab_factura
-						str_msg_erro+=getFormatoError("El documento de Identidad: "+str_cedula_cliente+" no se encuentra registrado en la base de datos, fila "+(i+1));
-					}
-					
 					String str_valor_conciliar = hoja.getCell(3, i).getContents();
 					String str_valor = hoja.getCell(19, i).getContents();
 					double double_valor_conciliar= Double.parseDouble(str_valor_conciliar.replace(",", "."));
-					System.out.println("imprimo valro a conciliar "+str_valor);
-					tab_tabla.insertar();
-					tab_tabla.setValor(0, "valor_conciliado_fafac", double_valor_conciliar+"");
+					String str_fecha_pago= hoja.getCell(6, i).getContents();
 
+					if(tab_factura.getValor("factura_sin_punto").equals(str_codigo_tercero) && tab_factura.getValor("ruc_sin_punto").equals(str_cedula_cliente)){
+						//System.out.println(" enter a poner el valor ");
+						String update="update fac_factura set conciliado_fafac=true,"
+								+"fecha_pago_fafac='"+str_fecha_pago+"',"
+								+"valor_conciliado_fafac="+double_valor_conciliar+","
+								+"fecha_conciliado_fafac='"+utilitario.getFechaActual()+"',"
+								+"documento_conciliado_fafac='"+str_valor+"',"
+								+"documento_bancario_fafac='"+txt_documento_banco.getValue()+"',"
+								+"ide_coest="+utilitario.getVariable("p_factura_pagado")+","
+								+"con_ide_coest="+utilitario.getVariable("p_estado_conciliacion_bancaria")
+								+" where ide_fafac="+tab_tabla.getValor(k,"ide_fafac");
+						//System.out.println(" imprimo update "+update);
+
+						utilitario.getConexion().ejecutarSql(update);
+						/*
+						tab_tabla.setValor(k, "conciliado_fafac", "true");
+						tab_tabla.setValor(k, "fecha_pago_fafac",str_fecha_pago);
+						tab_tabla.setValor(k, "valor_conciliado_fafac", double_valor_conciliar+"");
+						tab_tabla.setValor(k, "fecha_conciliado_fafac", "01/01/2015" );//utilitario.getFechaActual()+"");
+						tab_tabla.setValor(k, "documento_conciliado_fafac", str_valor);
+						tab_tabla.setValor(k, "documento_bancario_fafac", txt_documento_banco.getValue()+"");
+						tab_tabla.setValor(k, "con_ide_coest", utilitario.getVariable("p_estado_conciliacion_bancaria"));
+						//tab_tabla.modificar(tab_tabla.getFilaActual());
+						System.out.println(" fecha_pago_fafac "+tab_tabla.getValor(k, "fecha_pago_fafac"));
+						System.out.println(" valor_conciliado_fafac "+tab_tabla.getValor(k, "valor_conciliado_fafac"));
+						System.out.println(" fecha_conciliado_fafac "+tab_tabla.getValor(k, "fecha_conciliado_fafac"));
+
+						tab_tabla.modificar(k);
+						//tab_tabla.guardar();
+						  */
+						 
+					}
+					
+	
 				}
 				
 				}
-				utilitario.addUpdate("tab_tabla");;
+				utilitario.addUpdate("tab_tabla");
+				//tab_tabla.guardar();
+				//guardarPantalla();
+				tab_tabla.ejecutarSql();
+				utilitario.agregarMensaje("Conciliado", "Actualice los registros conciliados");
+
 
 			} catch (Exception e) {
 				// TODO: handle exception
@@ -301,6 +449,8 @@ public class pre_conciliacion_banco extends Pantalla {
     public void guardar() {
         tab_tabla.guardar();
         guardarPantalla();
+        tab_tabla.ejecutarSql();
+        utilitario.addUpdate("tab_tabla");
     }
 
     @Override
@@ -336,5 +486,11 @@ public class pre_conciliacion_banco extends Pantalla {
 	public void setCom_anio(Combo com_anio) {
 		this.com_anio = com_anio;
 	}
-    
+	public Tabla getTab_cliente() {
+		return tab_cliente;
+	}
+	public void setTab_cliente(Tabla tab_cliente) {
+		this.tab_cliente = tab_cliente;
+	}
+	
 }

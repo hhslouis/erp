@@ -93,7 +93,7 @@ public class ServicioFacturacion {
 		 * @param valor factuta de la busqueda
 		 * @return
 		 */
-		public TablaGenerica getDatosClienteFactura(String cedula,String factura){
+		public TablaGenerica getDatosClienteFactura(String ide_factura){
 			return utilitario.consultar("select orden,secuencial,fecha_transaccion_fafac, ruc_comercial_recli,rpad,base_aprobada_fafac, valor_iva_fafac, total_fafac,detalle_bogrm,doc_identidad,"
 +" repeat ('0',(15 - length (tot_sin_punto)))||tot_sin_punto as valor_sin_punto,repeat ('0',(15 - length (secuencial)))||secuencial as factura_sin_punto,repeat ('0',(13 - length (ruc_comercial_recli)))||ruc_comercial_recli as ruc_sin_punto,repeat ('0',(7 - length (nuevo_iva)))||nuevo_iva as iva_sin_punto"
 +" from ("
@@ -102,12 +102,9 @@ public class ServicioFacturacion {
 +" FROM fac_factura fac"
 +" join rec_clientes cli on cli.ide_recli=fac.ide_recli"
 +" join (select ide_fadaf, detalle_bogrm from fac_datos_factura a, bodt_grupo_material b where a.ide_bogrm = b.ide_bogrm) b on fac.ide_fadaf = b.ide_fadaf"
-+" where ide_coest=2" 
-+" and activo_fafac=true"
-+" and ide_tetid=4 "
-+" and ruc_comercial_recli = '"+cedula+"'"
++" where ide_fafac="+ide_factura 
+
 +" order by secuencial_fafac"
-+" ) a"
-+" where repeat ('0',(15 - length (secuencial)))||secuencial = '"+factura+"'");
++" ) a");
 		}
 }

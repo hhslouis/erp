@@ -61,6 +61,8 @@ public class Parametros {
         lis_parametros.add(new Parametro("1", "p_gen_tipo_institucion_educativa_idiomas", "Indica el tipo de institucion Educativa de Idiomas", "4","GEN_TIPO_INSTITUCION", "IDE_GETII", "DETALLE_GETII"));
         lis_parametros.add(new Parametro("1", "p_gen_responsable_depa_bienestar", "Indica el departamento para poder ver el responsable de la entrevista (Talento Humano)", "135","GEN_DEPARTAMENTO", "IDE_GEDEP", "DETALLE_GEDEP"));
         lis_parametros.add(new Parametro("1", "p_valor_iva", "Indica el valor aplicado del iva", "0.12"));
+        lis_parametros.add(new Parametro("1", "p_director_adminsitrativo", "Indica el titulo y nombre del Director Administrativo", "Ing. Paul Velez"));
+        lis_parametros.add(new Parametro("1", "p_jefe_activos_fijos", "Indica el titulo y nombre del jefe de Activos Fijos", "Ing. Evelyn Suarez"));
 
         /*
          * GESTION DE TALENTO HUMANO MODULO =2
@@ -362,6 +364,8 @@ public class Parametros {
         lis_parametros.add(new Parametro("14", "p_notadecredito_emitido","Indica el estado emitido de la nota de credito","14","cont_estado","ide_coest","detalle_coest"));
         lis_parametros.add(new Parametro("14", "p_factura_anulado","Indica el estado anulado de la factura","14","cont_estado","ide_coest","detalle_coest"));
         lis_parametros.add(new Parametro("14", "p_factura_emitido","Indica el estado emitido de la factura","14","cont_estado","ide_coest","detalle_coest"));
+        lis_parametros.add(new Parametro("14", "p_factura_pagado","Indica el estado pagado de la factura","14","cont_estado","ide_coest","detalle_coest"));
+        lis_parametros.add(new Parametro("14", "p_estado_conciliacion_bancaria","Indica el estado conciliacion del archivo bancario","14","cont_estado","ide_coest","detalle_coest"));
 
         /*
          *  ADQUISISCIONES = 15
@@ -404,6 +408,13 @@ public class Parametros {
          * */
         lis_parametros.add(new Parametro("18", "p_tes_impuesto_renta","Indica el tipo impuesto impuesto a la renta","1","tes_tipo_impuesto","ide_tetii","detalle_tetii"));
         lis_parametros.add(new Parametro("18", "p_tes_impuesto_iva","Indica el tipo impuesto impuesto iva","2","tes_tipo_impuesto","ide_tetii","detalle_tetii"));
+
+        /*
+         * ACTIVOS FIJOS =19
+         * */
+        lis_parametros.add(new Parametro("19", "p_base_legal_entregarecep","Indica la base legal para imprimir en el acta de Entrega Recepcion de Activos Fijos","1","gen_base_legal","ide_gebal","detalle_gebal"));
+        lis_parametros.add(new Parametro("19", "p_base_legal_constafisica","Indica la base legal para imprimir en el acta de Constatacion Fisica","1","gen_base_legal","ide_gebal","detalle_gebal"));
+        lis_parametros.add(new Parametro("19", "p_base_legal_cambiocustod","Indica la base legal para imprimir en el acta de Cambio de Custodio","1","gen_base_legal","ide_gebal","detalle_gebal"));
 
         return lis_parametros;
         

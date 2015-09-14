@@ -24,9 +24,13 @@ import paq_nomina.ejb.ServicioNomina;
 import paq_sistema.aplicacion.Pantalla;
 //import portal.entidades.SisTabla;
 
+
+
 import com.lowagie.text.pdf.Barcode128;
 
 import framework.aplicacion.TablaGenerica;
+import framework.componentes.AreaTexto;
+import framework.componentes.AutoCompletar;
 import framework.componentes.Boton;
 import framework.componentes.Confirmar;
 import framework.componentes.Dialogo;
@@ -54,9 +58,17 @@ public class pre_activo extends Pantalla {
 	private Etiqueta eti_pie=new Etiqueta();
 	private Confirmar con_guardar= new Confirmar();
 	private  Dialogo dia_egreso= new Dialogo();
+	private Dialogo dia_actas=new Dialogo();
 	private Texto tex_maximo=new Texto();
-
+	private Texto txt_numero_acta = new Texto();
+	private AutoCompletar aut_empleado = new AutoCompletar();
+	private Grid grid_acta = new Grid();
+	private Grid grid_acta_empleado = new Grid();
 	private Dialogo dia_fecha=new Dialogo();
+	private Dialogo dia_acta_nro = new Dialogo();
+	private AreaTexto are_txt_base_legal = new AreaTexto();
+	private AutoCompletar aut_empleado_acta= new AutoCompletar();
+	private AreaTexto are_txt_observacion = new AreaTexto();
 
 	@EJB
 	private ServicioNomina ser_nomina = (ServicioNomina) utilitario.instanciarEJB(ServicioNomina.class);
@@ -78,7 +90,8 @@ public class pre_activo extends Pantalla {
 		agregarComponente(rep_reporte);//agrega el componente a la pantalla
 		bar_botones.agregarReporte();//aparece el boton de reportes en la barra de botones
 		self_reporte.setId("self_reporte"); //id
-		agregarComponente(self_reporte);
+		agregarComponente(self_reporte);		
+	
 		tab_activos_fijos.setId("tab_activos_fijos");
 		tab_activos_fijos.setTabla("afi_activo","ide_afact", 1);
 		tab_activos_fijos.setCampoOrden("ide_afact desc");
@@ -156,7 +169,7 @@ public class pre_activo extends Pantalla {
 		grid_titulo.setColumns(2);
 		grid_titulo.setStyle("text-align:center;position:absolute;top:5px;left:55px;");
 		eti_titulo.setStyle("font-size:22px;color:black;font-weight: bold;text-align:center;");
-		eti_titulo.setValue("EMGIRS");
+		eti_titulo.setValue("EMGIRS-EP ");
 		grid_titulo.getChildren().add(eti_titulo);
 
 		Grid grid_pie = new Grid();
@@ -266,6 +279,47 @@ public class pre_activo extends Pantalla {
 		gri_grid.getChildren().add(tex_maximo);		
 		dia_egreso.setDialogo(gri_grid);		
 		agregarComponente(dia_egreso);
+		// instancio autocompletar para cargar en el grid
+		
+		//Dialogo para Ingreso la Impresion de Actas
+		dia_actas.setId("dia_actas");
+		dia_actas.setTitle("ACTAS");
+		dia_actas.setWidth("50%");
+		dia_actas.setHeight("50%");
+		dia_actas.getBot_aceptar().setMetodo("aceptarReporte");
+		grid_acta.setColumns(2);
+		are_txt_observacion.setId("are_txt_observacion");
+		are_txt_observacion.setAutoResize(true);
+		are_txt_observacion.setStyle("width:350px; height:70px");
+		
+		grid_acta.getChildren().add(new Etiqueta("Observaciones"));
+		grid_acta.getChildren().add(are_txt_observacion);
+		grid_acta.getChildren().add(new Etiqueta("Buscar Empleado:"));
+		aut_empleado_acta.setId("aut_empleado_acta");
+		aut_empleado_acta.setAutoCompletar("select IDE_GTEMP,DOCUMENTO_IDENTIDAD_GTEMP, APELLIDO_PATERNO_GTEMP, APELLIDO_MATERNO_GTEMP,PRIMER_NOMBRE_GTEMP,SEGUNDO_NOMBRE_GTEMP  from GTH_EMPLEADO");
+
+		grid_acta.getChildren().add(aut_empleado_acta);
+		dia_actas.setDialogo(grid_acta);
+		agregarComponente(dia_actas);
+
+		are_txt_base_legal.setId("are_txt_base_legal");
+		are_txt_base_legal.setAutoResize(true);
+		are_txt_base_legal.setStyle("width:350px; height:70px");
+		
+		//Dialogo para Ingreso la Impresion de Actas
+		dia_acta_nro.setId("dia_acta_nro");
+		dia_acta_nro.setTitle("ACTAS");
+		dia_acta_nro.setWidth("50%");
+		dia_acta_nro.setHeight("50%");
+		dia_acta_nro.getBot_aceptar().setMetodo("aceptarReporte");
+		grid_acta_empleado.setColumns(2);		
+		grid_acta_empleado.getChildren().add(new Etiqueta("Observaciones"));
+		grid_acta_empleado.getChildren().add(are_txt_base_legal);
+		grid_acta_empleado.getChildren().add(new Etiqueta("Nro. Acta:"));
+		grid_acta_empleado.getChildren().add(txt_numero_acta);
+		dia_acta_nro.setDialogo(grid_acta_empleado);
+		agregarComponente(dia_acta_nro);
+
 	}
 		public void importar(){
 			if(tab_activos_fijos.isEmpty()){
@@ -345,8 +399,14 @@ public class pre_activo extends Pantalla {
 		}
         TablaGenerica numero_secuencial = utilitario.consultar(ser_activos.getActivosCodigo(tab_activos_fijos.getValor("ide_afact")));
 		TablaGenerica secuencial_custodio=utilitario.consultar(ser_activos.getCustodioSecuencial(tab_activos_fijos.getValor("ide_afact")));
-        Integer num_numero_secuencial = Integer.parseInt(numero_secuencial.getValor("secuencial_afact"));
-        Integer num_secuencial_custodio =  	Integer.parseInt(secuencial_custodio.getValor("nro_secuencial_afcus"))+1;	
+		Integer num_numero_secuencial=0;
+		try {
+		num_numero_secuencial = Integer.parseInt(numero_secuencial.getValor("secuencial_afact"));
+        }
+        catch (Exception e){
+        	System.out.println("Error num_numero_secuencial: "+e);
+        }
+		Integer num_secuencial_custodio =  	Integer.parseInt(secuencial_custodio.getValor("nro_secuencial_afcus"))+1;	
 		if(num_secuencial_custodio>num_numero_secuencial){
 			utilitario.agregarMensajeInfo("Numero secuencial en uso", "No se puede agregar un custodio, existe un numero secuencial en uso, si desea cambiar de custodio utilice la opciòn Traspaso de Custodio");
 			return;
@@ -368,13 +428,12 @@ public class pre_activo extends Pantalla {
 
 	        String codigo_barras =codigo_cuenta.getValor("cue_codigo_remplazado")+"-"+tab_activos_fijos.getValor("ide_afact")+"-"+num_secuencial_custodio;
 		
-			System.out.println(" tabla generica"+tab_empleado_responsable.getSql());
+			//System.out.println(" tabla generica"+tab_empleado_responsable.getSql());
 			for(int i=0;i<tab_empleado_responsable.getTotalFilas();i++){
 				tab_custodio.insertar();
 				tab_custodio.setValor("IDE_GEEDP", tab_empleado_responsable.getValor(i, "IDE_GEEDP"));	
 				tab_custodio.setValor("nro_secuencial_afcus", num_secuencial_custodio+"");
 				tab_custodio.setValor("cod_barra_afcus", codigo_barras);
-
 			}
 			set_empleado.cerrar();
 			utilitario.addUpdateTabla(tab_custodio, "ide_geedp,nro_secuencial_afcus,cod_barra_afcus", "");			
@@ -446,7 +505,9 @@ public class pre_activo extends Pantalla {
 		rep_reporte.dibujar();
 	}
 	public void aceptarReporte(){
-		if(rep_reporte.getReporteSelecionado().equals("Activo"));{
+		String str_director_administrativo=utilitario.getVariable("p_director_adminsitrativo");
+		String str_jefe_activos_fijos=utilitario.getVariable("p_jefe_activos_fijos");
+		if(rep_reporte.getReporteSelecionado().equals("Activo")){
 			if (rep_reporte.isVisible()){
 				p_parametros=new HashMap();		
 				rep_reporte.cerrar();	
@@ -457,7 +518,9 @@ public class pre_activo extends Pantalla {
 				//p_parametros.put("pide_fafac",Integer.parseInt(tab_cont_viajeros.getValor("ide_fanoc")));
 				self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
 				self_reporte.dibujar();
-				}else if (rep_reporte.getReporteSelecionado().equals("Actividad")) {
+				}
+		} 
+		else if (rep_reporte.getReporteSelecionado().equals("Actividad")) {
 					if (rep_reporte.isVisible()) {
 						p_parametros=new HashMap();
 						rep_reporte.cerrar();
@@ -465,7 +528,10 @@ public class pre_activo extends Pantalla {
 						p_parametros.put("pide_tipo",Integer.parseInt(tab_activos_fijos.getValor("afi_activo")));
 						self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
 						self_reporte.dibujar();
-					}else if (rep_reporte.getReporteSelecionado().equals("Activo Actividad")) {
+					}
+		 }
+		
+		else if (rep_reporte.getReporteSelecionado().equals("Activo Actividad")) {
 						if (rep_reporte.isVisible()) {
 							p_parametros=new HashMap();
 							rep_reporte.cerrar();
@@ -474,20 +540,74 @@ public class pre_activo extends Pantalla {
 							self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
 							self_reporte.dibujar();
 
-						}else if (rep_reporte.getReporteSelecionado().equals("Codigo de Barra")) {
+				}
+			}
+		else if (rep_reporte.getReporteSelecionado().equals("Codigo de Barras")) {
 							if (rep_reporte.isVisible()) {
 								p_parametros=new HashMap();
 								rep_reporte.cerrar();
 								p_parametros.put("titulo","Codigo de Barras");
-								p_parametros.put("pide_barra",Integer.parseInt(tab_custodio.getValor("ide_afcus")));
+								p_parametros.put("pide_barras",tab_custodio.getValor("ide_afcus"));
 								self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
 								self_reporte.dibujar();
 							}
 						}
-					}
-				}
+		
+		else if (rep_reporte.getReporteSelecionado().equals("Acta Constatación Física")) {
+			if (rep_reporte.isVisible()) {
+				p_parametros=new HashMap();
+				rep_reporte.cerrar();
+				dia_actas.dibujar();
+			} else if(dia_actas.isVisible()){
+				dia_actas.cerrar();
+				p_parametros.put("titulo","ACTA DE CONSTATACION FISICA");
+				p_parametros.put("pide_empleado",Integer.parseInt(aut_empleado_acta.getValor()));
+				p_parametros.put("pbase_legal",are_txt_observacion.getValue());
+				p_parametros.put("pnum_acta",txt_numero_acta.getValue());
+				p_parametros.put("pdirector_administrativo",str_director_administrativo);
+				p_parametros.put("pjefe_activos",str_jefe_activos_fijos);
 
+				self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
+				self_reporte.dibujar();
+				}
+			
+		}
+			
+		else if (rep_reporte.getReporteSelecionado().equals("Acta Entrega Recepción")) {
+			if (rep_reporte.isVisible()) {
+				p_parametros=new HashMap();
+				rep_reporte.cerrar();
+				dia_acta_nro.dibujar();
+			} else if(dia_acta_nro.isVisible()){
+				dia_acta_nro.cerrar();
+				p_parametros.put("titulo","ACTA ENTREGA RECEPCION");
+				p_parametros.put("pnum_acta",txt_numero_acta.getValue());
+				p_parametros.put("pbase_legal",are_txt_base_legal.getValue());
+				p_parametros.put("pdirector_administrativo",str_director_administrativo);
+				p_parametros.put("pjefe_activos",str_jefe_activos_fijos);
+
+				self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
+				self_reporte.dibujar();
 			}
+		
+		}
+		else if (rep_reporte.getReporteSelecionado().equals("Acta Cambio Custodio")) {
+			if (rep_reporte.isVisible()) {
+				p_parametros=new HashMap();
+				rep_reporte.cerrar();
+				dia_acta_nro.dibujar();
+			} else if(dia_acta_nro.isVisible()){
+				dia_acta_nro.cerrar();
+				p_parametros.put("titulo","ACTA DE TRASPASO DE BIENES");
+				p_parametros.put("pnum_acta",txt_numero_acta.getValue());
+				p_parametros.put("pbase_legal",are_txt_base_legal.getValue());
+				p_parametros.put("pdirector_administrativo",str_director_administrativo);
+				p_parametros.put("pjefe_activos",str_jefe_activos_fijos);
+
+				self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
+				self_reporte.dibujar();
+			}
+		}
 		}
 	
 
@@ -569,14 +689,13 @@ public class pre_activo extends Pantalla {
 	public void guardar() {
 		// TODO Auto-generated method stub
 		if (tab_activos_fijos.guardar()){
+				if(tab_custodio.guardar()){
+				
+					generarCodigoBarras(tab_custodio.getValor("cod_barra_afcus"));	
 
-			if(tab_custodio.isFocus()){
-				generarCodigoBarras(tab_custodio.getValor("cod_barra_afcus"));	
-
-				tab_custodio.guardar();
-				eti_pie.setValue(tab_custodio.getValor("cod_barra_afcus"));
-				utilitario.addUpdate("eti_pie");
-			}
+					eti_pie.setValue(tab_custodio.getValor("cod_barra_afcus"));
+					utilitario.addUpdate("eti_pie");
+				}
 
 		}
 
@@ -704,6 +823,30 @@ public class pre_activo extends Pantalla {
 	}
 	public void setDia_egreso(Dialogo dia_egreso) {
 		this.dia_egreso = dia_egreso;
+	}
+	public AutoCompletar getAut_empleado() {
+		return aut_empleado;
+	}
+	public void setAut_empleado(AutoCompletar aut_empleado) {
+		this.aut_empleado = aut_empleado;
+	}
+	public Dialogo getDia_actas() {
+		return dia_actas;
+	}
+	public void setDia_actas(Dialogo dia_actas) {
+		this.dia_actas = dia_actas;
+	}
+	public AutoCompletar getAut_empleado_acta() {
+		return aut_empleado_acta;
+	}
+	public void setAut_empleado_acta(AutoCompletar aut_empleado_acta) {
+		this.aut_empleado_acta = aut_empleado_acta;
+	}
+	public Dialogo getDia_acta_nro() {
+		return dia_acta_nro;
+	}
+	public void setDia_acta_nro(Dialogo dia_acta_nro) {
+		this.dia_acta_nro = dia_acta_nro;
 	}
 
 

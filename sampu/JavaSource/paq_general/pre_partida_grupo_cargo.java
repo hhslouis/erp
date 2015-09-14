@@ -141,8 +141,8 @@ public class pre_partida_grupo_cargo extends Pantalla {
 		tab_tabla.getColumna("ACTIVO_GEPGC").setNombreVisual("ACTIVO");
 		tab_tabla.getColumna("VACANTE_GEPGC").setNombreVisual("VACANTE");
 
-		tab_tabla.getColumna("ENCARGO_GEPGC").setVisible(false);
-		tab_tabla.getColumna("SALARIO_ENCARGO_GEPGC").setVisible(false);
+		//tab_tabla.getColumna("ENCARGO_GEPGC").setVisible(false);
+		//tab_tabla.getColumna("SALARIO_ENCARGO_GEPGC").setVisible(false);
 		tab_tabla.setTipoFormulario(true);
 		tab_tabla.getGrid().setColumns(4);
 		tab_tabla.dibujar();

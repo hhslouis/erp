@@ -37,6 +37,9 @@ public class ServicioControl {
 				"	and not ide_geedp in ( 	select ide_geedp from asi_permisos_vacacion_hext where to_date('"+utilitario.getFormatoFecha(fecha)+"','yyyy-mm-dd') between fecha_desde_aspvh and fecha_hasta_aspvh and ide_geest=1 ) " +
 				"and control_asiStencia_geedp=true ) a 	left join con_biometrico_marcaciones b on a.TARJETA_MARCACION_GTEMP =RTRIM( b.ide_persona_cobim) " +
 				"		and to_char(b.fecha_evento_cobim,'yyyy-mm-dd') = '"+utilitario.getFormatoFecha(fecha)+"' 	order by ide_geedp,EVENTO_RELOJ_COBIM,fecha_evento_cobim");		
+		System.out.println("imprimo tabla generia getEmpleadosControlAsistencia ");
+		tab_emple.imprimirSql();
+		
 		return tab_emple;
 	}
 
@@ -94,10 +97,10 @@ public class ServicioControl {
 		int int_num_dia=utilitario.getNumeroDiasSemana(utilitario.getFecha(fecha));		
 		//1) Busco en la tabla de horariosGrupo
 
-		System.out.println("horarios "+tab_horariosGrupo.getTotalFilas()+"   "+ lis_marcaciones.size() );
+		System.out.println("horarios "+tab_horariosGrupo.getTotalFilas()+" lis_marcaciones.size()  "+ lis_marcaciones.size() );
 		for(int indice_marcacion=0;indice_marcacion<lis_marcaciones.size();indice_marcacion++){			
 			String[] str_fila=lis_marcaciones.get(indice_marcacion);
-
+			System.out.println("entre a horarios marcaciones ");
 			if(str_fila[1]!=null){
 				if(tab_horariosGrupo.getTotalFilas()>0){
 					//Existio marcacion en horario normal					
@@ -107,6 +110,10 @@ public class ServicioControl {
 						if((tab_horariosGrupo.getValor(i, "IDE_GTGRE").equals(str_fila[2]))&&(tab_horariosGrupo.getValor(i, "IDE_SUCU").equals(str_fila[3]))&&(String.valueOf(int_num_dia).equals(tab_horariosGrupo.getValor(i,"IDE_GEDIA")))){
 							String str_hora_inicio=tab_horariosGrupo.getValor(i, "HORA_INICIO");
 							String str_hora_fin=tab_horariosGrupo.getValor(i, "HORA_FIN");
+
+							System.out.println("HORA INICIO "+str_hora_inicio);
+							System.out.println("HORA FIN "+str_hora_fin);
+							
 							//Verifico que exista marcación					
 							String str_hora_marcoi=	utilitario.getFormatoHora(str_fila[5]);
 
@@ -117,8 +124,8 @@ public class ServicioControl {
 								//Valida con la entrada (1)
 								if(str_fila[8]!=null &&str_fila[8].equals("1")){
 									System.out.println("entre al str ");
-
-									double dou_diferencia= 0 ; //utilitario.getDiferenciaHoras(utilitario.getHora(str_hora_inicio), utilitario.getHora(str_hora_marcoi));
+									// saco la diferencia de las horas
+									double dou_diferencia= utilitario.getDiferenciaHoras(utilitario.getHora(str_hora_inicio), utilitario.getHora(str_hora_marcoi));
 									System.out.println("difenercia de horario "+dou_diferencia);
 									
 									tab_valida_asistencia.insertar();
@@ -309,7 +316,7 @@ public class ServicioControl {
 					if(str_evento!=null){
 						//Existio marcación	
 						int int_band=getNumeroFilaEmpleado(lis_marca_empleados, str_evento);
-						if(int_band==-1){
+						if(int_band==-1){ 
 							//Creo una fila correspondiete a la marcación				
 							String[] str_fila=new String[9];
 							str_fila[0]=tab_marcaciones.getValor(i, "IDE_GEEDP");
