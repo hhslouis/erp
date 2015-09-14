@@ -27,6 +27,7 @@ public class ServicioActivos{
 	}
 	public String getActivosCodigo(String ide_activo){
 		String tab_custodio ="select * from afi_activo where ide_afact in ("+ide_activo+")";
+		//System.out.println("imprimor getActivosCodigo "+tab_custodio);
 		return tab_custodio;		
 	}
 	public String getCustodioCodigo(String ide_activo){
