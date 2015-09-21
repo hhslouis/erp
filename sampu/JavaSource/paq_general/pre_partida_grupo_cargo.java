@@ -86,9 +86,9 @@ public class pre_partida_grupo_cargo extends Pantalla {
 		tab_tabla.getColumna("IDE_GEPAP").setUnico(true);
 		tab_tabla.getColumna("IDE_GEGRO").setCombo("GEN_GRUPO_OCUPACIONAL",	"IDE_GEGRO", "DETALLE_GEGRO", "");
 		tab_tabla.getColumna("IDE_GEGRO").setMetodoChange("grupoOcupacional");
-		//tab_tabla.getColumna("IDE_GECAF").setCombo("select a.IDE_GECAF,a.DETALLE_GECAF from GEN_CARGO_FUNCIONAL a, GEN_GRUPO_CARGO b where a.IDE_GECAF = b.IDE_GECAF");
-		//tab_tabla.getColumna("IDE_GECAF").setBuscarenCombo(false);
-		tab_tabla.getColumna("IDE_GECAF").setVisible(false);
+		tab_tabla.getColumna("IDE_GECAF").setCombo("select a.IDE_GECAF,a.DETALLE_GECAF from GEN_CARGO_FUNCIONAL a, GEN_GRUPO_CARGO b where a.IDE_GECAF = b.IDE_GECAF");
+		tab_tabla.getColumna("IDE_GECAF").setBuscarenCombo(false);
+		//tab_tabla.getColumna("IDE_GECAF").setVisible(false);
 		tab_tabla.setMostrarcampoSucursal(true);
 		tab_tabla.getColumna("IDE_SUCU").setCombo("SIS_SUCURSAL", "IDE_SUCU","NOM_SUCU", "");
 		tab_tabla.getColumna("IDE_SUCU").setBuscarenCombo(false);
