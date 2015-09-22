@@ -3778,12 +3778,12 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 		else if (ide_nrrub.equalsIgnoreCase(P_NRH_BASE_IMPONIBLE_MES_ANTERIOR)){
 					TablaGenerica rol_anterior=utilitario.consultar("select * from gen_perido_rol where ide_gepro="+ide_gepro);
 					TablaGenerica valor_base_mes_anterior=utilitario.consultar("select a.ide_nrrol,a.ide_gepro,valor_nrdro from nrh_rol a, nrh_detalle_rol b"
-							+" where a.ide_nrrol=b.ide_nrrol and ide_gepro="+rol_anterior.getValor("gen_ide_gepro")+" and ide_geedp = "+ide_geedp+" and ide_nrder in (select ide_nrder from nrh_detalle_rubro where ide_nrrub="+utilitario.getVariable("p_nrh_rubro_imponible_mes_anterior")+")");
+							+" where a.ide_nrrol=b.ide_nrrol and ide_gepro="+rol_anterior.getValor("gen_ide_gepro")+" and ide_geedp in (select ide_geedp from gen_empleados_departamento_par where ide_gtemp in (select  ide_gtemp from gen_empleados_departamento_par where ide_geedp="+ide_geedp+" )) and ide_nrder in (select ide_nrder from nrh_detalle_rubro where ide_nrrub="+utilitario.getVariable("p_nrh_rubro_imponible_mes_anterior")+")");
 					
 					//System.out.println("imporatndo perido rol mes anterior");
-					rol_anterior.imprimirSql();
+					//rol_anterior.imprimirSql();
 					//System.out.println("imporatndo valor mes anterior");
-					valor_base_mes_anterior.imprimirSql();
+					//valor_base_mes_anterior.imprimirSql();
 					if(valor_base_mes_anterior.getTotalFilas()>0){
 						base_imponible_mes_anterior=valor_base_mes_anterior.getValor("valor_nrdro");
 						//System.out.println("valor vbase "+base_imponible_mes_anterior);
@@ -3802,7 +3802,7 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 				else if (ide_nrrub.equalsIgnoreCase(P_NRH_RUBRO_FONRESERV_ACUM_PAGO)){
 							TablaGenerica rol_anterior=utilitario.consultar("select * from gen_perido_rol where ide_gepro="+ide_gepro);
 							TablaGenerica valor_base_mes_anterior=utilitario.consultar("select a.ide_nrrol,a.ide_gepro,valor_nrdro from nrh_rol a, nrh_detalle_rol b"
-									+" where a.ide_nrrol=b.ide_nrrol and ide_gepro="+rol_anterior.getValor("gen_ide_gepro")+" and ide_geedp = "+ide_geedp+" and ide_nrder in (select ide_nrder from nrh_detalle_rubro where ide_nrrub="+utilitario.getVariable("p_nrh_rubro_fondreser_acum_ante")+")");
+									+" where a.ide_nrrol=b.ide_nrrol and ide_gepro="+rol_anterior.getValor("gen_ide_gepro")+" and ide_geedp in (select ide_geedp from gen_empleados_departamento_par where ide_gtemp in (select  ide_gtemp from gen_empleados_departamento_par where ide_geedp="+ide_geedp+" ))  and ide_nrder in (select ide_nrder from nrh_detalle_rubro where ide_nrrub="+utilitario.getVariable("p_nrh_rubro_fondreser_acum_ante")+")");
 							
 							//rol_anterior.imprimirSql();
 							
@@ -3965,6 +3965,7 @@ System.out.println("update  NRH_AMORTIZACION set ACTIVO_NRAMO=false " +
 			if (fecha_contrato!=null && !fecha_contrato.isEmpty()){
 				int int_mes_rol=utilitario.getMes(fecha_final_gepro);
 				int int_mes_contrato=utilitario.getMes(fecha_contrato);
+				
 				if (Double.parseDouble(dias_antiguedad)>360 && Double.parseDouble(dias_antiguedad)<=395
 						&& int_mes_rol==int_mes_contrato ){
 					String fecha_ini_calculo=utilitario.getAnio(fecha_final_gepro)+"-"+utilitario.getMes(fecha_contrato)+"-"+utilitario.getDia(fecha_contrato);
