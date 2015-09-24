@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_areas" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3ccf602c-8b15-4dd2-9216-12a2155abad2">
-	<property name="ireport.zoom" value="0.75"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="57"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["D:\\workspace\\biess\\WebContent\\reportes\\rep_gestion\\"]]></defaultValueExpression>
@@ -18,8 +18,7 @@
 	<parameter name="pdirector_administrativo" class="java.lang.String"/>
 	<parameter name="pjefe_activos" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[
-select a.ide_afcus,a.ide_gtemp,fecha_entrega_afcus,numero_acta_afcus,custodio,activo_afcus,cedula,detalle_gecaf,detalle_geare,detalle_afest,
+		<![CDATA[select a.ide_afcus,a.ide_gtemp,fecha_entrega_afcus,numero_acta_afcus,custodio,activo_afcus,cedula,detalle_gecaf,detalle_geare,detalle_afest,cod_anterior_afact,
 detalle_afact,valor_unitario_afact,color_afact,nro_factura_afact,marca_afact,serie_afact,modelo_afact,detalle_afnoa,cod_barra_afcus
 from (
 select ide_afcus,ide_afact,b.ide_gtemp,fecha_entrega_afcus,numero_acta_afcus,activo_afcus,documento_identidad_gtemp as cedula,
@@ -28,7 +27,7 @@ primer_nombre_gtemp||' '||(case when segundo_nombre_gtemp is null then '' else s
 from afi_custodio a, gen_empleados_departamento_par b, gth_empleado c
 where a.ide_geedp = b.ide_geedp and b.ide_gtemp = c.ide_gtemp
 ) a, (
-select ide_afact,detalle_afact,valor_unitario_afact,color_afact,nro_factura_afact,marca_afact,serie_afact,modelo_afact,detalle_afnoa,detalle_afest
+select ide_afact,detalle_afact,valor_unitario_afact,color_afact,nro_factura_afact,marca_afact,serie_afact,modelo_afact,detalle_afnoa,detalle_afest,cod_anterior_afact
 from afi_activo a, afi_nombre_activo b,afi_estado c
 where a.ide_afnoa = b.ide_afnoa and a.ide_afest = c.ide_afest
 ) b,
@@ -66,6 +65,7 @@ order by fecha_entrega_afcus desc]]>
 		<fieldDescription><![CDATA[Este campo define el nombre del area ejemplo: Directorio, Auditoria Interna, etc.]]></fieldDescription>
 	</field>
 	<field name="detalle_afest" class="java.lang.String"/>
+	<field name="cod_anterior_afact" class="java.lang.String"/>
 	<field name="detalle_afact" class="java.lang.String">
 		<fieldDescription><![CDATA[detalle_afact]]></fieldDescription>
 	</field>
@@ -125,7 +125,7 @@ order by fecha_entrega_afcus desc]]>
 	<columnHeader>
 		<band height="40">
 			<staticText>
-				<reportElement uuid="9ae3b8c2-9448-4b37-8f35-948e90cf4468" x="98" y="28" width="108" height="12"/>
+				<reportElement uuid="9ae3b8c2-9448-4b37-8f35-948e90cf4468" x="169" y="28" width="90" height="12"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -139,7 +139,7 @@ order by fecha_entrega_afcus desc]]>
 				<text><![CDATA[NOMBRE ACTIVO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="4741b086-4836-4a23-ae7d-65941f9fde9e" x="206" y="28" width="206" height="12"/>
+				<reportElement uuid="4741b086-4836-4a23-ae7d-65941f9fde9e" x="259" y="28" width="166" height="12"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -174,7 +174,7 @@ order by fecha_entrega_afcus desc]]>
 				<textFieldExpression><![CDATA[$F{numero_acta_afcus}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="8799a3ca-2547-451f-9e79-b4d8f3e634d8" x="473" y="28" width="45" height="12"/>
+				<reportElement uuid="8799a3ca-2547-451f-9e79-b4d8f3e634d8" x="482" y="28" width="45" height="12"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -188,7 +188,7 @@ order by fecha_entrega_afcus desc]]>
 				<text><![CDATA[ESTADO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="83c2b688-c9e9-4004-9a4c-b88c4f30cc81" x="575" y="28" width="57" height="12"/>
+				<reportElement uuid="83c2b688-c9e9-4004-9a4c-b88c4f30cc81" x="584" y="28" width="57" height="12"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -202,7 +202,7 @@ order by fecha_entrega_afcus desc]]>
 				<text><![CDATA[MODELO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="af1cc960-244b-4d83-abb1-34b5b2aceb0c" x="632" y="28" width="57" height="12"/>
+				<reportElement uuid="af1cc960-244b-4d83-abb1-34b5b2aceb0c" x="641" y="28" width="57" height="12"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -216,7 +216,7 @@ order by fecha_entrega_afcus desc]]>
 				<text><![CDATA[SERIE]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="ee3de8d4-d762-4115-9924-ab4b2c2e061f" x="518" y="28" width="57" height="12"/>
+				<reportElement uuid="ee3de8d4-d762-4115-9924-ab4b2c2e061f" x="527" y="28" width="57" height="12"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -230,7 +230,7 @@ order by fecha_entrega_afcus desc]]>
 				<text><![CDATA[MARCA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="f8392a32-80b8-4b29-85c1-d0257b1fc435" x="689" y="28" width="57" height="12"/>
+				<reportElement uuid="f8392a32-80b8-4b29-85c1-d0257b1fc435" x="698" y="28" width="57" height="12"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -244,7 +244,7 @@ order by fecha_entrega_afcus desc]]>
 				<text><![CDATA[COLOR]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="7a718da8-96e5-4e99-b35b-1e067edbacce" x="746" y="28" width="56" height="12"/>
+				<reportElement uuid="7a718da8-96e5-4e99-b35b-1e067edbacce" x="755" y="28" width="47" height="12"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -289,7 +289,7 @@ order by fecha_entrega_afcus desc]]>
 				<text><![CDATA[CODIGO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="2a6d893f-81b5-4fb5-8047-52c1e402acd9" x="412" y="28" width="61" height="12"/>
+				<reportElement uuid="2a6d893f-81b5-4fb5-8047-52c1e402acd9" x="425" y="28" width="57" height="12"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -300,7 +300,7 @@ order by fecha_entrega_afcus desc]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[FEC. ENTREGA]]></text>
+				<text><![CDATA[FEC. ENTRE.]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="1260aad0-d921-4511-89c2-4eed1fede363" x="144" y="4" width="60" height="20" isRemoveLineWhenBlank="true"/>
@@ -365,12 +365,26 @@ order by fecha_entrega_afcus desc]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{detalle_geare}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement uuid="b3334efb-7264-4ef8-894a-273063ecde6e" x="98" y="28" width="71" height="12"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[COD. ANTERIOR]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="12" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="c4609a2a-30ea-4a49-8dcc-86dd496c4d0e" stretchType="RelativeToBandHeight" x="98" y="0" width="108" height="12" isPrintWhenDetailOverflows="true"/>
+				<reportElement uuid="c4609a2a-30ea-4a49-8dcc-86dd496c4d0e" stretchType="RelativeToBandHeight" x="169" y="0" width="90" height="12" isPrintWhenDetailOverflows="true"/>
 				<box>
 					<pen lineWidth="0.25"/>
 					<topPen lineWidth="0.25"/>
@@ -384,7 +398,7 @@ order by fecha_entrega_afcus desc]]>
 				<textFieldExpression><![CDATA[$F{detalle_afnoa}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="4ffc6417-44fa-4eb9-8c50-67d998c64fd3" stretchType="RelativeToBandHeight" x="206" y="0" width="206" height="12" isPrintWhenDetailOverflows="true"/>
+				<reportElement uuid="4ffc6417-44fa-4eb9-8c50-67d998c64fd3" stretchType="RelativeToBandHeight" x="259" y="0" width="166" height="12" isPrintWhenDetailOverflows="true"/>
 				<box>
 					<pen lineWidth="0.25"/>
 					<topPen lineWidth="0.25"/>
@@ -398,7 +412,7 @@ order by fecha_entrega_afcus desc]]>
 				<textFieldExpression><![CDATA[$F{detalle_afact}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="4bfb8318-cfab-40d3-84b9-6bfdefc42b12" stretchType="RelativeToBandHeight" x="518" y="0" width="57" height="12" isPrintWhenDetailOverflows="true"/>
+				<reportElement uuid="4bfb8318-cfab-40d3-84b9-6bfdefc42b12" stretchType="RelativeToBandHeight" x="527" y="0" width="57" height="12" isPrintWhenDetailOverflows="true"/>
 				<box>
 					<pen lineWidth="0.25"/>
 					<topPen lineWidth="0.25"/>
@@ -412,7 +426,7 @@ order by fecha_entrega_afcus desc]]>
 				<textFieldExpression><![CDATA[$F{marca_afact}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="227c77c3-ebdb-404e-8f14-f38cc4d62787" stretchType="RelativeToBandHeight" x="575" y="0" width="57" height="12" isPrintWhenDetailOverflows="true"/>
+				<reportElement uuid="227c77c3-ebdb-404e-8f14-f38cc4d62787" stretchType="RelativeToBandHeight" x="584" y="0" width="57" height="12" isPrintWhenDetailOverflows="true"/>
 				<box>
 					<pen lineWidth="0.25"/>
 					<topPen lineWidth="0.25"/>
@@ -426,7 +440,7 @@ order by fecha_entrega_afcus desc]]>
 				<textFieldExpression><![CDATA[$F{modelo_afact}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="12aa9dda-501b-4c58-9786-8b97917640de" stretchType="RelativeToBandHeight" x="632" y="0" width="57" height="12" isPrintWhenDetailOverflows="true"/>
+				<reportElement uuid="12aa9dda-501b-4c58-9786-8b97917640de" stretchType="RelativeToBandHeight" x="641" y="0" width="57" height="12" isPrintWhenDetailOverflows="true"/>
 				<box>
 					<pen lineWidth="0.25"/>
 					<topPen lineWidth="0.25"/>
@@ -440,7 +454,7 @@ order by fecha_entrega_afcus desc]]>
 				<textFieldExpression><![CDATA[$F{serie_afact}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="d9327525-833f-4363-a4ea-812b033640b6" stretchType="RelativeToBandHeight" x="689" y="0" width="57" height="12" isPrintWhenDetailOverflows="true"/>
+				<reportElement uuid="d9327525-833f-4363-a4ea-812b033640b6" stretchType="RelativeToBandHeight" x="698" y="0" width="57" height="12" isPrintWhenDetailOverflows="true"/>
 				<box>
 					<pen lineWidth="0.25"/>
 					<topPen lineWidth="0.25"/>
@@ -454,7 +468,7 @@ order by fecha_entrega_afcus desc]]>
 				<textFieldExpression><![CDATA[$F{color_afact}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement uuid="f65aaa74-8aa3-49ae-8c8f-3cf6997105fd" stretchType="RelativeToBandHeight" x="746" y="0" width="56" height="12" isPrintWhenDetailOverflows="true"/>
+				<reportElement uuid="f65aaa74-8aa3-49ae-8c8f-3cf6997105fd" stretchType="RelativeToBandHeight" x="755" y="0" width="47" height="12" isPrintWhenDetailOverflows="true"/>
 				<box>
 					<pen lineWidth="0.25"/>
 					<topPen lineWidth="0.25"/>
@@ -496,7 +510,7 @@ order by fecha_entrega_afcus desc]]>
 				<textFieldExpression><![CDATA[$F{cod_barra_afcus}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="50115bef-38ba-4b80-b96d-3f1099373225" stretchType="RelativeToBandHeight" x="473" y="0" width="45" height="12" isPrintWhenDetailOverflows="true"/>
+				<reportElement uuid="50115bef-38ba-4b80-b96d-3f1099373225" stretchType="RelativeToBandHeight" x="482" y="0" width="45" height="12" isPrintWhenDetailOverflows="true"/>
 				<box>
 					<pen lineWidth="0.25"/>
 					<topPen lineWidth="0.25"/>
@@ -510,7 +524,7 @@ order by fecha_entrega_afcus desc]]>
 				<textFieldExpression><![CDATA[$F{detalle_afest}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement uuid="32e52c52-f83d-45b5-9344-1aec28bf5722" stretchType="RelativeToBandHeight" x="412" y="0" width="61" height="12" isPrintWhenDetailOverflows="true"/>
+				<reportElement uuid="32e52c52-f83d-45b5-9344-1aec28bf5722" stretchType="RelativeToBandHeight" x="425" y="0" width="57" height="12" isPrintWhenDetailOverflows="true"/>
 				<box>
 					<pen lineWidth="0.25"/>
 					<topPen lineWidth="0.25"/>
@@ -522,6 +536,20 @@ order by fecha_entrega_afcus desc]]>
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{fecha_entrega_afcus}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="501aceaa-af2e-4b75-875c-b5f31446341e" stretchType="RelativeToBandHeight" x="98" y="0" width="71" height="12" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cod_anterior_afact}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -598,7 +626,7 @@ order by fecha_entrega_afcus desc]]>
 				<textFieldExpression><![CDATA[$V{vsum_total}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="634605c9-7350-48e0-9f6e-b1300ca4f6c9" key="staticText-11" mode="Transparent" x="0" y="120" width="802" height="28" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement uuid="634605c9-7350-48e0-9f6e-b1300ca4f6c9" key="staticText-11" mode="Transparent" x="0" y="147" width="802" height="28" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -612,7 +640,7 @@ order by fecha_entrega_afcus desc]]>
 				<text><![CDATA[Los bienes que se detallan son los que quedan bajo su responsabilidad de conformidad con el Acuerdo Nro. 027-CG-2015, Reglamento y Manual de Administración y Control de Bienes de la EMGIRS EP.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="2c8dc404-560b-4c21-b9d7-7693b481cfa3" key="staticText-7" mode="Transparent" x="168" y="103" width="199" height="17" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement uuid="2c8dc404-560b-4c21-b9d7-7693b481cfa3" key="staticText-7" mode="Transparent" x="288" y="102" width="199" height="17" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -623,27 +651,13 @@ order by fecha_entrega_afcus desc]]>
 					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[Unidad de Activos Fijos]]></text>
+				<text><![CDATA[Unidad de Bienes]]></text>
 			</staticText>
 			<line>
-				<reportElement uuid="7bf74809-b37a-4918-b7a4-9801653759e2" key="line-2" x="144" y="82" width="230" height="1"/>
+				<reportElement uuid="7bf74809-b37a-4918-b7a4-9801653759e2" key="line-2" x="16" y="111" width="230" height="1"/>
 			</line>
-			<staticText>
-				<reportElement uuid="f044a73b-d93d-4d20-94a5-fdc361f42b8d" key="staticText-9" mode="Transparent" x="327" y="21" width="152" height="21" forecolor="#000000" backcolor="#FFFFFF"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
-					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<text><![CDATA[ACEPTAN CONFORME:]]></text>
-			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="e4a39c0f-7eb2-4af5-ab56-727d4450ced5" positionType="Float" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="126" y="86" width="263" height="17" isPrintWhenDetailOverflows="true"/>
+				<reportElement uuid="e4a39c0f-7eb2-4af5-ab56-727d4450ced5" positionType="Float" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="0" y="113" width="263" height="17" isPrintWhenDetailOverflows="true"/>
 				<box>
 					<pen lineWidth="0.0"/>
 					<topPen lineWidth="0.0"/>
@@ -657,7 +671,7 @@ order by fecha_entrega_afcus desc]]>
 				<textFieldExpression><![CDATA[$P{pjefe_activos}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="e5da0833-e7e7-471f-8744-dbefb419ddca" positionType="Float" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="389" y="86" width="262" height="17" isPrintWhenDetailOverflows="true"/>
+				<reportElement uuid="e5da0833-e7e7-471f-8744-dbefb419ddca" positionType="Float" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="518" y="113" width="262" height="17" isPrintWhenDetailOverflows="true"/>
 				<box>
 					<pen lineWidth="0.0"/>
 					<topPen lineWidth="0.0"/>
@@ -671,7 +685,7 @@ order by fecha_entrega_afcus desc]]>
 				<textFieldExpression><![CDATA[$F{custodio}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="7c187767-d9c1-47db-b4f3-6156e13a7352" key="staticText-7" mode="Transparent" x="424" y="103" width="199" height="17" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement uuid="7c187767-d9c1-47db-b4f3-6156e13a7352" key="staticText-7" mode="Transparent" x="559" y="130" width="199" height="17" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -685,10 +699,10 @@ order by fecha_entrega_afcus desc]]>
 				<text><![CDATA[Custodio]]></text>
 			</staticText>
 			<line>
-				<reportElement uuid="a7d11df9-69a8-4de6-b3da-72a40c75ada0" key="line-2" x="421" y="83" width="230" height="1"/>
+				<reportElement uuid="a7d11df9-69a8-4de6-b3da-72a40c75ada0" key="line-2" x="547" y="112" width="230" height="1"/>
 			</line>
 			<staticText>
-				<reportElement uuid="416214ef-f0e3-4cba-b259-94b12fc55df3" key="staticText-9" mode="Transparent" x="0" y="148" width="152" height="21" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement uuid="416214ef-f0e3-4cba-b259-94b12fc55df3" key="staticText-9" mode="Transparent" x="0" y="175" width="152" height="21" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -702,7 +716,7 @@ order by fecha_entrega_afcus desc]]>
 				<text><![CDATA[OBSERVACIONES:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="0ffe6daa-a411-4ce3-b2eb-fc6a699b25ab" positionType="Float" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="116" y="148" width="686" height="48" isPrintWhenDetailOverflows="true"/>
+				<reportElement uuid="0ffe6daa-a411-4ce3-b2eb-fc6a699b25ab" positionType="Float" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="116" y="175" width="686" height="21" isPrintWhenDetailOverflows="true"/>
 				<box>
 					<pen lineWidth="0.0"/>
 					<topPen lineWidth="0.0"/>
@@ -715,6 +729,51 @@ order by fecha_entrega_afcus desc]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{pbase_legal}]]></textFieldExpression>
 			</textField>
+			<line>
+				<reportElement uuid="70b2e794-e28f-454a-8387-2226357851d0" key="line-2" x="288" y="85" width="230" height="1"/>
+			</line>
+			<staticText>
+				<reportElement uuid="df56cb66-8208-46f5-a87a-1fc54a6adab6" key="staticText-11" mode="Transparent" x="-1" y="18" width="802" height="19" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Justified" verticalAlignment="Top" rotation="None">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Para constancia de lo actuado y en fé de conformidad y aceptación, suscriben la presente acta en tres ejemplares de igual tenor y efecto.]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="fd551dae-bef0-4e33-a19e-e826f9965994" positionType="Float" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="255" y="85" width="263" height="17" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{pdirector_administrativo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b366b12d-7cb7-420a-88a5-ef8d876ed0e3" key="staticText-7" mode="Transparent" x="33" y="130" width="199" height="17" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top" rotation="None">
+					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Delegado de la Unidad de Bienes]]></text>
+			</staticText>
 		</band>
 	</summary>
 </jasperReport>
