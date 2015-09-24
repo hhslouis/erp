@@ -26,6 +26,8 @@ import paq_sistema.aplicacion.Pantalla;
 
 
 
+
+
 import com.lowagie.text.pdf.Barcode128;
 
 import framework.aplicacion.TablaGenerica;
@@ -42,12 +44,14 @@ import framework.componentes.Reporte;
 import framework.componentes.SeleccionFormatoReporte;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
+import framework.componentes.Tabulador;
 import framework.componentes.Texto;
 
 public class pre_activo extends Pantalla {
 	private Tabla tab_activos_fijos=new Tabla();
 	private Tabla tab_custodio=new Tabla();
 	private Tabla tab_fecha=new Tabla();
+	private Tabla tab_archivo=new Tabla();
 	private Map p_parametros = new HashMap();
 	private Reporte rep_reporte = new Reporte();
 	private SeleccionFormatoReporte self_reporte = new SeleccionFormatoReporte();
@@ -125,6 +129,7 @@ public class pre_activo extends Pantalla {
 		tab_activos_fijos.setTipoFormulario(true);
 		tab_activos_fijos.getGrid().setColumns(4);
 		tab_activos_fijos.agregarRelacion(tab_custodio);
+		tab_activos_fijos.agregarRelacion(tab_archivo);
 		tab_activos_fijos.onSelect("seleccionarActivo");
 		tab_activos_fijos.dibujar();
 		PanelTabla pat_activo_fijos=new PanelTabla();
@@ -132,6 +137,7 @@ public class pre_activo extends Pantalla {
 
 
 		tab_custodio.setId("tab_custodio");
+		tab_custodio.setIdCompleto("tab_tabulador:tab_custodio");
 		tab_custodio.setTabla("afi_custodio","ide_afcus", 2);
 		tab_custodio.setCampoOrden("ide_afcus desc");
 		tab_custodio.getColumna("ide_geedp").setCombo(ser_nomina.servicioEmpleadoContrato("true,false"));
@@ -153,7 +159,20 @@ public class pre_activo extends Pantalla {
 		tab_custodio.getGrid().setColumns(4);
 		tab_custodio.dibujar();
 		PanelTabla pat_custodio=new PanelTabla();
+		pat_custodio.setId("pat_custodio");
 		pat_custodio.setPanelTabla(tab_custodio);
+		
+		tab_archivo.setId("tab_archivo");
+		tab_archivo.setIdCompleto("tab_tabulador:tab_archivo");
+		tab_archivo.setTabla("afi_archivo", "ide_afarc", 3);
+		tab_archivo.getColumna("foto_afacr").setUpload("activos");
+		tab_archivo.getColumna("activo_afacr").setValorDefecto("true");
+		tab_archivo.setTipoFormulario(true);
+		tab_archivo.getGrid().setColumns(4);
+		tab_archivo.dibujar();
+		PanelTabla pat_archivo=new PanelTabla();
+		pat_archivo.setId("pat_archivo");
+		pat_archivo.setPanelTabla(tab_archivo);
 
 		//////////imagen codigo de barra
 		generarCodigoBarras(tab_custodio.getValor("cod_barra_afcus"));		
@@ -181,14 +200,24 @@ public class pre_activo extends Pantalla {
 		grid_pie.getChildren().add(eti_pie);
 
 		Division divx=new Division();
-		divx.dividir3(grid_titulo,giBarra ,grid_pie, "20%","30%", "H");
+		divx.setId("divx");
+		divx.dividir3(grid_titulo,giBarra ,grid_pie, "10%","70%", "H");
 
 		Division div=new Division();
+		div.setId("div");
 		div.dividir2(pat_custodio,divx , "70%", "V");
 
+			
+		Tabulador tab_tabulador = new Tabulador();
+		tab_tabulador.setId("tab_tabulador");
+		tab_tabulador.agregarTab("CUSTODIO", div);
+		tab_tabulador.agregarTab("ARCHIVOS ANEXOS", pat_archivo);
+		
 		Division div_division=new Division();
-		div_division.dividir2(pat_activo_fijos,div, "50%", "h");
-
+		div_division.setId("div_division");
+		div_division.dividir2(pat_activo_fijos,tab_tabulador, "50%", "h");
+		
+		
 		agregarComponente(div_division);
 
 		////boton empleado
@@ -458,22 +487,64 @@ public class pre_activo extends Pantalla {
 	public void inicio() {
 		// TODO Auto-generated method stub
 		super.inicio();
-		if(tab_custodio.isFocus()){
-			generarCodigoBarras(tab_custodio.getValor("cod_barra_afcus"));	
-			eti_pie.setValue(tab_custodio.getValor("cod_barra_afcus"));
-			utilitario.addUpdate("eti_pie");
+		String cod=tab_custodio.getValor("cod_barra_afcus");
+		if(cod==null || cod.isEmpty()){
+			codBarras=null;
+			utilitario.addUpdate("tab_tabulador:giBarra");
+			return;
 		}
+		try{
+			Barcode128 code128 = new Barcode128();
+			code128.setCode(cod);
+			java.awt.Image img = code128.createAwtImage(Color.BLACK, Color.WHITE);			
+			BufferedImage outImage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_RGB);
+			outImage.getGraphics().drawImage(img, 0, 0, null);
+			ByteArrayOutputStream bytesOut = new ByteArrayOutputStream();
+			ImageIO.write(outImage, "jpeg", bytesOut);
+			bytesOut.flush();
+			byte[] jpgImageData = bytesOut.toByteArray();
+			codBarras= new DefaultStreamedContent(new ByteArrayInputStream(jpgImageData), "image/png");
+			giBarra.setValue(codBarras);
+			utilitario.addUpdate("tab_tabulador:giBarra");
+		}catch(Exception ex){
+			System.out.println(ex.getMessage());
+			ex.printStackTrace();
+		}
+		eti_pie.setValue(tab_custodio.getValor("cod_barra_afcus"));
+		utilitario.addUpdate("tab_tabulador:eti_pie");
+		
 	}
 
 	@Override
 	public void siguiente() {
 		// TODO Auto-generated method stub
 		super.siguiente();
-		if(tab_custodio.isFocus()){
-			generarCodigoBarras(tab_custodio.getValor("cod_barra_afcus"));	
-			eti_pie.setValue(tab_custodio.getValor("cod_barra_afcus"));
-			utilitario.addUpdate("eti_pie");
+		String cod=tab_custodio.getValor("cod_barra_afcus");
+		if(cod==null || cod.isEmpty()){
+			codBarras=null;
+			utilitario.addUpdate("tab_tabulador:giBarra");
+			return;
 		}
+		try{
+			Barcode128 code128 = new Barcode128();
+			code128.setCode(cod);
+			java.awt.Image img = code128.createAwtImage(Color.BLACK, Color.WHITE);			
+			BufferedImage outImage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_RGB);
+			outImage.getGraphics().drawImage(img, 0, 0, null);
+			ByteArrayOutputStream bytesOut = new ByteArrayOutputStream();
+			ImageIO.write(outImage, "jpeg", bytesOut);
+			bytesOut.flush();
+			byte[] jpgImageData = bytesOut.toByteArray();
+			codBarras= new DefaultStreamedContent(new ByteArrayInputStream(jpgImageData), "image/png");
+			giBarra.setValue(codBarras);
+			utilitario.addUpdate("tab_tabulador:giBarra");
+		}catch(Exception ex){
+			System.out.println(ex.getMessage());
+			ex.printStackTrace();
+		}
+		eti_pie.setValue(tab_custodio.getValor("cod_barra_afcus"));
+		utilitario.addUpdate("tab_tabulador:eti_pie");
+
 	}
 
 
@@ -481,22 +552,63 @@ public class pre_activo extends Pantalla {
 	public void atras() {
 		// TODO Auto-generated method stub
 		super.atras();
-		if(tab_custodio.isFocus()){
-			generarCodigoBarras(tab_custodio.getValor("cod_barra_afcus"));
-			eti_pie.setValue(tab_custodio.getValor("cod_barra_afcus"));
-			utilitario.addUpdate("eti_pie");
+		String cod=tab_custodio.getValor("cod_barra_afcus");
+		if(cod==null || cod.isEmpty()){
+			codBarras=null;
+			utilitario.addUpdate("tab_tabulador:giBarra");
+			return;
 		}
+		try{
+			Barcode128 code128 = new Barcode128();
+			code128.setCode(cod);
+			java.awt.Image img = code128.createAwtImage(Color.BLACK, Color.WHITE);			
+			BufferedImage outImage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_RGB);
+			outImage.getGraphics().drawImage(img, 0, 0, null);
+			ByteArrayOutputStream bytesOut = new ByteArrayOutputStream();
+			ImageIO.write(outImage, "jpeg", bytesOut);
+			bytesOut.flush();
+			byte[] jpgImageData = bytesOut.toByteArray();
+			codBarras= new DefaultStreamedContent(new ByteArrayInputStream(jpgImageData), "image/png");
+			giBarra.setValue(codBarras);
+			utilitario.addUpdate("tab_tabulador:giBarra");
+		}catch(Exception ex){
+			System.out.println(ex.getMessage());
+			ex.printStackTrace();
+		}
+		eti_pie.setValue(tab_custodio.getValor("cod_barra_afcus"));
+		utilitario.addUpdate("tab_tabulador:eti_pie");
 	}
 
 	@Override
 	public void fin() {
 		// TODO Auto-generated method stub
 		super.fin();
-		if(tab_custodio.isFocus()){
-			generarCodigoBarras(tab_custodio.getValor("cod_barra_afcus"));	
-			eti_pie.setValue(tab_custodio.getValor("cod_barra_afcus"));
-			utilitario.addUpdate("eti_pie");
+		String cod=tab_custodio.getValor("cod_barra_afcus");
+		if(cod==null || cod.isEmpty()){
+
+			codBarras=null;
+			utilitario.addUpdate("tab_tabulador:giBarra");
+			return;
 		}
+		try{
+			Barcode128 code128 = new Barcode128();
+			code128.setCode(cod);
+			java.awt.Image img = code128.createAwtImage(Color.BLACK, Color.WHITE);			
+			BufferedImage outImage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_RGB);
+			outImage.getGraphics().drawImage(img, 0, 0, null);
+			ByteArrayOutputStream bytesOut = new ByteArrayOutputStream();
+			ImageIO.write(outImage, "jpeg", bytesOut);
+			bytesOut.flush();
+			byte[] jpgImageData = bytesOut.toByteArray();
+			codBarras= new DefaultStreamedContent(new ByteArrayInputStream(jpgImageData), "image/png");
+			giBarra.setValue(codBarras);
+			utilitario.addUpdate("tab_tabulador:giBarra");
+		}catch(Exception ex){
+			System.out.println(ex.getMessage());
+			ex.printStackTrace();
+		}
+		eti_pie.setValue(tab_custodio.getValor("cod_barra_afcus"));
+		utilitario.addUpdate("tab_tabulador:eti_pie");
 	}
 
 	//reporte
@@ -616,7 +728,7 @@ public class pre_activo extends Pantalla {
 	private void generarCodigoBarras(String cod)  {
 		if(cod==null || cod.isEmpty()){
 			codBarras=null;
-			utilitario.addUpdate("giBarra");
+			utilitario.addUpdate("tab_tabulador:giBarra");
 			return;
 		}
 		try{
@@ -631,7 +743,7 @@ public class pre_activo extends Pantalla {
 			byte[] jpgImageData = bytesOut.toByteArray();
 			codBarras= new DefaultStreamedContent(new ByteArrayInputStream(jpgImageData), "image/png");
 			giBarra.setValue(codBarras);
-			utilitario.addUpdate("giBarra");
+			utilitario.addUpdate("tab_tabulador:giBarra");
 		}catch(Exception ex){
 			System.out.println(ex.getMessage());
 			ex.printStackTrace();
@@ -681,8 +793,15 @@ public class pre_activo extends Pantalla {
 	@Override
 	public void insertar() {
 		// TODO Auto-generated method stub
-		utilitario.getTablaisFocus().insertar();
-
+		if(tab_activos_fijos.isFocus()){
+			tab_activos_fijos.insertar();
+		}
+		else if (tab_custodio.isFocus()){
+			tab_custodio.insertar();
+		}
+		else if(tab_archivo.isFocus()){
+			tab_archivo.insertar();
+		}
 	}
 
 	@Override
@@ -695,6 +814,9 @@ public class pre_activo extends Pantalla {
 
 					eti_pie.setValue(tab_custodio.getValor("cod_barra_afcus"));
 					utilitario.addUpdate("eti_pie");
+					if(tab_archivo.guardar()){
+						
+					}
 				}
 
 		}
@@ -711,8 +833,7 @@ public class pre_activo extends Pantalla {
 
 	}
 
-
-
+	
 
 
 	public Tabla getTab_activos_fijos() {
@@ -847,6 +968,12 @@ public class pre_activo extends Pantalla {
 	}
 	public void setDia_acta_nro(Dialogo dia_acta_nro) {
 		this.dia_acta_nro = dia_acta_nro;
+	}
+	public Tabla getTab_archivo() {
+		return tab_archivo;
+	}
+	public void setTab_archivo(Tabla tab_archivo) {
+		this.tab_archivo = tab_archivo;
 	}
 
 
