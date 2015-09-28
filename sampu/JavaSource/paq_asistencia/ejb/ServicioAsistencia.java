@@ -41,7 +41,11 @@ public class ServicioAsistencia {
 		String str="update ASI_VACACION set ACTIVO_ASVAC=true where IDE_ASVAC="+ide_asvac;
 		return str;
 	}
-	
+
+	public String getSqlConsultaVacacion(String ide_aspvh){
+		String str="select ide_asvac,ide_gtemp,fecha_ingreso_asvac,activo_asvac from  asi_vacacion where ide_gtemp in (select ide_gtemp from asi_permisos_vacacion_hext where ide_aspvh="+ide_aspvh+") and activo_asvac =true";
+		return str;
+	}
 	public boolean activarPeriodoVacacion(String ide_asvac){
 		if (utilitario.getConexion().ejecutarSql("update ASI_VACACION set ACTIVO_ASVAC=true where IDE_ASVAC="+ide_asvac).isEmpty()){
 			return true;
