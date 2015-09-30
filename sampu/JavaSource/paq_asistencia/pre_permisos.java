@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import javax.ejb.EJB;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
@@ -18,6 +19,8 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 
 import paq_anticipos.ejb.ServicioAnticipo;
+import paq_asistencia.ejb.ServicioAsistencia;
+import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_gestion.ejb.ServicioEmpleado;
 import paq_gestion.ejb.ServicioGestion;
 import paq_nomina.ejb.ServicioNomina;
@@ -69,7 +72,10 @@ public class pre_permisos extends Pantalla {
 	private AreaTexto are_tex_razon_anula=new AreaTexto();
 	private Texto tex_documento_anula=new Texto();
 	private Calendario cal_fecha_anula=new Calendario();
-
+	@EJB
+	private ServicioAsistencia ser_asistencia = (ServicioAsistencia) utilitario.instanciarEJB(ServicioAsistencia.class);
+	@EJB
+	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad) utilitario.instanciarEJB(ServicioContabilidad.class);
 
 	public pre_permisos() {
 
@@ -85,7 +91,13 @@ public class pre_permisos extends Pantalla {
 		bot_aprobacion_talento_humano.setValue("APROBACION TALENTO HUMANO");
 		bot_aprobacion_talento_humano.setMetodo("aprobacionTalentoHumano");
 
+		Boton bot_aplica_vacacion=new Boton();
+		bot_aplica_vacacion.setValue("APLICA VACACION");
+		bot_aplica_vacacion.setMetodo("aplicaVacacion");
 
+		Boton bot_deshacer_aplica_vacacion=new Boton();
+		bot_deshacer_aplica_vacacion.setValue("DESHACER APLICA VACACION");
+		bot_deshacer_aplica_vacacion.setMetodo("deshacerAplicaVacacion");
 		// boton limpiar
 		Boton bot_limpiar = new Boton();
 		bot_limpiar.setIcon("ui-icon-cancel");
@@ -269,6 +281,11 @@ public class pre_permisos extends Pantalla {
 		sel_cal.getBot_aceptar().setMetodo("aceptarReporte");
 		agregarComponente(sel_cal);
 
+		bar_botones.agregarBoton(bot_aprobar_solicitud);
+		bar_botones.agregarBoton(bot_anulado);
+		bar_botones.agregarBoton(bot_aprobacion_talento_humano); 
+		bar_botones.agregarBoton(bot_aplica_vacacion); 
+		bar_botones.agregarBoton(bot_deshacer_aplica_vacacion); 
 
 		/// dialogo de anula
 
@@ -295,10 +312,52 @@ public class pre_permisos extends Pantalla {
 		dia_anulado.setDynamic(false);
 		gri_anular_horas_extra.setStyle("width:" + (dia_anulado.getAnchoPanel() - 5) + "px;overflow:auto;");
 		agregarComponente(dia_anulado);
-
-
 	}
-
+		public void aplicaVacacion(){
+			//double valor_horas=parseDouble(tab_permisos.getValor("nro_horas_aspvh"));
+			if(tab_permisos.getValor("ide_aspvh")==null){
+				utilitario.agregarMensajeInfo("No existe registro", "No se puede aplicar vacación no existe un registro.");
+				return;
+			}
+			if(tab_permisos.getValor("registro_novedad_aspvh").equals("true")){
+				utilitario.agregarMensajeInfo("Vacación Aplicada", "Ya se encuentra aplicada la vacación");
+				return;
+			}
+			TablaGenerica tab_consulta_vacacion = utilitario.consultar(ser_asistencia.getSqlConsultaVacacion(tab_permisos.getValor("ide_aspvh")));
+			if(tab_consulta_vacacion.getTotalFilas()>0){
+			double valor = (Double.parseDouble( tab_permisos.getValor("nro_horas_aspvh"))/8);
+		
+		    TablaGenerica tab_codigo =utilitario.consultar(ser_contabilidad.servicioCodigoMaximo("asi_detalle_vacacion", "ide_asdev"));
+			utilitario.getConexion().ejecutarSql("insert into asi_detalle_vacacion (ide_asdev,ide_aspvh,ide_asvac,fecha_novedad_asdev,dia_descontado_asdev,observacion_asdev,activo_asdev)"
+					+"values ( "+tab_codigo.getValor("codigo")+","+tab_permisos.getValor("ide_aspvh")+","+tab_consulta_vacacion.getValor("ide_asvac")+",'"+tab_permisos.getValor("fecha_solicitud_aspvh")+"',"+valor+",'"+tab_permisos.getValor("detalle_aspvh")+"',true )");
+			
+			tab_permisos.setValor("registro_novedad_aspvh", "true");
+			tab_permisos.modificar(tab_permisos.getFilaActual());//para que haga el update
+			tab_permisos.guardar();
+			guardarPantalla();
+			utilitario.addUpdate("tab_permisos");
+			utilitario.agregarMensaje("Aplicado Vacación", "Se aplico descuento a vacaciones exitosamente");
+			}
+			else{
+				utilitario.agregarMensajeInfo("No existe vacación", "No empleado seleccionado no posee un periodo de vacaciones activo");
+			}
+			
+		}
+		public void deshacerAplicaVacacion(){
+			if(tab_permisos.getValor("ide_aspvh")==null){
+				utilitario.agregarMensajeInfo("No existe registro", "No se puede aplicar vacación no existe un registro.");
+				return;
+			}
+			utilitario.getConexion().ejecutarSql("delete from asi_detalle_vacacion where ide_aspvh="+tab_permisos.getValor("ide_aspvh"));
+			tab_permisos.setValor("registro_novedad_aspvh", "false");
+			tab_permisos.modificar(tab_permisos.getFilaActual());//para que haga el update
+			tab_permisos.guardar();
+			guardarPantalla();
+			utilitario.addUpdate("tab_permisos");
+			utilitario.agregarMensaje("Aplicado Deshacer Vacación", "Se descontó a vacaciones exitosamente");
+			
+		}
+		
 
 	public void aprobarSolicitud(){	
 		if(aut_empleado.getValor()!=null && !aut_empleado.getValor().isEmpty()){
