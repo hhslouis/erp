@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_areas" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3ccf602c-8b15-4dd2-9216-12a2155abad2">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="57"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["D:\\workspace\\biess\\WebContent\\reportes\\rep_gestion\\"]]></defaultValueExpression>
@@ -19,7 +19,7 @@
 	<parameter name="pjefe_activos" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select a.ide_afcus,a.ide_gtemp,fecha_entrega_afcus,numero_acta_afcus,custodio,activo_afcus,cedula,detalle_gecaf,detalle_geare,detalle_afest,cod_anterior_afact,
-detalle_afact,valor_unitario_afact,color_afact,nro_factura_afact,marca_afact,serie_afact,modelo_afact,detalle_afnoa,cod_barra_afcus
+detalle_afact,valor_unitario_afact,color_afact,nro_factura_afact,marca_afact,serie_afact,modelo_afact,detalle_afnoa,cod_barra_afcus,ide_afacd
 from (
 select ide_afcus,ide_afact,b.ide_gtemp,fecha_entrega_afcus,numero_acta_afcus,activo_afcus,documento_identidad_gtemp as cedula,
 apellido_paterno_gtemp||' '||(case when apellido_materno_gtemp is null then '' else  apellido_materno_gtemp end)||' '||
@@ -27,20 +27,21 @@ primer_nombre_gtemp||' '||(case when segundo_nombre_gtemp is null then '' else s
 from afi_custodio a, gen_empleados_departamento_par b, gth_empleado c
 where a.ide_geedp = b.ide_geedp and b.ide_gtemp = c.ide_gtemp
 ) a, (
-select ide_afact,detalle_afact,valor_unitario_afact,color_afact,nro_factura_afact,marca_afact,serie_afact,modelo_afact,detalle_afnoa,detalle_afest,cod_anterior_afact
+select ide_afact,detalle_afact,valor_unitario_afact,color_afact,nro_factura_afact,marca_afact,serie_afact,modelo_afact,detalle_afnoa,detalle_afest,cod_anterior_afact,ide_afacd
 from afi_activo a, afi_nombre_activo b,afi_estado c
 where a.ide_afnoa = b.ide_afnoa and a.ide_afest = c.ide_afest
 ) b,
 (
 select ide_gtemp,detalle_gecaf,detalle_geare from gen_empleados_departamento_par a, gen_area b, gen_cargo_funcional c
 where a.ide_geare = b.ide_geare and a.ide_gecaf = c.ide_gecaf and ide_geedp in (
-select max(ide_geedp) as ide_geedp from gen_empleados_departamento_par group by ide_geedp )
+select max(ide_geedp) as ide_geedp from gen_empleados_departamento_par group by ide_gtemp )
 order by ide_gtemp
 ) c
 where a.ide_afact = b.ide_afact
 and a.ide_gtemp = c.ide_gtemp
 and activo_afcus=true
-and a.ide_gtemp=$P{pide_empleado}
+and a.ide_gtemp= $P{pide_empleado}
+and not ide_afacd in (select cast(valor_para as integer)  from sis_parametros where nom_para='p_estado_baja_activo')
 order by fecha_entrega_afcus desc]]>
 	</queryString>
 	<field name="ide_afcus" class="java.lang.Long">
@@ -89,6 +90,7 @@ order by fecha_entrega_afcus desc]]>
 	<field name="cod_barra_afcus" class="java.lang.String">
 		<fieldDescription><![CDATA[cod_barra_afcus]]></fieldDescription>
 	</field>
+	<field name="ide_afacd" class="java.lang.Long"/>
 	<variable name="vcuenta_bien" class="java.lang.Integer" calculation="Count">
 		<variableExpression><![CDATA[$F{ide_afcus}]]></variableExpression>
 	</variable>
