@@ -862,7 +862,7 @@ public class pre_anticipos extends Pantalla {
 
 
 	public void abrirDialogoDatosGarante(){
-System.out.println("variable ide_geedp_activo.... "+ide_geedp_activo);
+//System.out.println("variable ide_geedp_activo.... "+ide_geedp_activo);
 		aut_empleado_autoriza_memo.setAutoCompletar("SELECT EPAR.IDE_GEEDP,EMP.DOCUMENTO_IDENTIDAD_GTEMP, " +
 				"EMP.APELLIDO_PATERNO_GTEMP || ' ' ||  " +
 				" EMP.APELLIDO_MATERNO_GTEMP || ' ' || " +
