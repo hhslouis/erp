@@ -436,10 +436,15 @@ public class pre_activo extends Pantalla {
         	System.out.println("Error num_numero_secuencial: "+e);
         }
 		Integer num_secuencial_custodio =  	Integer.parseInt(secuencial_custodio.getValor("nro_secuencial_afcus"))+1;	
-		if(num_secuencial_custodio>num_numero_secuencial){
-			utilitario.agregarMensajeInfo("Numero secuencial en uso", "No se puede agregar un custodio, existe un numero secuencial en uso, si desea cambiar de custodio utilice la opciòn Traspaso de Custodio");
-			return;
-		}
+		if(num_numero_secuencial>1) {
+		
+			if(num_secuencial_custodio>num_numero_secuencial){
+				utilitario.agregarMensajeInfo("Numero secuencial en uso", "No se puede agregar un custodio, existe un numero secuencial en uso, si desea cambiar de custodio utilice la opciòn Traspaso de Custodio");
+				return;
+			}
+		
+		}	
+		
 		set_empleado.getTab_seleccion().setSql(ser_nomina.servicioEmpleadoContrato("true"));
 		set_empleado.getTab_seleccion().ejecutarSql();
 		set_empleado.dibujar();
@@ -461,7 +466,13 @@ public class pre_activo extends Pantalla {
 			for(int i=0;i<tab_empleado_responsable.getTotalFilas();i++){
 				tab_custodio.insertar();
 				tab_custodio.setValor("IDE_GEEDP", tab_empleado_responsable.getValor(i, "IDE_GEEDP"));	
+				if(num_numero_secuencial>1){
 				tab_custodio.setValor("nro_secuencial_afcus", num_secuencial_custodio+"");
+				}
+				else{
+				tab_custodio.setValor("nro_secuencial_afcus", num_numero_secuencial+"");
+				codigo_barras =codigo_cuenta.getValor("cue_codigo_remplazado")+"-"+tab_activos_fijos.getValor("ide_afact")+"-"+num_numero_secuencial;
+				}
 				tab_custodio.setValor("cod_barra_afcus", codigo_barras);
 			}
 			set_empleado.cerrar();
