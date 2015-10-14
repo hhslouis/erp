@@ -61,13 +61,13 @@ public class pre_traspaso_custodio extends Pantalla {
 		bar_botones.agregarBoton(bot_limpiar);
 		
 		
-      /**DFJ**/
-    BotonesCombo boc_seleccion_inversa = new BotonesCombo();
-    ItemMenu itm_todas = new ItemMenu();
-    ItemMenu itm_niguna = new ItemMenu();
+        /**DFJ**/
+        BotonesCombo boc_seleccion_inversa = new BotonesCombo();
+        ItemMenu itm_todas = new ItemMenu();
+        ItemMenu itm_niguna = new ItemMenu();
 
 
-    boc_seleccion_inversa.setValue("Selección Inversa");
+        boc_seleccion_inversa.setValue("Selección Inversa");
         boc_seleccion_inversa.setIcon("ui-icon-circle-check");
         boc_seleccion_inversa.setMetodo("seleccinarInversa");
         boc_seleccion_inversa.setUpdate("tab_traspaso");
