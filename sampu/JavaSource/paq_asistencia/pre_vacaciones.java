@@ -184,9 +184,9 @@ public class pre_vacaciones extends Pantalla {
 		tab_permisos.getColumna("IDE_ASMOT").setCombo("select IDE_ASMOT,DETALLE_ASMOT from ASI_MOTIVO order by DETALLE_ASMOT");		
 		tab_permisos.getColumna("GEN_IDE_GEEDP").setCombo("SELECT EPAR.IDE_GEEDP,EMP.DOCUMENTO_IDENTIDAD_GTEMP, " +
 				"EMP.APELLIDO_PATERNO_GTEMP || ' ' ||  " +
-				" EMP.APELLIDO_MATERNO_GTEMP || ' ' || " +
+				"(case when EMP.APELLIDO_MATERNO_GTEMP is null then '' else EMP.APELLIDO_MATERNO_GTEMP end)|| ' ' || " +
 				"EMP.PRIMER_NOMBRE_GTEMP || ' ' || " +
-				"EMP.SEGUNDO_NOMBRE_GTEMP AS NOMBRES_APELLIDOS, " +
+				"(case when EMP.SEGUNDO_NOMBRE_GTEMP is null then '' else EMP.SEGUNDO_NOMBRE_GTEMP end) AS NOMBRES_APELLIDOS, " +
 				"SUCU.NOM_SUCU, AREA.DETALLE_GEARE, " +
 				"DEPA.DETALLE_GEDEP " +
 				"FROM GEN_EMPLEADOS_DEPARTAMENTO_PAR EPAR " +

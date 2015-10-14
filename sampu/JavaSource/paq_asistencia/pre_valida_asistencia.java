@@ -24,7 +24,6 @@ import framework.correo.EnviarCorreo;
 
 /**
  *
- * @author Diego
  */
 public class pre_valida_asistencia extends Pantalla {
 
@@ -63,9 +62,9 @@ public class pre_valida_asistencia extends Pantalla {
 		aut_empleados.setId("aut_empleados");
 		aut_empleados.setAutoCompletar("SELECT EPAR.IDE_GEEDP,EMP.DOCUMENTO_IDENTIDAD_GTEMP, " +
 				"EMP.APELLIDO_PATERNO_GTEMP || ' ' ||  " +
-				" EMP.APELLIDO_MATERNO_GTEMP || ' ' || " +
+				"(case when EMP.APELLIDO_MATERNO_GTEMP is null then '' else EMP.APELLIDO_MATERNO_GTEMP end)|| ' ' || " +
 				"EMP.PRIMER_NOMBRE_GTEMP || ' ' || " +
-				"EMP.SEGUNDO_NOMBRE_GTEMP AS NOMBRES_APELLIDOS, " +
+				"(case when EMP.SEGUNDO_NOMBRE_GTEMP is null then '' else EMP.SEGUNDO_NOMBRE_GTEMP end) AS NOMBRES_APELLIDOS, " +
 				"SUCU.NOM_SUCU, AREA.DETALLE_GEARE, " +
 				"DEPA.DETALLE_GEDEP " +
 				"FROM GEN_EMPLEADOS_DEPARTAMENTO_PAR EPAR " +

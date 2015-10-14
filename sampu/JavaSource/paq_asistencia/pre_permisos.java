@@ -157,9 +157,9 @@ public class pre_permisos extends Pantalla {
 		tab_permisos.getColumna("IDE_GEANI").setVisible(false);
 		tab_permisos.getColumna("GEN_IDE_GEEDP").setCombo("SELECT EPAR.IDE_GEEDP,EMP.DOCUMENTO_IDENTIDAD_GTEMP, " +
 				"EMP.APELLIDO_PATERNO_GTEMP || ' ' ||  " +
-				" EMP.APELLIDO_MATERNO_GTEMP || ' ' || " +
+				"(case when EMP.APELLIDO_MATERNO_GTEMP is null then '' else EMP.APELLIDO_MATERNO_GTEMP end) || ' ' || " +
 				"EMP.PRIMER_NOMBRE_GTEMP || ' ' || " +
-				"EMP.SEGUNDO_NOMBRE_GTEMP AS NOMBRES_APELLIDOS, " +
+				"(case when EMP.SEGUNDO_NOMBRE_GTEMP is null then '' else EMP.SEGUNDO_NOMBRE_GTEMP end) AS NOMBRES_APELLIDOS, " +
 				"SUCU.NOM_SUCU, AREA.DETALLE_GEARE, " +
 				"DEPA.DETALLE_GEDEP " +
 				"FROM GEN_EMPLEADOS_DEPARTAMENTO_PAR EPAR " +
@@ -169,9 +169,7 @@ public class pre_permisos extends Pantalla {
 				"LEFT JOIN GEN_AREA AREA ON AREA.IDE_GEARE=EPAR.IDE_GEARE " +
 				"WHERE EPAR.ACTIVO_GEEDP=true");
 		tab_permisos.getColumna("GEN_IDE_GEEDP").setAutoCompletar();
-		//		tab_permisos.getColumna("GEN_IDE_GEEDP").setLectura(true);
 		tab_permisos.getColumna("GEN_IDE_GEEDP2").setCombo(tab_permisos.getColumna("GEN_IDE_GEEDP").getListaCombo());
-		//		tab_permisos.getColumna("GEN_IDE_GEEDP2").setLectura(true);
 		tab_permisos.getColumna("GEN_IDE_GEEDP2").setAutoCompletar();
 		//GERENTE DE AREA GEN_IDE_GEEDP3
 		tab_permisos.getColumna("GEN_IDE_GEEDP3").setCombo(tab_permisos.getColumna("GEN_IDE_GEEDP").getListaCombo());
