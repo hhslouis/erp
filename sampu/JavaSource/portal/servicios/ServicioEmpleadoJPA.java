@@ -317,7 +317,7 @@ public class ServicioEmpleadoJPA {
     public GenEmpleadosDepartamentoPar getEmpleadoDepartamentoPartida(String ideGtemp) {
         EntityManager manejador = fabrica.createEntityManager();
         try {
-            Query q = manejador.createQuery("SELECT g FROM GenEmpleadosDepartamentoPar g WHERE g.ideGtemp.ideGtemp =" + ideGtemp + " and g.activoGeedp=1");
+            Query q = manejador.createQuery("SELECT g FROM GenEmpleadosDepartamentoPar g WHERE g.ideGtemp.ideGtemp =" + ideGtemp + " and g.activoGeedp=true");
             return (GenEmpleadosDepartamentoPar) q.getSingleResult();
         } catch (Exception e) {
         } finally {

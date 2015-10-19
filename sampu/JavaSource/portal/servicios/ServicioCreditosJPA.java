@@ -23,10 +23,7 @@ import portal.entidades.NrhGarante;
 import portal.entidades.NrhMotivoAnticipo;
 import portal.entidades.NrhTipoGarante;
 
-/**
- *
- * @author Diego
- */
+
 @Stateless
 @TransactionManagement(TransactionManagementType.BEAN)
 public class ServicioCreditosJPA {
@@ -129,9 +126,9 @@ public class ServicioCreditosJPA {
     public List getEmpleadosDepartamentos() {
         return utilitario.getConexion().consultar("SELECT EPAR.IDE_GEEDP,EMP.DOCUMENTO_IDENTIDAD_GTEMP, "
                 + "EMP.APELLIDO_PATERNO_GTEMP || ' ' ||  "
-                + " EMP.APELLIDO_MATERNO_GTEMP || ' ' || "
+                + "(case when EMP.APELLIDO_MATERNO_GTEMP is null then '' else EMP.APELLIDO_MATERNO_GTEMP end) || ' ' || "
                 + "EMP.PRIMER_NOMBRE_GTEMP || ' ' || "
-                + "EMP.SEGUNDO_NOMBRE_GTEMP AS NOMBRES_APELLIDOS, "
+                + "(case when EMP.SEGUNDO_NOMBRE_GTEMP is null then '' else EMP.SEGUNDO_NOMBRE_GTEMP end) AS NOMBRES_APELLIDOS, "
                 + "SUCU.NOM_SUCU, AREA.DETALLE_GEARE, "
                 + "DEPA.DETALLE_GEDEP "
                 + "FROM GEN_EMPLEADOS_DEPARTAMENTO_PAR EPAR "
@@ -148,21 +145,21 @@ public class ServicioCreditosJPA {
                 + "c.jefe_talento_humano "
                 + "FROM nrh_anticipo  a "
                 + "left join( "
-                + "SELECT ide_gtemp,apellido_paterno_gtemp ||' '|| apellido_materno_gtemp ||' '|| primer_nombre_gtemp ||' '|| segundo_nombre_gtemp as empleado FROM gth_empleado "
+                + "SELECT ide_gtemp,apellido_paterno_gtemp ||' '|| (case when  apellido_materno_gtemp is null then '' else  apellido_materno_gtemp end) ||' '|| primer_nombre_gtemp ||' '|| (case when segundo_nombre_gtemp is null then '' else segundo_nombre_gtemp end) as empleado FROM gth_empleado "
                 + ")b ON b.ide_gtemp=a.ide_gtemp "
                 + "left join( "
-                + "SELECT a.ide_geedp as ide_geedp_talento, b.apellido_paterno_gtemp ||' '|| b.apellido_materno_gtemp ||' '|| b.primer_nombre_gtemp ||' '|| b.segundo_nombre_gtemp as jefe_talento_humano FROM gen_empleados_departamento_par a, gth_empleado b "
+                + "SELECT a.ide_geedp as ide_geedp_talento, b.apellido_paterno_gtemp ||' '||(case when  b.apellido_materno_gtemp is null then '' else  b.apellido_materno_gtemp end)  ||' '|| b.primer_nombre_gtemp ||' '|| (case when b.segundo_nombre_gtemp is null then '' else b.segundo_nombre_gtemp end) as jefe_talento_humano FROM gen_empleados_departamento_par a, gth_empleado b "
                 + "where a.ide_gtemp=b.ide_gtemp  "
                 + ")c ON c.ide_geedp_talento=a.gen_ide_geedp3 "
                 + "left join( "
-                + "SELECT a.ide_geedp as ide_geedp_inmediato, b.apellido_paterno_gtemp ||' '|| b.apellido_materno_gtemp ||' '|| b.primer_nombre_gtemp ||' '|| b.segundo_nombre_gtemp as jefe_inmediato FROM gen_empleados_departamento_par a, gth_empleado b "
+                + "SELECT a.ide_geedp as ide_geedp_inmediato, b.apellido_paterno_gtemp ||' '|| (case when  b.apellido_materno_gtemp is null then '' else  b.apellido_materno_gtemp end) ||' '|| b.primer_nombre_gtemp ||' '|| (case when b.segundo_nombre_gtemp is null then '' else b.segundo_nombre_gtemp end) as jefe_inmediato FROM gen_empleados_departamento_par a, gth_empleado b "
                 + "where a.ide_gtemp=b.ide_gtemp  "
                 + ")d ON d.ide_geedp_inmediato=a.gen_ide_geedp2 "
                 + "left join( "
-                + "SELECT a.ide_geedp as ide_geedp_gerente, b.apellido_paterno_gtemp ||' '|| b.apellido_materno_gtemp ||' '|| b.primer_nombre_gtemp ||' '|| b.segundo_nombre_gtemp as jefe_gerente FROM gen_empleados_departamento_par a, gth_empleado b "
+                + "SELECT a.ide_geedp as ide_geedp_gerente, b.apellido_paterno_gtemp ||' '|| (case when  b.apellido_materno_gtemp is null then '' else  b.apellido_materno_gtemp end) ||' '|| b.primer_nombre_gtemp ||' '||(case when b.segundo_nombre_gtemp is null then '' else b.segundo_nombre_gtemp end) as jefe_gerente FROM gen_empleados_departamento_par a, gth_empleado b "
                 + "where a.ide_gtemp=b.ide_gtemp  "
                 + ")e ON e.ide_geedp_gerente=a.gen_ide_geedp "
-                + "where a.aprobado_nrant=1 and a.ide_geedp="+ IDE_GEEDP+" "
+                + "where a.aprobado_nrant=true and a.ide_geedp="+ IDE_GEEDP+" "
                 + "order by nro_anticipo_nrant desc");
     }
 

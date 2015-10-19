@@ -96,7 +96,7 @@ public class ServicioVacacionesJPA {
     }
 
     public Object getPeriodosVacaciones(String IDE_GEEDP) {
-        TablaGenerica tab_periodo = utilitario.consultar("SELECT IDE_ASVAC,FECHA_INGRESO_ASVAC FROM ASI_VACACION WHERE IDE_GTEMP in (select IDE_GTEMP from GEN_EMPLEADOS_DEPARTAMENTO_PAR where IDE_GEEDP=" + IDE_GEEDP + ") AND ACTIVO_ASVAC=1");        
+        TablaGenerica tab_periodo = utilitario.consultar("SELECT IDE_ASVAC,FECHA_INGRESO_ASVAC FROM ASI_VACACION WHERE IDE_GTEMP in (select IDE_GTEMP from GEN_EMPLEADOS_DEPARTAMENTO_PAR where IDE_GEEDP=" + IDE_GEEDP + ") AND ACTIVO_ASVAC=true");        
         if (!tab_periodo.isEmpty()) {
             return utilitario.getConexion().consultar("SELECT IDE_ASVAC,DIA_ACUMULADO,NRO_DIAS_ADICIONAL,DIA_DESCONTADO,DIA_SOLICITADO,  "
                     + " DIA_ACUMULADO+NRO_DIAS_ADICIONAL as NRO_TOTALES_VACACIONES, (DIA_ACUMULADO+NRO_DIAS_ADICIONAL)-(DIA_DESCONTADO+DIA_SOLICITADO) AS DIAS_PENDIENTES  "
@@ -105,20 +105,20 @@ public class ServicioVacacionesJPA {
                     + " (case when SUM(DIA_ADICIONAL_ASDEV) is null then 0 else SUM(DIA_ADICIONAL_ASDEV) end) as NRO_DIAS_ADICIONAL,  "
                     + " (case when SUM(DIA_DESCONTADO_ASDEV) is null then 0 else SUM(DIA_DESCONTADO_ASDEV) end)AS DIA_DESCONTADO,  "
                     + " (case when SUM(DIA_SOLICITADO_ASDEV) is null then 0 else SUM(DIA_SOLICITADO_ASDEV) end)AS DIA_SOLICITADO  "
-                    + " FROM ASI_DETALLE_VACACION WHERE ACTIVO_ASDEV = 1 GROUP BY IDE_ASVAC  "
+                    + " FROM ASI_DETALLE_VACACION WHERE ACTIVO_ASDEV = true GROUP BY IDE_ASVAC  "
                     + " ) a where IDE_ASVAC=" + tab_periodo.getValor("IDE_ASVAC")).get(0);
         }
         return null;
     }
     
      public List getResumeVacaciones(String IDE_GEEDP) {
-        TablaGenerica tab_periodo = utilitario.consultar("SELECT IDE_ASVAC,FECHA_INGRESO_ASVAC FROM ASI_VACACION WHERE IDE_GTEMP in (select IDE_GTEMP from GEN_EMPLEADOS_DEPARTAMENTO_PAR where IDE_GEEDP=" + IDE_GEEDP + ") AND ACTIVO_ASVAC=1");        
+        TablaGenerica tab_periodo = utilitario.consultar("SELECT IDE_ASVAC,FECHA_INGRESO_ASVAC FROM ASI_VACACION WHERE IDE_GTEMP in (select IDE_GTEMP from GEN_EMPLEADOS_DEPARTAMENTO_PAR where IDE_GEEDP=" + IDE_GEEDP + ") AND ACTIVO_ASVAC=true");        
         if (!tab_periodo.isEmpty()) {
             return utilitario.getConexion().consultar("SELECT " +
-					"(PERIODO -1) ||' - '|| periodo AS PERIODO,DIA_ACUMULADO,NRO_DIAS_ADICIONAL,DIA_DESCONTADO,DIA_SOLICITADO, " +
+					"(cast(PERIODO as integer) -1) ||' - '|| periodo AS PERIODO,DIA_ACUMULADO,NRO_DIAS_ADICIONAL,DIA_DESCONTADO,DIA_SOLICITADO, " +
 					"DIA_ACUMULADO+NRO_DIAS_ADICIONAL as NRO_TOTALES_VACACIONES, (DIA_ACUMULADO+NRO_DIAS_ADICIONAL)-(DIA_DESCONTADO+DIA_SOLICITADO) AS DIAS_PENDIENTES " +
 					" FROM ( " +
-					"SELECT IDE_ASVAC,PERIODO -1 AS ANTERIOR,periodo,SUM(DIA_ACUMULADO) AS DIA_ACUMULADO,SUM(NRO_DIAS_ADICIONAL) AS NRO_DIAS_ADICIONAL, " +
+					"SELECT IDE_ASVAC,cast(PERIODO as integer) -1 AS ANTERIOR,periodo,SUM(DIA_ACUMULADO) AS DIA_ACUMULADO,SUM(NRO_DIAS_ADICIONAL) AS NRO_DIAS_ADICIONAL, " +
 					"SUM(DIA_DESCONTADO) AS DIA_DESCONTADO,SUM(DIA_SOLICITADO) AS DIA_SOLICITADO " +
 					"FROM ( " +
 					"SELECT IDE_ASVAC, " +
@@ -127,7 +127,7 @@ public class ServicioVacacionesJPA {
 					"(case when DIA_ADICIONAL_ASDEV is null then 0 else DIA_ADICIONAL_ASDEV end) as NRO_DIAS_ADICIONAL, " +
 					"(case when DIA_DESCONTADO_ASDEV is null then 0 else DIA_DESCONTADO_ASDEV end)AS DIA_DESCONTADO, " +
 					"(case when DIA_SOLICITADO_ASDEV is null then 0 else DIA_SOLICITADO_ASDEV end)AS DIA_SOLICITADO " +
-					"FROM ASI_DETALLE_VACACION WHERE ACTIVO_ASDEV = 1 AND IDE_ASVAC="+tab_periodo.getValor("IDE_ASVAC")+
+					"FROM ASI_DETALLE_VACACION WHERE ACTIVO_ASDEV = true AND IDE_ASVAC="+tab_periodo.getValor("IDE_ASVAC")+
 					")a GROUP BY a.periodo,a.IDE_ASVAC " +
 					")b ORDER BY PERIODO DESC");
         }
