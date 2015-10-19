@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
@@ -80,9 +81,27 @@ public class Utilitario extends Framework {
 	}
 
 
+	public Date DeStringADate(String fecha){
+        SimpleDateFormat formato = new SimpleDateFormat("yyyy-mm-dd");
+        String strFecha = fecha;
+        Date fechaDate = null;
+        try {
+            fechaDate = formato.parse(strFecha);
+                 //       System.out.println("entre a convertir strign a fecha "+fechaDate.toString());
+            return fechaDate;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return fechaDate;
+        }
+    }
 
-
-
+	public String DeDateAString(Date fecha){
+		String convertido="1900-01-01";
+		DateFormat format_fecha = new SimpleDateFormat("yyyy-mm-dd");
+		convertido = format_fecha.format(fecha);
+		//System.out.println(convertido);
+		return convertido;
+	}
 	/*Valida el ingreso de solo numeros enteros positivos (telefono)
 	 * 
 	 */
