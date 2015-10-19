@@ -366,6 +366,7 @@ public class Parametros {
         lis_parametros.add(new Parametro("14", "p_factura_emitido","Indica el estado emitido de la factura","14","cont_estado","ide_coest","detalle_coest"));
         lis_parametros.add(new Parametro("14", "p_factura_pagado","Indica el estado pagado de la factura","14","cont_estado","ide_coest","detalle_coest"));
         lis_parametros.add(new Parametro("14", "p_estado_conciliacion_bancaria","Indica el estado conciliacion del archivo bancario","14","cont_estado","ide_coest","detalle_coest"));
+        lis_parametros.add(new Parametro("14", "p_estado_nota_debito_factura","Indica el estado que cambia la factura cuando se realiza la nota de debito","14","cont_estado","ide_coest","detalle_coest"));
 
         /*
          *  ADQUISISCIONES = 15
@@ -415,6 +416,7 @@ public class Parametros {
         lis_parametros.add(new Parametro("19", "p_base_legal_entregarecep","Indica la base legal para imprimir en el acta de Entrega Recepcion de Activos Fijos","1","gen_base_legal","ide_gebal","detalle_gebal"));
         lis_parametros.add(new Parametro("19", "p_base_legal_constafisica","Indica la base legal para imprimir en el acta de Constatacion Fisica","1","gen_base_legal","ide_gebal","detalle_gebal"));
         lis_parametros.add(new Parametro("19", "p_base_legal_cambiocustod","Indica la base legal para imprimir en el acta de Cambio de Custodio","1","gen_base_legal","ide_gebal","detalle_gebal"));
+        lis_parametros.add(new Parametro("19", "p_estado_baja_activo","Indica el estado dado de baja del activo o bien","2","afi_actividad","ide_afacd","detalle_afacd"));
 
         return lis_parametros;
         
