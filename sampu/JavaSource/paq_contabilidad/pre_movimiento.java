@@ -21,9 +21,11 @@ public class pre_movimiento extends Pantalla{
 	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
 	@EJB
 	private ServicioPresupuesto ser_Presupuesto = (ServicioPresupuesto ) utilitario.instanciarEJB(ServicioPresupuesto.class);
-	
+	private String p_modulo_factruracion="";
 	
 	public pre_movimiento (){
+		p_modulo_factruracion=utilitario.getVariable("p_modulo_facturacion");
+		
 		com_anio.setCombo(ser_contabilidad.getAnioDetalle("true,false","true,false"));
 		com_anio.setMetodo("seleccionaElAnio");
 		bar_botones.agregarComponente(new Etiqueta("Seleccione El Año:"));
@@ -32,12 +34,12 @@ public class pre_movimiento extends Pantalla{
 		tab_movimiento.setId("tab_movimiento");
 		tab_movimiento.setHeader("MOVIMIENTOS");
 		tab_movimiento.setTabla("cont_movimiento", "ide_comov", 1);
+		tab_movimiento.getColumna("ide_gemod").setCombo("gen_modulo", "ide_cotim", "detalle_cotim", "");
 		tab_movimiento.getColumna("ide_cotim").setCombo("cont_tipo_movimiento", "ide_cotim", "detalle_cotim", "");
 		tab_movimiento.getColumna("ide_cotia").setCombo("cont_tipo_asiento", "ide_cotia", "detalle_cotia", "");
 		tab_movimiento.getColumna("ide_geare").setCombo("gen_area", "ide_geare", "detalle_geare", "");
 		tab_movimiento.getColumna("ide_gemes").setCombo("gen_mes", "ide_gemes", "detalle_gemes", "");
-		tab_movimiento.getColumna("ide_geani").setVisible(false);
-		tab_movimiento.setCondicion("ide_geani=-1"); 
+		tab_movimiento.getColumna("ide_geani").setCombo("gen_anio","ide_geani","detalle_geani","");
 		tab_movimiento.getColumna("ide_tecpo").setLectura(true);
 		tab_movimiento.getColumna("activo_comov").setValorDefecto("true");
 		tab_movimiento.getColumna("activo_comov").setLectura(true);

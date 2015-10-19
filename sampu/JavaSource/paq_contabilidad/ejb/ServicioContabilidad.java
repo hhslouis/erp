@@ -266,12 +266,16 @@ public String getInventario(String ide_geani,String carga,String material){
  * Metodo que devuelve la Cuenta Cantable por realizaqr transacciones filtra cuentas contables por año fiscal vigente
  * @return String SQL Cuenta Contable para realizar transacciones
  */
-public String servicioCatalogoCuentasTransaccion(){
+public String servicioCatalogoCuentasTransaccion(String aplica_anio){
 	
 	String catalogo_cuenta_anio="select ide_cocac,cue_codigo_cocac,substring (cue_descripcion_cocac from 1 for 100) as cuenta from cont_catalogo_cuenta  where not ide_cocac in ("
-+" select con_ide_cocac from cont_catalogo_cuenta where not con_ide_cocac is null group by con_ide_cocac )" 
-+" and ide_cocac in ( select ide_cocac from cont_vigente where not ide_cocac is null and ide_geani in (select ide_geani from gen_anio where activo_geani = true limit 1) )"
-+" order by cue_codigo_cocac";
+			+" select con_ide_cocac from cont_catalogo_cuenta where not con_ide_cocac is null group by con_ide_cocac )" 
+			+" and ide_cocac in ( select ide_cocac from cont_vigente where not ide_cocac is null ";
+	if (aplica_anio.equals("0")){
+		catalogo_cuenta_anio+= " and ide_geani in (select ide_geani from gen_anio where activo_geani = true limit 1)";
+	}
+	catalogo_cuenta_anio+= " )"
+			+" order by cue_codigo_cocac";
 	return catalogo_cuenta_anio;
 }
 /**
