@@ -155,9 +155,9 @@ public class ServicioGestion {
 	public String getSqlEmpleadosAutocompletar(){
 		String str_sql="SELECT EMP.IDE_GTEMP,EMP.DOCUMENTO_IDENTIDAD_GTEMP, " +
 				"EMP.APELLIDO_PATERNO_GTEMP || ' ' || " +
-				"EMP.APELLIDO_MATERNO_GTEMP || ' ' || " +
+				"(case when EMP.APELLIDO_MATERNO_GTEMP is null then '' else EMP.APELLIDO_MATERNO_GTEMP end) || ' ' || " +
 				"EMP.PRIMER_NOMBRE_GTEMP || ' ' || " +
-				"EMP.SEGUNDO_NOMBRE_GTEMP AS NOMBRES_APELLIDOS, " +
+				"(case when EMP.SEGUNDO_NOMBRE_GTEMP is null then '' else EMP.SEGUNDO_NOMBRE_GTEMP end) AS NOMBRES_APELLIDOS, " +
 				"SUCU.NOM_SUCU, AREA.DETALLE_GEARE, " +
 				"DEPA.DETALLE_GEDEP " +
 				"FROM GTH_EMPLEADO EMP " +

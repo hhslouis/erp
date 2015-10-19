@@ -386,7 +386,7 @@ public class pre_empleado extends Pantalla {
 		dia_contrata.setId("dia_contrata");
 		dia_contrata.setTitle("CONTRATACIÓN");
 		dia_contrata.setWidth("85%");
-		dia_contrata.setHeight("95%");
+		dia_contrata.setHeight("75%");
 		dia_contrata.getBot_aceptar().setMetodo("acpetarContratacion");
 		agregarComponente(dia_contrata);
 
@@ -403,9 +403,10 @@ public class pre_empleado extends Pantalla {
 		tab_partida_cargo.getColumna("IDE_GEPAP").setUnico(true);
 		tab_partida_cargo.getColumna("IDE_GEGRO").setCombo("GEN_GRUPO_OCUPACIONAL",	"IDE_GEGRO", "DETALLE_GEGRO", "");
 		tab_partida_cargo.getColumna("IDE_GEGRO").setMetodoChange("grupoOcupacional");
-		tab_partida_cargo.getColumna("IDE_GECAF").setCombo("select a.IDE_GECAF,a.DETALLE_GECAF from GEN_CARGO_FUNCIONAL a, GEN_GRUPO_CARGO b where a.IDE_GECAF = b.IDE_GECAF");
+		tab_partida_cargo.getColumna("IDE_GECAF").setCombo("select a.IDE_GECAF,a.DETALLE_GECAF from GEN_CARGO_FUNCIONAL a");
 		tab_partida_cargo.getColumna("IDE_GECAF").setBuscarenCombo(false);
-		tab_partida_cargo.getColumna("IDE_GECAF").setVisible(false);
+		tab_partida_cargo.getColumna("IDE_GECAF").setNombreVisual("CARGO FUNCIONAL");
+		//tab_partida_cargo.getColumna("IDE_GECAF").setVisible(false);
 		tab_partida_cargo.setMostrarcampoSucursal(true);
 		tab_partida_cargo.getColumna("IDE_SUCU").setCombo("SIS_SUCURSAL", "IDE_SUCU","NOM_SUCU", "");
 		tab_partida_cargo.getColumna("IDE_SUCU").setBuscarenCombo(false);
@@ -448,6 +449,19 @@ public class pre_empleado extends Pantalla {
 		tab_partida_cargo.getColumna("IDE_GEARE").setNombreVisual("PROCESO");
 		tab_partida_cargo.getColumna("IDE_GEDEP").setNombreVisual("SUB_PROCESO");
 		tab_partida_cargo.getColumna("TITULO_CARGO_GEPGC").setNombreVisual("DENOMINACION PUESTO");
+
+		///orden de los campos
+		tab_partida_cargo.getColumna("IDE_GEPGC").setOrden(1);
+		tab_partida_cargo.getColumna("IDE_GTTEM").setOrden(2);
+		tab_partida_cargo.getColumna("IDE_SUCU").setOrden(3);
+		tab_partida_cargo.getColumna("IDE_GECAF").setOrden(7);
+		tab_partida_cargo.getColumna("IDE_GEGRO").setOrden(5);
+		tab_partida_cargo.getColumna("IDE_GEPAP").setOrden(9);
+		tab_partida_cargo.getColumna("IDE_GEARE").setOrden(4);
+		tab_partida_cargo.getColumna("IDE_GEDEP").setOrden(6);
+		tab_partida_cargo.getColumna("TITULO_CARGO_GEPGC").setOrden(8);
+
+		
 		tab_partida_cargo.dibujar();
 
 
@@ -463,6 +477,7 @@ public class pre_empleado extends Pantalla {
 		tab_empleado_departamento_dia.getColumna("FECHA_FINCTR_GEEDP").setMetodoChange("sumarFecha");
 		tab_empleado_departamento_dia.getColumna("IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL","IDE_GECAF","DETALLE_GECAF","");	
 		tab_empleado_departamento_dia.getColumna("IDE_GECAF").setBuscarenCombo(true);
+		tab_empleado_departamento_dia.getColumna("IDE_GECAF").setVisible(false);
 		tab_empleado_departamento_dia.getColumna("GEN_IDE_GECAF").setCombo("GEN_CARGO_FUNCIONAL", "IDE_GECAF", "DETALLE_GECAF", "");
 		tab_empleado_departamento_dia.getColumna("IDE_SUCU").setCombo("SIS_SUCURSAL", "IDE_SUCU", "NOM_SUCU", "");
 		tab_empleado_departamento_dia.getColumna("IDE_SUCU").setVisible(true);
@@ -575,7 +590,7 @@ public class pre_empleado extends Pantalla {
 		
 	public void grupoOcupacional(AjaxBehaviorEvent evt){
 		tab_partida_cargo.modificar(evt);//Siempre es la primera linea
-		tab_partida_cargo.setValor("IDE_GECAF", tab_partida_cargo.getValor("IDE_GEGRO"));
+		tab_partida_cargo.getColumna("IDE_GECAF").setCombo("select a.IDE_GECAF,a.DETALLE_GECAF from GEN_CARGO_FUNCIONAL a where ide_gecaf in (select ide_gecaf from gen_grupo_cargo where ide_gegro="+tab_partida_cargo.getValor("IDE_GEGRO")+")");		
 		utilitario.addUpdateTabla(tab_partida_cargo, "IDE_GECAF", "");
 	}
 	
@@ -699,6 +714,11 @@ public class pre_empleado extends Pantalla {
 
 
 	public void acpetarContratacion(){
+		if(tab_empleado_departamento_dia.getValor("rmu_geedp").equals("")||tab_empleado_departamento_dia.getValor("rmu_geedp").equals("null")||tab_empleado_departamento_dia.getValor("rmu_geedp").equals(null)){
+			utilitario.agregarMensajeError("Ingrese Valor", "Ingrese el valor de la Remuneración");
+			return;
+		}
+		
 		if (validacionesContratacion()){
 			String str_IDE_GEPGC=null;
 			//Guarda partida grupo cargo
