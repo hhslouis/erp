@@ -16,10 +16,7 @@ import javax.faces.bean.ViewScoped;
 import paq_gestion.ejb.ServicioEmpleado;
 import paq_sistema.aplicacion.Utilitario;
 
-/**
- *
- * @author Diego
- */
+
 @ManagedBean
 @ViewScoped
 public class ControladorRoles {
