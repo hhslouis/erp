@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_areas" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3ccf602c-8b15-4dd2-9216-12a2155abad2">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="540"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["D:\\workspace\\biess\\WebContent\\reportes\\rep_gestion\\"]]></defaultValueExpression>
@@ -213,7 +213,7 @@ order by fecha_entrega_afcus desc]]>
 				<text><![CDATA[MODELO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="af1cc960-244b-4d83-abb1-34b5b2aceb0c" x="635" y="27" width="57" height="12"/>
+				<reportElement uuid="af1cc960-244b-4d83-abb1-34b5b2aceb0c" x="635" y="27" width="67" height="12"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -241,7 +241,7 @@ order by fecha_entrega_afcus desc]]>
 				<text><![CDATA[MARCA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="f8392a32-80b8-4b29-85c1-d0257b1fc435" x="692" y="27" width="57" height="12"/>
+				<reportElement uuid="f8392a32-80b8-4b29-85c1-d0257b1fc435" x="702" y="27" width="47" height="12"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -451,7 +451,7 @@ order by fecha_entrega_afcus desc]]>
 				<textFieldExpression><![CDATA[$F{modelo_afact}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="12aa9dda-501b-4c58-9786-8b97917640de" stretchType="RelativeToBandHeight" x="635" y="0" width="57" height="12" isPrintWhenDetailOverflows="true"/>
+				<reportElement uuid="12aa9dda-501b-4c58-9786-8b97917640de" stretchType="RelativeToBandHeight" x="635" y="0" width="67" height="12" isPrintWhenDetailOverflows="true"/>
 				<box>
 					<pen lineWidth="0.25"/>
 					<topPen lineWidth="0.25"/>
@@ -465,7 +465,7 @@ order by fecha_entrega_afcus desc]]>
 				<textFieldExpression><![CDATA[$F{serie_afact}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="d9327525-833f-4363-a4ea-812b033640b6" stretchType="RelativeToBandHeight" x="692" y="0" width="57" height="12" isPrintWhenDetailOverflows="true"/>
+				<reportElement uuid="d9327525-833f-4363-a4ea-812b033640b6" stretchType="RelativeToBandHeight" x="702" y="0" width="47" height="12" isPrintWhenDetailOverflows="true"/>
 				<box>
 					<pen lineWidth="0.25"/>
 					<topPen lineWidth="0.25"/>
