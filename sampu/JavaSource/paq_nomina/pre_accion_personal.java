@@ -1559,7 +1559,7 @@ public void cambiarPartida(){
 
 		if(tab_empleado_departamento.getValor("fecha_encargo_geedp")!=null && !tab_empleado_departamento.getValor("fecha_encargo_geedp").isEmpty()){
 			if(tab_empleado_departamento.getValor("fecha_encargo_fin_geedp")!=null && !tab_empleado_departamento.getValor("fecha_encargo_fin_geedp").isEmpty()){
-				if (utilitario.isFechaMayor(utilitario.getFecha(tab_empleado_departamento.getValor("fecha_encargo_geedp")), utilitario.getFecha(tab_empleado_departamento.getValor("fecha_encargo_fin_geedp")))){
+				if (utilitario.isFechaMayor(utilitario.getFecha(tab_empleado_departamento.getValor("fecha_encargo_fin_geedp")), utilitario.getFecha(tab_empleado_departamento.getValor("fecha_encargo_geedp")))){
 					utilitario.agregarMensajeInfo("No se puede guardar", "La fecha de encargo inicial no puede ser mayor que la fecha encargo fin");
 					return;
 				}	
