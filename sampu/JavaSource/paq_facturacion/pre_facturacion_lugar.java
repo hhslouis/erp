@@ -1,4 +1,6 @@
 package paq_facturacion;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +32,7 @@ import paq_sistema.aplicacion.Pantalla;
 import org.apache.poi.hssf.record.CalcCountRecord;
 import org.apache.poi.hssf.util.HSSFColor.TAN;
 import org.primefaces.event.SelectEvent;
+
 import framework.componentes.AutoCompletar;
 import framework.componentes.Etiqueta;
 
@@ -97,6 +100,9 @@ public class pre_facturacion_lugar extends Pantalla{
 		self_reporte.setId("self_reporte"); //id
 		agregarComponente(self_reporte);
 
+		
+
+		
 		// TODO Auto-generated constructor stub
 
 		tab_factura.setHeader("FACTURACIÓN");
@@ -139,7 +145,7 @@ public class pre_facturacion_lugar extends Pantalla{
 		tab_factura.getColumna("total_fafac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_factura.getColumna("secuencial_fafac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
 		tab_factura.getColumna("secuencial_fafac").setEtiqueta();
-		tab_factura.getColumna("fecha_vencimiento_fafac").setVisible(false);
+		tab_factura.getColumna("fecha_transaccion_fafac").setMetodoChange("fechaVencimiento");
 		tab_factura.getColumna("fecha_emision_fafac").setVisible(false);
 		tab_factura.getColumna("direccion_fafac").setVisible(false);
 		tab_factura.getColumna("responsable_faclinea_fafac").setLectura(true);
@@ -167,6 +173,7 @@ public class pre_facturacion_lugar extends Pantalla{
 		// TABLA 2
 		tab_detalle_factura.setId("tab_detalle_factura");
 		tab_detalle_factura.setTabla("fac_detalle_factura", "ide_fadef", 2);
+		tab_detalle_factura.setGenerarPrimaria(false);
 		tab_detalle_factura.getColumna("cantidad_fadef").setValorDefecto("0");
 		tab_detalle_factura.getColumna("activo_fadef").setValorDefecto("true");
 		tab_detalle_factura.getColumna("activo_fadef").setLectura(true);
@@ -414,9 +421,21 @@ public class pre_facturacion_lugar extends Pantalla{
 		bar_botones.agregarBoton(bot_crearCliente);
 
 	}
+	
+	public void fechaVencimiento(){
+		int numero_dias=Integer.parseInt(utilitario.getVariable("p_dias_calculo_interes_mora_nd"));
+		String fecha= tab_factura.getValor("fecha_transaccion_fafac");
+		Date fecha_a_sumar=utilitario.DeStringADate(fecha);		
+		Date nueva_fecha=utilitario.sumarDiasFecha(fecha_a_sumar, numero_dias);
+		String str_fecha=utilitario.DeDateAString(nueva_fecha);
+		tab_factura.setValor("fecha_vencimiento_fafac", str_fecha);
+		utilitario.addUpdate("tab_factura");
+	}
+	 
+	
 	public void abrirDialogoCliente(){
 
-		//Hace aparecer el componente
+		//Hace aparecer el component
 		if(aut_factura.getValor()!=null){
 			tab_cliente.limpiar();
 			tab_cliente.insertar();
@@ -890,6 +909,7 @@ public class pre_facturacion_lugar extends Pantalla{
 				tab_detalle_factura.insertar();
 				}
 			}
+			fechaVencimiento();
 		}
 		else{
 			utilitario.agregarMensajeError("Debe seleccionar los datos de Facturación","");

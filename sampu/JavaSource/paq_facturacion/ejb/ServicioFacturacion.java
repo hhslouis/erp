@@ -16,9 +16,9 @@ public class ServicioFacturacion {
 
 
 	public String getClientes(String matrizSucursal ){
-	    String tab_cliente="select a.ide_recli, ruc_comercial_recli,nombre_comercial_recli," +
-	            "  nro_establecimiento_recli, codigo_zona_recli, " +
-	            " telefono_factura_recli, direccion_recld from rec_clientes a " +
+	    String tab_cliente="select a.ide_recli, ruc_comercial_recli,razon_social_recli,establecimiento_operativo_recli," +
+	            "  nro_establecimiento_recli,nombre_comercial_recli, " +
+	            "  direccion_recld from rec_clientes a " +
 	            " LEFT JOIN rec_cliente_direccion b on a.ide_recli=b.ide_recli where MATRIZ_SUCURSAL_RECLI in ("+matrizSucursal+")" +
 	                " ORDER BY  nombre_comercial_recli";
 	    return tab_cliente;
@@ -72,6 +72,14 @@ public class ServicioFacturacion {
 		 tab_cabecera_factura+=" order by secuencial_fafac";
 		 return tab_cabecera_factura;
 	 }
+	 public String getClientesFactura(){
+		 String tab_cabecera_factura="select ide_fafac,secuencial_fafac,ruc_comercial_recli,razon_social_recli,total_fafac,detalle_bogrm"
+				 +" from fac_factura a, rec_clientes b,fac_datos_factura c,bodt_grupo_material d"
+				 +" where a.ide_recli = b.ide_recli and a.ide_fadaf = c.ide_fadaf and c.ide_bogrm = d.ide_bogrm";		
+		 		
+		 
+		 return tab_cabecera_factura;
+	 }
 	 public TablaGenerica getTablaGenericaFacturaCabecera(String codigo){
 		 
 		 TablaGenerica tab_cabecera_factura=utilitario.consultar("select ide_fafac,secuencial_fafac,factura_fisica_fafac,fecha_transaccion_fafac,detalle_bogrm,base_aprobada_fafac,valor_iva_fafac,total_fafac" +
@@ -80,10 +88,42 @@ public class ServicioFacturacion {
 		 return tab_cabecera_factura;
 		 
 	 }
-	 
-	 
+	 	/**
+		 * Este servicio retorna los datos de la factura para ser contabilizados, y a su ves consulta los asientos
+		 * @param tipo_emision recibe 1 para mostrar las facturas de tipo emision,2 para mostrar facturas tipo recaudacion, 0 para consultar facturas en asientos contables 
+		 * @param fecha_inicial si tipo_emision=1, fecha iniciail corresponde a fecha transacccion iniicial, si tipo_emision=2 corresponde a fecha de pago de la factura. 
+		 * @return retorna un string con el siguiente contenido: codigo de la factura, numero del asiento contable, nombre del asiento contable, ruc del proveedor, nombre del proveedor, numero de factura y los respectivos valores de la factura
+		 */
+		public String getDatosFacturaContabilidad(String tipo_emision,String fecha_inicial,String fecha_final){
+			String tab_datos_factura="select a.ide_fafac,b.ide_comov,b.ide_coest,b.ide_conac,detalle_coest,detalle_conac,secuencial_fafac,ruc_comercial_recli,razon_social_recli,base_aprobada_fafac,"
+					+" valor_iva_fafac,total_fafac,factura_fisica_fafac,fecha_transaccion_fafac,detalle_bogrm"
+					+" from ("
+						+" 	select ide_fafac,secuencial_fafac,ruc_comercial_recli,razon_social_recli,base_aprobada_fafac,valor_iva_fafac,total_fafac,factura_fisica_fafac,fecha_transaccion_fafac,detalle_bogrm"
+						+" 	from fac_datos_factura a, bodt_grupo_material b,fac_factura c,rec_clientes d "
+						+" 	where a.ide_bogrm = b.ide_bogrm and a.ide_fadaf=c.ide_fadaf and c.ide_recli = d.ide_recli"
+						+" 	) a"
+						+" 	left join cont_factura_asiento b on a.ide_fafac = b.ide_fafac"
+						+" 	left join cont_estado c on b.ide_coest = c.ide_coest"
+						+" 	left join cont_nombre_asiento_contable d on b.ide_conac = d.ide_conac";
+						if(tipo_emision.equals("1")){
+							tab_datos_factura +=" where fecha_transaccion_fafac between '"+fecha_inicial+"' and '"+fecha_final+"'"	;
+						}
+						tab_datos_factura += " 	order by secuencial_fafac";
+							System.out.println("datos factura "+tab_datos_factura);
+							return tab_datos_factura;
+		}
+		
+	 public TablaGenerica getTablaGenericaFacturasVencidas(String codigo){
+		 
+		 TablaGenerica tab_cabecera_factura=utilitario.consultar("select ide_fafac,ide_recli,fecha_transaccion_fafac,to_date(to_char(now(), 'YYYY/MM/DD'), 'YYYY/MM/DD')  - fecha_transaccion_fafac  as dias_emitido" 
+				 +" from fac_factura where ide_coest = 2"
+				 +" and to_date(to_char(now(), 'YYYY/MM/DD'), 'YYYY/MM/DD')  - fecha_transaccion_fafac >6 and ide_recli in ("+codigo+") "
+				 +" order by ide_recli");
+		 return tab_cabecera_factura;
+		 
+	 } 
 	 public String getClientesDatosBasicos(String matrizSucursal ){
-		    String tab_cliente="select a.ide_recli, ruc_comercial_recli,nombre_comercial_recli from rec_clientes a " +
+		    String tab_cliente="select a.ide_recli, ruc_comercial_recli,razon_social_recli,establecimiento_operativo_recli from rec_clientes a " +
 		            " LEFT JOIN rec_cliente_direccion b on a.ide_recli=b.ide_recli where MATRIZ_SUCURSAL_RECLI in ("+matrizSucursal+")" +
 		                " ORDER BY  nombre_comercial_recli";
 		    return tab_cliente;

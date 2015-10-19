@@ -66,7 +66,7 @@ public class pre_nota_credito extends Pantalla {
 		tab_nota_credito.setTipoFormulario(true);
 		tab_nota_credito.getGrid().setColumns(4);
 		tab_nota_credito.setTabla("fac_nota_credito","ide_fanoc", 1);
-		tab_nota_credito.getColumna("ide_fafac").setCombo(ser_Facturacion.getCabeceraFactura("1",""));
+		tab_nota_credito.getColumna("ide_fafac").setCombo(ser_Facturacion.getClientesFactura());
 		tab_nota_credito.getColumna("ide_fafac").setAutoCompletar();
 		tab_nota_credito.getColumna("ide_fafac").setLectura(true);
 		

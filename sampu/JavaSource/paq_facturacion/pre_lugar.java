@@ -33,6 +33,7 @@ public class pre_lugar extends Pantalla{
 		tab_usuario_lugar.setIdCompleto("tab_tabulador:tab_usuario_lugar");
 		tab_usuario_lugar.setTabla("fac_usuario_lugar", "ide_fausl", 2);
 		tab_usuario_lugar.getColumna("ide_usua").setCombo("select ide_usua,nom_usua,nick_usua from sis_usuario order by nom_usua");
+		tab_usuario_lugar.getColumna("ide_tecaj").setCombo("tes_caja","ide_tecaj","detalle_tecaj","");
 		tab_usuario_lugar.getColumna("ide_usua").setUnico(true);
 		tab_usuario_lugar.getColumna("ide_falug").setUnico(true);
 		tab_usuario_lugar.dibujar();

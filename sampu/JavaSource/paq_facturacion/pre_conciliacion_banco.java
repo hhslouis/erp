@@ -22,6 +22,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import jxl.Sheet;
 import jxl.Workbook;
@@ -29,6 +30,7 @@ import jxl.Workbook;
 import org.apache.poi.hssf.util.HSSFColor.TAN;
 import org.primefaces.event.FileUploadEvent;
 
+import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_facturacion.ejb.ServicioFacturacion;
 import paq_sistema.aplicacion.Pantalla;
 import framework.aplicacion.TablaGenerica;
@@ -43,7 +45,7 @@ import framework.componentes.Radio;
 import framework.componentes.Tabla;
 import framework.componentes.Texto;
 import framework.componentes.Upload;
-
+import java.util.List;
 /**
  *
  * @author HHSLOUIS
@@ -59,10 +61,13 @@ public class pre_conciliacion_banco extends Pantalla {
 	private Upload upl_archivo=new Upload();
 	private Tabla tab_cliente = new Tabla();
 	private Texto txt_documento_banco = new Texto();
+	
 
 
 	@EJB
 	private ServicioFacturacion ser_facturacion = (ServicioFacturacion ) utilitario.instanciarEJB(ServicioFacturacion.class);
+	@EJB
+	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
 
     public pre_conciliacion_banco() { 
     	
@@ -123,7 +128,7 @@ public class pre_conciliacion_banco extends Pantalla {
     	
     	tab_tabla.setId("tab_tabla");
     	tab_tabla.setTabla("fac_factura", "ide_fafac", 1);
-    	tab_tabla.setCampoOrden("ide_fafac limit 2000");
+//    	tab_tabla.setCampoOrden("ide_fafac limit 2000");
     	tab_tabla.setCondicion("ide_fafac=-1");
 //    	tab_tabla.setCondicion("not conciliado_fafac is true");
     	tab_tabla.getColumna("ide_comov").setVisible(false);
@@ -145,7 +150,7 @@ public class pre_conciliacion_banco extends Pantalla {
     	tab_tabla.getColumna("responsable_faclinea_fafac").setVisible(false);
     	tab_tabla.getColumna("num_comprobante_fafac").setVisible(false);
     	tab_tabla.getColumna("ide_fadaf").setVisible(false);
-    	tab_tabla.getColumna("ide_coest").setVisible(false);
+    	//tab_tabla.getColumna("ide_coest").setVisible(false);
     	tab_tabla.getColumna("secuencial_fafac").setLectura(true);
     	tab_tabla.getColumna("base_aprobada_fafac").setLectura(true);
     	tab_tabla.getColumna("valor_iva_fafac").setLectura(true);
@@ -161,12 +166,19 @@ public class pre_conciliacion_banco extends Pantalla {
     	tab_tabla.getColumna("con_ide_coest").setCombo("select ide_coest,detalle_coest from cont_estado");
     	tab_tabla.getColumna("con_ide_coest").setAutoCompletar();
     	tab_tabla.getColumna("con_ide_coest").setLectura(true);
+    	tab_tabla.getColumna("ide_coest").setCombo(ser_contabilidad.getModuloEstados("true", utilitario.getVariable("p_modulo_facturacion")));
+
     	tab_tabla.getColumna("ide_recli").setLongitud(200);
     	//tab_tabla.getColumna("ide_fadaf").setCombo(ser_facturacion.getDatosFactura("1",""));
     	//tab_tabla.getColumna("ide_fadaf").setAutoCompletar();
     	//tab_tabla.getColumna("ide_fadaf").setLectura(true);
     	//tab_tabla.setRows(200);
     	//tab_tabla.setLectura(true);
+		  
+	       
+	       tab_tabla.getColumna("documento_conciliado_fafac").setCombo("select documento_conciliado_fafac,documento_conciliado_fafac from fac_factura group by documento_conciliado_fafac");
+	       //tab_tabla.getColumna("documento_conciliado_fafac").setValorDefecto("CAJA MATRIZ");
+	       tab_tabla.getColumna("documento_conciliado_fafac").setAutoCompletar();
     	tab_tabla.dibujar();
     	
         PanelTabla pat_panel = new PanelTabla();
@@ -178,6 +190,7 @@ public class pre_conciliacion_banco extends Pantalla {
         div_division.dividir1(pat_panel);
         agregarComponente(div_division);
     }
+    
     
 	public void actualizarLista(){
 		if (cal_fecha_inicial.getValue() != null && cal_fecha_final.getValue() != null
@@ -436,6 +449,7 @@ public class pre_conciliacion_banco extends Pantalla {
 
 			} catch (Exception e) {
 				// TODO: handle exception
+				System.out.println("Error conciliacion Bancaria: "+e);
 			}	
 			
 	}
