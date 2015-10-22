@@ -422,7 +422,22 @@ public class pre_facturacion_lugar extends Pantalla{
 
 	}
 	
-	public void fechaVencimiento(){
+	public void fechaVencimiento(AjaxBehaviorEvent evt){		
+		tab_factura.modificar(evt);
+					
+		int numero_dias=Integer.parseInt(utilitario.getVariable("p_dias_calculo_interes_mora_nd"));
+		String fecha= tab_factura.getValor("fecha_transaccion_fafac");
+		Date fecha_a_sumar=utilitario.DeStringADate(fecha);		
+		Date nueva_fecha=utilitario.sumarDiasFecha(fecha_a_sumar, numero_dias);
+		String str_fecha=utilitario.DeDateAString(nueva_fecha);
+		tab_factura.setValor("fecha_vencimiento_fafac", str_fecha);
+		utilitario.addUpdateTabla(tab_factura, "fecha_vencimiento_fafac", "");
+
+	}
+	
+	
+	public void fechaVencimientoInserta(){		
+			
 		int numero_dias=Integer.parseInt(utilitario.getVariable("p_dias_calculo_interes_mora_nd"));
 		String fecha= tab_factura.getValor("fecha_transaccion_fafac");
 		Date fecha_a_sumar=utilitario.DeStringADate(fecha);		
@@ -431,6 +446,7 @@ public class pre_facturacion_lugar extends Pantalla{
 		tab_factura.setValor("fecha_vencimiento_fafac", str_fecha);
 		utilitario.addUpdate("tab_factura");
 	}
+
 	 
 	
 	public void abrirDialogoCliente(){
@@ -909,7 +925,7 @@ public class pre_facturacion_lugar extends Pantalla{
 				tab_detalle_factura.insertar();
 				}
 			}
-			fechaVencimiento();
+			fechaVencimientoInserta();
 		}
 		else{
 			utilitario.agregarMensajeError("Debe seleccionar los datos de Facturación","");

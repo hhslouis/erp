@@ -130,6 +130,7 @@ public class pre_factura extends Pantalla{
 		tab_factura.getColumna("base_cero_fafac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_factura.getColumna("base_aprobada_fafac").setEtiqueta();
 		tab_factura.getColumna("base_aprobada_fafac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
+		tab_factura.getColumna("base_aprobada_fafac").setFormatoNumero(2);
 		tab_factura.getColumna("valor_iva_fafac").setEtiqueta();
 		tab_factura.getColumna("valor_iva_fafac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_factura.getColumna("total_fafac").setEtiqueta();
@@ -399,7 +400,22 @@ public class pre_factura extends Pantalla{
 		bar_botones.agregarBoton(bot_crearCliente);
 
 	}
-	public void fechaVencimiento(){
+	public void fechaVencimiento(AjaxBehaviorEvent evt){		
+		tab_factura.modificar(evt);
+					
+		int numero_dias=Integer.parseInt(utilitario.getVariable("p_dias_calculo_interes_mora_nd"));
+		String fecha= tab_factura.getValor("fecha_transaccion_fafac");
+		Date fecha_a_sumar=utilitario.DeStringADate(fecha);		
+		Date nueva_fecha=utilitario.sumarDiasFecha(fecha_a_sumar, numero_dias);
+		String str_fecha=utilitario.DeDateAString(nueva_fecha);
+		tab_factura.setValor("fecha_vencimiento_fafac", str_fecha);
+		utilitario.addUpdateTabla(tab_factura, "fecha_vencimiento_fafac", "");
+
+	}
+	
+	
+	public void fechaVencimientoInserta(){		
+			
 		int numero_dias=Integer.parseInt(utilitario.getVariable("p_dias_calculo_interes_mora_nd"));
 		String fecha= tab_factura.getValor("fecha_transaccion_fafac");
 		Date fecha_a_sumar=utilitario.DeStringADate(fecha);		
@@ -895,7 +911,7 @@ public class pre_factura extends Pantalla{
 				tab_detalle_factura.insertar();
 				}
 			}
-			fechaVencimiento();
+			fechaVencimientoInserta();
 		}
 		else{
 			utilitario.agregarMensajeError("Debe seleccionar los datos de Facturación","");
