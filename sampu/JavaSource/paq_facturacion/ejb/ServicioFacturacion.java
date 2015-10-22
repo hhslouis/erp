@@ -109,7 +109,7 @@ public class ServicioFacturacion {
 							tab_datos_factura +=" where fecha_transaccion_fafac between '"+fecha_inicial+"' and '"+fecha_final+"'"	;
 						}
 						tab_datos_factura += " 	order by secuencial_fafac";
-							System.out.println("datos factura "+tab_datos_factura);
+							System.out.println("datos factura contabilizar"+tab_datos_factura);
 							return tab_datos_factura;
 		}
 		
