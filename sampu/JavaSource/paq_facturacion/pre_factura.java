@@ -132,8 +132,10 @@ public class pre_factura extends Pantalla{
 		tab_factura.getColumna("base_aprobada_fafac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_factura.getColumna("base_aprobada_fafac").setFormatoNumero(2);
 		tab_factura.getColumna("valor_iva_fafac").setEtiqueta();
+		tab_factura.getColumna("valor_iva_fafac").setFormatoNumero(2);
 		tab_factura.getColumna("valor_iva_fafac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_factura.getColumna("total_fafac").setEtiqueta();
+		tab_factura.getColumna("total_fafac").setFormatoNumero(2);
 		tab_factura.getColumna("total_fafac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_factura.getColumna("secuencial_fafac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
 		tab_factura.getColumna("secuencial_fafac").setEtiqueta();
@@ -189,6 +191,7 @@ public class pre_factura extends Pantalla{
 		tab_detalle_factura.getColumna("total_fadef").setEtiqueta();
 		tab_detalle_factura.getColumna("total_fadef").setEstilo("font-size:13px;font-weight:bold;");
 		tab_detalle_factura.getColumna("valor_fadef").setEtiqueta();
+		tab_detalle_factura.getColumna("valor_fadef").setFormatoNumero(2);
 		tab_detalle_factura.getColumna("valor_fadef").setEstilo("font-size:13px;font-weight:bold;");
 		//LLAMAR A ESTE METODO CUANDO EL USUARIO, MODIFIQUE LA CANTIDAD O EL VALOR DESDE LA APLICACION
 		tab_detalle_factura.getColumna("cantidad_fadef").setMetodoChange("calcularDetalle");
