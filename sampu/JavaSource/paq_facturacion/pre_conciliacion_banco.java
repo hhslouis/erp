@@ -153,8 +153,11 @@ public class pre_conciliacion_banco extends Pantalla {
     	//tab_tabla.getColumna("ide_coest").setVisible(false);
     	tab_tabla.getColumna("secuencial_fafac").setLectura(true);
     	tab_tabla.getColumna("base_aprobada_fafac").setLectura(true);
+    	tab_tabla.getColumna("base_aprobada_fafac").setFormatoNumero(2);
     	tab_tabla.getColumna("valor_iva_fafac").setLectura(true);
+    	tab_tabla.getColumna("valor_iva_fafac").setFormatoNumero(2);
     	tab_tabla.getColumna("total_fafac").setLectura(true);
+    	tab_tabla.getColumna("total_fafac").setFormatoNumero(2);
     	//tab_tabla.getColumna("conciliado_fafac").setLectura(true);
     	tab_tabla.getColumna("activo_fafac").setLectura(true);
     	tab_tabla.getColumna("factura_fisica_fafac").setLectura(true);
