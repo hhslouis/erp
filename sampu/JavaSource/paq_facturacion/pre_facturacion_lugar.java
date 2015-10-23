@@ -138,10 +138,13 @@ public class pre_facturacion_lugar extends Pantalla{
 		tab_factura.getColumna("base_cero_fafac").setEtiqueta();
 		tab_factura.getColumna("base_cero_fafac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_factura.getColumna("base_aprobada_fafac").setEtiqueta();
+		tab_factura.getColumna("base_aprobada_fafac").setFormatoNumero(2);
 		tab_factura.getColumna("base_aprobada_fafac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_factura.getColumna("valor_iva_fafac").setEtiqueta();
+		tab_factura.getColumna("valor_iva_fafac").setFormatoNumero(2);
 		tab_factura.getColumna("valor_iva_fafac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_factura.getColumna("total_fafac").setEtiqueta();
+		tab_factura.getColumna("total_fafac").setFormatoNumero(2);
 		tab_factura.getColumna("total_fafac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_factura.getColumna("secuencial_fafac").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
 		tab_factura.getColumna("secuencial_fafac").setEtiqueta();
