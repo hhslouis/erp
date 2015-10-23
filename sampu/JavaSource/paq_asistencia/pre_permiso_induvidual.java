@@ -94,9 +94,12 @@ public class pre_permiso_induvidual extends Pantalla {
 		else
 		{
 	
-        Etiqueta eti_recaudador = new Etiqueta("EMPLEADO :");
-        eti_recaudador.setStyle("font-size: 15px;font-weight: bold;text-aling:left");
-        bar_botones.agregarComponente(aut_recaudador);
+      
+        
+        Etiqueta eti_colaborador=new Etiqueta("CLIENTE:");
+		bar_botones.agregarComponente(eti_colaborador);
+		bar_botones.agregarComponente(aut_recaudador);
+		
         
         
        	aut_recaudador.setId("aut_recaudador");
@@ -466,11 +469,11 @@ public class pre_permiso_induvidual extends Pantalla {
 	public void insertar() {
 		// TODO Auto-generated method stub
 		if (tab_permisos.isFocus()){
-			if (aut_empleado.getValor()!=null){
-				if (ide_geedp_activo!=null && !ide_geedp_activo.isEmpty()){					
+			if (ide_empleado!=null){
+				if (ide_geedp_activo!=null){					
 					tab_permisos.insertar();
 					tab_permisos.setValor("IDE_GEEDP",ide_geedp_activo);
-					tab_permisos.setValor("IDE_GTEMP", aut_empleado.getValor());									
+					tab_permisos.setValor("IDE_GTEMP", aut_recaudador.getValor());									
 				}else{
 					utilitario.agregarMensajeInfo("No se puede insertar", "El contrato del empleado no esta activo");
 				}					
@@ -557,7 +560,7 @@ public class pre_permiso_induvidual extends Pantalla {
 	@Override
 	public void guardar() {
 		// TODO Auto-generated method stub
-		if (aut_empleado.getValor()!=null){
+		if (ide_empleado!=null){
 			System.out.println("ingresa al if de autocompletar: ");
 			if (validarSolicitudPermiso()){
 				System.out.println("ingresa al if : validarSolicitudPermiso");
