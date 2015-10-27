@@ -52,7 +52,7 @@ import framework.componentes.Texto;
 
 public class pre_permiso_induvidual_dias extends Pantalla {
 
-	private Tabla tab_recaudacion = new Tabla();
+	//private Tabla tab_recaudacion = new Tabla();
 	private Tabla tab_permisos=new Tabla();
 	private AutoCompletar aut_recaudador = new AutoCompletar();
 	private AutoCompletar aut_sucursal= new AutoCompletar();
@@ -75,8 +75,7 @@ public class pre_permiso_induvidual_dias extends Pantalla {
 	String ide_empleado="";
 	String ide_empleado1="";
 	String ide_sucursal="";
-	String nom_empleado="";
-	
+	int empleado_entero=0;
 	private Dialogo dia_anulado=new Dialogo();
 	private AreaTexto are_tex_razon_anula=new AreaTexto();
 	private Texto tex_documento_anula=new Texto();
@@ -89,9 +88,12 @@ public class pre_permiso_induvidual_dias extends Pantalla {
 	public pre_permiso_induvidual_dias() {
 		ide_empleado=obtenerEmpleado();
 		ide_empleado1=filtrarEmpleado(ide_empleado);
-	System.out.println("ide_geedp_activo"+ide_empleado1);
-	
-		if (ide_empleado1==null){
+		try {
+			empleado_entero=Integer.parseInt(ide_empleado1);
+		} catch (Exception e) {
+		}
+
+	if (ide_empleado1==null){
 			utilitario.agregarNotificacion("EMPLEADO INACTIVO", "El usuario no contiene Contrato vigente", "");
 			return;
 	}else
@@ -100,7 +102,7 @@ public class pre_permiso_induvidual_dias extends Pantalla {
         eti_recaudador.setStyle("font-size: 15px;font-weight: bold;text-aling:left");
         bar_botones.agregarComponente(eti_recaudador);
         
-             
+        //autocompletar     
        	aut_recaudador.setId("aut_recaudador");
        	aut_recaudador.setStyle("text-aling:left");
         aut_recaudador.setAutoCompletar("select ide_gtemp,apellido_paterno_gtemp,apellido_materno_gtemp,primer_nombre_gtemp,segundo_nombre_gtemp from gth_empleado");
@@ -108,20 +110,17 @@ public class pre_permiso_induvidual_dias extends Pantalla {
        	aut_recaudador.setDisabled(true);
        	bar_botones.agregarComponente(aut_recaudador);
         bar_botones.getBot_eliminar().setRendered(false); 	
-       	
-       	
-       	
+    	bar_botones.getBot_inicio().setMetodo("inicio");
+		bar_botones.getBot_fin().setMetodo("fin");
+		bar_botones.getBot_siguiente().setMetodo("siguiente");
+		bar_botones.getBot_atras().setMetodo("atras");
        	tab_permisos.setId("tab_permisos");
 		tab_permisos.setTabla("ASI_PERMISOS_VACACION_HEXT", "IDE_ASPVH", 1);
 		tab_permisos.getColumna("TIPO_ASPVH").setValorDefecto("1");// 1 permisos 
-		tab_permisos.agregarRelacion(tab_permiso_justificacion);
 		tab_permisos.getColumna("TIPO_ASPVH").setVisible(false);
-		tab_permisos.getColumna("IDE_GTEMP").setVisible(false);
-		tab_permisos.getColumna("IDE_GEEDP").setVisible(false);
-
-
+	    tab_permisos.getColumna("IDE_GTEMP").setVisible(false);
+	    tab_permisos.getColumna("IDE_GEEDP").setVisible(false);
 		tab_permisos.getColumna("APROBADO_ASPVH").setCheck();
-		//		tab_permisos.getColumna("IDE_ASMOT").setCombo("ASI_MOTIVO", "IDE_ASMOT", "DETALLE_ASMOT", "");
 		tab_permisos.getColumna("IDE_ASMOT").setCombo("select IDE_ASMOT,DETALLE_ASMOT from ASI_MOTIVO order by DETALLE_ASMOT");		
 		tab_permisos.getColumna("IDE_GEMES").setVisible(false);
 		tab_permisos.getColumna("IDE_GEANI").setVisible(false);
@@ -174,9 +173,7 @@ public class pre_permiso_induvidual_dias extends Pantalla {
 		tab_permisos.getColumna("documento_anula_aspvh").setVisible(false);
 		tab_permisos.getColumna("razon_anula_aspvh").setVisible(false);
 		tab_permisos.getColumna("fecha_anula_aspvh").setVisible(false);
-		tab_permisos.setCondicion("TIPO_ASPVH=1 AND IDE_GTEMP="+ide_empleado);
 		tab_permisos.getColumna("fecha_hasta_aspvh").setLectura(true);
-
 		tab_permisos.getColumna("aprobado_tthh_aspvh").setLectura(true);
 		tab_permisos.getColumna("aprobado_aspvh").setLectura(true);
 		tab_permisos.getColumna("aprobado_tthh_aspvh").setLectura(true);
@@ -186,7 +183,7 @@ public class pre_permiso_induvidual_dias extends Pantalla {
 		tab_permisos.setTipoFormulario(true);
 		tab_permisos.getColumna("ANULADO_ASPVH").setCheck();
 		tab_permisos.getColumna("APROBADO_TTHH_ASPVH").setCheck();
-	//	tab_permisos.setCondicion("TIPO_ASPVH=1 AND IDE_GEEDP=-1");
+	    tab_permisos.setCondicion("TIPO_ASPVH=1 AND IDE_GEEDP="+empleado_entero);
 		tab_permisos.dibujar();
 
 		PanelTabla pat_panel1=new PanelTabla();
@@ -204,312 +201,82 @@ public class pre_permiso_induvidual_dias extends Pantalla {
        
 	}
 		
-	
-	
-	
-	
-	
-
 	public String obtenerEmpleado(){
 		String empleado="";
 		String empleado1="";
 		List list_sql1 = utilitario.getConexion().consultar("select ide_gtemp from sis_usuario where ide_usua= "+utilitario.getVariable("IDE_USUA"));	
 			if (!list_sql1.isEmpty() && list_sql1.get(0) != null){
 			empleado=String.valueOf(list_sql1.get(0));
-			
-			
 		}
 		return empleado;
-	}
+		}
 	
-	
-	
-		public void aplicaVacacion(){
-			if(tab_permisos.getValor("ide_aspvh")==null){
-				utilitario.agregarMensajeInfo("No existe registro", "No se puede aplicar vacación no existe un registro.");
-				return;
-			}
-			if(tab_permisos.getValor("registro_novedad_aspvh").equals("true")){
-				utilitario.agregarMensajeInfo("Vacación Aplicada", "Ya se encuentra aplicada la vacación");
-				return;
-			}
-			TablaGenerica tab_consulta_vacacion = utilitario.consultar(ser_asistencia.getSqlConsultaVacacion(tab_permisos.getValor("ide_aspvh")));
-			if(tab_consulta_vacacion.getTotalFilas()>0){
-			double valor = (Double.parseDouble( tab_permisos.getValor("nro_horas_aspvh"))/8);
-		
-		    TablaGenerica tab_codigo =utilitario.consultar(ser_contabilidad.servicioCodigoMaximo("asi_detalle_vacacion", "ide_asdev"));
-			utilitario.getConexion().ejecutarSql("insert into asi_detalle_vacacion (ide_asdev,ide_aspvh,ide_asvac,fecha_novedad_asdev,dia_descontado_asdev,observacion_asdev,activo_asdev)"
-					+"values ( "+tab_codigo.getValor("codigo")+","+tab_permisos.getValor("ide_aspvh")+","+tab_consulta_vacacion.getValor("ide_asvac")+",'"+tab_permisos.getValor("fecha_solicitud_aspvh")+"',"+valor+",'"+tab_permisos.getValor("detalle_aspvh")+"',true )");
-			
-			tab_permisos.setValor("registro_novedad_aspvh", "true");
-			tab_permisos.modificar(tab_permisos.getFilaActual());//para que haga el update
-			tab_permisos.guardar();
-			guardarPantalla();
-			utilitario.addUpdate("tab_permisos");
-			utilitario.agregarMensaje("Aplicado Vacación", "Se aplico descuento a vacaciones exitosamente");
-			}
-			else{
-				utilitario.agregarMensajeInfo("No existe vacación", "No empleado seleccionado no posee un periodo de vacaciones activo");
-			}
-			
-		}
-		public void deshacerAplicaVacacion(){
-			if(tab_permisos.getValor("ide_aspvh")==null){
-				utilitario.agregarMensajeInfo("No existe registro", "No se puede aplicar vacación no existe un registro.");
-				return;
-			}
-			utilitario.getConexion().ejecutarSql("delete from asi_detalle_vacacion where ide_aspvh="+tab_permisos.getValor("ide_aspvh"));
-			tab_permisos.setValor("registro_novedad_aspvh", "false");
-			tab_permisos.modificar(tab_permisos.getFilaActual());//para que haga el update
-			tab_permisos.guardar();
-			guardarPantalla();
-			utilitario.addUpdate("tab_permisos");
-			utilitario.agregarMensaje("Aplicado Deshacer Vacación", "Se descontó a vacaciones exitosamente");
-			
-		}
-		
-
-	public void aprobarSolicitud(){	
-		if(aut_empleado.getValor()!=null && !aut_empleado.getValor().isEmpty()){
-			if(tab_permisos.getTotalFilas()>0){
-				if(tab_permisos.getValor("anulado_aspvh").equalsIgnoreCase("true")){
-					utilitario.agregarMensajeInfo("No se puede Aprobar la Solicitud ", "Solicitud se encuentra Anulada");
-					return;
-				}
-				if(tab_permisos.getValor("aprobado_aspvh").equalsIgnoreCase("true")){
-					utilitario.agregarMensajeInfo("No se puede Aprobar la Solicitud ", "Solicitud se encuentra Aprobada");
-					return;
-				}
-				con_guardar.setMessage("Esta Seguro de Aprobar La Solicitud de Permiso");
-				con_guardar.setTitle("CONFIRMACION APROBACION DE SOLICITUD DE PERMISO");
-				con_guardar.getBot_aceptar().setMetodo("aceptarAprobarSolicitud");
-				con_guardar.dibujar();
-				utilitario.addUpdate("con_guardar");
-			}else{
-				utilitario.agregarMensajeInfo("No se puede Aprobar la Solicitud ", "El Empleado no Tiene Solicitudes");
-			}		
-		}else{
-			utilitario.agregarMensajeInfo("No se puede Aprobar la Solicitud ", "Debe seleccionar un Empleado");
-		}
-	}
-
-	public void aceptarAprobarSolicitud(){		
-		utilitario.getConexion().agregarSqlPantalla("update ASI_PERMISOS_VACACION_HEXT set aprobado_aspvh=true where TIPO_ASPVH=1 and ide_aspvh="+tab_permisos.getValorSeleccionado());
-		guardarPantalla();
-		con_guardar.cerrar();	
-		String ide_anterior=tab_permisos.getValorSeleccionado();		
-		tab_permisos.ejecutarSql();
-		tab_permisos.setFilaActual(ide_anterior);	
-	}
-
-	public void anularSolicitud(){		
-		if(aut_empleado.getValue()!=null && !aut_empleado.getValue().toString().isEmpty()){
-			if(tab_permisos.getTotalFilas()>0){
-				if(tab_permisos.getValor("anulado_aspvh").equalsIgnoreCase("true")){
-					utilitario.agregarMensajeInfo("No se puede Aprobar la Solicitud ", "Solicitud se encuentra Anulada");
-					return;
-				}
-				dia_anulado.dibujar();
-			}else{
-				utilitario.agregarMensajeInfo("No se puede Aprobar los Permisos ", "El Empleado no Tiene Solicitudes");
-			}			
-		}else{
-			utilitario.agregarMensajeInfo("No se puede Anular los permisos ", "Debe seleccionar un Empleado");
-		}
-	}
-
-	public void aceptarAnulacionHorasPermisos(){
-		if (are_tex_razon_anula.getValue()!=null && !are_tex_razon_anula.getValue().toString().isEmpty()) {
-			if(tex_documento_anula.getValue()!=null && !tex_documento_anula.getValue().toString().isEmpty()){
-				if (cal_fecha_anula.getValue()!=null && !cal_fecha_anula.getValue().toString().isEmpty()) {
-					tab_permisos.setValor("razon_anula_aspvh",are_tex_razon_anula.getValue().toString());
-					tab_permisos.setValor("documento_anula_aspvh",tex_documento_anula.getValue().toString());
-					tab_permisos.setValor("fecha_anula_aspvh", cal_fecha_anula.getFecha());
-					tab_permisos.modificar(tab_permisos.getFilaActual());
-					tab_permisos.guardar();
-					utilitario.getConexion().agregarSqlPantalla("update ASI_PERMISOS_VACACION_HEXT set anulado_aspvh=1 where ide_aspvh="+tab_permisos.getValorSeleccionado());					
-					guardarPantalla();
-					dia_anulado.cerrar();
-					String ide_anterior=tab_permisos.getValorSeleccionado();		
-					tab_permisos.ejecutarSql();
-					tab_permisos.setFilaActual(ide_anterior);
-				} else {
-					utilitario.agregarMensajeInfo("No se puede anular la solicitud", "Debe seleccionar una Fecha para para anular los Permisos");
-				}	
-			}else{
-				utilitario.agregarMensajeInfo("No se puede anular la solicitud", "Debe Ingresar El Documento de Anulación para anular  los Permisos");
-			}					
-		} else {
-			utilitario.agregarMensajeInfo("No se puede anular la solicitud", "Debe ingresar una Razon para anular  los Permisos");
-		}	
-	}
-
-
-
-	public void aprobacionTalentoHumano(){
-		if(aut_empleado.getValor()!=null && !aut_empleado.getValor().isEmpty()){
-			if(tab_permisos.getTotalFilas()>0){
-				if(tab_permisos.getValor("anulado_aspvh").equalsIgnoreCase("true")){
-					utilitario.agregarMensajeInfo("No se puede Aprobar la Solicitud ", "Solicitud se encuentra Anulada");
-					return;
-				}
-				if(tab_permisos.getValor("aprobado_tthh_aspvh").equalsIgnoreCase("true")){
-					utilitario.agregarMensajeInfo("No se puede Aprobar la Solicitud ", "Solicitud se encuentra Aprobada");
-					return;
-				}
-				if(tab_permisos.getValor("aprobado_tthh_aspvh").equalsIgnoreCase("true")){
-					utilitario.agregarMensajeInfo("No se puede continuar", "Ya se encuentra aprobado por Talento Humano");
-					return;
-				}
-				con_guardar.setMessage("Esta Seguro de Aprobar La Solicitud de Talento Humano");
-				con_guardar.setTitle("CONFIRMACION APROBACION DE TALENTO HUMANO");
-				con_guardar.getBot_aceptar().setMetodo("aceptarAprobarSolicitudTalento");
-				con_guardar.dibujar();
-				utilitario.addUpdate("con_guardar");
-			}else{
-				utilitario.agregarMensajeInfo("No se puede Aprobar la Solicitud ", "El Empleado no Tiene Solicitudes");
-			}		
-		}else{
-			utilitario.agregarMensajeInfo("No se puede Aprobar la Solicitud ", "Debe seleccionar un Empleado");
-		}					
-	}
-
-	public void aceptarAprobarSolicitudTalento(){
-		utilitario.getConexion().agregarSqlPantalla("update ASI_PERMISOS_VACACION_HEXT set aprobado_tthh_aspvh=true where TIPO_ASPVH=1 and ide_aspvh="+tab_permisos.getValorSeleccionado());
-		guardarPantalla();
-		con_guardar.cerrar();	
-		String ide_anterior=tab_permisos.getValorSeleccionado();		
-		tab_permisos.ejecutarSql();
-		tab_permisos.setFilaActual(ide_anterior);
-	}
-
-	/**
-	 * metodo para el boton Inicio del navegador de paginas, muestra el primer registro de la tabla 
-	 * 
-	 */
 	@Override
 	public void inicio() {
 		// TODO Auto-generated method stub
 		super.inicio();
-		actualizarTabla2();
-	}
-
-
-	/**
-	 * metodo para el boton Fin del navegador de paginas, muestra el ultimo registro de la tabla 
-	 * 
-	 */
+						}
 	@Override
 	public void fin() {
 		// TODO Auto-generated method stub
 		super.fin();
-		actualizarTabla2();
 	}
 
-
-	/**
-	 * metodo para el boton Siguiente del navegador de paginas, muestra un registro posterior del registro actual de la tabla 
-	 * 
-	 */
 	@Override
 	public void siguiente() {
 		// TODO Auto-generated method stub
 		super.siguiente();
-		actualizarTabla2();
 	}
 
-
-	/**
-	 * metodo para el boton Atras del navegador de paginas, muestra un registro anterior del registro actual de la tabla 
-	 * 
-	 */
 	@Override
 	public void atras() {
 		// TODO Auto-generated method stub
 		super.atras();
-		actualizarTabla2();
 	}
 
 
 	@Override
 	public void actualizar() {
-		// TODO Auto-generated method stub
 		super.actualizar();
-		actualizarTabla2();
 	}
 
 	@Override
 	public void aceptarBuscar() {
 		// TODO Auto-generated method stub
 		super.aceptarBuscar();
-		actualizarTabla2();
-	}
-
-	public void actualizarTabla2(){
-		tab_permiso_justificacion.setCondicion("IDE_ASPVH="+tab_permisos.getValorSeleccionado());
-		tab_permiso_justificacion.ejecutarSql();		
-
 	}
 
 	String ide_geedp_activo="";
 	public String filtrarEmpleado(String ide_empleado){
 		ide_geedp_activo=ser_gestion.getIdeContratoActivo(ide_empleado);
-//		System.out.println("ide_geedp_activo"+ide_geedp_activo);
 		return ide_geedp_activo;
-	}
-	
+		}
 
-	/**
-	 * limpia toda la pantalla incluyendo el autocompletar
-	 */
-	public void limpiar() {
-		tab_permisos.limpiar();
-		tab_permiso_justificacion.limpiar();
-		ide_geedp_activo="";
-		aut_empleado.limpiar();
-		sel_cal.Limpiar();
-
-		utilitario.addUpdate("aut_empleado");// limpia y refresca el autocompletar
-	}
-
-
-	/* (non-Javadoc)
-	 * @see paq_sistema.aplicacion.Pantalla#insertar()
-	 * metodo para insertar un registro en cualquier tabla de la pantalla
-	 */
 	@Override
 	public void insertar() {
 		// TODO Auto-generated method stub
 		if (tab_permisos.isFocus()){
 			if (ide_empleado!=null){
-			//	if (ide_geedp_activo!=null && !ide_geedp_activo.isEmpty()){	
+				if (ide_geedp_activo!=null && !ide_geedp_activo.isEmpty()){	
 					tab_permisos.insertar();
 					tab_permisos.setValor("IDE_GEEDP",ide_geedp_activo);
 					tab_permisos.setValor("IDE_GTEMP", aut_recaudador.getValor());									
-			System.out.println("impresion"+ide_geedp_activo);
-					//utilitario.agregarMensajeInfo("No se puede insertar", "El contrato del empleado no esta activo");
-				//}else{
-					//utilitario.agregarMensajeInfo("No se puede insertar", "Debe seleccionar un empleado valido");
-				//}					
+				}else{
+					utilitario.agregarMensajeInfo("No se puede insertar", "Debe seleccionar un empleado valido");
+				}					
 			}else{
 				utilitario.agregarMensajeInfo("No se puede insertar", "Debe seleccionar el Empleado que solicita el Permiso");
-			}
-		}else if(tab_permiso_justificacion.isFocus()){
-			tab_permiso_justificacion.insertar();
-		}
+			     }
+		     }
 	}
 
 	public boolean isHoraMayor(String hora_ini,String hora_fin){
 		try {
 			DateFormat dateFormat = new  SimpleDateFormat ("hh:mm:ss");
-
 			String hora1 = utilitario.getFormatoHora(hora_ini);
 			String hora2 = utilitario.getFormatoHora(hora_fin);
-
 			int int_hora1=Integer.parseInt(hora1.replaceAll(":", ""));
 			int int_hora2=Integer.parseInt(hora2.replaceAll(":", ""));
-
-
 			if(int_hora1>int_hora2){
 				return true;
 			}
@@ -580,10 +347,7 @@ public class pre_permiso_induvidual_dias extends Pantalla {
 				System.out.println("ingresa al if : validarSolicitudPermiso");
 				if (tab_permisos.guardar()){
 					System.out.println("ingresa al if : tab_permisos");
-					if (tab_permiso_justificacion.guardar()) {
-						System.out.println("ingresa al if : tab_permiso_justificacion");
-						guardarPantalla();	
-					}					
+					guardarPantalla();	
 				}
 			}
 		}else{
@@ -592,7 +356,6 @@ public class pre_permiso_induvidual_dias extends Pantalla {
 	}
 	@Override
 	public void eliminar() {
-		// TODO Auto-generated method stub
 		if (utilitario.getTablaisFocus().isFilaInsertada()){
 			utilitario.getTablaisFocus().eliminar();
 		}
@@ -877,67 +640,40 @@ public class pre_permiso_induvidual_dias extends Pantalla {
 			utilitario.agregarMensajeInfo("HORA INICIAL NO PUEDE SER  MENOR A HORA FINAL", "");
 		}
 	}
-
-	public Tabla getTab_permiso_justificacion() {
-		return tab_permiso_justificacion;
-	}
-
-	public void setTab_permiso_justificacion(Tabla tab_permiso_justificacion) {
-		this.tab_permiso_justificacion = tab_permiso_justificacion;
-	}
 	public AutoCompletar getAut_recaudador() {
 		return aut_recaudador;
 	}
-
-
 
 	public void setAut_recaudador(AutoCompletar aut_recaudador) {
 		this.aut_recaudador = aut_recaudador;
 	}
 
-
-
 	public AutoCompletar getAut_sucursal() {
 		return aut_sucursal;
 	}
-
-
-
 	public void setAut_sucursal(AutoCompletar aut_sucursal) {
 		this.aut_sucursal = aut_sucursal;
 	}
-
-
 
 	public ServicioEmpleado getSer_empleado() {
 		return ser_empleado;
 	}
 
-
-
 	public void setSer_empleado(ServicioEmpleado ser_empleado) {
 		this.ser_empleado = ser_empleado;
 	}
-
-
 
 	public String getIde_empleado() {
 		return ide_empleado;
 	}
 
-
-
 	public void setIde_empleado(String ide_empleado) {
 		this.ide_empleado = ide_empleado;
 	}
 
-
-
 	public String getIde_sucursal() {
 		return ide_sucursal;
 	}
-
-
 
 	public void setIde_sucursal(String ide_sucursal) {
 		this.ide_sucursal = ide_sucursal;
