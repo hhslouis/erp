@@ -28,6 +28,7 @@ public class pre_inventario extends Pantalla{
 	private SeleccionTabla set_material=new SeleccionTabla();
 	private SeleccionTabla set_actualizamaterial=new SeleccionTabla();
 	private SeleccionTabla set_reporte_inventario=new SeleccionTabla();
+	private SeleccionTabla set_buscar = new SeleccionTabla();
 	private Confirmar con_guardar=new Confirmar();
 	public static String par_grupo_material;
 	private Map p_parametros = new HashMap();
@@ -100,6 +101,14 @@ public class pre_inventario extends Pantalla{
 		bot_material.setMetodo("importarMaterial");
 		bar_botones.agregarBoton(bot_material);
 
+		
+		Boton bot_buscar = new Boton();
+		bot_buscar.setValue("Buscar Inventario");
+		bot_buscar.setTitle("BUSCAR");
+		bot_buscar.setIcon("ui-icon-person");
+		bot_buscar.setMetodo("buscarMaterial");
+		bar_botones.agregarBoton(bot_buscar);
+		
 		set_material.setId("set_material");
 		set_material.setSeleccionTabla(ser_Bodega.getInventario("0","true",par_grupo_material),"ide_bomat");
 		set_material.getTab_seleccion().getColumna("codigo_bomat").setFiltro(true);
@@ -148,7 +157,34 @@ public class pre_inventario extends Pantalla{
 	
 		set_reporte_inventario.getBot_aceptar().setMetodo("aceptarReporte");
 		agregarComponente(set_reporte_inventario);
+		
+		/// INSTANCIO TABLA PARA BUSCAR
+		set_buscar.setId("set_buscar");
+		set_buscar.setSeleccionTabla(ser_Bodega.getInventario("0","true",par_grupo_material),"ide_bomat");
+		set_buscar.getTab_seleccion().getColumna("codigo_bomat").setFiltro(true);
+		set_buscar.getTab_seleccion().getColumna("detalle_bomat").setFiltro(true);
+		set_buscar.getTab_seleccion().getColumna("detalle_bogrm").setFiltro(true);
+		set_buscar.getBot_aceptar().setMetodo("filtraMaterial");
+		set_buscar.getTab_seleccion().ejecutarSql();
+		set_buscar.setRadio();
+		agregarComponente(set_buscar);
 
+	}
+	public void buscarMaterial(){
+		if(com_anio.getValue()==null){
+			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
+			return;
+		}
+
+		set_buscar.getTab_seleccion().setSql(ser_Bodega.getInventario("0","true",par_grupo_material));
+		set_buscar.getTab_seleccion().ejecutarSql();
+		set_buscar.dibujar();
+	}
+	public void filtraMaterial(){
+		tab_inventario.setCondicion("ide_bomat="+set_buscar.getValorSeleccionado());
+		tab_inventario.ejecutarSql();
+		set_buscar.cerrar();
+		utilitario.addUpdate("tab_inventario");
 	}
 	public void imprimirKardex(){
 		if (tab_inventario.getValor("ide_geani")==null){
@@ -423,6 +459,12 @@ public void aceptarReporte(){
 	}
 	public void setRep_reporte(Reporte rep_reporte) {
 		this.rep_reporte = rep_reporte;
+	}
+	public SeleccionTabla getSet_buscar() {
+		return set_buscar;
+	}
+	public void setSet_buscar(SeleccionTabla set_buscar) {
+		this.set_buscar = set_buscar;
 	} 
 
 }
