@@ -26,6 +26,7 @@ public class pre_asiento_tipo extends Pantalla{
 		tab_asiento_contable.setId("tab_asiento_contable");
 		tab_asiento_contable.setTabla("cont_nombre_asiento_contable", "ide_conac", 1);
 		tab_asiento_contable.getColumna("ide_gemod").setCombo("select ide_gemod,detalle_gemod from gen_modulo");
+		tab_asiento_contable.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
 		tab_asiento_contable.agregarRelacion(tab_estado);
 		tab_asiento_contable.agregarRelacion(tab_reglas_asiento);
 		tab_asiento_contable.dibujar();
@@ -39,7 +40,7 @@ public class pre_asiento_tipo extends Pantalla{
 		tab_estado.setTabla("cont_asiento_tipo", "ide_coast", 2);	
 		tab_estado.getColumna("ide_bogrm").setCombo("select ide_bogrm,detalle_bogrm from bodt_grupo_material order by detalle_bogrm");
 		tab_estado.getColumna("ide_bogrm").setAutoCompletar();
-		tab_estado.getColumna("ide_cocac").setCombo(ser_contabilidad.servicioCatalogoCuentasTransaccion("1"));
+		tab_estado.getColumna("ide_cocac").setCombo(ser_contabilidad.servicioCatalogoCuentaCombo());
 		tab_estado.getColumna("ide_cocac").setAutoCompletar();
 		tab_estado.getColumna("ide_gelua").setCombo("select ide_gelua,detalle_gelua from gen_lugar_aplica");
 		tab_estado.getColumna("ide_coest").setCombo("select ide_coest,detalle_coest from cont_estado order by detalle_coest");
