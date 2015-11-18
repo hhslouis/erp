@@ -73,6 +73,10 @@ public String getAnioDetalle (String activo, String bloqueado ){
 	return tab_anio;
 
 	}
+public String getNombreAsientoContable (String modulo, String estado ){
+	String tab_asiento= "select a.ide_conac,ide_gemod,detalle_conac,consolidado_conac,individual_conac,activo_conac,ide_coest from cont_nombre_asiento_contable a where ide_gemod in ( "+modulo+") and activo_conac in ("+estado+")" ;
+	return tab_asiento;
+}
 public TablaGenerica getTablaAnioDetalle (String activo, String bloqueado ){
 	TablaGenerica tab_anio= utilitario.consultar("select ide_geani,detalle_geani," +
 			" CASE WHEN activo_geani = true THEN 'Activo' ELSE 'Inactivo' END AS activo_geani," +
