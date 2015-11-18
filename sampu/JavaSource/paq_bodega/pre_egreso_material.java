@@ -55,6 +55,9 @@ public class pre_egreso_material extends Pantalla {
 		tab_concepto_egreso.getColumna("IDE_GEEDP").setCombo(ser_nomina.servicioEmpleadoContrato("true"));
 		tab_concepto_egreso.getColumna("gen_ide_geedp").setCombo(ser_nomina.servicioEmpleadoContrato("true"));
 		tab_concepto_egreso.getColumna("gen_ide_geedp2").setCombo(ser_nomina.servicioEmpleadoContrato("true"));
+		tab_concepto_egreso.getColumna("IDE_GEEDP").setAutoCompletar();
+		tab_concepto_egreso.getColumna("gen_ide_geedp").setAutoCompletar();
+		tab_concepto_egreso.getColumna("gen_ide_geedp2").setAutoCompletar();
 		tab_concepto_egreso.agregarRelacion(tab_egreso);
 		tab_concepto_egreso.setTipoFormulario(true);
 		tab_concepto_egreso.getGrid().setColumns(4);	
