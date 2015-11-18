@@ -367,6 +367,7 @@ public class Parametros {
         lis_parametros.add(new Parametro("14", "p_factura_pagado","Indica el estado pagado de la factura","14","cont_estado","ide_coest","detalle_coest"));
         lis_parametros.add(new Parametro("14", "p_estado_conciliacion_bancaria","Indica el estado conciliacion del archivo bancario","14","cont_estado","ide_coest","detalle_coest"));
         lis_parametros.add(new Parametro("14", "p_estado_nota_debito_factura","Indica el estado que cambia la factura cuando se realiza la nota de debito","14","cont_estado","ide_coest","detalle_coest"));
+        lis_parametros.add(new Parametro("14", "p_modulo_nota_debito","Indica el modulo que pertenece a nota de debito","14","gen_modulo","ide_gemod","detalle_gemod"));
 
         /*
          *  ADQUISISCIONES = 15
@@ -409,6 +410,7 @@ public class Parametros {
          * */
         lis_parametros.add(new Parametro("18", "p_tes_impuesto_renta","Indica el tipo impuesto impuesto a la renta","1","tes_tipo_impuesto","ide_tetii","detalle_tetii"));
         lis_parametros.add(new Parametro("18", "p_tes_impuesto_iva","Indica el tipo impuesto impuesto iva","2","tes_tipo_impuesto","ide_tetii","detalle_tetii"));
+        lis_parametros.add(new Parametro("18", "p_tipo_mov_facturacion","Indica el tipo de movimiento a ser utilizado al momento de generar el asiento contable de facturacion","2","cont_tipo_movimiento","ide_cotim","detalle_cotim"));
 
         /*
          * ACTIVOS FIJOS =19
