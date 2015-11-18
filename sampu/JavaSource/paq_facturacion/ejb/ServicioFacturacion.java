@@ -94,25 +94,62 @@ public class ServicioFacturacion {
 		 * @param fecha_inicial si tipo_emision=1, fecha iniciail corresponde a fecha transacccion iniicial, si tipo_emision=2 corresponde a fecha de pago de la factura. 
 		 * @return retorna un string con el siguiente contenido: codigo de la factura, numero del asiento contable, nombre del asiento contable, ruc del proveedor, nombre del proveedor, numero de factura y los respectivos valores de la factura
 		 */
-		public String getDatosFacturaContabilidad(String tipo_emision,String fecha_inicial,String fecha_final){
+		public String getDatosFacturaContabilidad(String tipo_emision,String fecha_inicial,String fecha_final,String estado){
 			String tab_datos_factura="select a.ide_fafac,b.ide_comov,b.ide_coest,b.ide_conac,detalle_coest,detalle_conac,secuencial_fafac,ruc_comercial_recli,razon_social_recli,base_aprobada_fafac,"
 					+" valor_iva_fafac,total_fafac,factura_fisica_fafac,fecha_transaccion_fafac,detalle_bogrm"
 					+" from ("
-						+" 	select ide_fafac,secuencial_fafac,ruc_comercial_recli,razon_social_recli,base_aprobada_fafac,valor_iva_fafac,total_fafac,factura_fisica_fafac,fecha_transaccion_fafac,detalle_bogrm"
+						+" 	select ide_fafac,secuencial_fafac,ruc_comercial_recli,razon_social_recli,base_aprobada_fafac,valor_iva_fafac,total_fafac,factura_fisica_fafac,fecha_transaccion_fafac,detalle_bogrm,fecha_pago_fafac"
 						+" 	from fac_datos_factura a, bodt_grupo_material b,fac_factura c,rec_clientes d "
 						+" 	where a.ide_bogrm = b.ide_bogrm and a.ide_fadaf=c.ide_fadaf and c.ide_recli = d.ide_recli"
 						+" 	) a"
 						+" 	left join cont_factura_asiento b on a.ide_fafac = b.ide_fafac"
-						+" 	left join cont_estado c on b.ide_coest = c.ide_coest"
+						+" 	left join cont_estado c on b.ide_coest = c.ide_coest "
 						+" 	left join cont_nombre_asiento_contable d on b.ide_conac = d.ide_conac";
 						if(tipo_emision.equals("1")){
-							tab_datos_factura +=" where fecha_transaccion_fafac between '"+fecha_inicial+"' and '"+fecha_final+"'"	;
+							tab_datos_factura +=" where fecha_transaccion_fafac between '"+fecha_inicial+"' and '"+fecha_final+"' and b.ide_comov is null "	;
+						}
+						if(tipo_emision.equals("2")){
+							tab_datos_factura +=" where fecha_pago_fafac between '"+fecha_inicial+"' and '"+fecha_final+"' and b.ide_comov is null "	;
 						}
 						tab_datos_factura += " 	order by secuencial_fafac";
 							System.out.println("datos factura contabilizar"+tab_datos_factura);
 							return tab_datos_factura;
 		}
+	
+	 	/**
+		 * Este servicio retorna los datos de la factura para ser insertados en contabilidad.
+		 * @param ide_facturas recibe los ides de las facturas para ser insertados en contabilidad 
+		 * @param lugra_aplica recibe el parametro del lugar que aplica, ejemplo aplica debe, aplica_haber 
+		 * @param ide_conac recibe el codigo del nombre del asiento a contabilizar 
+		 * @param individual_grupal recibe 1 si es grupal 0 si es individual 
+		 * @return retorna un string con el siguiente contenido: codigo de la factura, numero del asiento contable, nombre del asiento contable, ruc del proveedor, nombre del proveedor, numero de factura y los respectivos valores de la factura
+		 */
+	 public String getFacturasInsertaContabilidad(String ide_facturas,String lugar_aplica,String ide_conac,String individual_grupal){
 		
+		 String str_factura_contabilidad="";
+				 if(individual_grupal.equals("1")){
+					 str_factura_contabilidad +="select ide_cocac,ide_gelua,sum(valor_asiento) as valor_asiento,detalle_bogrm, 'De las Facturas ('||textcat_all(secuencial_fafac || ', ') ||')' as secuencial_fafac from ( ";
+				 }
+				 str_factura_contabilidad +="select ide_fafac,a.ide_bogrm,ide_cocac,ide_gelua,ide_coest,ide_conac,tipo_iva_coast,secuencial_fafac,base_aprobada_fafac,valor_iva_fafac,"
+				 +" (case when tipo_iva_coast is true then valor_iva_fafac else base_aprobada_fafac end) as valor_asiento,detalle_bogrm"
+				 +" from ("
+				 +" select ide_bogrm,ide_cocac,ide_gelua,ide_coest,ide_conac,tipo_iva_coast,activo_coast"
+				 +" from cont_asiento_tipo where ide_gelua in (select cast(valor_para as integer) as valor from sis_parametros where nom_para ='"+lugar_aplica+"')"
+				 +" and activo_coast = true"
+				 +" ) a, ("
+				 +" select a.ide_fafac,b.ide_bogrm,secuencial_fafac,base_aprobada_fafac as base_aprobada_fafac,valor_iva_fafac,detalle_bogrm"
+				 +" from fac_factura a, fac_datos_factura b,  bodt_grupo_material c"
+				 +" where a.ide_fadaf = b.ide_fadaf"
+				 +" and b.ide_bogrm = c.ide_bogrm"
+				 +" and a.ide_fafac in ("+ide_facturas+")"
+				 +" ) b"
+				 +" where a.ide_bogrm=b.ide_bogrm and ide_conac ="+ide_conac;
+				 if(individual_grupal.equals("1")){
+					 str_factura_contabilidad +=" ) a group by ide_cocac,ide_gelua,detalle_bogrm";
+				 }
+				 
+		 return str_factura_contabilidad;
+	 }
 	 public TablaGenerica getTablaGenericaFacturasVencidas(String codigo){
 		 
 		 TablaGenerica tab_cabecera_factura=utilitario.consultar("select ide_fafac,ide_recli,fecha_transaccion_fafac,to_date(to_char(now(), 'YYYY/MM/DD'), 'YYYY/MM/DD')  - fecha_transaccion_fafac  as dias_emitido" 
@@ -137,7 +174,7 @@ public class ServicioFacturacion {
 			return utilitario.consultar("select orden,secuencial,fecha_transaccion_fafac, ruc_comercial_recli,rpad,base_aprobada_fafac, valor_iva_fafac, total_fafac,detalle_bogrm,doc_identidad,"
 +" repeat ('0',(15 - length (tot_sin_punto)))||tot_sin_punto as valor_sin_punto,repeat ('0',(15 - length (secuencial)))||secuencial as factura_sin_punto,repeat ('0',(13 - length (ruc_comercial_recli)))||ruc_comercial_recli as ruc_sin_punto,repeat ('0',(7 - length (nuevo_iva)))||nuevo_iva as iva_sin_punto"
 +" from ("
-+" SELECT row_number() over( order by secuencial_fafac) as orden,substring(secuencial_fafac from 9 for 7) as secuencial,fecha_transaccion_fafac, ruc_comercial_recli,rpad(razon_social_recli,30,' ') as rpad,base_aprobada_fafac, valor_iva_fafac, total_fafac,"
++" SELECT row_number() over( order by secuencial_fafac) as orden,replace (secuencial_fafac,'-','') as secuencial,fecha_transaccion_fafac, ruc_comercial_recli,rpad(razon_social_recli,30,' ') as rpad,base_aprobada_fafac, valor_iva_fafac, total_fafac,"
 +" detalle_bogrm,replace(round(total_fafac,2)||'','.','') as tot_sin_punto, ( case when ide_gttdi = 1  then 'P' when ide_gttdi= 2 then 'R' when ide_gttdi= 3 then 'C' end) as doc_identidad,replace((round(valor_iva_fafac,2))||'','.','') as nuevo_iva "
 +" FROM fac_factura fac"
 +" join rec_clientes cli on cli.ide_recli=fac.ide_recli"
