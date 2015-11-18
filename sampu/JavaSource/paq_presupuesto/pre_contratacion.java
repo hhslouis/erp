@@ -37,7 +37,7 @@ public class pre_contratacion extends Pantalla{
 	private Tabla tab_archivo=new Tabla();
 	private Tabla tab_financiamiento=new Tabla();
 	private Tabla tab_funcion_programa=new Tabla();
-
+	private Tabla tab_financiamiento_reforma=new Tabla();
 	private Combo com_anio=new Combo();
 
 	private SeleccionTabla set_clasificador=new SeleccionTabla();
@@ -53,6 +53,7 @@ public class pre_contratacion extends Pantalla{
 	private Map map_parametros = new HashMap();
 	private SeleccionTabla sel_poa= new SeleccionTabla();
 	private SeleccionTabla sel_resolucion= new SeleccionTabla();
+	
 	
 	@EJB
 	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
@@ -118,7 +119,7 @@ public class pre_contratacion extends Pantalla{
 		tab_poa.agregarRelacion(tab_mes);//agraga relacion para los tabuladores
 		tab_poa.agregarRelacion(tab_financiamiento);
 		tab_poa.agregarRelacion(tab_reforma);
-
+		tab_poa.agregarRelacion(tab_financiamiento_reforma);
 
 		tab_poa.dibujar();
 		PanelTabla pat_poa=new PanelTabla();
@@ -175,6 +176,17 @@ public class pre_contratacion extends Pantalla{
 		PanelTabla pat_panel4= new PanelTabla();
 		pat_panel4.setPanelTabla(tab_financiamiento);
 
+		//FINANCIAMIENTO
+		tab_financiamiento_reforma.setId("tab_financiamiento_reforma"); 
+		tab_financiamiento_reforma.setHeader("REFORMA FUENTES DE FINANCIAMIENTO (POA)");
+		tab_financiamiento_reforma.setIdCompleto("tab_tabulador:tab_financiamiento_reforma");
+		tab_financiamiento_reforma.setTabla("pre_poa_reforma_fuente","ide_prprf",7);
+		tab_financiamiento_reforma.getColumna("ide_prfuf").setCombo("pre_fuente_financiamiento","ide_prfuf","detalle_prfuf","");
+
+		tab_financiamiento_reforma.dibujar();
+		PanelTabla pat_panel7= new PanelTabla();
+		pat_panel7.setPanelTabla(tab_financiamiento_reforma);
+		
 		//ARCHIVO
 		tab_archivo.setId("tab_archivo");
 		tab_archivo.setHeader("ARCHIVOS ANEXOS (POA)");
@@ -201,6 +213,7 @@ public class pre_contratacion extends Pantalla{
 		tab_tabulador.agregarTab("EJECUCION MENSUAL", pat_panel2);//intancia los tabuladores 
 		tab_tabulador.agregarTab("REFORMA MENSUAL",pat_panel3);
 		tab_tabulador.agregarTab("FINANCIAMIENTO", pat_panel4);
+		tab_tabulador.agregarTab("REFORMA FINANCIAMIENTO", pat_panel7);
 		tab_tabulador.agregarTab("ARCHIVOS",pat_panel5);
 
 		// factor_competencia
@@ -571,6 +584,9 @@ public void aceptarSelResolucion (){
 			tab_archivo.insertar();
 
 		}
+		else if (tab_financiamiento_reforma.isFocus()){
+			tab_financiamiento_reforma.insertar();
+		}
 	}
 
 	@Override
@@ -601,8 +617,10 @@ public void aceptarSelResolucion (){
 			if (tab_mes.guardar()) {
 				if( tab_financiamiento.guardar()){
 					if(tab_reforma.guardar()){
-						tab_archivo.guardar();	
-						guardarPantalla();
+						if(tab_financiamiento_reforma.guardar()){
+							tab_archivo.guardar();	
+							guardarPantalla();
+						}
 					}
 
 				}
@@ -635,7 +653,9 @@ public void aceptarSelResolucion (){
 		else if (tab_archivo.isFocus()){
 			tab_archivo.eliminar();
 		}
-
+		else if(tab_financiamiento_reforma.isFocus()){
+			tab_financiamiento_reforma.eliminar();
+		}
 	}
 
 	public void filtrarAnio(){
@@ -762,6 +782,14 @@ public void aceptarSelResolucion (){
 	}
 	public void setSel_resolucion(SeleccionTabla sel_resolucion) {
 		this.sel_resolucion = sel_resolucion;
+	}
+
+	public Tabla getTab_financiamiento_reforma() {
+		return tab_financiamiento_reforma;
+	}
+
+	public void setTab_financiamiento_reforma(Tabla tab_financiamiento_reforma) {
+		this.tab_financiamiento_reforma = tab_financiamiento_reforma;
 	}
 
 
