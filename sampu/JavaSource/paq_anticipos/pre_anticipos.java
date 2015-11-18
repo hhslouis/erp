@@ -3371,7 +3371,7 @@ public class pre_anticipos extends Pantalla {
 					System.out.println("EMPLEADOS :"+set_empleado_anticipo.getSeleccionados());
 					p_parametros.put("IDE_GTEMP", set_empleado_anticipo.getSeleccionados());
 					p_parametros.put("titulo","LISTADO DE SOLICITUDES EMPLEADO");
-					System.out.println("path "+rep_reporte.getPath());
+					
 					sef_reporte.setSeleccionFormatoReporte(p_parametros, rep_reporte.getPath());
 					set_empleado_anticipo.cerrar();
 					sef_reporte.dibujar();
