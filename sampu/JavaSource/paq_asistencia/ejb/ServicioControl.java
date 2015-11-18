@@ -31,7 +31,7 @@ public class ServicioControl {
 	 * @return
 	 */
 	public TablaGenerica getEmpleadosControlAsistencia(String fecha){
-		TablaGenerica tab_emple=utilitario.consultar("select  ide_geedp,TARJETA_MARCACION_GTEMP,fecha_evento_cobim,TO_CHAR(fecha_evento_cobim ,'YYYY-MM-DD') AS FECHA_MARCACION, TO_CHAR(fecha_evento_cobim ,'HH24:Mi:SS') AS HORA_MARCACION, EVENTO_RELOJ_COBIM,IDE_SUCU,IDE_GTGRE " +
+		TablaGenerica tab_emple=utilitario.consultar("select  ide_geedp,TARJETA_MARCACION_GTEMP,fecha_evento_cobim,TO_CHAR(fecha_evento_cobim ,'YYYY-MM-DD') AS FECHA_MARCACION, TO_CHAR(fecha_evento_cobim ,'HH24:MM:SS') AS HORA_MARCACION, EVENTO_RELOJ_COBIM,IDE_SUCU,IDE_GTGRE " +
 				"	from ( select ide_geedp,documento_identidad_gtemp,TARJETA_MARCACION_GTEMP,IDE_SUCU,IDE_GTGRE " +
 				"	from  gth_empleado a, gen_empleados_departamento_par b where a.ide_gtemp = b.ide_gtemp and activo_geedp=true " +
 				"	and not ide_geedp in ( 	select ide_geedp from asi_permisos_vacacion_hext where to_date('"+utilitario.getFormatoFecha(fecha)+"','yyyy-mm-dd') between fecha_desde_aspvh and fecha_hasta_aspvh and ide_geest=1 ) " +
@@ -82,7 +82,7 @@ public class ServicioControl {
 	public TablaGenerica getHorariosGrupoEmpleado(){
 		String p_asi_hora_normal="3";
 
-		TablaGenerica tab_horario =utilitario.consultar("SELECT DH.IDE_ASHOR,DH.IDE_GEDIA,HO.IDE_ASGRI,HO.IDE_SUCU,TO_CHAR(HO.HORA_INICIAL_ASHOR ,'HH24:Mi:SS') AS HORA_INICIO,TO_char(HO.HORA_FINAL_ASHOR,'HH24:Mi:SS') AS HORA_FIN,TUR.IDE_GTGRE,TUR.MINUTO_TOLERANCIA_ASTUR,minuto_almuerzo_gtgre " +
+		TablaGenerica tab_horario =utilitario.consultar("SELECT DH.IDE_ASHOR,DH.IDE_GEDIA,HO.IDE_ASGRI,HO.IDE_SUCU,TO_CHAR(HO.HORA_INICIAL_ASHOR ,'HH24:MM:SS') AS HORA_INICIO,TO_char(HO.HORA_FINAL_ASHOR,'HH24:MM:SS') AS HORA_FIN,TUR.IDE_GTGRE,TUR.MINUTO_TOLERANCIA_ASTUR,minuto_almuerzo_gtgre " +
 				"from ASI_DIA_HORARIO dh " +
 				"INNER JOIN ASI_HORARIO ho on DH.IDE_ASHOR=HO.IDE_ASHOR " +
 				"INNER JOIN ASI_TURNOS TUR on DH.IDE_ASHOR=TUR.IDE_ASHOR " +
@@ -95,12 +95,15 @@ public class ServicioControl {
 
 	private void buscaHorarioMarcacion(TablaGenerica tab_horariosGrupo,List<String[]> lis_marcaciones,String fecha){
 		int int_num_dia=utilitario.getNumeroDiasSemana(utilitario.getFecha(fecha));		
-		//1) Busco en la tabla de horariosGrupo
+		//1) Busco en la tabla de horariosGrupo+
 
 		System.out.println("horarios "+tab_horariosGrupo.getTotalFilas()+" lis_marcaciones.size()  "+ lis_marcaciones.size() );
 		for(int indice_marcacion=0;indice_marcacion<lis_marcaciones.size();indice_marcacion++){			
 			String[] str_fila=lis_marcaciones.get(indice_marcacion);
 			System.out.println("entre a horarios marcaciones ");
+			System.out.println("str_fila[1] " +str_fila[1]); 
+			System.out.println("str_fila[2] " +str_fila[2]); 
+			
 			if(str_fila[1]!=null){
 				if(tab_horariosGrupo.getTotalFilas()>0){
 					//Existio marcacion en horario normal					
@@ -113,7 +116,8 @@ public class ServicioControl {
 
 							System.out.println("HORA INICIO "+str_hora_inicio);
 							System.out.println("HORA FIN "+str_hora_fin);
-							
+							System.out.println("str_fila[8] "+str_fila[8]);
+						
 							//Verifico que exista marcación					
 							String str_hora_marcoi=	utilitario.getFormatoHora(str_fila[5]);
 
@@ -125,7 +129,11 @@ public class ServicioControl {
 								if(str_fila[8]!=null &&str_fila[8].equals("1")){
 									System.out.println("entre al str ");
 									// saco la diferencia de las horas
+									
+									
 									double dou_diferencia= utilitario.getDiferenciaHoras(utilitario.getHora(str_hora_inicio), utilitario.getHora(str_hora_marcoi));
+									//double dou_diferencia= utilitario.getDiferenciaHoras(utilitario.DeStringAHora(str_hora_inicio), utilitario.DeStringAHora(str_hora_fin));
+
 									System.out.println("difenercia de horario "+dou_diferencia);
 									
 									tab_valida_asistencia.insertar();
@@ -243,7 +251,8 @@ public class ServicioControl {
 					}
 				}
 				else{
-					//No encontro configuracion de horarios					
+					//No encontro configuracion de horarios		
+					System.out.println("entre a poner que no ENCONTRO HORARIO ");
 					tab_valida_asistencia.insertar();
 					tab_valida_asistencia.setValor("IDE_GEEDP", str_fila[0]);
 					tab_valida_asistencia.setValor("FECHA_MARCACION_ASVAA", fecha);
@@ -302,10 +311,14 @@ public class ServicioControl {
 			for (int i = 0; i < tab_marcaciones.getTotalFilas(); i++) {
 				if(i==0){
 					str_ide_geedp_actual=tab_marcaciones.getValor(i, "IDE_GEEDP");
+					System.out.println("pregunto str_ide_geedp_actual "+i+"  espacio "+str_ide_geedp_actual);
+
 				}
+				System.out.println("pregunto lis_marca_empleados "+i+" espacio 2 "+lis_marca_empleados);
 
 				if(!str_ide_geedp_actual.equals(tab_marcaciones.getValor(i, "IDE_GEEDP"))){					
 					//Es otro empleado Analizar Asitencia
+					System.out.println("primer ingreso str_ide_geedp_actual "+str_ide_geedp_actual+" IDE_GEEDP " +tab_marcaciones.getValor(i, "IDE_GEEDP")+" lis_marca_empleados "+lis_marca_empleados);
 					buscaHorarioMarcacion(tab_horariosGrupo, lis_marca_empleados, fecha);
 					lis_marca_empleados.clear();
 					str_ide_geedp_actual=tab_marcaciones.getValor(i, "IDE_GEEDP");
@@ -353,6 +366,7 @@ public class ServicioControl {
 				}
 			}
 			///precesa el ultimo 
+			System.out.println("segundo ingreso tab_horariosGrupo "+tab_horariosGrupo+" lis_marca_empleados " +lis_marca_empleados);
 
 			//Es otro empleado Analizar Asitencia
 			buscaHorarioMarcacion(tab_horariosGrupo, lis_marca_empleados, fecha);
@@ -692,10 +706,10 @@ public class ServicioControl {
 							"FECHA_ASNOD=TO_DATE('"+tab_marc.getValor(i, "FECHA_MARCACION_ASVAA")+"','yyyy-mm-dd'), "+
 							"observacion_asnod='"+tab_marc.getValor(i, "EVENTO_ASVAA")+"' ";
 					if(tab_marc.getValor(i, "HORA_MARCACION_ASVAA")!=null){
-						str_update+=",HORA_INICIO_ASNOD=to_timestamp('"+ tab_marc.getValor(i, "HORA_MARCACION_ASVAA")+"','hh24-mi-ss') ";	
+						str_update+=",HORA_INICIO_ASNOD=to_timestamp('"+ tab_marc.getValor(i, "HORA_MARCACION_ASVAA")+"','hh24-MM-ss') ";	
 					}
 					if(tab_marc.getValor(i, "HORA_MARCA_SALIDA_ASVAA")!=null){
-						str_update+=",HORA_FIN_ASNOD=to_timestamp('"+ tab_marc.getValor(i, "HORA_MARCA_SALIDA_ASVAA")+"','hh24-mi-ss') ";	
+						str_update+=",HORA_FIN_ASNOD=to_timestamp('"+ tab_marc.getValor(i, "HORA_MARCA_SALIDA_ASVAA")+"','hh24-MM-ss') ";	
 					}									
 					str_update+=" where IDE_ASVAA="+tab_marc.getValor(i, "IDE_ASVAA")+""+ 
 							" and ide_asnov="+ide_asnov+"";
@@ -727,10 +741,10 @@ public class ServicioControl {
 								",NRO_HORAS_APROBADO_ASNOD="+utilitario.getFormatoNumero(dou_diferencia1)+" "+
 								",observacion_asnod='"+tab_marc.getValor(i, "EVENTO_ASVAA")+"' ";
 						if(tab_marc.getValor(i, "HORA_MARCACION_ASVAA")!=null){
-							str_update+=",HORA_INICIO_ASNOD=to_timestamp('"+ tab_marc.getValor(i, "HORA_MARCACION_ASVAA")+"','hh24-mi-ss') ";	
+							str_update+=",HORA_INICIO_ASNOD=to_timestamp('"+ tab_marc.getValor(i, "HORA_MARCACION_ASVAA")+"','hh24-MM-ss') ";	
 						}
 						if(tab_marc.getValor(i, "HORA_MARCA_SALIDA_ASVAA")!=null){
-							str_update+=",HORA_FIN_ASNOD=to_timestamp('"+ tab_marc.getValor(i, "HORA_MARCA_SALIDA_ASVAA")+"','hh24-mi-ss') ";	
+							str_update+=",HORA_FIN_ASNOD=to_timestamp('"+ tab_marc.getValor(i, "HORA_MARCA_SALIDA_ASVAA")+"','hh24-MM-ss') ";	
 						}									
 						str_update+=" where IDE_ASVAA="+tab_marc.getValor(i, "IDE_ASVAA")+""+ 
 								" and ide_asnov="+ide_asnov+"";
@@ -747,10 +761,10 @@ public class ServicioControl {
 								",NRO_HORAS_APROBADO_ASNOD="+utilitario.getFormatoNumero(dou_diferencia1)+" "+
 								",observacion_asnod='"+tab_marc.getValor(i, "EVENTO_ASVAA")+"' ";
 						if(tab_marc.getValor(i, "HORA_MARCACION_ASVAA")!=null){
-							str_update+=",HORA_INICIO_ASNOD=to_timestamp('"+ tab_marc.getValor(i, "HORA_MARCACION_ASVAA")+"','hh24-mi-ss') ";	
+							str_update+=",HORA_INICIO_ASNOD=to_timestamp('"+ tab_marc.getValor(i, "HORA_MARCACION_ASVAA")+"','hh24-MM-ss') ";	
 						}
 						if(tab_marc.getValor(i, "HORA_MARCA_SALIDA_ASVAA")!=null){
-							str_update+=",HORA_FIN_ASNOD=to_timestamp('"+ tab_marc.getValor(i, "HORA_MARCA_SALIDA_ASVAA")+"','hh24-mi-ss') ";	
+							str_update+=",HORA_FIN_ASNOD=to_timestamp('"+ tab_marc.getValor(i, "HORA_MARCA_SALIDA_ASVAA")+"','hh24-MM-ss') ";	
 						}									
 						str_update+=" where IDE_ASVAA="+tab_marc.getValor(i, "IDE_ASVAA")+""+ 
 								" and ide_asnov="+ide_asnov+"";
@@ -767,10 +781,10 @@ public class ServicioControl {
 								",NRO_HORAS_APROBADO_ASNOD="+utilitario.getFormatoNumero(dou_diferencia1)+" "+
 								",observacion_asnod='"+tab_marc.getValor(i, "EVENTO_ASVAA")+"' ";
 						if(tab_marc.getValor(i, "HORA_MARCACION_ASVAA")!=null){
-							str_update+=",HORA_INICIO_ASNOD=to_timestamp('"+ tab_marc.getValor(i, "HORA_MARCACION_ASVAA")+"','hh24-mi-ss') ";	
+							str_update+=",HORA_INICIO_ASNOD=to_timestamp('"+ tab_marc.getValor(i, "HORA_MARCACION_ASVAA")+"','hh24-MM-ss') ";	
 						}
 						if(tab_marc.getValor(i, "HORA_MARCA_SALIDA_ASVAA")!=null){
-							str_update+=",HORA_FIN_ASNOD=to_timestamp('"+ tab_marc.getValor(i, "HORA_MARCA_SALIDA_ASVAA")+"','hh24-mi-ss') ";	
+							str_update+=",HORA_FIN_ASNOD=to_timestamp('"+ tab_marc.getValor(i, "HORA_MARCA_SALIDA_ASVAA")+"','hh24-MM-ss') ";	
 						}									
 						str_update+=" where IDE_ASVAA="+tab_marc.getValor(i, "IDE_ASVAA")+""+ 
 								" and ide_asnov="+ide_asnov+"";
