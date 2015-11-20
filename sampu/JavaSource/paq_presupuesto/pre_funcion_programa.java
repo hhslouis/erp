@@ -122,11 +122,14 @@ public class pre_funcion_programa extends Pantalla {
 	  }
 	
 		public void agregarSubActividad(){
-			
+			if(tab_funcion_programa.getValor("ide_prnfp").equals(par_sub_activdad)){
 			set_sub_actividad.getTab_seleccion().setSql("select ide_prsua,codigo_prsua,detalle_prsua from pre_sub_actividad order by codigo_prsua,detalle_prsua");  
 			set_sub_actividad.getTab_seleccion().ejecutarSql();
 			set_sub_actividad.dibujar();
-
+			}
+			else {
+				utilitario.agregarNotificacionInfo("Nivel no Valido", "El nivel debe ser Sub Actividad para poder agregar la Sub Actividad");
+			}
 			
 		}
 
@@ -236,7 +239,9 @@ public void validaSubActividad(AjaxBehaviorEvent evt){
 		}
 		}
 		
-		
+		else if (tab_vigente.isFocus()){
+				tab_vigente.guardar();
+		}
 	}
 
 
