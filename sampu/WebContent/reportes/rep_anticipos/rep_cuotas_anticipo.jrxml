@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_coutas_anticipo" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e7dd9952-a409-447d-8e31-0b821fcad13a">
 	<property name="ireport.zoom" value="1.6500000000000001"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="35"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="IDE_GTEMP" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
