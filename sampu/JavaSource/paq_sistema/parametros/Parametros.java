@@ -79,8 +79,9 @@ public class Parametros {
         lis_parametros.add(new Parametro("2", "p_gth_tipo_telefono_celular", "Indica el tipo de telefono celular", "0","GTH_TIPO_TELEFONO", "IDE_GTTIT", "DETALLE_GTTIT"));
         lis_parametros.add(new Parametro("2", "p_gth_tipo_telefono_fijo", "Indica el tipo de telefono fijo", "1","GTH_TIPO_TELEFONO", "IDE_GTTIT", "DETALLE_GTTIT"));
         lis_parametros.add(new Parametro("2", "p_gth_tipo_telefono_oficina", "Indica el tipo de telefono de oficina", "3","GTH_TIPO_TELEFONO", "IDE_GTTIT", "DETALLE_GTTIT"));
-        
         lis_parametros.add(new Parametro("2", "p_gth_tipo_empleado_codigo", "Indica el tipo de empleado de codigo de trabajo", "1","GTH_TIPO_EMPLEADO", "IDE_GTTEM", "DETALLE_GTTEM"));
+        lis_parametros.add(new Parametro("2", "p_gth_coordinador_tthh", "Indica el nombre del coordinador de talento humano", "Ing. Tania Pantoja"));
+        lis_parametros.add(new Parametro("2", "p_gth_analista_tthh", "Indica el nombre del analista de talento humano", "Ing. Paola"));
 
         /*
          * NOMINA =3
