@@ -3314,9 +3314,20 @@ public class pre_anticipos extends Pantalla {
 			}
 		}
 
-		else if (rep_reporte.getReporteSelecionado().equals("Solicitud Anticipo")){
+		else if (rep_reporte.getReporteSelecionado().equals("Solicitud Anticipo")){ 
 			if (tab_anticipo.getTotalFilas()>0) {
+				
 				if(tab_anticipo.getValor("APROBADO_NRANT").equals("true")){
+				
+					if(tab_anticipo_interes.getTotalFilas()==0){
+						utilitario.agregarMensajeInfo("No se puede continuar", "El empleado no tiene generada la Tabla de Amortización");
+						return;
+					}
+					if(tab_amortizacion.getTotalFilas()==0){
+						utilitario.agregarMensajeInfo("No se puede continuar", "El empleado no posee Tabla de Amortización");
+						return;
+					}
+					
 					if (rep_reporte.isVisible()){
 						p_parametros=new HashMap();				
 						rep_reporte.cerrar();				
@@ -3325,6 +3336,17 @@ public class pre_anticipos extends Pantalla {
 						p_parametros.put("ACTIVO_NRANT","1");						
 						p_parametros.put("titulo", " SOLICITUD DE ANTICIPOS");
 						p_parametros.put("p_firma_resp_solicitud_debito", utilitario.getVariable("p_firma_resp_solicitud_debito_sd"));
+						p_parametros.put("p_coordinador_tthh",utilitario.getVariable("p_gth_coordinador_tthh"));
+						p_parametros.put("p_analista_tthh",utilitario.getVariable("p_gth_analista_tthh"));
+						
+						// paramtros para autorizacion debito
+						p_parametros.put("IDE_GTEMP",Long.parseLong(tab_anticipo.getValor("IDE_GTEMP")));
+						p_parametros.put("IDE_NRANI",Long.parseLong(tab_anticipo_interes.getValor("IDE_NRANI")));
+						p_parametros.put("p_cuota_mensual",utilitario.getLetrasDolarNumero(utilitario.getFormatoNumero(tab_capacidad.getValor("CUOTA_MENSUAL_NRCAP"),2)));
+						String valores=getDebitoAnticipo(tab_anticipo.getValor("IDE_NRANT"));				
+						p_parametros.put("p_valores",valores);
+						
+						
 						sef_reporte.setSeleccionFormatoReporte(p_parametros, rep_reporte.getPath());						
 						sef_reporte.dibujar();
 					}
