@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_datos_anticipo" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="852c4d6a-0081-4cb4-999b-90b0ee43d843">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="90"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
-		<defaultValueExpression><![CDATA["D:\\workspace\\biess\\WebContent\\reportes\\rep_gestion\\"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<parameter name="ide_sucu" class="java.lang.Integer"/>
 	<parameter name="ide_empr" class="java.lang.Integer">
@@ -329,9 +329,9 @@ WHERE ANT.IDE_NRANT =$P{IDE_NRANT}]]>
 		<band splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band height="104" splitType="Stretch">
+		<band height="112" splitType="Stretch">
 			<staticText>
-				<reportElement uuid="c6d15c33-1d8a-407d-9d03-a6b70cf31567" x="0" y="0" width="555" height="16"/>
+				<reportElement uuid="c6d15c33-1d8a-407d-9d03-a6b70cf31567" x="0" y="0" width="554" height="16"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -406,6 +406,15 @@ WHERE ANT.IDE_NRANT =$P{IDE_NRANT}]]>
 			</staticText>
 			<line>
 				<reportElement uuid="977187b3-72b1-40df-a441-2815bdfdd75b" positionType="Float" x="210" y="91" width="120" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="977187b3-72b1-40df-a441-2815bdfdd75b" positionType="Float" x="0" y="111" width="555" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="7b52a07a-e569-4f1c-99ae-f8891a445807" x="0" y="16" width="1" height="96"/>
+			</line>
+			<line>
+				<reportElement uuid="7b52a07a-e569-4f1c-99ae-f8891a445807" x="554" y="15" width="1" height="96"/>
 			</line>
 		</band>
 	</summary>

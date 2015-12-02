@@ -288,7 +288,7 @@ WHERE GAR.IDE_NRANT=$P{IDE_NRANT}]]>
 					<font size="7" isBold="true" isPdfEmbedded="true"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<text><![CDATA[TELEFONO:]]></text>
+				<text><![CDATA[]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="3eb1fdeb-4089-46f9-9a27-13a72bc2ee18" x="420" y="37" width="135" height="10"/>
@@ -303,7 +303,6 @@ WHERE GAR.IDE_NRANT=$P{IDE_NRANT}]]>
 					<font size="7"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{numero_telefono_gttel}]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
