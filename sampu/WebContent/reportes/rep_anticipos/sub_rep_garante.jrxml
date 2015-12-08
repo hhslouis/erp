@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sub_rep_garante" language="groovy" pageWidth="555" pageHeight="749" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="9dfdef7e-a92d-47bd-9651-d6bac70699f5">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="IDE_NRANT" class="java.lang.Integer">
@@ -23,22 +23,26 @@ GAR.SEGUNDO_NOMBREC_NRGAR AS NOMBRES_CONYUGE,
 GAR.DOCUMENTO_IDENTIDADG_NRGAR AS CEDULA_CONYUGE,
 EDP.fecha_geedp AS FECHA_INGRESO,
 GAR.RMU_NRGAR AS RMU,
-caf.detalle_gecaf AS CARGO,
 dep.detalle_gedep AS DEPARTAMENTO,
 b.MONTO_VIVIENDA,
 c.MONTO_VEHICULO,
 GAR.TOTAL_PATRIMONIO_NRGAR AS PATRIMONIO,
 GAR.lugar_trabajo_nrgar AS DIRECCION,
+ARA.DETALLE_GEARE AS COORDINACION,
+GPG.TITULO_CARGO_GEPGC AS CARGO,
+
 a.numero_telefono_gttel,
 (case when b.MONTO_VIVIENDA is null then 'NO' else 'SI' END)as TIENE_VIVIENDA,
 (case when c.MONTO_VEHICULO is null then 'NO' else 'SI' END)as TIENE_VEHICULO,
 (case when MONTO_VIVIENDA is null then 0 else MONTO_VIVIENDA end) + (case when MONTO_VEHICULO is null then 0 else MONTO_VEHICULO end) as PATRIMONIO
 FROM NRH_GARANTE GAR
 LEFT JOIN GEN_EMPLEADOS_DEPARTAMENTO_PAR EDP ON  EDP.IDE_GEEDP=GAR.IDE_GEEDP
-LEFT JOIN GEN_CARGO_FUNCIONAL CAF ON CAF.IDE_GECAF=EDP.IDE_GECAF
 LEFT JOIN GEN_DEPARTAMENTO DEP ON DEP.IDE_GEDEP=EDP.IDE_GEDEP
 LEFT JOIN NRH_TIPO_GARANTE  TGA ON TGA.IDE_NRTIG=GAR.IDE_NRTIG
 LEFT JOIN GTH_CONYUGE CON ON CON.IDE_GTEMP=EDP.IDE_GTEMP
+LEFT JOIN GEN_AREA ARA ON ARA.IDE_GEARE =EDP.IDE_GEARE
+LEFT JOIN GEN_PARTIDA_GRUPO_CARGO GPG ON GPG.IDE_GEPGC =EDP.IDE_GEPGC
+
 LEFT JOIN(
 SELECT ide_gttel,ide_nrgar,numero_telefono_gttel FROM gth_telefono WHERE IDE_GTTEL IN(
 SELECT MAX(ide_gttel) FROM gth_telefono WHERE activo_gttel=true
@@ -61,18 +65,25 @@ WHERE GAR.IDE_NRANT=$P{IDE_NRANT}]]>
 	<field name="ide_gtcon" class="java.lang.Integer">
 		<fieldDescription><![CDATA[ide_gtcon]]></fieldDescription>
 	</field>
-	<field name="nombres" class="java.lang.String"/>
+	<field name="nombres" class="java.lang.String">
+		<fieldDescription><![CDATA[NOMBRES]]></fieldDescription>
+	</field>
 	<field name="cedula" class="java.lang.String"/>
 	<field name="nombres_conyuge" class="java.lang.String"/>
 	<field name="cedula_conyuge" class="java.lang.String"/>
 	<field name="fecha_ingreso" class="java.sql.Date"/>
 	<field name="rmu" class="java.math.BigDecimal"/>
-	<field name="cargo" class="java.lang.String"/>
 	<field name="departamento" class="java.lang.String"/>
 	<field name="monto_vivienda" class="java.math.BigDecimal"/>
 	<field name="monto_vehiculo" class="java.math.BigDecimal"/>
 	<field name="patrimonio" class="java.math.BigDecimal"/>
-	<field name="direccion" class="java.lang.String"/>
+	<field name="direccion" class="java.lang.String">
+		<fieldDescription><![CDATA[DIRECCION]]></fieldDescription>
+	</field>
+	<field name="coordinacion" class="java.lang.String"/>
+	<field name="cargo" class="java.lang.String">
+		<fieldDescription><![CDATA[CARGO]]></fieldDescription>
+	</field>
 	<field name="numero_telefono_gttel" class="java.lang.String">
 		<fieldDescription><![CDATA[numero_telefono_gttel]]></fieldDescription>
 	</field>
@@ -243,7 +254,7 @@ WHERE GAR.IDE_NRANT=$P{IDE_NRANT}]]>
 					<font size="7"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{departamento}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{coordinacion}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="34dd697b-10ae-4248-b286-4270ce76da87" x="0" y="47" width="145" height="10"/>
@@ -258,7 +269,7 @@ WHERE GAR.IDE_NRANT=$P{IDE_NRANT}]]>
 					<font size="7" isBold="true" isPdfEmbedded="true"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<text><![CDATA[DEPARTAMENTO:]]></text>
+				<text><![CDATA[COORDINACION:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="41e6807a-d944-4de1-b358-14ccae550c2e" x="145" y="17" width="410" height="10"/>

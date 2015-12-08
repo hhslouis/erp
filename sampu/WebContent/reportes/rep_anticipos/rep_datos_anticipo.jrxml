@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_datos_anticipo" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="852c4d6a-0081-4cb4-999b-90b0ee43d843">
-	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="90"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -118,7 +118,7 @@ WHERE ANT.IDE_NRANT =$P{IDE_NRANT}]]>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="45" splitType="Stretch">
+		<band height="49" splitType="Stretch">
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement uuid="18f5608f-2cc8-4d42-a569-02b3d60bab0b" x="82" y="0" width="63" height="10"/>
 				<box>
@@ -262,7 +262,7 @@ WHERE ANT.IDE_NRANT =$P{IDE_NRANT}]]>
 				<textFieldExpression><![CDATA[$F{lugar}]]></textFieldExpression>
 			</textField>
 		</band>
-		<band height="25">
+		<band height="30">
 			<subreport>
 				<reportElement uuid="eeedbbf8-786c-478b-9dd5-f65760c26704" positionType="Float" x="0" y="0" width="555" height="25" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true"/>
 				<subreportParameter name="IDE_NRANT">
@@ -272,7 +272,7 @@ WHERE ANT.IDE_NRANT =$P{IDE_NRANT}]]>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_anticipos/sub_rep_garante.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
-		<band height="25">
+		<band height="29">
 			<subreport>
 				<reportElement uuid="d8f885c7-a51e-4669-a992-4789eff1bdd2" positionType="Float" x="0" y="0" width="555" height="25" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true"/>
 				<subreportParameter name="p_coordinador_tthh">

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_autorizacion_debito_anticipos" language="groovy" pageWidth="554" pageHeight="749" whenNoDataType="AllSectionsNoDetail" columnWidth="554" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="fea5355a-b74d-4d42-8cba-a0a49c16a704">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="0.75"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="IDE_GTEMP" class="java.lang.Long">
@@ -159,7 +159,7 @@ WHERE a.IDE_NRANT=$P{IDE_NRANT} AND  a.IDE_GTEMP=$P{IDE_GTEMP}]]>
 	<pageHeader>
 		<band height="428" splitType="Stretch">
 			<line>
-				<reportElement uuid="a3158997-b0ca-4029-84fc-f1cb724d6501" x="0" y="1" width="555" height="1"/>
+				<reportElement uuid="a3158997-b0ca-4029-84fc-f1cb724d6501" x="1" y="1" width="554" height="1"/>
 				<graphicElement>
 					<pen lineWidth="0.5"/>
 				</graphicElement>
@@ -187,7 +187,7 @@ WHERE a.IDE_NRANT=$P{IDE_NRANT} AND  a.IDE_GTEMP=$P{IDE_GTEMP}]]>
 				<text><![CDATA[5. COORDINACION DE TALENTO HUMANO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="27ef9ddf-0ff3-4e67-ac6e-3cb59f084286" x="0" y="262" width="555" height="20"/>
+				<reportElement uuid="27ef9ddf-0ff3-4e67-ac6e-3cb59f084286" x="0" y="236" width="553" height="20"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -266,28 +266,6 @@ WHERE a.IDE_NRANT=$P{IDE_NRANT} AND  a.IDE_GTEMP=$P{IDE_GTEMP}]]>
 				</textElement>
 				<text><![CDATA[Adjunto una letra de cambio como garantía del indicado anticipo, con todas las condiciones e implicaciones legales que con esto conlleva.]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement uuid="dbb6f7b1-a3cb-4148-9d04-0f253577775a" x="204" y="229" width="100" height="15"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="8" isUnderline="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{rmu_geedp}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="4b449fc1-831d-4cbc-96a8-c82e89729cd5" x="355" y="243" width="60" height="15"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isUnderline="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{plazo_nrani}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement uuid="2e933c86-4e37-478b-93a8-45e014482c2a" x="0" y="229" width="205" height="15"/>
-				<box leftPadding="3"/>
-				<textElement verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[R. M. U.:]]></text>
-			</staticText>
 			<staticText>
 				<reportElement uuid="99786efb-0b0b-4d87-a6f9-e76cd5e1a270" x="-3" y="285" width="205" height="15"/>
 				<box leftPadding="3"/>
@@ -296,53 +274,6 @@ WHERE a.IDE_NRANT=$P{IDE_NRANT} AND  a.IDE_GTEMP=$P{IDE_GTEMP}]]>
 				</textElement>
 				<text><![CDATA[VALOR INGRESO:]]></text>
 			</staticText>
-			<staticText>
-				<reportElement uuid="8607f16e-0601-46de-81ce-9a94eb0aa166" x="0" y="244" width="205" height="15"/>
-				<box leftPadding="3"/>
-				<textElement verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[FECHA DE CANCELACION DE ULTIMO PRESTAMO:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="f3a08a7d-d06b-4f17-b55f-b43d3554b4a6" x="316" y="243" width="40" height="15"/>
-				<textElement verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[PLAZO:]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" pattern="yyyy/MM" isBlankWhenNull="true">
-				<reportElement uuid="ab309cd7-1b63-4d12-94dd-b9e7178498fe" x="204" y="243" width="100" height="15"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isUnderline="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{fecha_cancelacion_pres}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement uuid="d457bcf9-9d90-465f-85ae-d793bb192f62" x="414" y="243" width="40" height="15"/>
-				<textElement verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[MESES]]></text>
-			</staticText>
-			<line>
-				<reportElement uuid="5820faf9-06e9-401a-969d-e6ec58141308" x="205" y="257" width="99" height="1"/>
-				<graphicElement>
-					<pen lineWidth="0.5"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement uuid="c117a203-afec-412b-a4b0-f0fdb472580a" x="205" y="242" width="99" height="1"/>
-				<graphicElement>
-					<pen lineWidth="0.5"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement uuid="f55d3675-b71d-45a8-a056-15a98bbe0409" x="355" y="257" width="60" height="1"/>
-				<graphicElement>
-					<pen lineWidth="0.5"/>
-				</graphicElement>
-			</line>
 			<line>
 				<reportElement uuid="939a26f0-5e5d-4a32-9600-19f2404cc001" x="555" y="1" width="1" height="415"/>
 				<graphicElement>
@@ -356,31 +287,7 @@ WHERE a.IDE_NRANT=$P{IDE_NRANT} AND  a.IDE_GTEMP=$P{IDE_GTEMP}]]>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement uuid="93ada627-3111-4d94-b259-badb4410e240" x="0" y="330" width="1" height="45"/>
-				<graphicElement>
-					<pen lineWidth="0.5"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement uuid="b6c2c79d-1e37-4ad6-a5f7-898f4b3db9f0" x="555" y="330" width="1" height="45"/>
-				<graphicElement>
-					<pen lineWidth="0.5"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement uuid="c2527208-b9bb-4e2f-bcaf-d2981ec102fc" x="0" y="310" width="1" height="20"/>
-				<graphicElement>
-					<pen lineWidth="0.5"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement uuid="09b9d291-813f-481d-b77a-935ede97bc2a" x="555" y="310" width="1" height="20"/>
-				<graphicElement>
-					<pen lineWidth="0.5"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement uuid="f939854b-987d-4938-950a-6b8cf5bf00a4" x="2" y="416" width="555" height="1"/>
+				<reportElement uuid="f939854b-987d-4938-950a-6b8cf5bf00a4" x="2" y="416" width="553" height="1"/>
 				<graphicElement>
 					<pen lineWidth="0.5"/>
 				</graphicElement>
@@ -393,7 +300,7 @@ WHERE a.IDE_NRANT=$P{IDE_NRANT} AND  a.IDE_GTEMP=$P{IDE_GTEMP}]]>
 				<textFieldExpression><![CDATA["Por el lapso de "]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="EEEEE dd MMMMM yyyy" isBlankWhenNull="true">
-				<reportElement uuid="c502c273-cf5f-4016-9820-4e8920069cd0" x="4" y="23" width="550" height="27"/>
+				<reportElement uuid="c502c273-cf5f-4016-9820-4e8920069cd0" x="-3" y="22" width="550" height="27"/>
 				<textElement textAlignment="Justified" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
@@ -401,11 +308,11 @@ WHERE a.IDE_NRANT=$P{IDE_NRANT} AND  a.IDE_GTEMP=$P{IDE_GTEMP}]]>
 " ("+$P{p_cuota_mensual}+") Dólares de los Estados Unidos de América."]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="EEEEE dd MMMMM yyyy" isBlankWhenNull="true">
-				<reportElement uuid="84651c49-36e3-4754-81ec-d24971709dec" x="275" y="50" width="267" height="12"/>
+				<reportElement uuid="84651c49-36e3-4754-81ec-d24971709dec" x="250" y="50" width="267" height="12"/>
 				<textElement textAlignment="Justified" verticalAlignment="Top">
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA["; acorde a la Tabla de Descuentos adjunto."]]></textFieldExpression>
+				<textFieldExpression><![CDATA["acorde a la Tabla de Descuentos adjunto."]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="MMMMM  &apos;   a&apos;" isBlankWhenNull="true">
 				<reportElement uuid="021b8a49-8f3b-4896-8d8d-8a9f3a0fe15d" x="66" y="50" width="69" height="12"/>
@@ -494,7 +401,7 @@ WHERE a.IDE_NRANT=$P{IDE_NRANT} AND  a.IDE_GTEMP=$P{IDE_GTEMP}]]>
 				<text><![CDATA[VALOR EGRESOS:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="5c612b23-74ea-431f-8d39-89dc24e2dabd" x="-3" y="315" width="205" height="15"/>
+				<reportElement uuid="5c612b23-74ea-431f-8d39-89dc24e2dabd" x="2" y="315" width="200" height="15"/>
 				<box leftPadding="3"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
@@ -572,15 +479,15 @@ WHERE a.IDE_NRANT=$P{IDE_NRANT} AND  a.IDE_GTEMP=$P{IDE_GTEMP}]]>
 				<reportElement uuid="7c62324e-d7a6-4b18-b6c1-87ac04a42d73" x="275" y="368" width="25" height="20"/>
 			</rectangle>
 			<staticText>
-				<reportElement uuid="99786efb-0b0b-4d87-a6f9-e76cd5e1a270" x="316" y="285" width="116" height="15"/>
+				<reportElement uuid="99786efb-0b0b-4d87-a6f9-e76cd5e1a270" x="316" y="285" width="138" height="15"/>
 				<box leftPadding="3"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[PORCENTAJE ENDEUDA:]]></text>
+				<text><![CDATA[PORCENTAJE ENDEUDAMIENTO:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement uuid="4d6ce683-e080-490b-95a6-e8ca5b08a04f" x="432" y="285" width="42" height="15"/>
+				<reportElement uuid="4d6ce683-e080-490b-95a6-e8ca5b08a04f" x="454" y="285" width="42" height="15"/>
 				<box>
 					<bottomPen lineWidth="0.0"/>
 				</box>
@@ -590,7 +497,7 @@ WHERE a.IDE_NRANT=$P{IDE_NRANT} AND  a.IDE_GTEMP=$P{IDE_GTEMP}]]>
 				<textFieldExpression><![CDATA[(($F{total_egreso_nrcap}+$F{cuota_mensual_nrcap})/($F{total_ingreso_nrcap})*(100))]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="99786efb-0b0b-4d87-a6f9-e76cd5e1a270" x="474" y="285" width="16" height="15"/>
+				<reportElement uuid="99786efb-0b0b-4d87-a6f9-e76cd5e1a270" x="496" y="285" width="16" height="15"/>
 				<box leftPadding="3"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
