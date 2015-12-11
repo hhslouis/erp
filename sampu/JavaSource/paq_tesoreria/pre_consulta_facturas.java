@@ -130,7 +130,11 @@ public class pre_consulta_facturas extends Pantalla{
 		tab_recaudacion.getColumna("fecha_vencimiento_fafac").setLectura(true);
 		tab_recaudacion.getColumna("ide_coest").setVisible(false);		
 		tab_recaudacion.getColumna("ide_coest").setLectura(true);		
-
+		tab_recaudacion.getColumna("razon_social_recli").setLectura(true);		
+		tab_recaudacion.getColumna("detalle_retip").setLectura(true);		
+		tab_recaudacion.getColumna("comprobante_pago").setLectura(true);		
+		tab_recaudacion.getColumna("cheque").setLectura(true);		
+		
 
 		
 
