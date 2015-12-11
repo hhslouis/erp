@@ -34,7 +34,8 @@ public class pre_movimiento extends Pantalla{
 		tab_movimiento.setId("tab_movimiento");
 		tab_movimiento.setHeader("MOVIMIENTOS");
 		tab_movimiento.setTabla("cont_movimiento", "ide_comov", 1);
-		tab_movimiento.getColumna("ide_gemod").setCombo("gen_modulo", "ide_cotim", "detalle_cotim", "");
+		tab_movimiento.setCondicion("ide_geani=-1");
+		tab_movimiento.getColumna("ide_gemod").setCombo("gen_modulo", "ide_gemod", "detalle_gemod", "");
 		tab_movimiento.getColumna("ide_cotim").setCombo("cont_tipo_movimiento", "ide_cotim", "detalle_cotim", "");
 		tab_movimiento.getColumna("ide_cotia").setCombo("cont_tipo_asiento", "ide_cotia", "detalle_cotia", "");
 		tab_movimiento.getColumna("ide_geare").setCombo("gen_area", "ide_geare", "detalle_geare", "");
