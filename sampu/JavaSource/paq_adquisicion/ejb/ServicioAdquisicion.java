@@ -33,7 +33,7 @@ public String getSolicitud (String ide_adsoc){
 		
 	}
 	public TablaGenerica getTablaGenericaSolicitud(String ide_adsoc){
-		TablaGenerica tab_solicitud =utilitario.consultar("select a.ide_adsoc,a.ide_tepro,a.ide_prtra,nombre_tepro,detalle_adsoc,nro_solicitud_adsoc,total_adfac,valor_iva_adfac,num_factura_adfac" +
+		TablaGenerica tab_solicitud =utilitario.consultar("select a.ide_adsoc,a.ide_tepro,a.ide_prtra,nombre_tepro,detalle_adsoc,nro_solicitud_adsoc,total_adfac,valor_iva_adfac,num_factura_adfac,subtotal_adfac" +
 				" from adq_solicitud_compra a,adq_factura b ,tes_proveedor c " +
 				" where  a.ide_adsoc=b.ide_adsoc and a.ide_tepro=c.ide_tepro and a.ide_adsoc in ("+ide_adsoc+") order by detalle_adsoc");
 
