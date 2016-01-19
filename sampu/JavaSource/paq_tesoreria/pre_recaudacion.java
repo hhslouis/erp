@@ -2,10 +2,12 @@ package paq_tesoreria;
 
 import java.util.List;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.ejb.EJB;
 
+import net.sf.jasperreports.engine.JRParameter;
 import framework.aplicacion.Fila;
 import framework.componentes.AutoCompletar;
 import framework.componentes.Boton;
@@ -277,6 +279,8 @@ public class pre_recaudacion extends Pantalla{
 		
 	}
 	public void pagado(){
+		Locale locale=new Locale("es","ES");
+
 		if(txt_documento.getValue().toString()==""){
 			utilitario.agregarMensajeInfo("No se puede cobrar", "Ingrese el nro. de documento de cobro para poder recaudar");
 			return;
@@ -321,12 +325,12 @@ public class pre_recaudacion extends Pantalla{
 				//System.out.println("  indice "+tab_recaudacion.getSeleccionados()[i].getIndice());
 				String coma=",";
 				if(tab_recaudacion.getValor(tab_recaudacion.getSeleccionados()[i].getIndice(),"grupo").equals("1")){
-					utilitario.getConexion().ejecutarSql("update fac_factura set ide_coest="+estado_pagado+",ide_tecaj="+ide_caja+",cliente_pago_fafac='"+usuario_pago+"',gth_ide_gtemp="+ide_empleado_cobro+",sis_ide_sucu="+ide_sucursal+",fac_ide_falug="+lugar_trabajo+",fecha_pago_fafac=now(),documento_conciliado_fafac='"+documento_cobro+"',ide_retip="+forma_pago+",documento_bancario_fafac='"+cheque+"' where ide_fafac="+tab_recaudacion.getValor(tab_recaudacion.getSeleccionados()[i].getIndice(),"ide_fafac"));
+					utilitario.getConexion().ejecutarSql("update fac_factura set ide_coest="+estado_pagado+",ide_tecaj="+ide_caja+",cliente_pago_fafac='"+usuario_pago+"',gth_ide_gtemp="+ide_empleado_cobro+",sis_ide_sucu="+ide_sucursal+",fac_ide_falug="+lugar_trabajo+",fecha_pago_fafac=now(),documento_conciliado_fafac='"+documento_cobro+"',ide_retip="+forma_pago+",documento_bancario_fafac='"+cheque+"',conciliado_fafac=true where ide_fafac="+tab_recaudacion.getValor(tab_recaudacion.getSeleccionados()[i].getIndice(),"ide_fafac"));
 					utilitario.getConexion().ejecutarSql("INSERT INTO fac_cobro(ide_caja, ide_factura, ide_lugar_cobro, tipo) VALUES ("+ide_caja+", "+tab_recaudacion.getValor(tab_recaudacion.getSeleccionados()[i].getIndice(),"ide_fafac")+", "+lugar_trabajo+", "+tab_recaudacion.getValor(tab_recaudacion.getSeleccionados()[i].getIndice(),"grupo")+");");
 				}
 				else{
 					utilitario.getConexion().ejecutarSql("update fac_nota_debito set ide_coest="+estado_pagado+" where ide_fanod="+tab_recaudacion.getValor(tab_recaudacion.getSeleccionados()[i].getIndice(),"ide_fafac"));
-					utilitario.getConexion().ejecutarSql("update fac_factura set ide_coest="+estado_pagado+",ide_tecaj="+ide_caja+",cliente_pago_fafac='"+usuario_pago+"',gth_ide_gtemp="+ide_empleado_cobro+",sis_ide_sucu="+ide_sucursal+",fac_ide_falug="+lugar_trabajo+",fecha_pago_fafac=now(),documento_conciliado_fafac='"+documento_cobro+"',ide_retip="+forma_pago+",documento_bancario_fafac='"+cheque+"' where ide_fafac in (select ide_fafac from fac_detalle_debito where ide_fanod in ("+tab_recaudacion.getValor(tab_recaudacion.getSeleccionados()[i].getIndice(),"ide_fafac")+"))");
+					utilitario.getConexion().ejecutarSql("update fac_factura set ide_coest="+estado_pagado+",ide_tecaj="+ide_caja+",cliente_pago_fafac='"+usuario_pago+"',gth_ide_gtemp="+ide_empleado_cobro+",sis_ide_sucu="+ide_sucursal+",fac_ide_falug="+lugar_trabajo+",fecha_pago_fafac=now(),documento_conciliado_fafac='"+documento_cobro+"',ide_retip="+forma_pago+",documento_bancario_fafac='"+cheque+"',conciliado_fafac=true where ide_fafac in (select ide_fafac from fac_detalle_debito where ide_fanod in ("+tab_recaudacion.getValor(tab_recaudacion.getSeleccionados()[i].getIndice(),"ide_fafac")+"))");
 					utilitario.getConexion().ejecutarSql("INSERT INTO fac_cobro(ide_caja, ide_factura, ide_lugar_cobro, tipo) VALUES ("+ide_caja+", "+tab_recaudacion.getValor(tab_recaudacion.getSeleccionados()[i].getIndice(),"ide_fafac")+", "+lugar_trabajo+", "+tab_recaudacion.getValor(tab_recaudacion.getSeleccionados()[i].getIndice(),"grupo")+");");
 				}
 				
@@ -339,7 +343,7 @@ public class pre_recaudacion extends Pantalla{
             Map parametros = new HashMap();
             parametros.put("pide_fafac", Integer.parseInt(ide_caja));
             parametros.put("plugar_cobro", Integer.parseInt(lugar_trabajo));
-
+            parametros.put("REPORT_LOCALE", locale);
             vpdf_pago.setVisualizarPDF("rep_facturacion/rep_recibo_caja.jasper", parametros);
             vpdf_pago.dibujar();
             utilitario.addUpdate("vpdf_pago");

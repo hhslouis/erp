@@ -31,13 +31,10 @@ public class pre_impuesto extends Pantalla {
 		
 		tab_cont_asiento.setId("tab_cont_asiento");
 		tab_cont_asiento.setHeader("ASIENTO CONTABLE");
-		tab_cont_asiento.setTabla("cont_asiento_tipo","ide_coast", 2);
-		tab_cont_asiento.getColumna("ide_gemod").setCombo("gen_modulo","ide_gemod","detalle_gemod","");
+		tab_cont_asiento.setTabla("tes_asiento_tipo","ide_teast", 2);
 		tab_cont_asiento.getColumna("ide_cocac").setCombo(ser_contabilidad.getCuentaContable("true"));
 		tab_cont_asiento.getColumna("ide_cocac").setAutoCompletar();
-		tab_cont_asiento.getColumna("ide_bogrm").setCombo("bodt_grupo_material","ide_bogrm","detalle_bogrm","");
 		tab_cont_asiento.getColumna("ide_gelua").setCombo("gen_lugar_aplica","ide_gelua","detalle_gelua","");
-		tab_cont_asiento.getColumna("ide_bogrm").setVisible(false);
 		tab_cont_asiento.dibujar();
 		PanelTabla pat_asiento=new PanelTabla();
 		pat_asiento.setPanelTabla(tab_cont_asiento);
