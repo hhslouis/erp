@@ -698,9 +698,6 @@ public class pre_nomina_global_empleado extends Pantalla {
 			for (int j = 0; j < lis_totales_consolidado.size(); j++) {
 				jxl.write.Number num = new jxl.write.Number(j+5, int_fila, Double.parseDouble(String.valueOf(lis_totales_consolidado.get(j))), formato_celda_totales); 
 				hoja_xls.addCell(num);
-
-				//				lab_tot = new jxl.write.Label(j+5, int_fila, lis_totales_consolidado.get(j)+"", formato_celda_totales);
-				//				hoja_xls.addCell(lab_tot); 
 			}
 
 			archivo_xls.write(); 
