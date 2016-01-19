@@ -11,10 +11,7 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
 
-/**
- *
- * @author Diego Fernando Jácome
- */
+
 @FacesConverter("ConvertidorAutoCompletar")
 public class ConvertidorAutoCompletar implements Converter {
 
