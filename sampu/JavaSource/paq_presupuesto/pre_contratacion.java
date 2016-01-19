@@ -2,6 +2,10 @@ package paq_presupuesto;
 
 
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,12 +42,18 @@ public class pre_contratacion extends Pantalla{
 	private Tabla tab_financiamiento=new Tabla();
 	private Tabla tab_funcion_programa=new Tabla();
 	private Tabla tab_financiamiento_reforma=new Tabla();
+	private Tabla tab_financiamiento_ejecucion=new Tabla();
 	private Combo com_anio=new Combo();
 
 	private SeleccionTabla set_clasificador=new SeleccionTabla();
+	private SeleccionTabla set_clasificador_actua=new SeleccionTabla();
+	
 	private SeleccionTabla set_funcion=new SeleccionTabla();
 	private SeleccionTabla set_actualizarfuncion=new SeleccionTabla();
 	private SeleccionTabla set_sub_actividad=new SeleccionTabla();
+	private SeleccionTabla set_poa=new SeleccionTabla();
+	private SeleccionTabla set_saldo_fuente=new SeleccionTabla();
+	
 	private Confirmar con_guardar=new Confirmar();
 	private Arbol arb_arbol = new Arbol();
 	///reporte
@@ -74,7 +84,7 @@ public class pre_contratacion extends Pantalla{
 		self_reporte.setId("self_reporte"); //id
 		agregarComponente(self_reporte);
 		
-		com_anio.setCombo("select ide_geani,detalle_geani from gen_anio order by detalle_geani");
+		com_anio.setCombo(ser_contabilidad.getAnioDetalle("true,false","true,false"));
 		com_anio.setMetodo("filtrarAnio");
 		//com_anio.setMetodo("seleccionaElAnio");
 		bar_botones.agregarComponente(new Etiqueta("Seleccione El Año:"));
@@ -91,6 +101,7 @@ public class pre_contratacion extends Pantalla{
 		tab_poa.setTabla("pre_poa","ide_prpoa",2);
 		tab_poa.getColumna("ide_geani").setVisible(false);
 		tab_poa.setCondicion("ide_geani=-1");  
+		tab_poa.setCampoOrden("ide_prpoa desc");
 		tab_poa.getColumna("objeto_programa_prpoa").setVisible(false);
 		tab_poa.getColumna("objetivo_proyecto_prpoa").setVisible(false);
 		tab_poa.getColumna("meta_proyecto_prpoa").setVisible(false);
@@ -103,16 +114,28 @@ public class pre_contratacion extends Pantalla{
 		tab_poa.getColumna("ide_prcla").setAncho(25);
 		tab_poa.getColumna("activo_prpoa").setLectura(true);
 		tab_poa.getColumna("activo_prpoa").setValorDefecto("false");
+		tab_poa.getColumna("ejecutado_presupuesto_prpoa").setLectura(true);
+		tab_poa.getColumna("ejecutado_presupuesto_prpoa").setValorDefecto("false");
+
 		tab_poa.getColumna("ide_geare").setCombo("gen_area","ide_geare","detalle_geare","");
-		tab_poa.getColumna("presupuesto_inicial_prpoa").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:black");
-		tab_poa.getColumna("presupuesto_inicial_prpoa").setValorDefecto("0.00");
-		tab_poa.getColumna("presupuesto_inicial_prpoa").setEtiqueta();
+		//tab_poa.getColumna("presupuesto_inicial_prpoa").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:black");
+		//tab_poa.getColumna("presupuesto_inicial_prpoa").setValorDefecto("0.00");
+		//tab_poa.getColumna("presupuesto_inicial_prpoa").setEtiqueta();
 		tab_poa.getColumna("reforma_prpoa").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:black");
 		tab_poa.getColumna("reforma_prpoa").setValorDefecto("0.00");
 		tab_poa.getColumna("reforma_prpoa").setEtiqueta();
 		tab_poa.getColumna("presupuesto_codificado_prpoa").setEtiqueta();
 		tab_poa.getColumna("presupuesto_codificado_prpoa").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:black");
 		tab_poa.getColumna("presupuesto_codificado_prpoa").setValorDefecto("0.00");
+		tab_poa.getColumna("valor_certificado_prpoa").setEtiqueta();
+		tab_poa.getColumna("valor_certificado_prpoa").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:green");
+		tab_poa.getColumna("valor_certificado_prpoa").setValorDefecto("0.00");
+		tab_poa.getColumna("valor_compromiso_prpoa").setEtiqueta();
+		tab_poa.getColumna("valor_compromiso_prpoa").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:green");
+		tab_poa.getColumna("valor_compromiso_prpoa").setValorDefecto("0.00");
+		tab_poa.getColumna("valor_devengado_prpoa").setEtiqueta();
+		tab_poa.getColumna("valor_devengado_prpoa").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:green");
+		tab_poa.getColumna("valor_devengado_prpoa").setValorDefecto("0.00");
 		tab_poa.setTipoFormulario(true);
 		tab_poa.getGrid().setColumns(4);
 
@@ -120,6 +143,7 @@ public class pre_contratacion extends Pantalla{
 		tab_poa.agregarRelacion(tab_financiamiento);
 		tab_poa.agregarRelacion(tab_reforma);
 		tab_poa.agregarRelacion(tab_financiamiento_reforma);
+		tab_poa.agregarRelacion(tab_financiamiento_ejecucion);
 
 		tab_poa.dibujar();
 		PanelTabla pat_poa=new PanelTabla();
@@ -165,10 +189,9 @@ public class pre_contratacion extends Pantalla{
 		tab_financiamiento.setHeader("FUENTES DE FINANCIAMIENTO (POA)");
 		tab_financiamiento.setIdCompleto("tab_tabulador:tab_financiamiento");
 		tab_financiamiento.setTabla("pre_poa_financiamiento","ide_prpof",5);
-		tab_financiamiento.setCampoForanea("ide_prpoa");
 		tab_financiamiento.getColumna("ide_prfuf").setCombo("pre_fuente_financiamiento","ide_prfuf","detalle_prfuf","");
 		tab_financiamiento.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
-		tab_financiamiento.getColumna("valor_financiamiento_prpof").setMetodoChange("valorFinanciamiento");
+		//tab_financiamiento.getColumna("valor_financiamiento_prpof").setMetodoChange("valorFinanciamiento");
 		tab_financiamiento.getColumna("activo_prpof").setValorDefecto("true");
 		tab_financiamiento.getColumna("activo_prpof").setLectura(true);
 		tab_financiamiento.getColumna("ide_coest").setVisible(false);
@@ -186,6 +209,27 @@ public class pre_contratacion extends Pantalla{
 		tab_financiamiento_reforma.dibujar();
 		PanelTabla pat_panel7= new PanelTabla();
 		pat_panel7.setPanelTabla(tab_financiamiento_reforma);
+		
+		//FINANCIAMIENTO EJECUCION
+		tab_financiamiento_ejecucion.setId("tab_financiamiento_ejecucion");
+		tab_financiamiento_ejecucion.setHeader("EJECUCION FUENTE DE FINANCIAMIENTO");
+		tab_financiamiento_ejecucion.setIdCompleto("tab_tabulador:tab_financiamiento_ejecucion");
+		tab_financiamiento_ejecucion.setTabla("pre_poa_fuente_ejecucion", "ide_prpfe", 8);
+		tab_financiamiento_ejecucion.getColumna("ide_prfuf").setCombo("pre_fuente_financiamiento","ide_prfuf","detalle_prfuf","");
+		tab_financiamiento_ejecucion.getColumna("valor_certificado_prpfe").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
+		tab_financiamiento_ejecucion.getColumna("valor_certificado_prpfe").setValorDefecto("0.00");
+		tab_financiamiento_ejecucion.getColumna("valor_certificado_prpfe").setEtiqueta();
+		tab_financiamiento_ejecucion.getColumna("valor_compromiso_prpfe").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
+		tab_financiamiento_ejecucion.getColumna("valor_compromiso_prpfe").setValorDefecto("0.00");
+		tab_financiamiento_ejecucion.getColumna("valor_compromiso_prpfe").setEtiqueta();
+		tab_financiamiento_ejecucion.getColumna("valor_devengado_prpfe").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
+		tab_financiamiento_ejecucion.getColumna("valor_devengado_prpfe").setValorDefecto("0.00");
+		tab_financiamiento_ejecucion.getColumna("valor_devengado_prpfe").setEtiqueta();
+		tab_financiamiento_ejecucion.getColumna("ide_prfuf").setLectura(true);
+		tab_financiamiento_ejecucion.getColumna("activo_prpfe").setLectura(true);
+		tab_financiamiento_ejecucion.dibujar();
+		PanelTabla pat_panel8=new PanelTabla();
+		pat_panel8.setPanelTabla(tab_financiamiento_ejecucion);
 		
 		//ARCHIVO
 		tab_archivo.setId("tab_archivo");
@@ -214,6 +258,7 @@ public class pre_contratacion extends Pantalla{
 		tab_tabulador.agregarTab("REFORMA MENSUAL",pat_panel3);
 		tab_tabulador.agregarTab("FINANCIAMIENTO", pat_panel4);
 		tab_tabulador.agregarTab("REFORMA FINANCIAMIENTO", pat_panel7);
+		tab_tabulador.agregarTab("EJECUCION FINANCIAMIENTO", pat_panel8);
 		tab_tabulador.agregarTab("ARCHIVOS",pat_panel5);
 
 		// factor_competencia
@@ -238,7 +283,22 @@ public class pre_contratacion extends Pantalla{
 		bot_agregar.setValue("Agregar Partida Presupuestaria");
 		bot_agregar.setMetodo("agregarClasificador");
 		bar_botones.agregarBoton(bot_agregar);
-
+		
+		Boton bot_actualizar=new Boton();
+		bot_actualizar.setValue("Actualizar Partida Presupuestaria");
+		bot_actualizar.setMetodo("actualizadorClasificador");
+		bar_botones.agregarBoton(bot_actualizar);
+		
+		Boton bot_aprobar_poa = new Boton();
+		bot_aprobar_poa.setValue("Transferir (POA) Presupuesto");
+		bot_aprobar_poa.setMetodo("aprobarPoa");
+		bar_botones.agregarBoton(bot_aprobar_poa);
+		
+		Boton bot_saldo_fuente = new Boton();
+		bot_saldo_fuente.setValue("Consultar Saldos Fuente Financiamiento");
+		bot_saldo_fuente.setMetodo("saldoFuente");
+		bar_botones.agregarBoton(bot_saldo_fuente);
+		
 		set_clasificador.setId("set_clasificador");
 		set_clasificador.setTitle("SELECCIONE UNA PARTIDA PRESUPUESTARIA");
 		set_clasificador.setRadio(); //solo selecciona una opcion
@@ -248,13 +308,100 @@ public class pre_contratacion extends Pantalla{
 		set_clasificador.getBot_aceptar().setMetodo("aceptarClasificador");
 		agregarComponente(set_clasificador);
 
+
+		set_clasificador_actua.setId("set_clasificador_actua");
+		set_clasificador_actua.setTitle("SELECCIONE UNA PARTIDA PRESUPUESTARIA");
+		set_clasificador_actua.setRadio(); //solo selecciona una opcion
+		set_clasificador_actua.setSeleccionTabla(ser_presupuesto.getCatalogoPresupuestarioAnio("true", "-1"), "ide_prcla"); 
+		set_clasificador_actua.getTab_seleccion().getColumna("codigo_clasificador_prcla").setFiltroContenido(); //pone filtro
+		set_clasificador_actua.getTab_seleccion().getColumna("descripcion_clasificador_prcla").setFiltroContenido();//pone filtro
+		set_clasificador_actua.getBot_aceptar().setMetodo("aceptarActualizaClasificador");
+		agregarComponente(set_clasificador_actua);
 		
 		inicializarSelPoa();
 		inicializarSelResolucion();
-		
+		iniciaPoa();
+		iniciaFuente();
 
 	}
-	
+	public void iniciaFuente(){
+		set_saldo_fuente.setId("set_saldo_fuente");
+		set_saldo_fuente.setSeleccionTabla(ser_presupuesto.saldoFuenteFinanciamiento("-1"),"ide_prfuf");
+		set_saldo_fuente.setTitle("SALDO FUENTES DE FINANCIAMIENTO");
+		agregarComponente(set_saldo_fuente);
+	}
+	public void saldoFuente(){
+		set_saldo_fuente.getTab_seleccion().setSql(ser_presupuesto.saldoFuenteFinanciamiento(com_anio.getValue().toString()));
+		set_saldo_fuente.getTab_seleccion().ejecutarSql();
+		set_saldo_fuente.dibujar();
+	}
+	public void iniciaPoa(){
+		set_poa.setId("set_poa");
+		set_poa.setSeleccionTabla(ser_presupuesto.getPoa("-1","false","false"),"ide_prpoa");
+		set_poa.setTitle("Seleccione Poa");
+		set_poa.getTab_seleccion().getColumna("codigo_clasificador_prcla").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("descripcion_clasificador_prcla").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("DETALLE_PROGRAMA").setFiltro(true);//pone filtro
+		set_poa.getTab_seleccion().getColumna("PROGRAMA").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("DETALLE_PROYECTO").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("PROYECTO").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("DETALLE_PRODUCTO").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("PRODUCTO").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("DETALLE_ACTIVIDAD").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("ACTIVIDAD").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("DETALLE_SUBACTIVIDAD").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("SUBACTIVIDAD").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("CODIGO_SUBACTIVIDAD").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("NUM_RESOLUCION_PRPOA").setFiltro(true);
+		set_poa.getBot_aceptar().setMetodo("aprobarPoa");
+		agregarComponente(set_poa);
+	}
+	public void aprobarPoa(){
+		
+		if(com_anio.getValue()==null){
+			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
+			return;
+		}
+		
+		if(set_poa.isVisible()){
+			
+			String str_seleccionados=set_poa.getSeleccionados();
+			if (str_seleccionados!=null){
+				TablaGenerica tab_aprueba_poa =utilitario.consultar("select ide_prpoa,activo_prpoa from pre_poa where ide_prpoa in ("+str_seleccionados+")");
+				if(tab_aprueba_poa.getTotalFilas()>0){
+					
+					for(int i=0;i<tab_aprueba_poa.getTotalFilas();i++){
+						// Consulto codigo maximo de la cabecera de la tabla de pre_programa
+						TablaGenerica tab_maximo =utilitario.consultar(ser_contabilidad.servicioCodigoMaximo("pre_programa", "ide_prpro"));
+						String maximo_cont_movimiento=tab_maximo.getValor("codigo");
+						// Consulto codigo maximo de la cabecera de la tabla de pre_programa
+						TablaGenerica tab_maximo_vigente =utilitario.consultar(ser_contabilidad.servicioCodigoMaximo("cont_vigente", "ide_covig"));
+						String maximo_cont_vigente=tab_maximo_vigente.getValor("codigo");
+						// Consulto codigo maximo  de la tabla de fuente financiameinto ejecucion
+						TablaGenerica tab_maximo_ejecucion =utilitario.consultar(ser_contabilidad.servicioCodigoMaximo("pre_poa_fuente_ejecucion", "ide_prpfe"));
+						String maximo_ejecucion=tab_maximo_ejecucion.getValor("codigo");
+						
+						ser_presupuesto.apruebaPoa(tab_aprueba_poa.getValor(i,"ide_prpoa"), maximo_cont_movimiento);	
+						ser_presupuesto.insertaVigente(maximo_cont_vigente, maximo_cont_movimiento, com_anio.getValue().toString());
+						ser_presupuesto.insertaFuenteEjecucion(maximo_ejecucion, tab_aprueba_poa.getValor(i,"ide_prpoa"));
+					}
+					utilitario.agregarMensaje("Aprobado POA", "Se transfirió el POA para las ejecuciones presupuestarias.");
+
+				}
+				set_poa.cerrar();
+		
+			}
+			else{
+				utilitario.agregarMensajeInfo("Debe seleccionar al menos un registro", "");
+			}
+		}
+		else{
+			
+			set_poa.getTab_seleccion().setSql(ser_presupuesto.getPoa(com_anio.getValue().toString(),"false","false"));
+			set_poa.getTab_seleccion().ejecutarSql();
+			set_poa.dibujar();
+		}
+	}
 	public void actualizarEjecucionMensual(AjaxBehaviorEvent evt) {
 		tab_mes.modificar(evt); //Siempre es la primera linea
 		tab_mes.sumarColumnas();
@@ -341,21 +488,35 @@ public class pre_contratacion extends Pantalla{
 		tab_reforma.ejecutarValorForanea(tab_poa.getValorSeleccionado());
 		tab_archivo.ejecutarValorForanea(tab_poa.getValorSeleccionado());
 		tab_financiamiento.ejecutarValorForanea(tab_poa.getValorSeleccionado());
-
-		
+		tab_financiamiento_reforma.ejecutarValorForanea(tab_poa.getValorSeleccionado());
+		tab_financiamiento_ejecucion.ejecutarValorForanea(tab_poa.getValorSeleccionado());
+	
 	}
 
+	public void actualizadorClasificador(){
+		//si no selecciono ningun valor en el combo
+		if(com_anio.getValue()==null){
+			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
+			return;
+		}
+				
+		set_clasificador_actua.getTab_seleccion().setSql(ser_presupuesto.getCatalogoPresupuestarioAnio("true",com_anio.getValue().toString()));
+		set_clasificador_actua.getTab_seleccion().ejecutarSql();
+		set_clasificador_actua.dibujar();
+	}
 	public void agregarClasificador(){
 		//si no selecciono ningun valor en el combo
 		if(com_anio.getValue()==null){
 			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
 			return;
 		}
+		/*
 		//Si la tabla esta vacia
 		if(tab_poa.isEmpty()){
 			utilitario.agregarMensajeInfo("No se puede agregar Clasificador, por que no existen registros", "");
 			return;
 		}
+		*/
 		//Filtrar los clasificadores del año seleccionado
 		set_clasificador.getTab_seleccion().setSql(ser_presupuesto.getCatalogoPresupuestarioAnio("true",com_anio.getValue().toString()));
 		set_clasificador.getTab_seleccion().ejecutarSql();
@@ -364,8 +525,11 @@ public class pre_contratacion extends Pantalla{
 
 	public void aceptarClasificador(){
 		if(set_clasificador.getValorSeleccionado()!=null){
+			tab_poa.insertar();
 			tab_poa.setValor("ide_prcla", set_clasificador.getValorSeleccionado());
 			//Actualiza 
+			tab_poa.guardar();
+			guardarPantalla();
 			utilitario.addUpdate("tab_poa");//actualiza mediante ajax el objeto tab_poa
 			set_clasificador.cerrar();
 		}
@@ -373,7 +537,21 @@ public class pre_contratacion extends Pantalla{
 			utilitario.agregarMensajeInfo("Debe seleccionar un Clasificador", "");
 		}
 	}
-	
+
+	public void aceptarActualizaClasificador(){
+		if(set_clasificador_actua.getValorSeleccionado()!=null){			
+			tab_poa.setValor("ide_prcla", set_clasificador_actua.getValorSeleccionado());
+			tab_poa.modificar(tab_poa.getFilaActual());//para que haga el update
+			//Actualiza 
+			tab_poa.guardar();
+			guardarPantalla();
+			utilitario.addUpdate("tab_poa");//actualiza mediante ajax el objeto tab_poa
+			set_clasificador_actua.cerrar();
+		}
+		else{
+			utilitario.agregarMensajeInfo("Debe seleccionar un Clasificador", "");
+		}
+	}	
 	
 	
 	////reporte
@@ -597,6 +775,7 @@ public void aceptarSelResolucion (){
         double presupuesto_ejecutado = tab_mes.getSumaColumna("valor_presupuesto_prpom");
 		double presupuesto_reformado = Double.parseDouble(tab_poa.getValor("reforma_prpoa"));
 	
+		
         if(presupuesto_inicial<0){
         	utilitario.agregarMensajeInfo("Presupuesto Inicial", "EL valor del presupuesto inicial no puede ser negativo");
             return;
@@ -611,24 +790,94 @@ public void aceptarSelResolucion (){
         	utilitario.agregarMensajeInfo("Ejecuciòn Mensual", "No puede ejecutar un valor superior al presupuesto codificado");
             return;
         }
+        if(tab_financiamiento.isFocus()){        	
+        	
+        	for(int i=0;i<tab_financiamiento.getTotalFilas();i++){
+        		TablaGenerica tabla1= utilitario.consultar(ser_presupuesto.getInicialFuenteFinanciamiento(tab_financiamiento.getValor(i,"ide_prfuf"), com_anio.getValue().toString()));
+        		double valor_ingresado= Double.parseDouble(tab_financiamiento.getValor(i, "valor_financiamiento_prpof"));
+        		BigDecimal big_valor_ingresado=new BigDecimal(valor_ingresado);
+        		big_valor_ingresado=big_valor_ingresado.setScale(2, RoundingMode.HALF_UP);
+        		
+        		double ejcutado_inicial=0;
+        		double ejecucion=0;
+
+        		if(tabla1.getTotalFilas()>0){
+
+        			double asi_inicial=Double.parseDouble(tabla1.getValor("valor"));
+            		BigDecimal big_inicial=new BigDecimal(asi_inicial);
+            		big_inicial=big_inicial.setScale(2, RoundingMode.HALF_UP);
+
+
+        			TablaGenerica tabla2=utilitario.consultar(ser_presupuesto.getEjecutaFuenteFinanciamiento(tab_financiamiento.getValor(i, "ide_prfuf"), com_anio.getValue().toString(),tab_financiamiento.getValor(i, "ide_prpof")));
+        			if(tabla2.getTotalFilas()>0){
+        				ejcutado_inicial=Double.parseDouble(utilitario.getFormatoNumero(tabla2.getValor("valor"),2));
+        				
+        				BigDecimal big_ejecutado_inicial=new BigDecimal(ejcutado_inicial);
+        				big_ejecutado_inicial=big_ejecutado_inicial.setScale(2, RoundingMode.HALF_UP);
+                		
+        				ejecucion=Double.parseDouble(big_valor_ingresado+"")+Double.parseDouble(big_ejecutado_inicial+"");
+          				
+        				BigDecimal big_ejecucion=new BigDecimal(ejecucion);
+        				big_ejecucion=big_ejecucion.setScale(2, RoundingMode.HALF_UP);
+        				
+         				ejecucion=Double.parseDouble(big_ejecucion+"");
+        				asi_inicial=Double.parseDouble(big_inicial+"");
+        			}
+        			else {
+        				ejecucion=valor_ingresado+0;
+        			}
+
+        		 //cometando momentaneamente para revisuon
+        			if(asi_inicial<ejecucion){        		
+        				double saldo=asi_inicial-ejcutado_inicial; 
+        				utilitario.agregarMensajeError("Asignación supera el valor total en el POA", "Ya no dispone de saldo suficiente para la fuente de financiamiento seleccionada SALDO: "+saldo);
+        				return;
+        			}
+        			
+        		}
+        		else{
+        			utilitario.agregarMensajeError("No se puede asignar fuente de financiamiento", "No existe una fuente de Financiamiento Inicial asignada");
+        			return;
+        		}
+        	
+        	}
+        	
+        	//valida que la fuente de financiamiento sea igual ala valro asignado
+        	double total_fin=tab_financiamiento.getSumaColumna("valor_financiamiento_prpof");
+        	double inicial= Double.parseDouble(tab_poa.getValor("presupuesto_inicial_prpoa"));
+        	
+        	//System.out.println("total_fin "+total_fin+ " inicial "+inicial);
+        	if(total_fin!=inicial){
+        		utilitario.agregarMensajeError("Fuente de Financiamiento", "La Asignación de la fuente de financiamiento no conicide con el valor del presupuesto inicial");
+        		return;
+        	}
+        	
+        	tab_financiamiento.guardar();
+			guardarPantalla();
+
+        }
         
         if (tab_poa.guardar()) {
 
-			if (tab_mes.guardar()) {
-				if( tab_financiamiento.guardar()){
+			if (tab_mes.guardar()) {				
 					if(tab_reforma.guardar()){
 						if(tab_financiamiento_reforma.guardar()){
 							tab_archivo.guardar();	
 							guardarPantalla();
 						}
-					}
-
-				}
+					}				
 			}
 		}
 		
 	}
 
+	public static long parseUnsignedHex(String text) {
+        if (text.length() == 16) {
+            return (parseUnsignedHex(text.substring(0, 1)) << 60)
+                    | parseUnsignedHex(text.substring(1));
+        }
+        return Long.parseLong(text, 16);
+    }
 	@Override
 	public void eliminar() {
 		// TODO Auto-generated method stub
@@ -790,6 +1039,30 @@ public void aceptarSelResolucion (){
 
 	public void setTab_financiamiento_reforma(Tabla tab_financiamiento_reforma) {
 		this.tab_financiamiento_reforma = tab_financiamiento_reforma;
+	}
+	public Tabla getTab_financiamiento_ejecucion() {
+		return tab_financiamiento_ejecucion;
+	}
+	public void setTab_financiamiento_ejecucion(Tabla tab_financiamiento_ejecucion) {
+		this.tab_financiamiento_ejecucion = tab_financiamiento_ejecucion;
+	}
+	public SeleccionTabla getSet_poa() {
+		return set_poa;
+	}
+	public void setSet_poa(SeleccionTabla set_poa) {
+		this.set_poa = set_poa;
+	}
+	public SeleccionTabla getSet_saldo_fuente() {
+		return set_saldo_fuente;
+	}
+	public void setSet_saldo_fuente(SeleccionTabla set_saldo_fuente) {
+		this.set_saldo_fuente = set_saldo_fuente;
+	}
+	public SeleccionTabla getSet_clasificador_actua() {
+		return set_clasificador_actua;
+	}
+	public void setSet_clasificador_actua(SeleccionTabla set_clasificador_actua) {
+		this.set_clasificador_actua = set_clasificador_actua;
 	}
 
 
