@@ -23,6 +23,8 @@ public class pre_anual_egresos extends Pantalla {
 	private Tabla tab_reforma= new Tabla();
 	private Combo com_anio =new Combo();
 	private SeleccionTabla set_programa = new SeleccionTabla();
+	private SeleccionTabla set_poa=new SeleccionTabla();
+
 
 	@EJB
 	private ServicioPresupuesto ser_presupuesto=(ServicioPresupuesto) utilitario.instanciarEJB(ServicioPresupuesto.class);
@@ -52,6 +54,9 @@ public class pre_anual_egresos extends Pantalla {
 		tab_anual.getColumna("ide_geani").setCombo(ser_contabilidad.getAnio("true,false", "false,true"));
 		tab_anual.getColumna("ide_geani").setVisible(false);
 		tab_anual.setCondicion("ide_geani=-1");
+		tab_anual.getColumna("ide_prpoa").setCombo(ser_presupuesto.getPoaNombre("select ide_geani from gen_anio"));
+		tab_anual.getColumna("ide_prpoa").setAutoCompletar();
+		tab_anual.getColumna("ide_prpoa").setLectura(true);
 		tab_anual.getColumna("valor_reformado_h_pranu").setEtiqueta();
 		tab_anual.getColumna("valor_reformado_h_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_anual.getColumna("valor_reformado_h_pranu").setValorDefecto("0.00");
@@ -136,6 +141,12 @@ public class pre_anual_egresos extends Pantalla {
 		Division div_division =new Division ();
 		div_division.dividir2(pat_panel1, tab_tabulador, "50%", "h");
 		agregarComponente(div_division);
+
+		Boton bot_importarpoa = new Boton();
+		bot_importarpoa.setValue("Importar POA");
+		bot_importarpoa.setIcon("ui-icon-person");
+		bot_importarpoa.setMetodo("importarPoa");
+		bar_botones.agregarBoton(bot_importarpoa);
 		
 		Boton bot_material = new Boton();
 		bot_material.setValue("Agregar Programa");
@@ -152,7 +163,79 @@ public class pre_anual_egresos extends Pantalla {
 		set_programa.setRadio();
 		agregarComponente(set_programa);
 
+		iniciaPoa();
+
+	}
+	public void iniciaPoa(){
+		set_poa.setId("set_poa");
+		set_poa.setSeleccionTabla(ser_presupuesto.getPoa("-1","true","false"),"ide_prpoa");
+		set_poa.setTitle("Seleccione Poa");
+		set_poa.getTab_seleccion().getColumna("codigo_clasificador_prcla").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("descripcion_clasificador_prcla").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("DETALLE_PROGRAMA").setFiltro(true);//pone filtro
+		set_poa.getTab_seleccion().getColumna("PROGRAMA").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("DETALLE_PROYECTO").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("PROYECTO").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("DETALLE_PRODUCTO").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("PRODUCTO").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("DETALLE_ACTIVIDAD").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("ACTIVIDAD").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("DETALLE_SUBACTIVIDAD").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("SUBACTIVIDAD").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("CODIGO_SUBACTIVIDAD").setFiltro(true);
+		set_poa.getTab_seleccion().getColumna("NUM_RESOLUCION_PRPOA").setFiltro(true);
+		set_poa.getBot_aceptar().setMetodo("importarPoa");
+		agregarComponente(set_poa);
+	}
+	public void importarPoa(){
+		if(com_anio.getValue()==null){
+			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
+			return;
+		}
 		
+		if(set_poa.isVisible()){
+			String str_seleccionados=set_poa.getSeleccionados();
+			if (str_seleccionados!=null){
+				TablaGenerica tab_aprueba_poa =utilitario.consultar("select ide_prpoa,activo_prpoa,ide_prcla,ide_prfup,presupuesto_inicial_prpoa from pre_poa where ide_prpoa in ("+str_seleccionados+")");
+				if(tab_aprueba_poa.getTotalFilas()>0){
+					
+					for(int i=0;i<tab_aprueba_poa.getTotalFilas();i++){
+						TablaGenerica tab_programa=utilitario.consultar("select a.ide_prpro,a.ide_prfup,a.ide_prcla from pre_programa a, cont_vigente b where a.ide_prpro = b.ide_prpro and a.ide_prfup ="+tab_aprueba_poa.getValor(i,"ide_prfup")+"  and a.ide_prcla="+tab_aprueba_poa.getValor(i,"ide_prcla"));
+						tab_anual.insertar();
+						tab_anual.setValor("ide_prpro", tab_programa.getValor("ide_prpro"));
+						tab_anual.setValor("ide_geani", com_anio.getValue().toString());
+						tab_anual.setValor("ide_prpoa", tab_aprueba_poa.getValor(i,"ide_prpoa"));
+						tab_anual.setValor("valor_reformado_pranu", "0");
+						tab_anual.setValor("valor_inicial_pranu", tab_aprueba_poa.getValor(i,"presupuesto_inicial_prpoa"));
+						tab_anual.setValor("valor_codificado_pranu", tab_aprueba_poa.getValor(i,"presupuesto_inicial_prpoa"));
+						tab_anual.setValor("valor_reformado_h_pranu", "0");
+						tab_anual.setValor("valor_reformado_d_pranu", "0");
+						tab_anual.setValor("valor_devengado_pranu", "0");
+						tab_anual.setValor("valor_precomprometido_pranu", "0");
+						tab_anual.setValor("valor_eje_comprometido_pranu", "0");
+						tab_anual.setValor("valor_recaudado_pranu", "0");
+						tab_anual.setValor("valor_recaudado_efectivo_pranu", "0");
+						tab_anual.setValor("activo_pranu", "true");
+						tab_anual.guardar();
+						guardarPantalla();
+						
+						String sql="update pre_poa set ejecutado_presupuesto_prpoa=true where ide_prpoa= "+tab_aprueba_poa.getValor(i,"ide_prpoa");
+						utilitario.getConexion().ejecutarSql(sql);
+					}
+					
+				}
+				set_poa.cerrar();
+			}
+
+			else{
+				utilitario.agregarMensajeInfo("Debe seleccionar al menos un registro", "");
+			}
+		}
+		else{
+			set_poa.getTab_seleccion().setSql(ser_presupuesto.getPoa(com_anio.getValue().toString(),"true","false"));
+			set_poa.getTab_seleccion().ejecutarSql();
+			set_poa.dibujar();
+			}
 	}
 	///metodo año
 	public void seleccionaElAnio (){
@@ -323,6 +406,12 @@ public class pre_anual_egresos extends Pantalla {
 
 	public void setSet_programa(SeleccionTabla set_programa) {
 		this.set_programa = set_programa;
+	}
+	public SeleccionTabla getSet_poa() {
+		return set_poa;
+	}
+	public void setSet_poa(SeleccionTabla set_poa) {
+		this.set_poa = set_poa;
 	}
 
 }
