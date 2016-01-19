@@ -529,5 +529,9 @@ public String getMayorAnalitico(String fecha_inicial,String fecha_final,String i
 +" order by cue_codigo_cocac,mov_fecha_comov,nro_comprobante_comov"; 
 		return sql;
 }
+public void limpiarAcceso(String tabla){
+	String sql="delete from sis_bloqueo where tabla_bloq ilike '"+tabla+"';";
+	utilitario.getConexion().ejecutarSql(sql);
+}
 }
 
