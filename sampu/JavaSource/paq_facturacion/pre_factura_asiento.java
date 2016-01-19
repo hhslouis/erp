@@ -117,6 +117,7 @@ public class pre_factura_asiento extends Pantalla
 		tab_factura.getColumna("ide_geins").setCombo("gen_institucion", "ide_geins", "detalle_geins", "");
 		tab_factura.getColumna("ide_recli").setCombo(ser_facturacion.getClientes("0,1"));
 		tab_factura.getColumna("ide_recli").setAutoCompletar();
+		tab_factura.getColumna("ide_recli").setLongitud(100);
 		tab_factura.getColumna("ide_recli").setLectura(true);
 		tab_factura.getColumna("ide_falug").setCombo("fac_lugar", "ide_falug", "detalle_lugar_falug", "");
 		tab_factura.getColumna("ide_retip").setCombo("rec_tipo", "ide_retip", "detalle_retip", "");
@@ -159,6 +160,8 @@ public class pre_factura_asiento extends Pantalla
 		// TABLA 2
 		tab_factura_asiento.setId("tab_factura_asiento");
 		tab_factura_asiento.setTabla("cont_factura_asiento", "ide_cofaa", 2);
+		tab_factura_asiento.getColumna("ide_conac").setCombo("cont_nombre_asiento_contable", "ide_conac", "detalle_conac", "");
+		tab_factura_asiento.getColumna("ide_coest").setCombo("cont_estado", "ide_coest", "detalle_coest", "");
 		tab_factura_asiento.setLectura(true);
 		tab_factura_asiento.dibujar();
 

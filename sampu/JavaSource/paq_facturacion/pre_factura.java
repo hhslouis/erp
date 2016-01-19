@@ -496,7 +496,8 @@ public class pre_factura extends Pantalla{
 			}
 
 			tab_factura.setValor("ide_recli", str_seleccionado);				
-				
+			tab_factura.modificar(tab_factura.getFilaActual());//para que haga el update
+	
 			set_pantallacliente.cerrar();
 			utilitario.addUpdate("tab_factura");			
 		}
