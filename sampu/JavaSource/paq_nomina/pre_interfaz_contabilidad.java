@@ -178,7 +178,7 @@ public class pre_interfaz_contabilidad extends Pantalla {
 
 		Boton bot_core=new Boton();
 		bot_core.setMetodo("enviarCore");
-		bot_core.setValue("Enviar al Core Bancario");
+		//bot_core.setValue("Enviar al Core Bancario");
 		bar_botones.agregarBoton(bot_core);
 
 
@@ -225,7 +225,7 @@ public class pre_interfaz_contabilidad extends Pantalla {
 		}
 
 		if (tab_mov_contable.getValor("ANULADO_CNMOC")!=null && !tab_mov_contable.getValor("ANULADO_CNMOC").isEmpty()
-				&& (tab_mov_contable.getValor("ANULADO_CNMOC").equalsIgnoreCase("1") || tab_mov_contable.getValor("ANULADO_CNMOC").equalsIgnoreCase("true"))){
+				&& (tab_mov_contable.getValor("ANULADO_CNMOC").equalsIgnoreCase("true") || tab_mov_contable.getValor("ANULADO_CNMOC").equalsIgnoreCase("true"))){
 			utilitario.agregarMensajeInfo("No se puede anular la interfaz", "La interfaz ya se encuentra anulada");
 			return;
 		}
@@ -263,7 +263,7 @@ public class pre_interfaz_contabilidad extends Pantalla {
 
 
 
-				utilitario.getConexion().agregarSqlPantalla("UPDATE CNT_MOVIMIENTO_CONTABLE SET RAZON_ANULACION_CNMOC='"+are_razon_anula.getValue()+"',ANULADO_CNMOC=1 WHERE IDE_CNMOC="+tab_mov_contable.getValorSeleccionado());
+				utilitario.getConexion().agregarSqlPantalla("UPDATE CNT_MOVIMIENTO_CONTABLE SET RAZON_ANULACION_CNMOC='"+are_razon_anula.getValue()+"',ANULADO_CNMOC=true WHERE IDE_CNMOC="+tab_mov_contable.getValorSeleccionado());
 				try{
 					ConexionOracle con_core=new ConexionOracle(utilitario.getVariable("p_host_core_bancario"),// host  
 							utilitario.getVariable("p_port_core_bancario"), // puerto
@@ -582,7 +582,7 @@ public class pre_interfaz_contabilidad extends Pantalla {
 		}
 
 		if (tab_mov_contable.getValor("ACTIVO_CNMOC")!=null && !tab_mov_contable.getValor("ACTIVO_CNMOC").isEmpty()
-				&& (tab_mov_contable.getValor("ACTIVO_CNMOC").equalsIgnoreCase("1") || tab_mov_contable.getValor("ACTIVO_CNMOC").equalsIgnoreCase("true"))){
+				&& (tab_mov_contable.getValor("ACTIVO_CNMOC").equalsIgnoreCase("true") || tab_mov_contable.getValor("ACTIVO_CNMOC").equalsIgnoreCase("true"))){
 			utilitario.agregarMensajeInfo("No se puede cerrar el asiento", "El asiento ya se encuentra cerrado");
 			return;
 		}
@@ -597,7 +597,7 @@ public class pre_interfaz_contabilidad extends Pantalla {
 
 		if (con_guardar.isVisible()){
 			con_guardar.cerrar();
-			utilitario.getConexion().agregarSqlPantalla("update CNT_MOVIMIENTO_CONTABLE set activo_cnmoc=1 where ide_cnmoc="+tab_mov_contable.getValorSeleccionado());
+			utilitario.getConexion().agregarSqlPantalla("update CNT_MOVIMIENTO_CONTABLE set activo_cnmoc=true where ide_cnmoc="+tab_mov_contable.getValorSeleccionado());
 			
 			utilitario.getConexion().guardarPantalla();
 
@@ -736,7 +736,7 @@ public class pre_interfaz_contabilidad extends Pantalla {
 				"INNER JOIN GEN_AREA ARE ON rua.ide_geare=are.ide_geare " +
 				"WHERE ROL.IDE_NRROL in ("+set_nomina.getValorSeleccionado()+") " +
 				"AND RUA.IDE_GETIA="+tab_mov_contable.getValor("IDE_GETIA")+" " +
-				"and todos_nrrua=0 " +
+				"and todos_nrrua=false " +
 				"GROUP BY rua.IDE_GEARE,SUC.IDE_SUCU,SUC.NOM_SUCU,ARE.DETALLE_GEARE,RUB.IDE_NRRUB,RUA.IDE_GELUA,RUB.DETALLE_NRRUB,CUC.IDE_GECUC,ROL.IDE_NRDTN " +
 				"having SUM (DRO.VALOR_NRDRO) !=0 "+
 				"ORDER BY SUC.NOM_SUCU ASC,ARE.DETALLE_GEARE asc");
@@ -784,7 +784,7 @@ public class pre_interfaz_contabilidad extends Pantalla {
 				"INNER JOIN GEN_AREA ARE ON ARE.IDE_GEARE=EDP.IDE_GEARE " +
 				"WHERE ROL.IDE_NRROL in ("+set_nomina.getValorSeleccionado()+") " +
 				"AND RUA.IDE_GETIA="+tab_mov_contable.getValor("IDE_GETIA")+" " +
-				"and todos_nrrua=1 " +
+				"and todos_nrrua=true " +
 				"GROUP BY EDP.IDE_GEARE,SUC.IDE_SUCU,SUC.NOM_SUCU,ARE.DETALLE_GEARE,RUB.IDE_NRRUB,RUA.IDE_GELUA,RUB.DETALLE_NRRUB,CUC.IDE_GECUC,ROL.IDE_NRDTN " +
 				"having SUM (DRO.VALOR_NRDRO) !=0 "+
 				"ORDER BY SUC.NOM_SUCU ASC,ARE.DETALLE_GEARE ASC");
@@ -1015,7 +1015,7 @@ public class pre_interfaz_contabilidad extends Pantalla {
 
 				if (tab_mov_contable.getValor("activo_cnmoc")!=null 
 						&& !tab_mov_contable.getValor("activo_cnmoc").isEmpty() 
-						&& tab_mov_contable.getValor("activo_cnmoc").equalsIgnoreCase("1")){
+						&& tab_mov_contable.getValor("activo_cnmoc").equalsIgnoreCase("true")){
 					utilitario.agregarMensajeInfo("No se puede eliminar la interfaz seleccionada", "La interfaz ya se encuentra cerrada");
 					return;
 				}
