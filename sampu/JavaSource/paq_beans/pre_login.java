@@ -225,14 +225,16 @@ public class pre_login {
 
     public void salir() {
         try {
-            if (utilitario.getConexion() != null) {
-                ser_seguridad.salir(utilitario.getVariable("IDE_USUA"));
-                utilitario.getConexion().desconectar();
-            }
-            utilitario.cerrarSesion();
+            utilitario.ejecutarJavaScript("location.href='about:blank'");
             utilitario.ejecutarJavaScript("window.close()");
-        } catch (Exception ex) {
-        }
+        if (utilitario.getConexion() != null) {
+            ser_seguridad.salir(utilitario.getVariable("IDE_USUA"));
+            utilitario.getConexion().desconectar();
+        }            
+        utilitario.cerrarSesion();            
+    } catch (Exception ex) {
+    }
+
     }
 
     public String getTema() {
