@@ -1,7 +1,8 @@
 package paq_presupuesto;
 
 import javax.ejb.EJB;
-
+import java.util.HashMap;
+import java.util.Map;
 import framework.aplicacion.TablaGenerica;
 import framework.componentes.Boton;
 import framework.componentes.Combo;
@@ -17,6 +18,8 @@ import paq_nomina.ejb.ServicioNomina;
 import paq_presupuesto.ejb.ServicioPresupuesto;
 import paq_sistema.aplicacion.Pantalla;
 import paq_sistema.ejb.ServicioSeguridad;
+import framework.componentes.Reporte;
+import framework.componentes.SeleccionFormatoReporte;
 
 public class pre_tramite extends Pantalla   {
 
@@ -27,7 +30,9 @@ public class pre_tramite extends Pantalla   {
 	public static String par_no_adjudicado;
 	public static String par_proveedor;
 	public static String par_estado;
-
+	private Reporte rep_reporte=new Reporte();
+	private SeleccionFormatoReporte sef_reporte=new SeleccionFormatoReporte();
+	private Map p_parametros=new HashMap();
 
 
 	private Tabla tab_tramite=new Tabla();
@@ -57,6 +62,7 @@ public class pre_tramite extends Pantalla   {
 	@EJB
 	private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanciarEJB(ServicioSeguridad.class);
 	public pre_tramite(){
+		
 
 		empleado=ser_seguridad.getUsuario(utilitario.getVariable("ide_usua")).getValor("ide_gtemp");
 
@@ -67,7 +73,12 @@ public class pre_tramite extends Pantalla   {
 		par_proveedor=utilitario.getVariable("p_modulo_proveedor");
 		par_estado=utilitario.getVariable("p_modulo_estado_comprometido");
 
-
+		rep_reporte.setId("rep_reporte"); //id
+		rep_reporte.getBot_aceptar().setMetodo("aceptarReporte");//ejecuta el metodo al aceptar reporte
+		agregarComponente(rep_reporte);//agrega el componente a la pantalla
+		bar_botones.agregarReporte();//aparece el boton de reportes en la barra de botones
+		sef_reporte.setId("sef_reporte"); //id
+		agregarComponente(sef_reporte);	
 
 		com_anio.setCombo(ser_contabilidad.getAnioDetalle("true,false","true,false"));
 		com_anio.setMetodo("seleccionaElAnio");
@@ -124,6 +135,9 @@ public class pre_tramite extends Pantalla   {
 		tab_poa_tramite.getColumna("ide_prpoa").setAutoCompletar();
 		tab_poa_tramite.getColumna("ide_prpoa").setLectura(true);
 		tab_poa_tramite.getColumna("comprometido_prpot").setMetodoChange("CalcularSuma");
+		tab_poa_tramite.getColumna("ide_prfuf").setCombo("pre_fuente_financiamiento","ide_prfuf","detalle_prfuf","");
+		tab_poa_tramite.getColumna("ide_prfuf").setAutoCompletar();
+		tab_poa_tramite.getColumna("ide_prfuf").setLectura(true);
 		tab_poa_tramite.dibujar();
 		PanelTabla pat_panel2=new PanelTabla();
 		pat_panel2.setPanelTabla(tab_poa_tramite);
@@ -202,11 +216,11 @@ public class pre_tramite extends Pantalla   {
 		bar_botones.agregarBoton(bot_buscar);
 
 		set_poa.setId("set_poa");
-		set_poa.setSeleccionTabla(ser_presupuesto.getPoa("-1"),"ide_prpoa");
+		set_poa.setSeleccionTabla(ser_presupuesto.cetificacion(),"ide_prcer");
 		set_poa.setTitle("Seleccione Poa");
 		set_poa.getBot_aceptar().setMetodo("aceptarPoa");
 		agregarComponente(set_poa);
-		
+		/*
 		Boton bot_peticionario=new Boton();
 		bot_peticionario.setIcon("ui-icon-person");
 		bot_peticionario.setValue("Agregar Peticionario");
@@ -236,7 +250,7 @@ public class pre_tramite extends Pantalla   {
 		set_responsable.getBot_aceptar().setMetodo("aceptarResponsable");
 		set_responsable.setRadio();
 		agregarComponente(set_responsable);
-
+		*/
 	}
 public void importarPeticionario(){
 		
@@ -290,7 +304,7 @@ public void importarPeticionario(){
 			return;
 		}
 
-		set_poa.getTab_seleccion().setSql(ser_presupuesto.getPoa(com_anio.getValue().toString()));
+		set_poa.getTab_seleccion().setSql(ser_presupuesto.cetificacion());
 		set_poa.getTab_seleccion().ejecutarSql();
 		set_poa.dibujar();
 
@@ -300,25 +314,22 @@ public void importarPeticionario(){
 		String str_seleccionados = set_poa.getSeleccionados();
 
 		if (str_seleccionados!=null){
-			TablaGenerica tab_poa = ser_presupuesto.getTablaGenericaPoa(str_seleccionados);		
+			TablaGenerica tab_poa = ser_presupuesto.getTablaGenericaCert(str_seleccionados);		
 			for(int i=0;i<tab_poa.getTotalFilas();i++){
 				tab_poa_tramite.insertar();
 				tab_poa_tramite.setValor("ide_prpoa", tab_poa.getValor(i, "ide_prpoa"));
+				tab_poa_tramite.setValor("ide_prpoc", tab_poa.getValor(i, "ide_prpoc"));
+				tab_poa_tramite.setValor("ide_prfuf", tab_poa.getValor(i, "ide_prfuf"));
+				tab_poa_tramite.setValor("comprometido_prpot", tab_poa.getValor(i, "saldo_comprometer"));
+				tab_poa_tramite.setValor("saldo_comprometido_prpot", tab_poa.getValor(i, "saldo_comprometer"));
+
 			}
 			set_poa.cerrar();
 			utilitario.addUpdate("tab_poa_tramite");
 		}
 	}
 	public void aceptarTramite(){
-		if(set_tramite.isVisible()){
-			if (set_tramite.getValorSeleccionado()!=null){
-
-				tab_tramite.setValor("ide_copag", set_tramite.getValorSeleccionado());
-				utilitario.addUpdate("tab_tramite");
-				set_tramite.cerrar();
-				set_tramite_alterno.dibujar();
-			}
-		}else if(set_tramite_alterno.isVisible()){
+		if(set_tramite_alterno.isVisible()){
 			if (set_tramite_alterno.getValorSeleccionado()!=null){
 				tab_tramite.setValor("ide_copag", set_tramite_alterno.getValorSeleccionado());
 				set_tramite_alterno.cerrar();
@@ -361,7 +372,7 @@ public void importarPeticionario(){
 			}
 		}
 		
-		utilitario.addUpdateTabla(tab_tramite, "ide_tepro,ide_geedp,observaciones_prtra", "");
+		utilitario.addUpdateTabla(tab_tramite, "ide_tepro,ide_geedp,observaciones_prtra,ide_copag", "");
 
 	}
 	public void seleccionaElAnio (){
@@ -391,15 +402,14 @@ public void importarPeticionario(){
 		
 		}
 		if(tab_tramite.isFocus()){
+			tab_tramite.insertar();
+
 			String ide_gtempxx=ser_seguridad.getUsuario(utilitario.getVariable("ide_usua")).getValor("ide_gtemp");
 			tab_tramite.setValor("ide_coest", par_estado);
 			tab_tramite.setValor("ide_geani", com_anio.getValue()+"");
 			tab_tramite.setValor("ide_gtemp",ide_gtempxx );
-			set_tramite.getTab_seleccion().setSql(ser_contabilidad.getModuloParametros("true", par_tramite));
-			set_tramite.getTab_seleccion().ejecutarSql();
-			set_tramite.dibujar();
+			set_tramite_alterno.dibujar();
 			utilitario.addUpdate("tab_tramite");
-			tab_tramite.insertar();
 		}
 		else if(tab_poa_tramite.isFocus()){
 			tab_poa_tramite.insertar();
@@ -429,6 +439,18 @@ public void importarPeticionario(){
 			if (tab_poa_tramite.guardar()){
 				if (tab_documento.guardar()){
 					tab_archivo.guardar();
+					
+					String sql="delete from pre_mensual where ide_prtra in ("+tab_tramite.getValor("tab_tramite")+");"
++" INSERT INTO pre_mensual(ide_prmen, ide_pranu, ide_prtra,ide_comov, ide_codem, fecha_ejecucion_prmen, comprobante_prmen, devengado_prmen, cobrado_prmen," 
++"             cobradoc_prmen, pagado_prmen, comprometido_prmen, valor_anticipo_prmen, "
++"             activo_prmen,  certificado_prmen, ide_prfuf,ide_prcer)"
++" select row_number()over(order by a.ide_prtra)   +(select (case when max(ide_prmen) is null then 0 else max(ide_prmen) end) as codigo from pre_mensual)  as codigo,"
++" b.ide_pranu,a.ide_prtra,null,null,fecha_tramite_prtra,numero_oficio_prtra,0,0,0,0,comprometido_prpot,0,true,0,a.ide_prfuf,null"
++" from   pre_poa_tramite a,pre_anual b,pre_tramite c"
++" where a.ide_prpoa =b.ide_prpoa"
++" and a.ide_prtra =c.ide_prtra"
++" and a.ide_prtra ="+tab_tramite.getValor("ide_prtra")+";";
+					utilitario.getConexion().ejecutarSql(sql);
 				}
 			}
 		}
@@ -533,6 +555,45 @@ public void importarPeticionario(){
 	public void setSet_responsable(SeleccionTabla set_responsable) {
 		this.set_responsable = set_responsable;
 	}
-
+	public void aceptarReporte() {
+		  
+			if (rep_reporte.getReporteSelecionado().equals("Compromiso Presupuestario")){
+			
+			//	if (tab_tramite.getTotalFilas()>0) {
+				if (rep_reporte.isVisible()){
+						p_parametros=new HashMap();				
+						rep_reporte.cerrar();				
+						p_parametros.put("titulo", "TABLA DE CERTIFICACIÓN PRESUPUESTARIA");
+						sef_reporte.setSeleccionFormatoReporte(p_parametros, rep_reporte.getPath());						
+						sef_reporte.dibujar();
+					//}
+				}else{
+					utilitario.agregarMensajeInfo("No se puede continuar", "No ha seleccionado ningun registro en la cabecera del anticipo");
+				}
+			}
+			
+		}
+	@Override
+	public void abrirListaReportes() {
+		rep_reporte.dibujar();
+	}
+	public Reporte getRep_reporte() {
+		return rep_reporte;
+	}
+	public void setRep_reporte(Reporte rep_reporte) {
+		this.rep_reporte = rep_reporte;
+	}
+	public SeleccionFormatoReporte getSef_reporte() {
+		return sef_reporte;
+	}
+	public void setSef_reporte(SeleccionFormatoReporte sef_reporte) {
+		this.sef_reporte = sef_reporte;
+	}
+	public Map getP_parametros() {
+		return p_parametros;
+	}
+	public void setP_parametros(Map p_parametros) {
+		this.p_parametros = p_parametros;
+	}
 
 }
