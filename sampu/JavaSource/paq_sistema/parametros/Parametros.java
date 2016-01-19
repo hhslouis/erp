@@ -185,6 +185,7 @@ public class Parametros {
         lis_parametros.add(new Parametro("3", "p_liquidacion_aprobado_por", "Indica el nombre de la persona encargada de Aprobar la Liquidacion para el reporte de Liquidacion de Haberes", "Ing. Marco Egas"));
 
         lis_parametros.add(new Parametro("3", "p_nrh_rubro_vacaciones_liquidacion", "Indica el rubro en el cual se va a calcular el valor correspondiente a vacaciones ", "28","NRH_RUBRO", "IDE_NRRUB", "DETALLE_NRRUB"));
+        lis_parametros.add(new Parametro("3", "p_nrh_tipo_garante", "Indica el tipo de garante EMPLEADO DE EMGIRS", "1","nrh_tipo_garante", "ide_nrtig", "detalle_nrtig"));
 
 
 
@@ -369,6 +370,7 @@ public class Parametros {
         lis_parametros.add(new Parametro("14", "p_estado_conciliacion_bancaria","Indica el estado conciliacion del archivo bancario","14","cont_estado","ide_coest","detalle_coest"));
         lis_parametros.add(new Parametro("14", "p_estado_nota_debito_factura","Indica el estado que cambia la factura cuando se realiza la nota de debito","14","cont_estado","ide_coest","detalle_coest"));
         lis_parametros.add(new Parametro("14", "p_modulo_nota_debito","Indica el modulo que pertenece a nota de debito","14","gen_modulo","ide_gemod","detalle_gemod"));
+        lis_parametros.add(new Parametro("14", "p_modulo_nota_credito","Indica el modulo que pertenece a nota de credito","14","gen_modulo","ide_gemod","detalle_gemod"));
 
         /*
          *  ADQUISISCIONES = 15
@@ -399,12 +401,36 @@ public class Parametros {
         lis_parametros.add(new Parametro("16", "p_modulo_estado_comprometido","Indica el modulo que pertenece el comprometido ","21","cont_estado","ide_coest","detalle_coest"));
         lis_parametros.add(new Parametro("16", "p_modulo_estado_comprometido","Indica el modulo que pertenece el comprometido ","21","cont_estado","ide_coest","detalle_coest"));
         lis_parametros.add(new Parametro("16", "p_sub_actividad","Indica el nombre sub actividad para ","5","pre_nivel_funcion_programa","ide_prnfp","detalle_prnfp"));
-
+        lis_parametros.add(new Parametro("16", "p_mov_devengado","Indica el tipo de movimiento presupuestario devengado","5","pre_movimiento_presupuestario","ide_prmop","detalle_prmop"));
+        lis_parametros.add(new Parametro("16", "p_cuenta_banco","Indica el codigo de cuenta contable de bancos para generar el asiento contable","5","cont_catalogo_cuenta","ide_cocac","cue_codigo_cocac,cue_descripcion_cocac"));
+        lis_parametros.add(new Parametro("16", "p_lugar_ejecuta_banco","Indica el si la cuenta cuanta bancos donde se ejcuta debe o haber","2","gen_lugar_aplica","ide_gelua","detalle_gelua"));
+        lis_parametros.add(new Parametro("16", "p_cuenta_banco","Indica el codigo de cuenta contable de bancos para generar el asiento contable","5","cont_catalogo_cuenta","ide_cocac","cue_codigo_cocac,cue_descripcion_cocac"));
+        lis_parametros.add(new Parametro("16", "p_lugar_ejecuta_banco","Indica el si la cuenta cuanta bancos donde se ejcuta debe o haber","2","gen_lugar_aplica","ide_gelua","detalle_gelua"));
+        lis_parametros.add(new Parametro("16", "p_cuenta_iva","Indica el codigo de cuenta contable de iva para generar el asiento contable","5","cont_catalogo_cuenta","ide_cocac","cue_codigo_cocac,cue_descripcion_cocac"));
+        lis_parametros.add(new Parametro("16", "p_lugar_ejecuta_iva","Indica el si la cuenta cuanta iva donde se ejcuta debe o haber","2","gen_lugar_aplica","ide_gelua","detalle_gelua"));
+        lis_parametros.add(new Parametro("16", "p_cuenta_iva_cierra","Indica el codigo de cuenta contable de iva para generar el asiento contable","5","cont_catalogo_cuenta","ide_cocac","cue_codigo_cocac,cue_descripcion_cocac"));
+        lis_parametros.add(new Parametro("16", "p_lugar_ejecuta_iva_cierra","Indica el si la cuenta cuanta iva donde se ejcuta debe o haber","2","gen_lugar_aplica","ide_gelua","detalle_gelua"));
+        lis_parametros.add(new Parametro("16", "p_modulo_secuencialproyecto","Indica el modulo para generar el secuencial de proyecto","21","gen_modulo","ide_gemod","detalle_gemod"));
+        lis_parametros.add(new Parametro("16", "p_modulo_secuencialprograma","Indica el modulo para generar el secuencial de programa","21","gen_modulo","ide_gemod","detalle_gemod"));
+        lis_parametros.add(new Parametro("16", "p_modulo_secuencialproducto","Indica el modulo para generar el secuencial de producto","21","gen_modulo","ide_gemod","detalle_gemod"));
+        lis_parametros.add(new Parametro("16", "p_modulo_secuencialfase","Indica el modulo para generar el secuencial de fase","21","gen_modulo","ide_gemod","detalle_gemod"));
+        lis_parametros.add(new Parametro("16", "p_modulo_secuencialsubactiv","Indica el modulo para generar el secuencial de sub actividad","21","gen_modulo","ide_gemod","detalle_gemod"));
+        lis_parametros.add(new Parametro("16", "p_proyecto","Indica el proyecto","1","pre_nivel_funcion_programa","ide_prnfp","detalle_prnfp"));
+        lis_parametros.add(new Parametro("16", "p_programa","Indica el programa","2","pre_nivel_funcion_programa","ide_prnfp","detalle_prnfp"));
+        lis_parametros.add(new Parametro("16", "p_producto","Indica el producto","3","pre_nivel_funcion_programa","ide_prnfp","detalle_prnfp"));
+        lis_parametros.add(new Parametro("16", "p_fase","Indica el la fase","4","pre_nivel_funcion_programa","ide_prnfp","detalle_prnfp"));
+        lis_parametros.add(new Parametro("16", "p_modulo_secuencialcertificacion","Indica el modulo para generar el secuencial de las certificaciones","21","gen_modulo","ide_gemod","detalle_gemod"));
+     
         /*
          *  Contabilidad = 17
          * */
         lis_parametros.add(new Parametro("17", "p_tipo_asiento_inicial", "Indica  el codigo del tipo de asiento inicial", "4","cont_tipo_asiento","ide_cotia","detalle_cotia"));
-        
+        lis_parametros.add(new Parametro("17", "p_cuenta_banco_central", "Indica  el codigo de cuenta del banco central", "17","cont_catalogo_cuenta","ide_cocac","cue_codigo_cocac"));
+        lis_parametros.add(new Parametro("17", "p_modulo_contabilidad", "Indica  el moudlo contable", "17","gen_modulo","ide_gemod","detalle_gemod"));
+        lis_parametros.add(new Parametro("17", "p_nombre_contador", "Indica elnombre del Contador general", "Ing. Juan Carlos Flores"));
+        lis_parametros.add(new Parametro("17", "p_nombre_coordinador_fin", "Indica el nombre del Coordinador Financiero", "Ing. Juan Flores"));
+        lis_parametros.add(new Parametro("17", "p_nombre_jefe_presupuesto", "Indica el nombre del Jefe de Presupuesto", "Ing. Salasar Mishell"));
+     
 
         /*
          * TESORERIA=18
@@ -412,6 +438,7 @@ public class Parametros {
         lis_parametros.add(new Parametro("18", "p_tes_impuesto_renta","Indica el tipo impuesto impuesto a la renta","1","tes_tipo_impuesto","ide_tetii","detalle_tetii"));
         lis_parametros.add(new Parametro("18", "p_tes_impuesto_iva","Indica el tipo impuesto impuesto iva","2","tes_tipo_impuesto","ide_tetii","detalle_tetii"));
         lis_parametros.add(new Parametro("18", "p_tipo_mov_facturacion","Indica el tipo de movimiento a ser utilizado al momento de generar el asiento contable de facturacion","2","cont_tipo_movimiento","ide_cotim","detalle_cotim"));
+        lis_parametros.add(new Parametro("18", "p_valor_devenga", "Este campo indica el nombre del campo que se devenga de la tabla tes_comprobante_pago", "valor_pago_tecpo"));
 
         /*
          * ACTIVOS FIJOS =19
