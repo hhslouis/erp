@@ -82,12 +82,14 @@ public class Utilitario extends Framework {
 
 
 	public Date DeStringADate(String fecha){
+        System.out.println("entre a convertir a "+fecha);
+
         SimpleDateFormat formato = new SimpleDateFormat("yyyy-mm-dd");
         String strFecha = fecha;
         Date fechaDate = null;
         try {
             fechaDate = formato.parse(strFecha);
-                 //       System.out.println("entre a convertir strign a fecha "+fechaDate.toString());
+                        System.out.println("entre a convertir strign a fecha "+fechaDate.toString());
             return fechaDate;
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -102,6 +104,19 @@ public class Utilitario extends Framework {
 		//System.out.println(convertido);
 		return convertido;
 	}
+	public Date DeStringAHora(String fecha){
+        SimpleDateFormat formato = new SimpleDateFormat("hh:mm:ss");
+        String strFecha = fecha;
+        Date fechaDate = null;
+        try {
+            fechaDate = formato.parse(strFecha);
+                       System.out.println("entre a convertir strign a fecha "+fechaDate.toString());
+            return fechaDate;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return fechaDate;
+        }
+    }
 	/*Valida el ingreso de solo numeros enteros positivos (telefono)
 	 * 
 	 */
