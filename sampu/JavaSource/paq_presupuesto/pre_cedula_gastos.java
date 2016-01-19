@@ -12,6 +12,7 @@ import framework.componentes.Division;
 import framework.componentes.Etiqueta;
 import framework.componentes.PanelTabla;
 import framework.componentes.Radio;
+import framework.componentes.SeleccionCalendario;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import paq_contabilidad.ejb.ServicioContabilidad;
@@ -27,6 +28,8 @@ public class pre_cedula_gastos extends Pantalla{
 	private Confirmar con_guardar=new Confirmar();
 	private Combo com_nivel_cuenta_inicial = new Combo();
 	private Combo com_nivel_cuenta_final = new Combo();
+	private SeleccionCalendario sel_calendario=new SeleccionCalendario();
+
 	
 	public static String par_tipo_asiento_inicial;
 
@@ -83,8 +86,102 @@ public class pre_cedula_gastos extends Pantalla{
 		div1.dividir1(pat_balance_inicial);
 		agregarComponente(div1);
 		
+		Boton bot_actualizar=new Boton();
+		bot_actualizar.setIcon("ui-icon-person");
+		bot_actualizar.setValue("Recalcular Cedula Presupuestaria");
+		bot_actualizar.setMetodo("generarCedula");
+		bar_botones.agregarBoton(bot_actualizar);
 		
-		
+	}
+	public void generarCedula(){
+		if(com_anio.getValue()==null){
+			utilitario.agregarMensajeInfo("Selecione un Año", "");
+			return;			
+
+		}
+		String sql="update pre_cedula_gastos"
++" set inicial_prcei=0,"
++" acumulado_prcei=0,"
++" certificado_prcei=0,"
++" comprometido_prcei=0,"
++" devengado_prcei=0,"
++" pagado_prcei=0,"
++" saldo_comprometer_prcei=0,"
++" saldo_devengar_prcei=0,"
++" reforma_prcei=0,"
++" saldo_pagado_prcei=0,"
++" codificado_prcei=0;"
++" update pre_cedula_gastos"
++" set inicial_prcei=valor_inicial_pranu,"
++" certificado_prcei=valor_precomprometido_pranu,"
++" comprometido_prcei=valor_eje_comprometido_pranu,"
++" devengado_prcei=valor_devengado_pranu,"
++" pagado_prcei=pagado_pranu,"
++" reforma_prcei=valor_reformado_pranu,"
++" codificado_prcei=valor_codificado_pranu"
++" from ("
++" select a.ide_prcla,sum(valor_reformado_pranu) as valor_reformado_pranu,sum(valor_inicial_pranu) as valor_inicial_pranu,"
++" sum(valor_codificado_pranu) as valor_codificado_pranu,sum(valor_reformado_h_pranu) as valor_reformado_h_pranu,sum(valor_devengado_pranu) as valor_devengado_pranu,"
++" sum(valor_precomprometido_pranu) as valor_precomprometido_pranu,sum(valor_eje_comprometido_pranu) as valor_eje_comprometido_pranu,"
++" sum(valor_recaudado_pranu) as valor_recaudado_pranu,sum(valor_recaudado_efectivo_pranu) as valor_recaudado_efectivo_pranu ,sum(pagado_pranu) as pagado_pranu"
++" from pre_programa a, pre_anual b"
++" where a.ide_prpro = b.ide_prpro group by a.ide_prcla"
++" ) a where a.ide_prcla = pre_cedula_gastos.ide_prcla;"
++" update pre_cedula_gastos"
++" set inicial_prcei=inicial,"
++" certificado_prcei=certificado,"
++" comprometido_prcei=comprometido,"
++" devengado_prcei=devengado,"
++" pagado_prcei=pagado,"
++" reforma_prcei=reformado,"
++" codificado_prcei=codificado"
++" from ("
++" select pre_ide_prcla,"
++" sum(inicial_prcei) as inicial,sum(reforma_prcei) as reformado, sum(codificado_prcei) as codificado,sum(devengado_prcei) as devengado,sum(certificado_prcei) as certificado,"
++" sum (comprometido_prcei)as comprometido,sum(pagado_prcei) as pagado"
++" from pre_clasificador a, pre_cedula_gastos b "
++" where a.ide_prcla = b.ide_prcla and nivel_prcla = 4"
++" group by pre_ide_prcla"
++" ) a where a.pre_ide_prcla = pre_cedula_gastos.ide_prcla;"
++" update pre_cedula_gastos"
++" set inicial_prcei=inicial,"
++" certificado_prcei=certificado,"
++" comprometido_prcei=comprometido,"
++" devengado_prcei=devengado,"
++" pagado_prcei=pagado,"
++" reforma_prcei=reformado,"
++" codificado_prcei=codificado"
++" from ("
++" select pre_ide_prcla,"
++" sum(inicial_prcei) as inicial,sum(reforma_prcei) as reformado, sum(codificado_prcei) as codificado,sum(devengado_prcei) as devengado,sum(certificado_prcei) as certificado,"
++" sum (comprometido_prcei)as comprometido,sum(pagado_prcei) as pagado"
++" from pre_clasificador a, pre_cedula_gastos b "
++" where a.ide_prcla = b.ide_prcla and nivel_prcla = 3"
++" group by pre_ide_prcla"
++" ) a where a.pre_ide_prcla = pre_cedula_gastos.ide_prcla;"
++" update pre_cedula_gastos"
++" set inicial_prcei=inicial,"
++" certificado_prcei=certificado,"
++" comprometido_prcei=comprometido,"
++" devengado_prcei=devengado,"
++" pagado_prcei=pagado,"
++" reforma_prcei=reformado,"
++" codificado_prcei=codificado"
++" from ("
++" select pre_ide_prcla,"
++" sum(inicial_prcei) as inicial,sum(reforma_prcei) as reformado, sum(codificado_prcei) as codificado,sum(devengado_prcei) as devengado,sum(certificado_prcei) as certificado,"
++" sum (comprometido_prcei)as comprometido,sum(pagado_prcei) as pagado"
++" from pre_clasificador a, pre_cedula_gastos b "
++" where a.ide_prcla = b.ide_prcla and nivel_prcla = 2"
++" group by pre_ide_prcla"
++" ) a where a.pre_ide_prcla = pre_cedula_gastos.ide_prcla;"
++" update pre_cedula_gastos"
++" set saldo_comprometer_prcei=certificado_prcei-comprometido_prcei,"
++" saldo_devengar_prcei=comprometido_prcei-devengado_prcei,"
++" saldo_pagado_prcei=devengado_prcei-pagado_prcei;";
+		utilitario.getConexion().ejecutarSql(sql);
+		tab_balance_inicial.ejecutarSql();
+		utilitario.addUpdate("tab_balance_inicial");
 	}
 		public void seleccionaElAnio (){
 		if(com_anio.getValue()==null){

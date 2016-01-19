@@ -28,6 +28,8 @@ public class pre_certificacion extends Pantalla{
 	private SeleccionTabla set_poa=new SeleccionTabla();
 	private Combo com_anio=new Combo();
 	private String empleado;
+	public static String par_sec_certificacion;
+
 	///reporte
 	private Map p_parametros = new HashMap();
 	private Reporte rep_reporte = new Reporte();
@@ -48,6 +50,7 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 	
 	public pre_certificacion(){
 		
+		par_sec_certificacion =utilitario.getVariable("p_modulo_secuencialcertificacion");
 		///reporte
 		rep_reporte.setId("rep_reporte"); //id
 		rep_reporte.getBot_aceptar().setMetodo("aceptarReporte");//ejecuta el metodo al aceptar reporte
@@ -75,7 +78,7 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 		tab_certificacion.setHeader("CERTIFICACION PRESUPUESTARIA");
 		tab_certificacion.setTabla("pre_certificacion", "ide_prcer", 1);
 		tab_certificacion.setCampoOrden("ide_prcer desc");
-		tab_certificacion.getColumna("IDE_GEEDP").setCombo(ser_nomina.servicioEmpleadoContrato("true"));
+		tab_certificacion.getColumna("IDE_GEEDP").setCombo(ser_nomina.servicioEmpleadoContrato("true,false"));
 		tab_certificacion.getColumna("IDE_GEEDP").setAutoCompletar();
 		tab_certificacion.getColumna("gen_ide_geedp").setCombo(ser_nomina.servicioEmpleadoContrato("true,false"));
 		tab_certificacion.getColumna("gen_ide_geedp").setAutoCompletar();
@@ -111,10 +114,15 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 		tab_poa_certificacion.getColumna("ide_prpoa").setCombo(ser_presupuesto.getPoaTodos());
 		tab_poa_certificacion.getColumna("ide_prpoa").setAutoCompletar();
 		tab_poa_certificacion.getColumna("ide_prpoa").setLectura(true);
+		tab_poa_certificacion.getColumna("ide_prfuf").setCombo("pre_fuente_financiamiento","ide_prfuf","detalle_prfuf","");
+		tab_poa_certificacion.getColumna("ide_prfuf").setAutoCompletar();
+		tab_poa_certificacion.getColumna("ide_prfuf").setLectura(true);		
 		tab_poa_certificacion.getColumna("activo_prpoc").setValorDefecto("true");
 		tab_poa_certificacion.getColumna("activo_prpoc").setLectura(true);
 		tab_poa_certificacion.getColumna("valor_certificado_prpoc").setMetodoChange("calcular");
 		tab_poa_certificacion.getColumna("ide_prpoa").setAncho(50);
+		tab_poa_certificacion.getColumna("saldo_certificacion_prpoc").setEtiqueta();
+		tab_poa_certificacion.getColumna("saldo_certificacion_prpoc").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
 
 		tab_poa_certificacion.dibujar();
 		PanelTabla pat_poa_certi=new PanelTabla();
@@ -134,7 +142,7 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 		bar_botones.agregarBoton(bot_buscar);
 
 		set_poa.setId("set_poa");
-		set_poa.setSeleccionTabla(ser_presupuesto.getPoa("-1"),"ide_prpoa");
+		set_poa.setSeleccionTabla(ser_presupuesto.getPoa("-1","true","true"),"ide_prpoa");
 		set_poa.setTitle("Seleccione Poa");
 		set_poa.getTab_seleccion().getColumna("codigo_clasificador_prcla").setFiltro(true);
 		set_poa.getTab_seleccion().getColumna("descripcion_clasificador_prcla").setFiltro(true);
@@ -150,14 +158,35 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 		set_poa.getTab_seleccion().getColumna("SUBACTIVIDAD").setFiltro(true);
 		set_poa.getTab_seleccion().getColumna("CODIGO_SUBACTIVIDAD").setFiltro(true);
 		set_poa.getTab_seleccion().getColumna("NUM_RESOLUCION_PRPOA").setFiltro(true);
-		
-
 		set_poa.getBot_aceptar().setMetodo("aceptarPoa");
-		//set_poa.setRadio();
 		agregarComponente(set_poa);
 
 	}
 	
+	public int validaValorCertificado(){
+		
+		double valor_certificado=0;
+		double saldo_certificado=0;
+		int retorna=0;
+		
+		for (int i=0;i<tab_poa_certificacion.getTotalFilas();i++)
+		{	
+		valor_certificado =Double.parseDouble(tab_poa_certificacion.getValor(i,"valor_certificado_prpoc"));
+		saldo_certificado=Double.parseDouble(tab_poa_certificacion.getValor(i,"saldo_certificacion_prpoc"));
+		if(valor_certificado <=0)
+		{
+			utilitario.agregarNotificacionInfo("No se puede generar la Certificación Presupuestaria", "Ingrese un valor superior a cero o un valor positivo");
+			retorna +=retorna+1;
+			
+		}
+		if(valor_certificado>saldo_certificado){
+			utilitario.agregarNotificacionInfo("No se puede generar la Certificación Presupuestaria", "Ingrese un valor igual o menor al disponible de saldo");
+			retorna +=retorna+1;
+			
+		}
+		}
+		return retorna;
+	}
 	public void seleccionaElAnio (){
 		if(com_anio.getValue()!=null){
 			tab_certificacion.setCondicion("ide_geani="+com_anio.getValue());
@@ -186,10 +215,10 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 		////suma la los mismos valores
 		String valorcert=tab_poa_certificacion.getSumaColumna("valor_certificado_prpoc")+"";
 		dou_valor_certif=Double.parseDouble(valorcert);
-		if(dou_valor_certif > dou_saldo_poa || dou_saldo_poa <=0 ){
+		/*if(dou_valor_certif > dou_saldo_poa || dou_saldo_poa <=0 ){
 			utilitario.agregarNotificacionInfo("Valor Excedido", "Valor de la certificacion por POA excede su saldo, es un avalor negativo o valor cero verifique");
 			return;
-		}
+		}*/
 		///valor disponible
 		dou_valor_disponible=dou_valor_certif-dou_valor_liberado;
 				
@@ -213,7 +242,7 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 	
 ////importar poa
 	public void importarPoa(){
-		System.out.println(" ingresar al importar");
+		//System.out.println(" ingresar al importar");
 		if(com_anio.getValue()==null){
 			utilitario.agregarMensajeInfo("Debe seleccionar un año", "");
 			return;
@@ -222,7 +251,7 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 			utilitario.agregarMensajeInfo("No puede buscar un POA", "Debe tener una Certificación Presupuestaria");
 		}
 
-		set_poa.getTab_seleccion().setSql(ser_presupuesto.getPoa(com_anio.getValue().toString()));
+		set_poa.getTab_seleccion().setSql(ser_presupuesto.getPoa(com_anio.getValue().toString(),"true","true"));
 		set_poa.getTab_seleccion().ejecutarSql();
 		set_poa.dibujar();
 
@@ -235,9 +264,17 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 			TablaGenerica tab_poa = ser_presupuesto.getTablaGenericaPoa(str_seleccionados);		
 			for(int i=0;i<tab_poa.getTotalFilas();i++){
 				TablaGenerica saldo_poa=utilitario.consultar(ser_presupuesto.getSaldoPoa(tab_poa.getValor( i,"ide_prpoa")));
-				tab_poa_certificacion.insertar();
-				tab_poa_certificacion.setValor("ide_prpoa", tab_poa.getValor( i,"ide_prpoa"));
-				tab_poa_certificacion.setValor("valor_certificado_prpoc", saldo_poa.getValor("saldo_poa"));
+				for(int j=0;j<saldo_poa.getTotalFilas();j++){
+					
+					
+						tab_poa_certificacion.insertar();
+						tab_poa_certificacion.setValor("ide_prpoa", tab_poa.getValor( i,"ide_prpoa"));
+						tab_poa_certificacion.setValor("valor_certificado_prpoc", saldo_poa.getValor(j,"saldo_poa"));
+						tab_poa_certificacion.setValor("ide_prfuf", saldo_poa.getValor(j,"ide_prfuf"));
+						tab_poa_certificacion.setValor("saldo_certificacion_prpoc",saldo_poa.getValor(j,"saldo_poa"));
+						calcularCertificacion ();
+				}
+				
 			}
 			set_poa.cerrar();
 			utilitario.addUpdate("tab_poa_certificacion");
@@ -254,13 +291,17 @@ public void abrirListaReportes() {
 	rep_reporte.dibujar();
 }
 public void aceptarReporte(){
-	if(rep_reporte.getReporteSelecionado().equals("Certificaciòn Presupuestaria"));{
+	if(rep_reporte.getReporteSelecionado().equals("Certificación Presupuestaria"));{
 		TablaGenerica tab_reporte=utilitario.consultar("select ide_geani,detalle_geani from gen_anio where ide_geani="+com_anio.getValue());
 		if (rep_reporte.isVisible()){
 			p_parametros=new HashMap();		
 			rep_reporte.cerrar();	
 			p_parametros.put("titulo","Certificaciòn Presupuestaria");
-			p_parametros.put("ide_geani", Integer.parseInt(tab_certificacion.getValor("ide_prcer")));
+			p_parametros.put("ide_prcer", Integer.parseInt(tab_certificacion.getValor("ide_prcer")));
+			p_parametros.put("jefe_presupuesto", utilitario.getVariable("p_nombre_jefe_presupuesto"));
+			p_parametros.put("coordinador_finaciero",  utilitario.getVariable("p_nombre_coordinador_fin"));
+			p_parametros.put("ide_geani", Integer.parseInt("1"));
+
 			self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
 		self_reporte.dibujar();
 		
@@ -292,12 +333,15 @@ public void aceptarReporte(){
 		if(tab_certificacion.isFocus()){
 			tab_certificacion.insertar();
 			tab_certificacion.setValor("ide_gtemp",ide_gtempxx );
-			utilitario.addUpdate("tab_certificacion");
+			tab_certificacion.setValor("ide_geedp",ide_gtempxx );
 			tab_certificacion.setValor("ide_geani",com_anio.getValue()+"");
+			tab_certificacion.setValor("nro_certificacion_prcer",ser_contabilidad.numeroSecuencial(par_sec_certificacion));
+			tab_certificacion.setValor("fecha_prcer", utilitario.getFechaActual());
+			utilitario.addUpdate("tab_certificacion");
 
 		}
 		else if(tab_poa_certificacion.isFocus()){
-			utilitario.agregarMensajeInfo("No puede insertar", "Debe agrear un poa");
+			utilitario.agregarMensajeInfo("No puede insertar", "Debe seleccionar POA");
 		}
 		
 
@@ -306,9 +350,37 @@ public void aceptarReporte(){
 	@Override
 	public void guardar() {
 		// TODO Auto-generated method stub
+		if(tab_poa_certificacion.getTotalFilas()>0){
+			
+			if(validaValorCertificado()>0){
+				//utilitario.agregarMensajeError("No se puede guardar", "Nos epudo guaradr");
+				return;
+			}
+			//calcularCertificacion ();
+		}
+		
+		
+		
+		if(tab_certificacion.isFilaInsertada()){
+			ser_contabilidad.guardaSecuencial(ser_contabilidad.numeroSecuencial(par_sec_certificacion), par_sec_certificacion);
+		}
 		if(tab_certificacion.guardar()){
+
 			if(tab_poa_certificacion.guardar()){
 				guardarPantalla();
+				////ojosql provisional
+				String sql="delete from pre_mensual where ide_prcer in ("+tab_certificacion.getValor("ide_prcer")+");"
++" INSERT INTO pre_mensual(ide_prmen, ide_pranu, ide_prtra,ide_comov, ide_codem, fecha_ejecucion_prmen, comprobante_prmen, devengado_prmen, cobrado_prmen," 
++"             cobradoc_prmen, pagado_prmen, comprometido_prmen, valor_anticipo_prmen, "
+   +"          activo_prmen,  certificado_prmen, ide_prfuf,ide_prcer)"
++" select row_number()over(order by a.ide_prcer)   +(select (case when max(ide_prmen) is null then 0 else max(ide_prmen) end) as codigo from pre_mensual)  as codigo,"
++" b.ide_pranu,null,null,null,fecha_prcer,num_documento_prcer,0,0,0,0,0,0,true,valor_certificado_prpoc ,a.ide_prfuf,a.ide_prcer"
++" from   pre_poa_certificacion a,pre_anual b,pre_certificacion c"
++" where a.ide_prpoa =b.ide_prpoa"
++" and a.ide_prcer =c.ide_prcer"
++" and a.ide_prcer ="+tab_certificacion.getValor("ide_prcer");
+				utilitario.getConexion().ejecutarSql(sql);
+				
 			}
 		}
 	}
@@ -316,7 +388,9 @@ public void aceptarReporte(){
 	@Override
 	public void eliminar() {
 		// TODO Auto-generated method stub
+		
 		utilitario.getTablaisFocus().eliminar();
+		//calcularCertificacion ();
 	}
 
 	public Tabla getTab_certificacion() {
