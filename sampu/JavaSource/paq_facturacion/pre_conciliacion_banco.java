@@ -37,6 +37,7 @@ import framework.aplicacion.TablaGenerica;
 import framework.componentes.Boton;
 import framework.componentes.Calendario;
 import framework.componentes.Combo;
+import framework.componentes.Dialogo;
 import framework.componentes.Division;
 import framework.componentes.Etiqueta;
 import framework.componentes.Grid;
@@ -45,6 +46,7 @@ import framework.componentes.Radio;
 import framework.componentes.Tabla;
 import framework.componentes.Texto;
 import framework.componentes.Upload;
+
 import java.util.List;
 /**
  *
@@ -61,6 +63,8 @@ public class pre_conciliacion_banco extends Pantalla {
 	private Upload upl_archivo=new Upload();
 	private Tabla tab_cliente = new Tabla();
 	private Texto txt_documento_banco = new Texto();
+	private Dialogo dia_detalle = new Dialogo();
+	private Tabla tab_resultado = new Tabla();
 	
 
 
@@ -192,6 +196,22 @@ public class pre_conciliacion_banco extends Pantalla {
         div_division.setId("div_division");
         div_division.dividir1(pat_panel);
         agregarComponente(div_division);
+        
+        tab_resultado.setId("tab_resultado");
+        tab_resultado.setIdCompleto("dia_detalle:tab_resultado");
+        tab_resultado.setTabla("fac_auditoria_conciliacion", "ide_faauc", 3);
+        tab_resultado.setCondicion("ide_faauc=-1");
+        tab_resultado.setLectura(true);
+        tab_resultado.dibujar();
+        
+        
+		dia_detalle.setId("dia_detalle");
+		dia_detalle.setTitle("RESULTADO DE CONCILIACION");
+		dia_detalle.setWidth("80%");
+		dia_detalle.setDynamic(false);
+		dia_detalle.setDialogo(tab_resultado);
+		
+		agregarComponente(dia_detalle);
     }
     
     
@@ -216,7 +236,7 @@ public class pre_conciliacion_banco extends Pantalla {
 		String sql ="select orden,secuencial,fecha_transaccion_fafac, ruc_comercial_recli,rpad,base_aprobada_fafac, valor_iva_fafac, total_fafac,detalle_bogrm,doc_identidad,"
 				+" repeat ('0',(15 - length (tot_sin_punto)))||tot_sin_punto as valor_sin_punto,repeat ('0',(15 - length (secuencial)))||secuencial as factura_sin_punto,repeat ('0',(13 - length (ruc_comercial_recli)))||ruc_comercial_recli as ruc_sin_punto,repeat ('0',(7 - length (nuevo_iva)))||nuevo_iva as iva_sin_punto"
 				+" from ("
-				+" SELECT row_number() over( order by secuencial_fafac) as orden,substring(secuencial_fafac from 9 for 7) as secuencial,fecha_transaccion_fafac, ruc_comercial_recli,rpad(razon_social_recli,30,' ') as rpad,base_aprobada_fafac, valor_iva_fafac, total_fafac,"
+				+" SELECT row_number() over( order by secuencial_fafac) as orden,replace (secuencial_fafac,'-','') as secuencial,fecha_transaccion_fafac, ruc_comercial_recli,rpad(razon_social_recli,30,' ') as rpad,base_aprobada_fafac, valor_iva_fafac, total_fafac,"
 				+" detalle_bogrm,replace(round(total_fafac,2)||'','.','') as tot_sin_punto, ( case when ide_gttdi = 1  then 'P' when ide_gttdi= 2 then 'R' when ide_gttdi= 3 then 'C' end) as doc_identidad,replace((round(valor_iva_fafac,2))||'','.','') as nuevo_iva "
 				+" FROM fac_factura fac"
 				+" join rec_clientes cli on cli.ide_recli=fac.ide_recli"
@@ -366,6 +386,7 @@ public class pre_conciliacion_banco extends Pantalla {
 			String str_msg_adve="";
 			String str_msg_erro="";
 			double dou_tot_valor_imp=0;
+			String sql_inserta_auditoria=""; 
 			
 			if(txt_documento_banco.getValue().equals("")){
 				utilitario.agregarMensajeInfo("No se puede conciliar el Archivo", "Favor Ingrese el numero del documento de conciliacion");
@@ -385,17 +406,23 @@ public class pre_conciliacion_banco extends Pantalla {
 				int int_fin = hoja.getRows();
 				upl_archivo.setNombreReal(evt.getFile().getFileName());
 
-
+				insertaAuditoria(evt);
 
 				str_msg_info+=getFormatoInformacion("El archivo "+upl_archivo.getNombreReal()+" contiene "+int_fin+" filas");
 
 				int total_tabla= tab_tabla.getRowCount();
 				//System.out.println("valor de la tabal "+total_tabla+" valor impreso"+tab_tabla.getValor(1, "ide_fafac"));
 				for(int k=0; k< tab_tabla.getTotalFilas();k ++){
+					//System.out.println("factura "+tab_tabla.getValor(k, "ide_fafac"));
 					// extraigo los datos de la factura
 					TablaGenerica tab_factura=ser_facturacion.getDatosClienteFactura(tab_tabla.getValor(k, "ide_fafac"));
 
 				for (int i = 0; i < int_fin; i++) {
+					
+					//if (tab_tabla.getValor(k, "ide_fafac").equalsIgnoreCase("3961")){
+						//System.out.println("fila excel "+i);
+	
+					//}
 					//codigo tercero remplaza a str_cedula permite leer el codigo de la factutra
 					String str_codigo_tercero = hoja.getCell(4, i).getContents();	
 					str_codigo_tercero=str_codigo_tercero.trim(); 
@@ -406,6 +433,7 @@ public class pre_conciliacion_banco extends Pantalla {
 					double double_valor_conciliar= Double.parseDouble(str_valor_conciliar.replace(",", "."));
 					String str_fecha_pago= hoja.getCell(6, i).getContents();
 
+					
 					if(tab_factura.getValor("factura_sin_punto").equals(str_codigo_tercero) && tab_factura.getValor("ruc_sin_punto").equals(str_cedula_cliente)){
 						//System.out.println(" enter a poner el valor ");
 						String update="update fac_factura set conciliado_fafac=true,"
@@ -417,29 +445,14 @@ public class pre_conciliacion_banco extends Pantalla {
 								+"ide_coest="+utilitario.getVariable("p_factura_pagado")+","
 								+"con_ide_coest="+utilitario.getVariable("p_estado_conciliacion_bancaria")
 								+" where ide_fafac="+tab_tabla.getValor(k,"ide_fafac");
-						//System.out.println(" imprimo update "+update);
-
 						utilitario.getConexion().ejecutarSql(update);
-						/*
-						tab_tabla.setValor(k, "conciliado_fafac", "true");
-						tab_tabla.setValor(k, "fecha_pago_fafac",str_fecha_pago);
-						tab_tabla.setValor(k, "valor_conciliado_fafac", double_valor_conciliar+"");
-						tab_tabla.setValor(k, "fecha_conciliado_fafac", "01/01/2015" );//utilitario.getFechaActual()+"");
-						tab_tabla.setValor(k, "documento_conciliado_fafac", str_valor);
-						tab_tabla.setValor(k, "documento_bancario_fafac", txt_documento_banco.getValue()+"");
-						tab_tabla.setValor(k, "con_ide_coest", utilitario.getVariable("p_estado_conciliacion_bancaria"));
-						//tab_tabla.modificar(tab_tabla.getFilaActual());
-						System.out.println(" fecha_pago_fafac "+tab_tabla.getValor(k, "fecha_pago_fafac"));
-						System.out.println(" valor_conciliado_fafac "+tab_tabla.getValor(k, "valor_conciliado_fafac"));
-						System.out.println(" fecha_conciliado_fafac "+tab_tabla.getValor(k, "fecha_conciliado_fafac"));
+						sql_inserta_auditoria="update fac_auditoria_conciliacion set conciliado_faauc=true,ide_factura_sampu_faauc="+tab_tabla.getValor(k,"ide_fafac")+"  where codigo_factura_faauc='"+str_codigo_tercero+"' and cedula_archivo_faauc='"+str_cedula_cliente+"' and validado_faauc=false; ";
+						utilitario.getConexion().ejecutarSql(sql_inserta_auditoria);
 
-						tab_tabla.modificar(k);
-						//tab_tabla.guardar();
-						  */
 						 
 					}
 					
-	
+					
 				}
 				
 				}
@@ -448,15 +461,67 @@ public class pre_conciliacion_banco extends Pantalla {
 				//guardarPantalla();
 				tab_tabla.ejecutarSql();
 				utilitario.agregarMensaje("Conciliado", "Actualice los registros conciliados");
-
+				
+				tab_resultado.setCondicion("validado_faauc=false");
+				tab_resultado.ejecutarSql();
+				tab_resultado.exportarXLS();
+				//dia_detalle.dibujar();
 
 			} catch (Exception e) {
 				// TODO: handle exception
+				utilitario.agregarMensajeError("No se pudo conciliar el archivo", "Debido a una inconsistencia no se pudo culminar exitosamente con la conciliacion del archivo");
 				System.out.println("Error conciliacion Bancaria: "+e);
 			}	
 			
 	}
+	public String insertaAuditoria(FileUploadEvent evt){
+		String sql_inserta_auditoria=""; 
 
+		String resultado="";
+		try {
+		Workbook archivoExcel = Workbook.getWorkbook(evt.getFile().getInputstream());
+		Sheet hoja = archivoExcel.getSheet(0);//LEE LA PRIMERA HOJA
+		if (hoja == null) {
+			utilitario.agregarMensajeError("No existe ninguna hoja en el archivo seleccionado", "");
+			return resultado;
+		}
+		String sql_updatevalida="update fac_auditoria_conciliacion set validado_faauc=true where validado_faauc=false";
+		utilitario.getConexion().ejecutarSql(sql_updatevalida);
+		int int_fin = hoja.getRows();
+		for (int i = 0; i < int_fin; i++) {
+			//codigo tercero remplaza a str_cedula permite leer el codigo de la factutra
+			String str_codigo_tercero = hoja.getCell(4, i).getContents();	
+			str_codigo_tercero=str_codigo_tercero.trim(); 
+			String str_cedula_cliente =hoja.getCell(32, i).getContents();
+			str_cedula_cliente = str_cedula_cliente.trim();
+			String str_valor_conciliar = hoja.getCell(3, i).getContents();
+			String str_valor = hoja.getCell(19, i).getContents();
+			double double_valor_conciliar= Double.parseDouble(str_valor_conciliar.replace(",", "."));
+			String str_fecha_pago= hoja.getCell(6, i).getContents();
+			// Consulto codigo maximo de la cabecera de la tabla auditoria conciliacion
+			TablaGenerica tab_maximo_factura =utilitario.consultar(ser_contabilidad.servicioCodigoMaximo("fac_auditoria_conciliacion", "ide_faauc"));
+			String maximo_factura_auditoria=tab_maximo_factura.getValor("codigo");
+			// sql inserta en la tabla de auditorias
+			
+			sql_inserta_auditoria="insert into fac_auditoria_conciliacion (ide_faauc,codigo_factura_faauc,cedula_archivo_faauc,valor_archivo_faauc,fecha_pago_archivo_faauc,ide_usua,"
+					+" fecha_hora_concilia_faauc,documento_conciliado_faauc,nro_fila_excel_faauc,fecha_inicial_faauc,fecha_final_faauc,validado_faauc)"
+					+" values ("+maximo_factura_auditoria+",'"+str_codigo_tercero+"','"+str_cedula_cliente+"',"+double_valor_conciliar+",'"+str_fecha_pago
+					+"',"+utilitario.getVariable("IDE_USUA")+",(select now()),'"+str_valor+"',"+int_fin+",'"+cal_fecha_inicial.getFecha()+"','"+cal_fecha_final.getFecha()+"',false); ";
+			utilitario.getConexion().ejecutarSql(sql_inserta_auditoria);
+
+	
+				 
+			
+			
+
+		}
+		
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Error conciliacion Bancaria inserta: "+e);
+		}	
+		return resultado;		
+	}
     @Override
     public void insertar() {
         tab_tabla.insertar();
@@ -508,6 +573,26 @@ public class pre_conciliacion_banco extends Pantalla {
 	}
 	public void setTab_cliente(Tabla tab_cliente) {
 		this.tab_cliente = tab_cliente;
+	}
+
+
+	public Dialogo getDia_detalle() {
+		return dia_detalle;
+	}
+
+
+	public void setDia_detalle(Dialogo dia_detalle) {
+		this.dia_detalle = dia_detalle;
+	}
+
+
+	public Tabla getTab_resultado() {
+		return tab_resultado;
+	}
+
+
+	public void setTab_resultado(Tabla tab_resultado) {
+		this.tab_resultado = tab_resultado;
 	}
 	
 }
