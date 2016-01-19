@@ -93,7 +93,7 @@ public class pre_liquida_certificacion extends Pantalla {
 			bar_botones.agregarBoton(bot_buscar);
 
 			set_poa.setId("set_poa");
-			set_poa.setSeleccionTabla(ser_presupuesto.getPoa("-1"),"ie_prpoa");
+			set_poa.setSeleccionTabla(ser_presupuesto.getPoa("-1","true","true"),"ie_prpoa");
 			set_poa.setTitle("Seleccione Poa");
 			set_poa.getTab_seleccion().getColumna("DETALLE_PROGRAMA").setFiltro(true);//pone filtro
 			set_poa.getTab_seleccion().getColumna("PROGRAMA").setFiltro(true);
@@ -136,7 +136,7 @@ public class pre_liquida_certificacion extends Pantalla {
 			utilitario.agregarMensajeInfo("Debe seleccionar un Año", "");
 			return;
 		}
-		set_poa.getTab_seleccion().setSql(ser_presupuesto.getPoa(com_anio.getValue().toString()));
+		set_poa.getTab_seleccion().setSql(ser_presupuesto.getPoa(com_anio.getValue().toString(),"true","true"));
 		set_poa.getTab_seleccion().ejecutarSql();
 		set_poa.dibujar();
 

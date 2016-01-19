@@ -43,7 +43,7 @@ public class pre_libera_compromiso extends Pantalla{
 		tab_detalle_libera.setId("tab_detalle_libera");
 		tab_detalle_libera.setHeader("DETALLE LIBERA COMROMISO");
 		tab_detalle_libera.setTabla("pre_detalle_libera_compro", "ide_prdlc", 2);
-		tab_detalle_libera.getColumna("ide_prpoa").setCombo(ser_presupuesto.getPoa("true,false"));
+		tab_detalle_libera.getColumna("ide_prpoa").setCombo(ser_presupuesto.getPoa("select ide_geani from gen_anio","true,false","true,false"));
 		tab_detalle_libera.getColumna("ide_prpoa").setAutoCompletar();
 		tab_detalle_libera.getColumna("ide_prpoa").setLectura(true);
 		tab_detalle_libera.getColumna("activo_prdlc").setValorDefecto("true");
@@ -63,7 +63,7 @@ public class pre_libera_compromiso extends Pantalla{
 		bar_botones.agregarBoton(bot_buscar);
 
 		set_poa.setId("set_poa");
-		set_poa.setSeleccionTabla(ser_presupuesto.getPoa("true,false"),"ide_prpoa");
+	//	set_poa.setSeleccionTabla(ser_presupuesto.getPoa("true,false"),"ide_prpoa");
 		set_poa.setTitle("Seleccione Poa");
 		set_poa.getBot_aceptar().setMetodo("aceptarPoa");
 		agregarComponente(set_poa);
@@ -76,7 +76,7 @@ public class pre_libera_compromiso extends Pantalla{
 	public void importarPoa(){
 		System.out.println(" ingresar al importar");
 
-		set_poa.getTab_seleccion().setSql(ser_presupuesto.getPoa("true,false"));
+	//	set_poa.getTab_seleccion().setSql(ser_presupuesto.getPoa("true,false"));
 		set_poa.getTab_seleccion().ejecutarSql();
 		set_poa.dibujar();
 
