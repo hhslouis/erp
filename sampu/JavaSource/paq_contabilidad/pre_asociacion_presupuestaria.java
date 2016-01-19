@@ -33,16 +33,16 @@ public class pre_asociacion_presupuestaria extends Pantalla {
 
 
 	public pre_asociacion_presupuestaria (){
-		com_anio.setCombo(ser_contabilidad.getAnio("true,false", "true,false"));
-		com_anio.setMetodo("seleccioneElAnio");
-		bar_botones.agregarComponente(new Etiqueta("Año:"));
-		bar_botones.agregarComponente(com_anio);
-
+		
 		tab_asociacion_presupuestaria.setId("tab_asociacion_presupuestaria");
 		tab_asociacion_presupuestaria.setHeader("ASOCIACION PRESUPUESTARIA");
 		tab_asociacion_presupuestaria.setTabla("pre_asociacion_presupuestaria", "ide_prasp", 1);
 		tab_asociacion_presupuestaria.getColumna("ide_prcla").setCombo(ser_presupuesto.getCatalogoPresupuestario("true,false"));
 		tab_asociacion_presupuestaria.getColumna("ide_prcla").setAutoCompletar();
+		tab_asociacion_presupuestaria.getColumna("devengado").setCombo(ser_presupuesto.getCatalogoPresupuestario("true,false"));
+		tab_asociacion_presupuestaria.getColumna("devengado").setAutoCompletar();
+		tab_asociacion_presupuestaria.getColumna("pagado").setCombo(ser_presupuesto.getCatalogoPresupuestario("true,false"));
+		tab_asociacion_presupuestaria.getColumna("pagado").setAutoCompletar();	
 		tab_asociacion_presupuestaria.getColumna("ide_cocac").setCombo(ser_contabilidad.getCuentaContable("true,false"));
 		tab_asociacion_presupuestaria.getColumna("ide_cocac").setAutoCompletar();
 		tab_asociacion_presupuestaria.getColumna("ide_gelua").setCombo("gen_lugar_aplica","ide_gelua","detalle_gelua","");
@@ -163,11 +163,7 @@ public class pre_asociacion_presupuestaria extends Pantalla {
 	@Override
 	public void insertar() {
 		// TODO Auto-generated method stub
-		if(com_anio.getValue()==null){
-			utilitario.agregarMensaje("No se puede insertar", "Debe Seleccionar un Año");
-			return;
-
-		}
+		
 		if (tab_asociacion_presupuestaria.isFocus()) {
 			tab_asociacion_presupuestaria.insertar();
 			tab_asociacion_presupuestaria.setValor("ide_prcla", set_clasificador.getValorSeleccionado()+"");
