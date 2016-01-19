@@ -34,10 +34,6 @@ import portal.entidades.NrhTipoGarante;
 import portal.servicios.ServicioCreditosJPA;
 import portal.servicios.ServicioEmpleadoJPA;
 
-/**
- *
- * @author Diego
- */
 @ManagedBean
 @ViewScoped
 public class ControladorCreditos {
@@ -104,8 +100,8 @@ public class ControladorCreditos {
             listaAnticipos = new ArrayList<NrhAnticipo>();
         }
         solicitudAnticipo.setNroAnticipoNrant(new Integer((listaAnticipos.size() + 1) + ""));
-        solicitudAnticipo.setCalificadoNrant(new Boolean("0")); //false
-        solicitudAnticipo.setAprobadoNrant(new Boolean("0"));
+        solicitudAnticipo.setCalificadoNrant(new Boolean ("false")); //false
+        solicitudAnticipo.setAprobadoNrant(new Boolean("false"));
 
         listaMotivos = servicioCreditos.getMotivosAnticipo();
 
@@ -147,7 +143,9 @@ public class ControladorCreditos {
                 garanteSolicitud.setApellidoMaternogNrgar(emple.getIdeGtemp().getApellidoMaternoGtemp());
                 garanteSolicitud.setLugarTrabajoNrgar(utilitario.getCampoEmpresa("NOM_EMPR"));
                 garanteSolicitud.setRmuNrgar(emple.getRmuGeedp());
-               }
+                //garanteSolicitud.setIdeNrtig(new NrhTipoGarante(Integer.parseInt(utilitario.getVariable("p_nrh_tipo_garante"))));
+                //garanteSolicitud.setIdeNrtig(garanteSolicitud.getIdeNrtig().getIdeNrtig());
+            }
         }
     }
     
@@ -199,7 +197,7 @@ public class ControladorCreditos {
             }
             if (garanteTelefono.getIdeGttit().getIdeGttit() != null) {
                 garanteTelefono.setIdeGttit(servicioEmpleado.getTipoTelefono(garanteTelefono.getIdeGttit().getIdeGttit().toString()));
-                garanteTelefono.setActivoGttel(new Boolean("1"));
+                garanteTelefono.setActivoGttel(new Boolean("true"));
             }
         }
 
