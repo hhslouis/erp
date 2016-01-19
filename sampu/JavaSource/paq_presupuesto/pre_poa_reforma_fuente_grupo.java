@@ -27,7 +27,7 @@ import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import framework.componentes.Texto;
 
-public class pre_poa_reforma_fuente extends Pantalla {
+public class pre_poa_reforma_fuente_grupo extends Pantalla {
 	private Tabla tab_poa_reforma_fuenta =new Tabla();
 	private SeleccionTabla set_reforma_fuente = new SeleccionTabla();
 	private Combo com_anio=new Combo();
@@ -49,7 +49,7 @@ public class pre_poa_reforma_fuente extends Pantalla {
 	  @EJB
 	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
 
-	public pre_poa_reforma_fuente() {
+	public pre_poa_reforma_fuente_grupo() {
 		
 		bar_botones.getBot_insertar().setRendered(false);
 		bar_botones.getBot_eliminar().setRendered(false);

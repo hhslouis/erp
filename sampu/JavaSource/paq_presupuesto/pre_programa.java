@@ -32,11 +32,12 @@ public class pre_programa extends Pantalla {
 	
 
 	public pre_programa(){
+		/*
 		com_anio.setCombo(ser_contabilidad.getAnioDetalle("true,false","true,false"));
 		com_anio.setMetodo("seleccionaElAnio");
 		bar_botones.agregarComponente(new Etiqueta("Seleccione El Año:"));
 		bar_botones.agregarComponente(com_anio);
-
+*/
 		tab_programa.setId("tab_programa");
 		tab_programa.setHeader("PROGRAMA");
 		tab_programa.setTabla("pre_programa", "ide_prpro", 1);
@@ -54,7 +55,7 @@ public class pre_programa extends Pantalla {
 		tab_vigente.setId("tab_vigente");
 		tab_vigente.setHeader("VIGENTE");
 		tab_vigente.setTabla("cont_vigente", "ide_covig", 2);
-		tab_vigente.setCondicion("ide_covig=-1");
+		//tab_vigente.setCondicion("ide_covig=-1");
 		tab_vigente.getColumna("ide_prcla").setVisible(false);
 		tab_vigente.getColumna("ide_prasp").setVisible(false);
 		tab_vigente.getColumna("ide_cocac").setVisible(false);
@@ -67,27 +68,18 @@ public class pre_programa extends Pantalla {
 		PanelTabla pat_vigente=new PanelTabla();
 		pat_vigente.setPanelTabla(tab_vigente);
 		
-		// ARBOL
-				arb_arbol.setId("arb_arbol");
-				arb_arbol.setArbol("pre_funcion_programa", "ide_prfup", "codigo_prfup ||' '||detalle_prfup", "pre_ide_prfup");
-				//arb_arbol.setCondicion("ide_prfup in (select ide_prfup from cont_vigente where ide_prfup != null and ide_geani=-1 )"); //Carga vacio
-				arb_arbol.onSelect("seleccionar_arbol");
-				arb_arbol.setDynamic(false);
-				arb_arbol.dibujar();
-
 
 				Division div3 = new Division(); //UNE OPCION Y DIV 2
 				div3.dividir2(pat_progama, pat_vigente, "50%", "H");
-				Division div_division = new Division();
-				div_division.setId("div_division");
-				div_division.dividir2(arb_arbol, div3, "40%", "V");  //arbol y div3
-				agregarComponente(div_division);
+				
+				agregarComponente(div3);
 				///clasificador
+				/*
 				Boton bot_agregar=new Boton();
 				bot_agregar.setValue("Agregar Clasificador");
 				bot_agregar.setMetodo("agregarClasificador");
 				bar_botones.agregarBoton(bot_agregar);
-
+*/
 				set_clasificador.setId("set_clasificador");
 				set_clasificador.setTitle("SELECCIONE UNA PARTIDA PRESUPUESTARIA");
 				set_clasificador.setRadio(); //solo selecciona una opcion

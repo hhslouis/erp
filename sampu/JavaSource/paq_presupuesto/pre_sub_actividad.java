@@ -1,13 +1,23 @@
 package paq_presupuesto;
 
+import javax.ejb.EJB;
+
 import framework.componentes.PanelTabla;
 import framework.componentes.Tabla;
+import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_sistema.aplicacion.Pantalla;
 
 public class pre_sub_actividad extends Pantalla {
 	private Tabla tab_sub_actividad=new Tabla();
+	public static String par_sub_activdad;
+
 	
+	@EJB
+	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
+
 	public pre_sub_actividad(){
+		par_sub_activdad=utilitario.getVariable("p_modulo_secuencialsubactiv");
+		
 		tab_sub_actividad.setId("tab_sub_actividad");
 		tab_sub_actividad.setNumeroTabla(1);
 		tab_sub_actividad.setTabla("pre_sub_actividad", "ide_prsua", 1);
@@ -29,12 +39,19 @@ public class pre_sub_actividad extends Pantalla {
 		// TODO Auto-generated method stub
 		tab_sub_actividad.insertar();
 		
-		
+		tab_sub_actividad.setValor("codigo_prsua", ser_contabilidad.numeroSecuencial(par_sub_activdad));
+		ser_contabilidad.guardaSecuencial(ser_contabilidad.numeroSecuencial(par_sub_activdad),par_sub_activdad);
+
 	}
 
 	@Override
 	public void guardar() {
 		// TODO Auto-generated method stub
+		/*al momento de inserta ya guardo no requiero volver a guardar el secuencial
+		if(tab_sub_actividad.isFilaInsertada()){
+			ser_contabilidad.guardaSecuencial(ser_contabilidad.numeroSecuencial(par_sub_activdad),par_sub_activdad);
+		}
+		*/
 		tab_sub_actividad.guardar();
 		guardarPantalla();
 		
@@ -44,6 +61,7 @@ public class pre_sub_actividad extends Pantalla {
 	@Override
 	public void eliminar() {
 		// TODO Auto-generated method stub
+		
 		tab_sub_actividad.eliminar();
 		
 	}
