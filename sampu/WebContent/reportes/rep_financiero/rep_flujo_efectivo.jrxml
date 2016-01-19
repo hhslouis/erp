@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_flujo_efectivo" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1b0db692-5764-44b7-bbb4-e30fcb828b4e">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="120"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["C:\\workspace\\biess\\WebContent\\reportes\\rep_sistema_biess\\"]]></defaultValueExpression>
 	</parameter>
@@ -12,6 +12,7 @@
 	</parameter>
 	<parameter name="usuario" class="java.lang.Integer"/>
 	<parameter name="titulo" class="java.lang.String"/>
+	<parameter name="anio" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select ide_rpefe,titulo_rpefe,codigo_rpefe,concepto_rpefe,valor_rpefe,codigo_grupo_rpefe,grupo_general_rpefe
 from rep_estado_flujo_efectivo
@@ -111,13 +112,6 @@ order by codigo_grupo_rpefe,codigo_rpefe]]>
 	</title>
 	<pageHeader>
 		<band height="112" splitType="Stretch">
-			<staticText>
-				<reportElement uuid="f2d21923-65a0-4357-a0c2-b1378752be8d" x="81" y="92" width="442" height="20"/>
-				<textElement>
-					<font size="12" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Desde el 2 de Enero del 2014 hasta el 31 de Diciembre del 2014]]></text>
-			</staticText>
 			<subreport>
 				<reportElement uuid="d6c7b2b8-b93c-48bd-81ff-1fc7e1e298c2" x="0" y="2" width="555" height="79"/>
 				<subreportParameter name="SUBREPORT_DIR">
@@ -138,6 +132,13 @@ order by codigo_grupo_rpefe,codigo_rpefe]]>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera.jasper"]]></subreportExpression>
 			</subreport>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="cfd1809b-9439-404a-b249-f3ddf3294ea9" x="184" y="81" width="171" height="31"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{anio}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -220,48 +221,6 @@ order by codigo_grupo_rpefe,codigo_rpefe]]>
 			<rectangle radius="5">
 				<reportElement uuid="e5531a2c-8ccd-497d-84fe-63a689ec1772" mode="Transparent" x="0" y="2" width="555" height="25"/>
 			</rectangle>
-			<staticText>
-				<reportElement uuid="2b978bae-3094-4121-884f-51f036161447" x="133" y="44" width="173" height="20"/>
-				<textElement textAlignment="Right">
-					<font size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[SALDO INCIAL CAJA BANCOS]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="fb562ba8-965b-4cd0-8f46-efc281790d85" x="133" y="84" width="173" height="20"/>
-				<textElement textAlignment="Right">
-					<font size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[SALDO FINAL CAJA BANCOS]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="7b2a5b91-4c9c-4724-ae0e-60affdbaa23a" x="133" y="64" width="173" height="20"/>
-				<textElement textAlignment="Right">
-					<font size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[FLUJO EFECTIVO]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="348b8cf5-af6b-46e2-a9f5-08790d8c8865" x="344" y="44" width="113" height="20"/>
-				<textElement textAlignment="Right">
-					<font size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[1'536.237,49]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="877487c9-2c00-4d3a-9a96-100a05fc800f" x="344" y="64" width="113" height="20"/>
-				<textElement textAlignment="Right">
-					<font size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[2'406.898,52]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="fb53a131-6b37-4d36-ac30-f4d68600849e" x="344" y="84" width="113" height="20"/>
-				<textElement textAlignment="Right">
-					<font size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[3'943.136,01]]></text>
-			</staticText>
 			<staticText>
 				<reportElement uuid="2eb69be1-89a9-4a54-b5c8-3c558cd1d40c" x="37" y="174" width="173" height="20"/>
 				<textElement textAlignment="Right">

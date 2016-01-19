@@ -12,6 +12,7 @@
 	</parameter>
 	<parameter name="usuario" class="java.lang.Integer"/>
 	<parameter name="titulo" class="java.lang.String"/>
+	<parameter name="anio" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select * from rep_estado_situacion_financiera order by codigo_general_rpesf,codigo_especifico_rpesf,codigo_rpesf]]>
 	</queryString>
@@ -123,13 +124,6 @@
 	</title>
 	<pageHeader>
 		<band height="112" splitType="Stretch">
-			<staticText>
-				<reportElement uuid="f2d21923-65a0-4357-a0c2-b1378752be8d" x="83" y="92" width="442" height="20"/>
-				<textElement>
-					<font size="12" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Desde el 2 de Enero del 2014 hasta el 31 de Diciembre del 2014]]></text>
-			</staticText>
 			<subreport>
 				<reportElement uuid="d6c7b2b8-b93c-48bd-81ff-1fc7e1e298c2" x="0" y="2" width="555" height="79"/>
 				<subreportParameter name="SUBREPORT_DIR">
@@ -150,6 +144,13 @@
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera.jasper"]]></subreportExpression>
 			</subreport>
+			<textField>
+				<reportElement uuid="2baaf0e7-1b57-4212-9d8c-41604af84c6c" x="184" y="81" width="171" height="19"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{anio}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>

@@ -84,13 +84,6 @@
 	</title>
 	<pageHeader>
 		<band height="112" splitType="Stretch">
-			<staticText>
-				<reportElement uuid="f2d21923-65a0-4357-a0c2-b1378752be8d" x="80" y="92" width="442" height="20"/>
-				<textElement>
-					<font size="12" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Desde el 2 de Enero del 2014 hasta el 31 de Diciembre del 2014]]></text>
-			</staticText>
 			<subreport>
 				<reportElement uuid="d6c7b2b8-b93c-48bd-81ff-1fc7e1e298c2" x="0" y="2" width="555" height="79"/>
 				<subreportParameter name="SUBREPORT_DIR">
@@ -111,6 +104,13 @@
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera.jasper"]]></subreportExpression>
 			</subreport>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="b9c51729-d7b7-477a-80a0-332202b7d842" x="149" y="81" width="306" height="31"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{concepto_rpesr}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
