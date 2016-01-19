@@ -23,10 +23,6 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-/**
- *
- * @author Jimes
- */
 @Entity
 @Table(name = "nrh_garante", catalog = "sampu", schema = "public")
 @NamedQueries({
@@ -115,11 +111,11 @@ public class NrhGarante implements Serializable {
     @Column(name = "documento_identidadc_nrgar", length = 15)
     private String documentoIdentidadcNrgar;
     @Column(name = "vivienda_nrgar")
-    private Integer viviendaNrgar;
+    private Boolean viviendaNrgar;
     @Column(name = "monto_vivienda_nrgar", precision = 12, scale = 3)
     private BigDecimal montoViviendaNrgar;
     @Column(name = "vehiculo_nrgar")
-    private Integer vehiculoNrgar;
+    private Boolean vehiculoNrgar;
     @Column(name = "monto_vehiculo_nrgar", precision = 12, scale = 3)
     private BigDecimal montoVehiculoNrgar;
     @Column(name = "total_patrimonio_nrgar", precision = 12, scale = 3)
@@ -308,11 +304,11 @@ public class NrhGarante implements Serializable {
         this.documentoIdentidadcNrgar = documentoIdentidadcNrgar;
     }
 
-    public Integer getViviendaNrgar() {
+    public Boolean getViviendaNrgar() {
         return viviendaNrgar;
     }
 
-    public void setViviendaNrgar(Integer viviendaNrgar) {
+    public void setViviendaNrgar(Boolean viviendaNrgar) {
         this.viviendaNrgar = viviendaNrgar;
     }
 
@@ -324,11 +320,11 @@ public class NrhGarante implements Serializable {
         this.montoViviendaNrgar = montoViviendaNrgar;
     }
 
-    public Integer getVehiculoNrgar() {
+    public Boolean getVehiculoNrgar() {
         return vehiculoNrgar;
     }
 
-    public void setVehiculoNrgar(Integer vehiculoNrgar) {
+    public void setVehiculoNrgar(Boolean vehiculoNrgar) {
         this.vehiculoNrgar = vehiculoNrgar;
     }
 
