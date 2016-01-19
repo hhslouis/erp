@@ -50,7 +50,7 @@
                         <p:calendar  disabled="true" value="#{controladorCreditos.solicitudAnticipo.fechaSolicitudNrant}" pattern="dd/MM/yyyy"/>                       
                     </h:panelGrid>     
                     <p:separator/>
-                    <h:panelGrid columns="4">
+                    <h:panelGrid columns="6">
                         <h:outputText value="Motivo : *" style="font-weight: bold"/>
                         <p:selectOneMenu value="#{controladorCreditos.solicitudAnticipo.ideNrmoa.ideNrmoa}" required="true" requiredMessage="Debe seleccionar un Motivo">
                             <f:selectItem itemLabel="Seleccionar Motivo..."  />  
@@ -61,6 +61,9 @@
                             <p:inputText value="#{controladorCreditos.solicitudAnticipo.montoSolicitadoNrant}" size="10" required="true" requiredMessage="Debe ingresar un Monto"/>
                             <h:outputText value=" $"/>
                         </h:panelGrid>
+                             <h:outputText value="Nro Meses Plazo: *" style="font-weight: bold"/>
+                             <p:inputText value="#{controladorCreditos.solicitudAnticipo.nroMesNrant}" size="10" required="true" requiredMessage="Debe ingresar los Meses Plazo"/>
+                         
                     </h:panelGrid>
                     <h:panelGrid columns="2">
                         <h:outputText value="Observación : *" style="font-weight: bold"/>
@@ -68,7 +71,13 @@
                     </h:panelGrid>
 
                     <p:fieldset id="fieGarante" legend="Garante" rendered="#{controladorCreditos.ingresarGarante}">
-
+						    <h:panelGrid columns="2">
+						    <h:outputText style="font-weight: bold" value="Tipo Garante : *"/>
+                            <p:selectOneMenu value="#{controladorCreditos.garanteSolicitud.ideNrtig.ideNrtig}" required="true" requiredMessage="Debe seleccionar un Tipo de Garante">
+                                <f:selectItem itemLabel="Seleccionar Tipo Garante..."  />  
+                                <f:selectItems  value="#{controladorCreditos.listaTipoGarante}" var="combo" itemLabel="#{combo[1]}" itemValue="#{combo[0]}" />
+                            </p:selectOneMenu>
+                            	</h:panelGrid>
                         <h:panelGrid columns="2">
                             <h:outputText style="font-weight: bold" value="Nombres y Apellidos : *"/>
                             <h:panelGrid columns="4" >
@@ -83,6 +92,9 @@
 
                             </h:panelGrid>
                         </h:panelGrid>
+                            
+
+                            
                         <h:panelGrid columns="2">                                 
                             <h:outputText style="font-weight: bold" value="Asociar Garante a empleado de la Institución :"/>  
                             <p:autoComplete value="#{controladorCreditos.objEmpleadoGarante}" size="60" var="fila" maxResults="10" completeMethod="#{controladorCreditos.autocompletar}" 
@@ -124,11 +136,6 @@
                              </p:inputText>
                         </h:panelGrid>
                         <h:panelGrid columns="4">
-                            <h:outputText style="font-weight: bold" value="Tipo Garante : *"/>
-                            <p:selectOneMenu value="#{controladorCreditos.garanteSolicitud.ideNrtig.ideNrtig}" required="true" requiredMessage="Debe seleccionar un Tipo de Garante">
-                                <f:selectItem itemLabel="Seleccionar Tipo Garante..."  />  
-                                <f:selectItems  value="#{controladorCreditos.listaTipoGarante}" var="combo" itemLabel="#{combo[1]}" itemValue="#{combo[0]}" />
-                            </p:selectOneMenu>
                             <h:outputText style="font-weight: bold" value="Lugar de Trabajo : "/>
                             <p:inputText size="50" value="#{controladorCreditos.garanteSolicitud.lugarTrabajoNrgar}"/>
                             <h:outputText style="font-weight: bold" value="Tipo Teléfono:"/>
@@ -163,7 +170,7 @@
                     </p:column>  
 
                     <p:rowExpansion>
-                        <p:panelGrid  columns="2" style="margin-top: 5px;width: 50%;margin-left: 40px;" rendered="#{tabla.aprobadoNrant==1}">
+                        <p:panelGrid  columns="2" style="margin-top: 5px;width: 50%;margin-left: 40px;" rendered="#{tabla.aprobadoNrant==true}">
                             <f:facet name="header">
                                 Detalle Autorización
                             </f:facet>
@@ -176,7 +183,7 @@
                             <h:outputText value="RAZON AUTORIZA : "  style="font-weight: bold"/>
                             <h:outputText value="#{tabla.razonAutorizaNrant}"/>  
                         </p:panelGrid>
-                        <p:panelGrid  columns="2" style="margin-top: 5px;width: 50%;margin-left: 40px;" rendered="#{tabla.aprobadoNrant==1}">
+                        <p:panelGrid  columns="2" style="margin-top: 5px;width: 50%;margin-left: 40px;" rendered="#{tabla.aprobadoNrant==true}">
                             <f:facet name="header">
                                 Detalle Aprobación
                             </f:facet>
@@ -195,10 +202,10 @@
                         </p:panelGrid>
                     </p:rowExpansion> 
                     <p:column headerText="ESTADO" width="170">
-                        <h:outputText value="APROBADO" style="color: #006633;font-size: 13px;font-weight: bold" rendered="#{tabla.aprobadoNrant==1}"/>                        
-                        <h:outputText value="RECHAZADO" style="color: #ff0000;font-size: 13px;font-weight: bold" rendered="#{tabla.aprobadoNrant==0 and tabla.calificadoNrant==1}"/>
-                        <h:outputText value="PENDIENTE" style="color: #003366;font-size: 13px;font-weight: bold" rendered="#{tabla.aprobadoNrant==0 and tabla.calificadoNrant==0}"/>
-                        <h:outputText value="INACTIVO" style="padding-left: 10px;color: red;font-size: 13px;font-weight: bold" rendered="#{tabla.activoNrant==0}"/>
+                        <h:outputText value="APROBADO" style="color: #006633;font-size: 13px;font-weight: bold" rendered="#{tabla.aprobadoNrant==true}"/>                        
+                        <h:outputText value="RECHAZADO" style="color: #ff0000;font-size: 13px;font-weight: bold" rendered="#{tabla.aprobadoNrant==false and tabla.calificadoNrant==true}"/>
+                        <h:outputText value="PENDIENTE" style="color: #003366;font-size: 13px;font-weight: bold" rendered="#{tabla.aprobadoNrant==false and tabla.calificadoNrant==false}"/>
+                        <h:outputText value="INACTIVO" style="padding-left: 10px;color: red;font-size: 13px;font-weight: bold" rendered="#{tabla.activoNrant==false}"/>
                     </p:column>
                     <p:column headerText="Nro." width="40" sortBy="#{tabla.nroAnticipoNrant}">
                         <h:outputText value="#{tabla.nroAnticipoNrant}"/>    
