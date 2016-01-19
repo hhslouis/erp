@@ -60,8 +60,8 @@ public class pre_conciliacion_bancaria extends Pantalla {
     public void seleccionaCuenta(){
 		if(catalogo.getValue()!=null){
 			tab_tabla.setCondicion("ide_cocac="+catalogo.getValor());
-			tab_tabla.setValor("fecha_concilia_codem", utilitario.getFechaActual());
-			tab_tabla.setValor("conciliado_codem", "true");
+			//tab_tabla.setValor("fecha_concilia_codem", utilitario.getFechaActual());
+			//tab_tabla.setValor("conciliado_codem", "true");
 			tab_tabla.ejecutarSql();
 			
 			utilitario.addUpdate("tab_tabla");
