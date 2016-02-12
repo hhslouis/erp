@@ -47,6 +47,8 @@ public class pre_anual_egresos extends Pantalla {
 		tab_anual.setTabla("pre_anual", "ide_pranu", 1);
 		tab_anual.getColumna("ide_prcla").setCombo("select ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla from pre_clasificador order by codigo_clasificador_prcla");
 		tab_anual.getColumna("ide_prcla").setVisible(false);
+		tab_anual.getColumna("ide_prfuf").setVisible(false);
+
 		tab_anual.setCondicion("not ide_prpro is null");
 		tab_anual.getColumna("ide_prpro").setCombo(ser_presupuesto.getPrograma("true,false"));
 		tab_anual.getColumna("ide_prpro").setAutoCompletar();
@@ -87,6 +89,11 @@ public class pre_anual_egresos extends Pantalla {
 		tab_anual.getColumna("valor_recaudado_efectivo_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_anual.getColumna("valor_recaudado_efectivo_pranu").setValorDefecto("0.00");
 		tab_anual.getColumna("valor_inicial_pranu").setMetodoChange("calcularValor");
+		tab_anual.getColumna("valor_recaudado_pranu").setVisible(false);
+		tab_anual.getColumna("valor_recaudado_efectivo_pranu").setVisible(false);
+		tab_anual.getColumna("pagado_pranu").setVisible(false);
+
+
 		
 		/// requerida para grabar
 		tab_anual.getColumna("ide_prpro").setRequerida(true);
@@ -147,14 +154,14 @@ public class pre_anual_egresos extends Pantalla {
 		bot_importarpoa.setIcon("ui-icon-person");
 		bot_importarpoa.setMetodo("importarPoa");
 		bar_botones.agregarBoton(bot_importarpoa);
-		
+		/*
 		Boton bot_material = new Boton();
 		bot_material.setValue("Agregar Programa");
 		bot_material.setTitle("Solicitud Programa");
 		bot_material.setIcon("ui-icon-person");
 		bot_material.setMetodo("importarPrograma");
 		bar_botones.agregarBoton(bot_material);
-
+		 */
 		set_programa.setId("set_programa");
 		set_programa.setSeleccionTabla(ser_presupuesto.getPrograma("true,false"),"IDE_PRPRO");
 		set_programa.getTab_seleccion().getColumna("cod_programa_prpro").setFiltroContenido();
@@ -240,7 +247,7 @@ public class pre_anual_egresos extends Pantalla {
 	///metodo año
 	public void seleccionaElAnio (){
 		if(com_anio.getValue()!=null){
-			tab_anual.setCondicion("ide_geani="+com_anio.getValue());
+			tab_anual.setCondicion("not ide_prpro is null and ide_geani="+com_anio.getValue());
 			tab_anual.ejecutarSql();
 			//tab_mes.ejecutarValorForanea(tab_poa.getValorSeleccionado());
 

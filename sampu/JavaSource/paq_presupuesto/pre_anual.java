@@ -41,14 +41,14 @@ public class pre_anual extends Pantalla{
 		tab_anual.setId("tab_anual");
 		tab_anual.setHeader("PRESUPUESTO ANUAL DE INGRESOS");
 		tab_anual.setTabla("pre_anual", "ide_pranu", 1);
-		tab_anual.setCondicion("not ide_prcla is null");
+		tab_anual.setCondicion("not ide_prcla is null and ide_geani=-1");
 		tab_anual.getColumna("ide_prcla").setCombo(ser_presupuesto.getCatalogoPresupuestario("true,false"));
 		tab_anual.getColumna("ide_prcla").setLectura(true);
 		tab_anual.getColumna("ide_prcla").setAutoCompletar();
 		tab_anual.getColumna("ide_prpro").setVisible(false);
 		tab_anual.getColumna("ide_geani").setCombo(ser_contabilidad.getAnio("true,false","true,false"));
-		tab_anual.getColumna("ide_geani").setVisible(false);	
-		tab_anual.setCondicion("ide_geani=-1"); 
+		tab_anual.getColumna("ide_geani").setVisible(false);
+		tab_anual.getColumna("ide_prfuf").setCombo("select ide_prfuf,detalle_prfuf from pre_fuente_financiamiento order by detalle_prfuf");
 		tab_anual.getColumna("valor_reformado_pranu").setEtiqueta();
 		tab_anual.getColumna("valor_reformado_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
 		tab_anual.getColumna("valor_reformado_pranu").setValorDefecto("0.00");
@@ -79,6 +79,10 @@ public class pre_anual extends Pantalla{
 		tab_anual.getColumna("valor_eje_comprometido_pranu").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");
 		tab_anual.getColumna("valor_eje_comprometido_pranu").setValorDefecto("0.00");
 		tab_anual.getColumna("valor_inicial_pranu").setMetodoChange("calcularValor");
+		tab_anual.getColumna("valor_precomprometido_pranu").setVisible(false);
+		tab_anual.getColumna("valor_eje_comprometido_pranu").setVisible(false);
+		tab_anual.getColumna("ide_prpoa").setVisible(false);
+		
 		tab_anual.getColumna("activo_pranu").setValorDefecto("true");
 		tab_anual.agregarRelacion(tab_mensual);
 		tab_anual.agregarRelacion(tab_reforma);
@@ -181,7 +185,7 @@ public class pre_anual extends Pantalla{
 	
 	public void seleccionaElAnio (){
 		if(com_anio.getValue()!=null){
-			tab_anual.setCondicion("ide_geani="+com_anio.getValue());
+			tab_anual.setCondicion("not ide_prcla is null and ide_geani="+com_anio.getValue());
 			tab_anual.ejecutarSql();
 			//tab_mes.ejecutarValorForanea(tab_poa.getValorSeleccionado());
 
