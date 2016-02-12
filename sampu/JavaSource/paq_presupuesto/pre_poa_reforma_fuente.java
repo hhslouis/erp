@@ -26,8 +26,9 @@ import framework.componentes.Radio;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import framework.componentes.Texto;
-
+import paq_presupuesto.pre_contratacion;
 public class pre_poa_reforma_fuente extends Pantalla {
+	
 	private Tabla tab_poa_reforma_fuenta =new Tabla();
 	private SeleccionTabla set_reforma_fuente = new SeleccionTabla();
 	private Combo com_anio=new Combo();
@@ -40,7 +41,7 @@ public class pre_poa_reforma_fuente extends Pantalla {
 	private Dialogo dia_busca_resolucion = new Dialogo();
 	private Radio rad_imprimir= new Radio();
 	private Check che_aprobado=new Check();
-
+	//private pre_contratacion trig_reformas = new pre_contratacion();
 
 
 
@@ -248,22 +249,22 @@ public class pre_poa_reforma_fuente extends Pantalla {
 			TablaGenerica tab_poa_certificado= utilitario.consultar("select ide_prpfe,valor_certificado_prpfe from pre_poa_fuente_ejecucion where ide_prfuf = "+tab_poa_reforma_fuenta.getValor(i,"ide_prfuf")+" and ide_prpoa="+tab_poa_reforma_fuenta.getValor(i,"ide_prpoa"));
 			if(tab_poa_certificado.getTotalFilas()>0){
 				dou_valor_certificado=Double.parseDouble(tab_poa_certificado.getValor("valor_certificado_prpfe"));
-				/*
+				
 				BigDecimal big_valor_certificado=new BigDecimal(dou_valor_certificado);
 				big_valor_certificado=big_valor_certificado.setScale(2, RoundingMode.HALF_UP);
 				
 				dou_valor_certificado=Double.parseDouble(big_valor_certificado+"");
-				*/
+				
 			}
 			//Obtenemos el valor del saldo
 			try {
 				dou_valor_saldo =Double.parseDouble(tab_poa_reforma_fuenta.getValor(i,"saldo_actual_prprf"));
-				/*
+				
 				BigDecimal big_valor_saldo=new BigDecimal(dou_valor_saldo);
 				big_valor_saldo=big_valor_saldo.setScale(2, RoundingMode.HALF_UP);
 				
 				dou_valor_saldo=Double.parseDouble(big_valor_saldo+"");
-				*/
+				
 			} catch (Exception e) {
 				System.out.println("Error ingreso valor saldo_actual_prprf "+e);
 			}
@@ -272,12 +273,12 @@ public class pre_poa_reforma_fuente extends Pantalla {
 				//Obtenemos el valor de la cantidad
 				dou_valor_reforma +=Double.parseDouble(tab_poa_reforma_fuenta.getValor(i,"valor_reformado_prprf"));
 				
-				/*
+				
 				BigDecimal big_valor_reforma=new BigDecimal(dou_valor_reforma);
 				big_valor_reforma=big_valor_reforma.setScale(2, RoundingMode.HALF_UP);
 				
 				dou_valor_reforma=Double.parseDouble(big_valor_reforma+"");
-				*/
+				
 			} catch (Exception e) {
 				System.out.println("Error ingreso valor reformado "+e);
 			}
@@ -289,21 +290,21 @@ public class pre_poa_reforma_fuente extends Pantalla {
 			total_ejecutado=Double.parseDouble(big_total_ejecutado+"");
 			//System.out.println("valores ejcutados "+total_ejecutado+" dou_valor_saldo "+dou_valor_saldo+" dou_valor_certificado "+dou_valor_certificado);
 			double valor_ingresado =Double.parseDouble(tab_poa_reforma_fuenta.getValor(i,"valor_reformado_prprf")); //*(-1);
-			/*
+			
 			BigDecimal big_valor_ingresado=new BigDecimal(valor_ingresado);
 			big_valor_ingresado=big_valor_ingresado.setScale(2, RoundingMode.HALF_UP);
 			
 			valor_ingresado=Double.parseDouble(big_valor_ingresado+"");
-			*/
+			
 			double valor_ingreso_positivo=Double.parseDouble(tab_poa_reforma_fuenta.getValor(i,"valor_reformado_prprf"));
-			System.out.println("valor_ingreso_positivo "+valor_ingreso_positivo+" valor_ingresado " +valor_ingresado);
+			//System.out.println("valor_ingreso_positivo "+valor_ingreso_positivo+" valor_ingresado " +valor_ingresado);
 
 			double ejcutado_inicial=0;
 			double ejecucion=0;
 			double asi_inicial=0;
 			
 			
-			System.out.println("total_ejecutado "+total_ejecutado+" valor_ingresado " +valor_ingresado);
+			//System.out.println("total_ejecutado "+total_ejecutado+" valor_ingresado " +valor_ingresado);
 
 				/*
 			if(total_ejecutado<valor_ingresado){
@@ -340,7 +341,7 @@ public class pre_poa_reforma_fuente extends Pantalla {
 
     			}
        		}
-			System.out.println("asi_inicial "+asi_inicial+" ejecucion x "+ejecucion);
+			//System.out.println("asi_inicial "+asi_inicial+" ejecucion x "+ejecucion);
 			/*
        		if(asi_inicial<ejecucion){
 				System.out.println("intrego ver saldo insuficiente "+asi_inicial+"   xxx  "+ejecucion);
@@ -415,28 +416,7 @@ public class pre_poa_reforma_fuente extends Pantalla {
 		utilitario.getConexion().ejecutarSql(sql_emilinar_contadores);
 		
 	}
-	public void actualizarSaldosReforma(String ide_prpoa,String valor_reformado,String nro_resolucion,String fecha,String saldo,String estado){
-		
-		if(estado.equals("true")){
-		// Consulto codigo maximo de la cabecera de la tabla de reformas
-		TablaGenerica tab_maximo =utilitario.consultar(ser_contabilidad.servicioCodigoMaximo("pre_poa_reforma", "ide_prpor"));
-		String maximo_cont_movimiento=tab_maximo.getValor("codigo");
-		
-		String sql_actualiza_saldos="insert into pre_poa_reforma (ide_prpor,ide_prpoa,valor_reformado_prpor,resolucion_prpor,activo_prpor,fecha_prpor,saldo_actual_prpor)"
-				+" values("+maximo_cont_movimiento+","+ide_prpoa+","+valor_reformado+",'"+nro_resolucion+"',true,'"+fecha+"',"+saldo+")";
-		
-		utilitario.getConexion().ejecutarSql(sql_actualiza_saldos);
-		
-		String sql_actualiza_saldos_cabecera="update pre_poa"
-				+" set reforma_prpoa=valor_reformado"
-				+" from ( select sum(valor_reformado_prpor) as valor_reformado,ide_prpoa from pre_poa_reforma group by ide_prpoa) a"
-				+" where a.ide_prpoa=pre_poa.ide_prpoa and a.ide_prpoa ="+ide_prpoa+"; "
-				+" update pre_poa"
-				+" set presupuesto_codificado_prpoa=presupuesto_inicial_prpoa +reforma_prpoa"
-				+" where ide_prpoa ="+ide_prpoa+";";
-		utilitario.getConexion().ejecutarSql(sql_actualiza_saldos_cabecera);
-		}
-	}
+
 	@Override
 	public void insertar() {
 		// TODO Auto-generated method stub
@@ -456,7 +436,10 @@ public class pre_poa_reforma_fuente extends Pantalla {
 				for(int i=0;i<tab_poa_reforma_fuenta.getTotalFilas();i++){
 					String sql_actualiza="update pre_poa_reforma_fuente set fecha_prprf='"+cal_fecha_reforma.getFecha()+"',resolucion_prprf='"+txt_num_resolucion_guarda.getValue().toString()+"',aprobado_prprf='"+che_aprobado.getValue()+"' where ide_prprf="+tab_poa_reforma_fuenta.getValor(i, "ide_prprf");
 					utilitario.getConexion().ejecutarSql(sql_actualiza);
-					actualizarSaldosReforma(tab_poa_reforma_fuenta.getValor(i, "ide_prpoa"), tab_poa_reforma_fuenta.getValor(i, "valor_reformado_prprf"), txt_num_resolucion_guarda.getValue().toString(), cal_fecha_reforma.getFecha(), tab_poa_reforma_fuenta.getValor(i, "saldo_actual_prprf"),che_aprobado.getValue().toString());
+					//actualizarSaldosReforma(tab_poa_reforma_fuenta.getValor(i, "ide_prpoa"), tab_poa_reforma_fuenta.getValor(i, "valor_reformado_prprf"), txt_num_resolucion_guarda.getValue().toString(), cal_fecha_reforma.getFecha(), tab_poa_reforma_fuenta.getValor(i, "saldo_actual_prprf"),che_aprobado.getValue().toString());
+					ser_presupuesto.trigActualizaReformaFuente(tab_poa_reforma_fuenta.getValor(i, "ide_prpoa"));
+					ser_presupuesto.trigActualizaReforma(tab_poa_reforma_fuenta.getValor(i, "ide_prpoa"));
+					
 				}
 				tab_poa_reforma_fuenta.setCondicion("resolucion_prprf='"+txt_num_resolucion_guarda.getValue().toString()+"'");
 				tab_poa_reforma_fuenta.ejecutarSql();
@@ -471,7 +454,12 @@ public class pre_poa_reforma_fuente extends Pantalla {
 				for(int i=0;i<tab_poa_reforma_fuenta.getTotalFilas();i++){
 					String sql_actualiza="update pre_poa_reforma_fuente set fecha_prprf='"+cal_fecha_reforma.getFecha()+"',resolucion_prprf='"+txt_num_resolucion_guarda.getValue().toString()+"',aprobado_prprf='"+che_aprobado.getValue()+"' where ide_prprf="+tab_poa_reforma_fuenta.getValor(i, "ide_prprf");
 					utilitario.getConexion().ejecutarSql(sql_actualiza);
-					actualizarSaldosReforma(tab_poa_reforma_fuenta.getValor(i, "ide_prpoa"), tab_poa_reforma_fuenta.getValor(i, "valor_reformado_prprf"), txt_num_resolucion_guarda.getValue().toString(), cal_fecha_reforma.getFecha(), tab_poa_reforma_fuenta.getValor(i, "saldo_actual_prprf"),che_aprobado.getValue().toString());
+					//actualizarSaldosReforma(tab_poa_reforma_fuenta.getValor(i, "ide_prpoa"), tab_poa_reforma_fuenta.getValor(i, "valor_reformado_prprf"), txt_num_resolucion_guarda.getValue().toString(), cal_fecha_reforma.getFecha(), tab_poa_reforma_fuenta.getValor(i, "saldo_actual_prprf"),che_aprobado.getValue().toString());
+					
+					//triguers actualiza reformas.
+					ser_presupuesto.trigActualizaReformaFuente(tab_poa_reforma_fuenta.getValor(i, "ide_prpoa"));
+					ser_presupuesto.trigActualizaReforma(tab_poa_reforma_fuenta.getValor(i, "ide_prpoa"));
+
 				}
 				tab_poa_reforma_fuenta.setCondicion("resolucion_prprf='"+txt_num_resolucion_guarda.getValue().toString()+"'");
 				tab_poa_reforma_fuenta.setCampoOrden("ide_prprf desc");
