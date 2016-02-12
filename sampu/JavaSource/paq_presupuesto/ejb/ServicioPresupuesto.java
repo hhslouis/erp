@@ -109,8 +109,8 @@ public String getPoa (String ide_geani,String activo,String presupuesto){
 			" left join gen_area g on a.ide_geare=g.ide_geare where a.ide_geani= "+ide_geani+" and activo_prpoa in ("+activo+") and ejecutado_presupuesto_prpoa in ("+presupuesto+") order by codigo_subactividad,a.ide_prpoa");
 		return tab_poa;
 }  
-public String cetificacion(){
-	String sql="select ide_prcer,num_documento_prcer,detalle_prcer,valor_certificacion_prcer from pre_certificacion order by num_documento_prcer";
+public String cetificacion(String anio){
+	String sql="select ide_prcer,nro_certificacion_prcer,detalle_prcer,num_documento_prcer,valor_certificacion_prcer from pre_certificacion where ide_geani in ("+anio+") order by num_documento_prcer";
 	return sql;
 }
 public String getPoaNombre (String ide_geani){
@@ -205,14 +205,19 @@ public TablaGenerica getTablaGenericaPoa(String ide_prpoa) {
 }
 
 public TablaGenerica getTablaGenericaCert(String ide_prpoa) {
-	TablaGenerica tab_poa=utilitario.consultar("select a.ide_prpoa,a.ide_prfuf,valor_certificado_prpfe,valor_compromiso_prpfe,valor_certificado_prpfe - valor_compromiso_prpfe as saldo_comprometer,ide_prpoc from pre_poa_fuente_ejecucion a left join pre_poa_certificacion b on a.ide_prpoa = b.ide_prpoa and a.ide_prfuf = b.ide_prfuf where ide_prcer  in ("+ide_prpoa+")");
+	TablaGenerica tab_poa=utilitario.consultar("select b.ide_prpoa,b.ide_prfuf,a.ide_prcer,b.valor_certificado_prpoc,b.ide_prpoc,(case when comprometido is null then 0 else comprometido end) as comprometido,"
+			+" b.valor_certificado_prpoc - (case when comprometido is null then 0 else comprometido end) as saldo_comprometer,detalle_prcer"
+			+" from pre_certificacion a"
+			+" left join pre_poa_certificacion b on a.ide_prcer = b.ide_prcer"
+			+" left join (select sum(comprometido_prpot) as comprometido,ide_prpoc from pre_poa_tramite group by ide_prpoc) c on b.ide_prpoc = c.ide_prpoc where a.ide_prcer  in ("+ide_prpoa+")");
 	return tab_poa;
 	
 }
 public String getSaldoPoa(String ide_prpoa){
-	String tab_programa=("select a.ide_prpoa,valor_financiamiento_prpof- (case when valor_certificado_prpoc is null then 0 else valor_certificado_prpoc end) as saldo_poa,c.ide_prfuf,valor_financiamiento_prpof,"
-			+" valor_certificado_prpoc from pre_poa a left join pre_poa_financiamiento c on a.ide_prpoa=c.ide_prpoa "
+	String tab_programa=("select a.ide_prpoa,valor_financiamiento_prpof + (case when valor_reformado is null then 0 else valor_reformado end )- (case when valor_certificado_prpoc is null then 0 else valor_certificado_prpoc end) as saldo_poa,c.ide_prfuf,valor_financiamiento_prpof,"
+			+" valor_certificado_prpoc,valor_reformado from pre_poa a left join pre_poa_financiamiento c on a.ide_prpoa=c.ide_prpoa" 
 			+" left join (select (case when  sum(valor_certificado_prpoc) is null then 0 else sum(valor_certificado_prpoc) end) as valor_certificado_prpoc,ide_prpoa,ide_prfuf from pre_poa_certificacion group by ide_prpoa,ide_prfuf) b on a.ide_prpoa = b.ide_prpoa and b.ide_prfuf = c.ide_prfuf"
+			+" left join ( select sum(valor_reformado_prprf) as valor_reformado,ide_prpoa,ide_prfuf from pre_poa_reforma_fuente group by ide_prpoa,ide_prfuf) d on a.ide_prpoa = d.ide_prpoa and d.ide_prfuf=c.ide_prfuf"
 			+" where a.ide_prpoa = "+ide_prpoa);
 	return tab_programa;
 	
@@ -230,7 +235,7 @@ public TablaGenerica getTablaGenericaPrograma(String ide_prpro){
 	return tab_programa;
 }
 public String getCertificacion(String activo){
-	String tab_certificacion=("select ide_prcer,num_documento_prcer,detalle_prcer,fecha_prcer " +
+	String tab_certificacion=("select ide_prcer,nro_certificacion_prcer,num_documento_prcer,detalle_prcer,fecha_prcer " +
 			"from pre_certificacion where activo_prcer  in ("+activo+") order by num_documento_prcer");
 	return tab_certificacion;
 	
@@ -318,7 +323,7 @@ public String getEjecutaFuenteFinanciamiento(String ide_prfuf,String ide_geani,S
 				+" 	select ide_prfuf, sum(valor_reformado_prprf) as valor from pre_poa_reforma_fuente where ide_prfuf="+ide_prfuf+" and ide_prpoa in ("
 					+" 		select ide_prpoa from pre_poa where ide_geani ="+ide_geani+") and aprobado_prprf =true group by ide_prfuf"
 					+" ) a group by ide_prfuf";
-			System.out.println("ejecuon financiamiento "+tab_certificacion);
+			//System.out.println("ejecuon financiamiento "+tab_certificacion);
 	return tab_certificacion;
 	
 }
@@ -369,6 +374,88 @@ public void insertaFuenteEjecucion(String codigo,String ide_poa){
 			+" from pre_poa_financiamiento a"
 			+" left join pre_poa_fuente_ejecucion b on a.ide_prfuf=b.ide_prfuf and a.ide_prpoa=b.ide_prpoa"
 			+" where b.ide_prfuf is null and b.ide_prpoa is null and a.ide_prpoa ="+ide_poa;
+	utilitario.getConexion().ejecutarSql(sql);
+
+}
+String sql="";
+public void trigActualizaReformaFuente(String ide_prpoa){
+	 sql="delete from pre_poa_reforma  where ide_prpoa= "+ide_prpoa+";"
+				+" insert into pre_poa_reforma (ide_prpor,ide_prpoa,valor_reformado_prpor,resolucion_prpor,activo_prpor,fecha_prpor,saldo_actual_prpor)"
+				+" select row_number()over(order by ide_prpoa,fecha_prprf) + (select (case when max(ide_prpor) is null then 0 else max(ide_prpor) end) as maximo from pre_poa_reforma) as codigo,"
+				+" ide_prpoa,valor_reformado,resolucion_prprf,estado,fecha_prprf,saldo"
+				+" from ("
+				+" select ide_prpoa,sum(valor_reformado_prprf) as valor_reformado,resolucion_prprf,true as estado,fecha_prprf,sum(saldo_actual_prprf) as saldo"
+				+" from pre_poa_reforma_fuente a where activo_prprf=true"
+				+" group by ide_prpoa,resolucion_prprf,fecha_prprf having ide_prpoa="+ide_prpoa+" order by ide_prpoa" 
+				+" ) a"
+				+" order by ide_prpoa,fecha_prprf;";
+	utilitario.getConexion().ejecutarSql(sql);
+
+}
+public void trigActualizaReforma(String ide_prpoa){
+	 sql="update pre_poa set reforma_prpoa =valor_reformado"
+			 +" from ( select ide_prpoa,sum(valor_reformado_prpor) as valor_reformado from pre_poa_reforma a group by ide_prpoa having ide_prpoa="+ide_prpoa
+			 +" 		 ) a where a.ide_prpoa = pre_poa.ide_prpoa; update pre_poa set presupuesto_codificado_prpoa=presupuesto_inicial_prpoa+reforma_prpoa where ide_prpoa="+ide_prpoa;
+	utilitario.getConexion().ejecutarSql(sql);
+
+}
+public void trigValidaFuenteEjecucion(String ide_prpoa,String ide_prfuf){
+	 sql="insert into pre_poa_fuente_ejecucion (ide_prpfe,ide_prpoa,ide_prfuf,valor_certificado_prpfe,valor_compromiso_prpfe,valor_devengado_prpfe,activo_prpfe)"
+			 +" select row_number()over (order by ide_prfuf) +(select ( case when max (ide_prpfe) is null then 0 else max (ide_prpfe) end) as codigo from pre_poa_fuente_ejecucion) as codigo,"
+			 +" ide_prpoa,ide_prfuf,0,0,0,true from ( select a.ide_prpoa,a.ide_prfuf from pre_poa_financiamiento a left join pre_poa_fuente_ejecucion b on a.ide_prpoa = b.ide_prpoa and a.ide_prfuf = b.ide_prfuf"
+			 +" where a.ide_prpoa = "+ide_prpoa+" and a.ide_prfuf= "+ide_prfuf+" and b.ide_prfuf is null ) a";
+	utilitario.getConexion().ejecutarSql(sql);
+
+}
+
+public void trigEjecutaCertificacion(String ide_prpoa,String ide_prfuf){
+	 sql="update pre_poa_fuente_ejecucion set valor_certificado_prpfe=valor from ("
+			 +"  select ide_prpoa,sum(valor_certificado_prpoc) as valor,activo_prpoc,ide_prfuf from pre_poa_certificacion where activo_prpoc = true and ide_prpoa="+ide_prpoa+" and ide_prfuf ="+ide_prfuf+" group by ide_prpoa,activo_prpoc,ide_prfuf"
+		 +" ) a where a.ide_prpoa = pre_poa_fuente_ejecucion.ide_prpoa  and a.ide_prfuf = pre_poa_fuente_ejecucion.ide_prfuf; ";
+	utilitario.getConexion().ejecutarSql(sql);
+
+}
+public void trigActualizaCertificadoPoa(String ide_prpoa){
+	 sql="update pre_poa set valor_certificado_prpoa =valor from ("
+			 +" select sum(valor_certificado_prpfe) as valor,ide_prpoa from pre_poa_fuente_ejecucion where ide_prpoa="+ide_prpoa+" group by ide_prpoa) a where a.ide_prpoa=pre_poa.ide_prpoa";
+	utilitario.getConexion().ejecutarSql(sql);
+
+}
+public void trigCertificacionPreMensual(String ide_prcer){
+	 sql="delete from pre_mensual where ide_prcer = "+ide_prcer+";"
+			 +" INSERT INTO pre_mensual(ide_prmen, ide_pranu,fecha_ejecucion_prmen, comprobante_prmen, devengado_prmen, cobrado_prmen,"
+			 +" 		 cobradoc_prmen, pagado_prmen, comprometido_prmen, valor_anticipo_prmen, activo_prmen,  certificado_prmen, ide_prfuf,ide_prcer)"
+	 +" select row_number() over(order by ide_pranu) + (select (case when max(ide_prmen) is null then 0 else max(ide_prmen) end) as codigo from pre_mensual ) as codigo,"
+	 +" b.ide_pranu,fecha_prcer,num_documento_prcer,0,0,0,0,0,0,true,valor_certificado_prpoc,a.ide_prfuf,a.ide_prcer"
+	 +" from pre_poa_certificacion a, pre_anual b, pre_certificacion c"
+	 +" where a.ide_prpoa = b.ide_prpoa and a.ide_prcer = c.ide_prcer and a.ide_prcer = "+ide_prcer+";";
+	utilitario.getConexion().ejecutarSql(sql);
+
+}
+public void trigEjecutaCompromiso(String ide_prpoa,String ide_prfuf){
+	 sql="update pre_poa_fuente_ejecucion set valor_compromiso_prpfe=valor from ("
+			 +"  select ide_prpoa,sum(comprometido_prpot) as valor,ide_prfuf from pre_poa_tramite where activo_prpot = true and ide_prpoa="+ide_prpoa+" and ide_prfuf ="+ide_prfuf+" group by ide_prpoa,ide_prfuf"
+		 +" ) a where a.ide_prpoa = pre_poa_fuente_ejecucion.ide_prpoa  and a.ide_prfuf = pre_poa_fuente_ejecucion.ide_prfuf; ";
+	utilitario.getConexion().ejecutarSql(sql);
+
+}
+public void trigActualizaCompromisoPoa(String ide_prpoa){
+	 sql="update pre_poa set valor_compromiso_prpoa =valor from ("
+			 +" select sum(valor_compromiso_prpfe) as valor,ide_prpoa from pre_poa_fuente_ejecucion where ide_prpoa="+ide_prpoa+" group by ide_prpoa) a where a.ide_prpoa=pre_poa.ide_prpoa";
+	utilitario.getConexion().ejecutarSql(sql);
+
+}
+public void trigCompromisoPreMensual(String ide_prtra){
+	 sql="delete from pre_mensual where ide_prtra in ("+ide_prtra+");"
+			 +" INSERT INTO pre_mensual(ide_prmen, ide_pranu, ide_prtra,ide_comov, ide_codem, fecha_ejecucion_prmen, comprobante_prmen, devengado_prmen, cobrado_prmen," 
+			 +"             cobradoc_prmen, pagado_prmen, comprometido_prmen, valor_anticipo_prmen, "
+			 +"             activo_prmen,  certificado_prmen, ide_prfuf,ide_prcer)"
+			 +" select row_number()over(order by a.ide_prtra)   +(select (case when max(ide_prmen) is null then 0 else max(ide_prmen) end) as codigo from pre_mensual)  as codigo,"
+			 +" b.ide_pranu,a.ide_prtra,null,null,fecha_tramite_prtra,numero_oficio_prtra,0,0,0,0,comprometido_prpot,0,true,0,a.ide_prfuf,null"
+			 +" from   pre_poa_tramite a,pre_anual b,pre_tramite c"
+			 +" where a.ide_prpoa =b.ide_prpoa"
+			 +" and a.ide_prtra =c.ide_prtra"
+			 +" and a.ide_prtra ="+ide_prtra+";";
 	utilitario.getConexion().ejecutarSql(sql);
 
 }
