@@ -186,7 +186,6 @@ public class pre_rol extends Pantalla{
 		bot_enviar.setIcon("ui-icon-mail-closed");
 		bar_botones.agregarBoton(bot_enviar);
 
-
 		Boton bot_activar_nomina=new Boton();
 		bot_activar_nomina.setMetodo("activarNomina");
 		bot_activar_nomina.setValue("Activar Nomina");
@@ -647,7 +646,9 @@ public class pre_rol extends Pantalla{
 	}
 
 
-	
+	public void enviarCorreoPrueba(){
+		//utilitario.EnviaEmail("alex.becerra@emgirs.gob.ec", "Escarlata1", "veronica.zambrano@emgirs.gob.ec", "prueba", "holaddd");
+	}
 	public void calcularRenta(){
 		// valida que seleccione un periodo
 		if (com_periodo.getValue()==null){
@@ -2721,8 +2722,8 @@ String ide_gepro=ser_nomina.getPeriodosRol(str_fecha_ini, str_fecha_fin);
                          }
                          TablaGenerica tab_correos =ser_empleado.getCorreoEmpleados(str_ide.toString());                                         
                          StringBuilder str_resultado=new StringBuilder(getFormatoInformacion("TOTAL DE EMPLEADOS PARA ENVIAR CORREO ELECTRÓNICO : "+sel_tab_empleados.getTab_seleccion().getSeleccionados().length));
-                         EnviarCorreo env_enviar = new EnviarCorreo();
-                         String str_asunto="DETALLE DE NÓMINA";
+                         //EnviarCorreo env_enviar = new EnviarCorreo();
+                         String str_asunto="NOMINA DE PAGOS";
                          //Proceso de enviar a cada empleado                             
                          GenerarReporte ger = new GenerarReporte();                                              
                          for (Fila filaActual:sel_tab_empleados.getTab_seleccion().getSeleccionados()) {
@@ -2738,9 +2739,8 @@ String ide_gepro=ser_nomina.getPeriodosRol(str_fecha_ini, str_fecha_fin);
                                                          //str_mail="hhsoul_louis@hotmail.com";
                                                          continue;
                                                  }
-                                                 StringBuilder str_mensaje=new StringBuilder().append("<p>Generado: ").append(utilitario.getFechaLarga(utilitario.getFechaActual())).append(" Hora : ").append(utilitario.getHoraActual()).append("</p>");
-                                                 str_mensaje.append("<p>Señor(a): ").append(filaActual.getCampos()[2]).append("</p>");
-                                                 str_mensaje.append("<p>Para su conocimiento, le adjuntamos un archivo pdf con el detalle de la nómina generada por el Sistema de Gestíon de Talento Humano. </p>");
+                                                 String str_mensaje="Fecha Generación: "+utilitario.getFechaLarga(utilitario.getFechaActual())+" Hora : "+utilitario.getHoraActual()+" "+
+                                                 "Funcionario(a): "+filaActual.getCampos()[2]+" Para su conocimiento, le adjuntamos un archivo pdf con el detalle del rol de pago generado por el Sistema de Gestíon de Talento Humano.";
                                                  //Mismo proceso de llamar a reporte boleta individual
                                                  
                                                  p_parametros.put("IDE_GEEDP", filaActual.getCampos()[0].toString());            
@@ -2749,16 +2749,14 @@ String ide_gepro=ser_nomina.getPeriodosRol(str_fecha_ini, str_fecha_fin);
                                                  p_parametros.put("par_total_recibir",Integer.parseInt(utilitario.getVariable("p_nrh_rubro_valor_recibir")));
                                                  p_parametros.put("par_total_ingresos",Integer.parseInt(utilitario.getVariable("p_nrh_rubro_total_ingresos")));
                                                  p_parametros.put("par_total_egresos",Integer.parseInt(utilitario.getVariable("p_nrh_rubro_total_egresos")));                                                    
-
+                                                 
                                                  File fil_rol=generar(p_parametros, "/reportes/rep_rol_de_pagos/rep_n_rol_pagos.jasper",filaActual.getCampos()[0].toString());
                                                  List<File> lis_file = new ArrayList<File>();
                                                  lis_file.add(fil_rol);
-                                                 String str_msj= env_enviar.agregarCorreo(str_mail, str_asunto, str_mensaje.toString(), lis_file);
-
-                                                 if(str_msj.isEmpty()==false){
-                                                         //Fallo el envio de coorreo
-                                                         str_resultado.append(getFormatoError("No se puede enviar el correo a "+str_mail+" motivo: "+str_msj));
-                                                 }
+                                                // String str_msj= env_enviar.agregarCorreo(str_mail, str_asunto, str_mensaje.toString(), lis_file);
+                                                 TablaGenerica tab_correo = utilitario.consultar("select ide_corr,correo_corr,clave_corr from sis_correo limit 1");
+                                                 utilitario.EnviaEmail(tab_correo.getValor("correo_corr"), tab_correo.getValor("clave_corr"), str_mail, str_asunto, str_mensaje,fil_rol);
+                                                
                                             tab_correos.getFilas().remove(j);
 
                                                  break;
@@ -2768,13 +2766,13 @@ String ide_gepro=ser_nomina.getPeriodosRol(str_fecha_ini, str_fecha_fin);
 
                          }
                          sel_tab_empleados.cerrar();
-
-                         String str_mensaje=env_enviar.enviarTodos();
+                         /*	
+                         //String str_mensaje=env_enviar.enviarTodos();
                          System.out.println("DFJ****   "+str_mensaje);
                          if(str_mensaje.isEmpty()==false){
                                  str_resultado.append(getFormatoError(str_mensaje));
                          }
-
+						*/
                          edi_msj.setValue(str_resultado);
                          dia_resumen.dibujar();
 
