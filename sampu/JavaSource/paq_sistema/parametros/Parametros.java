@@ -391,7 +391,7 @@ public class Parametros {
  
         /*
          * PRESUPUESTO
-         * */
+        */
         lis_parametros.add(new Parametro("16", "p_modulo_presupuesto","Indica el modulo que pertenece a presupuesto","10","gen_modulo","ide_gemod","detalle_gemod"));
         lis_parametros.add(new Parametro("16", "p_modulo_tramite","Indica el modulo que pertenece el tramite ","11","gen_modulo","ide_gemod","detalle_gemod"));
         lis_parametros.add(new Parametro("16", "p_modulo_tramite_alterno","Indica el modulo que pertenece el tramite alterno ","15","gen_modulo","ide_gemod","detalle_gemod"));
@@ -430,6 +430,7 @@ public class Parametros {
         lis_parametros.add(new Parametro("17", "p_nombre_contador", "Indica elnombre del Contador general", "Ing. Juan Carlos Flores"));
         lis_parametros.add(new Parametro("17", "p_nombre_coordinador_fin", "Indica el nombre del Coordinador Financiero", "Ing. Juan Flores"));
         lis_parametros.add(new Parametro("17", "p_nombre_jefe_presupuesto", "Indica el nombre del Jefe de Presupuesto", "Ing. Salasar Mishell"));
+        lis_parametros.add(new Parametro("17", "p_anio_vigente", "Indica el año vigente","8","gen_anio","ide_geani", "detalle_geani"));
      
 
         /*
@@ -439,6 +440,9 @@ public class Parametros {
         lis_parametros.add(new Parametro("18", "p_tes_impuesto_iva","Indica el tipo impuesto impuesto iva","2","tes_tipo_impuesto","ide_tetii","detalle_tetii"));
         lis_parametros.add(new Parametro("18", "p_tipo_mov_facturacion","Indica el tipo de movimiento a ser utilizado al momento de generar el asiento contable de facturacion","2","cont_tipo_movimiento","ide_cotim","detalle_cotim"));
         lis_parametros.add(new Parametro("18", "p_valor_devenga", "Este campo indica el nombre del campo que se devenga de la tabla tes_comprobante_pago", "valor_pago_tecpo"));
+        lis_parametros.add(new Parametro("18", "p_modulo_comprobante_pago", "Indica  el modulo comprobantes de pago", "18","gen_modulo","ide_gemod","detalle_gemod"));
+        lis_parametros.add(new Parametro("18", "p_asiento_anticipo", "Indica  el asiento contable de tipo anticipo", "10","cont_nombre_asiento_contable","ide_conac","detalle_conac"));
+        lis_parametros.add(new Parametro("18", "p_estado_devengado", "Indica  el estado devengado del asiento", "2","cont_estado","ide_coest","detalle_coest"));
 
         /*
          * ACTIVOS FIJOS =19

@@ -3,6 +3,22 @@
  * and open the template in the editor.
  */
 package paq_sistema.aplicacion;
+import java.util.*;
+import java.util.*;
+
+import javax.mail.*;
+import javax.mail.internet.*;
+import javax.activation.*;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+
+
 
 import framework.aplicacion.Framework;
 
@@ -35,6 +51,7 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.activation.DataSource;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -54,6 +71,9 @@ import org.primefaces.model.StreamedContent;
 import org.primefaces.push.PushContext;
 import org.primefaces.push.PushContextFactory;
 import org.primefaces.util.Constants;
+
+
+
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
@@ -1301,8 +1321,94 @@ public List getListaGruposNivelPresupuesto(){
 		return lista;
 		}
 
-	
+	/////ENVIO DE EMAIL
+
+String miCorreo;
+String miContraseña;
+//String servidorSMTP = "smtp.gmail.com";
+//String puertoEnvio = "465";
+String servidorSMTP = "mail.emgirs.gob.ec";
+String puertoEnvio = "25";
+String mailReceptor;
+String asunto;
+String cuerpo;
+String filename = "C:/reporte.pdf";
+
+	// metodo que recibe y envia el email
+	public void EnviaEmail(String miCorreo, String miContraseña,
+			String mailReceptor, String asunto, String cuerpo, File filearchivo) {
+		this.miCorreo = miCorreo;
+		this.miContraseña = miContraseña;
+		this.mailReceptor = mailReceptor;
+		this.asunto = asunto;
+		this.cuerpo = cuerpo;
+
+		Properties props = new Properties();// propiedades a agragar
+		props.put("mail.smtp.user", this.miCorreo);// correo origen
+		props.put("mail.smtp.host", servidorSMTP);// tipo de servidor
+		props.put("mail.smtp.port", puertoEnvio);// puesto de salida
+		props.put("mail.smtp.starttls.enableue", false);// inicializar el
+														// servidor
+		// props.put("mail.transport.protocol",smpt);
+		props.put("mail.smtp.auth", "false");// autentificacion
+		props.put("mail.smtp.socketFactory.port", puertoEnvio);// activar el
+																// puerto
+		// props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
+		props.put("mail.smtp.socketFactory.fallback", "false");
+		props.put("mail.smtp.auth", "false");
+		props.put("mail.smtp.starttls.enable", false);
+
+		SecurityManager security = System.getSecurityManager();
+
+		try {
+			Authenticator auth = new autentificadorSMTP();// autentificar el
+															// correo
+			Session session = Session.getInstance(props, auth);// se inica una
+																// session
+
+			// Se compone la parte del texto
+			BodyPart texto = new MimeBodyPart();
+			texto.setText(cuerpo);
+
+			// Se compone el adjunto con la imagen
+			BodyPart adjunto = new MimeBodyPart();
+			DataSource source = new FileDataSource(filearchivo);
+			adjunto.setDataHandler(new DataHandler(source));
+			adjunto.setFileName(filearchivo.getName());
+
+			// Una MultiParte para agrupar texto e imagen.
+			MimeMultipart multiParte = new MimeMultipart();
+			//BodyPart messageBodyPart = new MimeBodyPart();
+	        //messageBodyPart.setContent(texto, "text/html");			
+	        
+	        multiParte.addBodyPart(texto);
+			multiParte.addBodyPart(adjunto);
+
+			// Se compone el correo, dando to, from, subject y el
+			// contenido.
+			MimeMessage message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(this.miCorreo));
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(
+					this.mailReceptor));
+			message.setSubject(asunto);
+			message.setContent(multiParte);
+
+			Transport.send(message);// envia el mensaje
+
+
+		} catch (Exception mex) {
+			System.out.println("ff" + mex);
+		}// fin try-catch
+	}// fin metodo enviaEmail
+
+	private class autentificadorSMTP extends javax.mail.Authenticator {
+
+		@Override
+		public PasswordAuthentication getPasswordAuthentication() {
+			return new PasswordAuthentication(miCorreo, miContraseña);
+		}
 	}
+}
 	
 
 
