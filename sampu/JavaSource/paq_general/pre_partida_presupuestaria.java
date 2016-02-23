@@ -21,6 +21,8 @@ public class pre_partida_presupuestaria extends Pantalla {
         tab_tabla.getColumna("ACTIVO_GEPAP").setCheck();
         tab_tabla.getColumna("ACTIVO_GEPAP").setValorDefecto("TRUE");
         tab_tabla.getColumna("ide_prasp").setVisible(false);
+        tab_tabla.getColumna("ide_prcla").setCombo("pre_clasificador", "ide_prcla", "codigo_clasificador_prcla,descripcion_clasificador_prcla", "");
+        tab_tabla.getColumna("ide_prcla").setAutoCompletar();
         tab_tabla.dibujar();
         PanelTabla pat_panel = new PanelTabla();
         pat_panel.setPanelTabla(tab_tabla);
