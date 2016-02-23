@@ -7,10 +7,12 @@ package paq_nomina;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.ejb.EJB;
 import javax.faces.event.AjaxBehaviorEvent;
 
 import org.primefaces.event.SelectEvent;
 
+import paq_contabilidad.ejb.ServicioContabilidad;
 import paq_sistema.aplicacion.Pantalla;
 import framework.aplicacion.TablaGenerica;
 import framework.componentes.AutoCompletar;
@@ -36,6 +38,11 @@ public class pre_rubro extends Pantalla {
 	private SeleccionFormatoReporte sef_reporte=new SeleccionFormatoReporte();
 	private SeleccionTabla  sel_tia = new SeleccionTabla();
 	private Map p_parametros=new HashMap();
+	
+	@EJB
+	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
+
+	
 	public pre_rubro() {        
 
 		bar_botones.agregarReporte();
@@ -46,27 +53,6 @@ public class pre_rubro extends Pantalla {
 		sef_reporte.setId("sef_reporte");
 		agregarComponente(sef_reporte);
 
-
-		com_cuenta_contable.setId("com_cuenta_contable");
-		com_cuenta_contable.setCombo("select CUC.IDE_GECUC," +
-				"cuc.CODIGO_CUENTA_GECUC, "+
-				"CUC.DETALLE_GECUC ||' / ' || LUA.DETALLE_GELUA as cuenta_contable, " +
-				"'Rubro ' || rub.detalle_nrrub as rubro  " +
-				"from GEN_CUENTA_CONTABLE cuc " +
-				"INNER JOIN NRH_RUBRO_ASIENTO rua on RUA.IDE_GECUC=CUC.IDE_GECUC " +
-				"inner join GEN_LUGAR_APLICA LUA ON LUA.IDE_GELUA=RUA.IDE_GELUA " +
-				"INNER JOIN NRH_RUBRO RUB ON RUB.IDE_NRRUB=RUA.IDE_NRRUB " +
-				"GROUP BY CUC.IDE_GECUC,CUC.DETALLE_GECUC,LUA.DETALLE_GELUA,rub.detalle_nrrub,cuc.CODIGO_CUENTA_GECUC " +
-				"ORDER BY CUC.DETALLE_GECUC,DETALLE_GELUA ");
-		com_cuenta_contable.setMetodo("seleccionaCuentaContable");
-		com_cuenta_contable.setFilterMatchMode("contains");
-		//    	aut_cuenta_contable.setId("aut_cuenta_contable");
-		//    	aut_cuenta_contable.setAutoCompletar("select IDE_GECUC,DETALLE_GECUC from GEN_CUENTA_CONTABLE");
-		//    	aut_cuenta_contable.setMetodoChange("seleccionaCuentaContable");
-
-		Etiqueta eti_colaborador=new Etiqueta("Cuenta Contable: ");
-		bar_botones.agregarComponente(eti_colaborador);
-		bar_botones.agregarComponente(com_cuenta_contable);
 
 		// boton limpiar
 		Boton bot_limpiar = new Boton();
@@ -105,9 +91,10 @@ public class pre_rubro extends Pantalla {
 
 		tab_tabla2.getColumna("IDE_GETIA").setCombo("GEN_TIPO_ASIENTO", "IDE_GETIA", "DETALLE_GETIA", "");
 		tab_tabla2.getColumna("IDE_GELUA").setCombo("GEN_LUGAR_APLICA", "IDE_GELUA", "DETALLE_GELUA", "");
-		tab_tabla2.getColumna("IDE_GECUC").setCombo("GEN_CUENTA_CONTABLE", "IDE_GECUC", "CODIGO_CUENTA_GECUC,DETALLE_GECUC", "");
-		tab_tabla2.getColumna("IDE_GECUC").setAutoCompletar();
-		tab_tabla2.getColumna("IDE_GEARE").setCombo("GEN_AREA","IDE_GEARE","DETALLE_GEARE","");		
+		//tab_tabla2.getColumna("IDE_GECUC").setCombo("GEN_CUENTA_CONTABLE", "IDE_GECUC", "CODIGO_CUENTA_GECUC,DETALLE_GECUC", "");
+		//tab_tabla2.getColumna("IDE_GECUC").setAutoCompletar();
+		tab_tabla2.getColumna("ide_cocac").setCombo(ser_contabilidad.servicioCatalogoCuentaCombo());
+		tab_tabla2.getColumna("ide_cocac").setAutoCompletar();		tab_tabla2.getColumna("IDE_GEARE").setCombo("GEN_AREA","IDE_GEARE","DETALLE_GEARE","");		
 		tab_tabla2.dibujar();
 		PanelTabla pat_panel2 = new PanelTabla();
 		pat_panel2.setMensajeWarn("RUBROS PARA ASIENTO CONTABLE");		
