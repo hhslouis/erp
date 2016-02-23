@@ -12,14 +12,27 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
+
+import javax.ejb.EJB;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+
+import jxl.CellView;
+import jxl.Workbook;
+import jxl.format.Colour;
+import jxl.format.Orientation;
+import jxl.write.WritableCellFormat;
+import jxl.write.WritableFont;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+
 import org.primefaces.event.SelectEvent;
 
 import com.lowagie.text.pdf.codec.Base64.OutputStream;
 
 import paq_sistema.aplicacion.Pantalla;
+import paq_tesoreria.ejb.ServicioTesoreria;
 import framework.aplicacion.TablaGenerica;
 import framework.componentes.Boton;
 import framework.componentes.Dialogo;
@@ -48,6 +61,8 @@ public class pre_spi extends Pantalla {
 	private double dou_total=0;
 
 	private SeleccionTabla sel_tab_tipo_nomina=new SeleccionTabla();
+	   @EJB
+	    private ServicioTesoreria ser_Tesoreria = (ServicioTesoreria) utilitario.instanciarEJB(ServicioTesoreria.class);
 
 	public pre_spi() {
 
@@ -68,6 +83,7 @@ public class pre_spi extends Pantalla {
 		tab_tabla1.getColumna("ACTIVO_SPTRA").setValorDefecto("true");	
 		tab_tabla1.getColumna("FECHA_SPTRA").setValorDefecto(utilitario.getFechaActual());
 		tab_tabla1.getColumna("HORA_SPTRA").setValorDefecto(utilitario.getFormatoHora("12:00:00"));
+		tab_tabla1.getColumna("ide_tetic").setCombo(ser_Tesoreria.getConsultaTipoConcepto("true,false"));
 		tab_tabla1.agregarRelacion(tab_tabla2);		
 		tab_tabla1.onSelect("seleccionarTabla1");
 		tab_tabla1.dibujar();
@@ -162,10 +178,207 @@ public class pre_spi extends Pantalla {
 		agregarComponente(sel_tab_tipo_nomina);
 
 
-
+		Boton bot_excel=new Boton();
+		bot_excel.setValue("Exportar EXCEL");
+		bot_excel.setAjax(false);
+		bot_excel.setMetodo("exportarExcel");
+		bar_botones.agregarBoton(bot_excel);
 
 	}
 
+	public void exportarExcel(){
+		if (tab_tabla2.getTotalFilas()>0){
+				exportarXLS("spi.xls","1","1");
+			
+		}
+	}
+	public void exportarXLS(String nombre,String tipo_nomina,String mes) { 
+		try { 
+			ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext(); 
+			String nom = nombre; 
+			File result = new File(extContext.getRealPath("/" + nom)); 
+			WritableWorkbook archivo_xls = Workbook.createWorkbook(result); 
+			WritableSheet hoja_xls = archivo_xls.createSheet("Tabla", 0); 
+			WritableFont fuente = new WritableFont(WritableFont.TAHOMA, 10);
+			WritableCellFormat formato_celda = new WritableCellFormat(fuente); 
+			formato_celda.setAlignment(jxl.format.Alignment.LEFT); 
+			formato_celda.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE); 
+			formato_celda.setOrientation(Orientation.HORIZONTAL); 
+			//formato_celda.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, Colour.BLACK);
+
+			WritableFont fuente_suc = new WritableFont(WritableFont.ARIAL, 11);
+			WritableCellFormat formato_celda_suc = new WritableCellFormat(fuente_suc); 
+			formato_celda_suc.setAlignment(jxl.format.Alignment.LEFT); 
+			formato_celda_suc.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE); 
+			formato_celda_suc.setOrientation(Orientation.HORIZONTAL); 
+			formato_celda_suc.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, Colour.BLACK);
+
+			WritableFont fuente_totales = new WritableFont(WritableFont.ARIAL, 11);
+			WritableCellFormat formato_celda_totales = new WritableCellFormat(fuente_suc); 
+			formato_celda_totales.setAlignment(jxl.format.Alignment.RIGHT); 
+			formato_celda_totales.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE); 
+			formato_celda_totales.setOrientation(Orientation.HORIZONTAL); 
+			formato_celda_totales.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, Colour.RED);
+
+			WritableCellFormat formato_celda_valor_rubro = new WritableCellFormat(fuente); 
+			formato_celda_valor_rubro.setAlignment(jxl.format.Alignment.RIGHT); 
+			formato_celda_valor_rubro.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE); 
+			formato_celda_valor_rubro.setOrientation(Orientation.HORIZONTAL); 
+			formato_celda_valor_rubro.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, Colour.BLACK);
+
+			int int_columna = 0; 
+			int int_fila=4;
+
+			CellView cv=new CellView();
+			for (int i = 0; i < tab_tabla2.getTotalFilas(); i++) {
+					// NOMBRES DE COLUMNAS
+					// DEPARTAMENTO
+					jxl.write.Label lab1 = new jxl.write.Label(0, 0, "CEDULA/RUC", formato_celda);
+					hoja_xls.addCell(lab1);
+					cv=new CellView();
+					cv.setAutosize(true);
+					hoja_xls.setColumnView(0,cv);
+
+					// CEDULA
+					lab1 = new jxl.write.Label(1, 0, "REFERENCIA", formato_celda);
+					hoja_xls.addCell(lab1);
+					cv=new CellView();
+					cv.setAutosize(true);
+					hoja_xls.setColumnView(1,cv);
+
+					// NOMBRE 
+					lab1 = new jxl.write.Label(2, 0, "NOMBRE", formato_celda);
+					hoja_xls.addCell(lab1);
+					cv=new CellView();
+					cv.setAutosize(true);
+					hoja_xls.setColumnView(2,cv);
+
+					// INSTITUCION FINANCIERA
+					lab1 = new jxl.write.Label(3, 0, "INSTITUCION FINANCIERA", formato_celda);
+					hoja_xls.addCell(lab1);
+					cv=new CellView();
+					cv.setAutosize(true);
+					hoja_xls.setColumnView(3,cv);
+
+					// CUENTA BENEFICIARIO
+					lab1 = new jxl.write.Label(4, 0, "CUENTA BENEFICIARIO", formato_celda);
+					hoja_xls.addCell(lab1);
+					cv=new CellView();
+					cv.setAutosize(true);
+					hoja_xls.setColumnView(4,cv);		
+					
+					// TIPOCUENTA
+					lab1 = new jxl.write.Label(5, 0, "TIPOCUENTA", formato_celda);
+					hoja_xls.addCell(lab1);
+					cv=new CellView();
+					cv.setAutosize(true);
+					hoja_xls.setColumnView(5,cv);
+
+					// VALOR
+					lab1 = new jxl.write.Label(6, 0, "VALOR", formato_celda);
+					hoja_xls.addCell(lab1);
+					cv=new CellView();
+					cv.setAutosize(true);
+					hoja_xls.setColumnView(6,cv);
+
+					// CONCEPTO
+					lab1 = new jxl.write.Label(7, 0, "CONCEPTO", formato_celda);
+					hoja_xls.addCell(lab1);
+					cv=new CellView();
+					cv.setAutosize(true);
+					hoja_xls.setColumnView(7,cv);
+					
+					// DETALLE
+					lab1 = new jxl.write.Label(8, 0, "DETALLE", formato_celda);
+					hoja_xls.addCell(lab1);
+					cv=new CellView();
+					cv.setAutosize(true);
+					hoja_xls.setColumnView(8,cv);	
+					
+					
+						//Cargamos RUC
+						jxl.write.Label lab2 = new jxl.write.Label(0, i+1,tab_tabla2.getValor(i, "cedula_sptrd"), formato_celda);
+						hoja_xls.addCell(lab2);
+						cv=new CellView();
+						cv.setAutosize(true);
+						hoja_xls.setColumnView(0,cv);
+						//Cargamos REFRECNIA
+						jxl.write.Number labnum1 = new jxl.write.Number(1, i+1,Double.parseDouble(tab_tabla2.getValor(i, "secuencial_sptrd")), formato_celda);
+						hoja_xls.addCell(labnum1);
+						cv=new CellView();
+						cv.setAutosize(true);
+						hoja_xls.setColumnView(1,cv);
+
+						//Cargamos PROVEEDRO
+
+						lab2 = new jxl.write.Label(2, i+1,tab_tabla2.getValor(i, "empleado_sptrd"), formato_celda);
+						hoja_xls.addCell(lab2);
+						cv=new CellView();
+						cv.setAutosize(true);
+						hoja_xls.setColumnView(2,cv);
+						//Cargamos INSITUCION FINANCIERA
+						jxl.write.Number labnum2 = new jxl.write.Number(3, i+1,Double.parseDouble(tab_tabla2.getValor(i, "cod_banco_sptrd")), formato_celda);
+						hoja_xls.addCell(labnum2);
+						cv=new CellView();
+						cv.setAutosize(true);
+						hoja_xls.setColumnView(3,cv);
+						
+						//Cargamos CUENTA BENEFICIARIO
+						jxl.write.Number labnum3 = new jxl.write.Number(4, i+1,Double.parseDouble(tab_tabla2.getValor(i, "nro_cuenta_sptrd")), formato_celda);
+						hoja_xls.addCell(labnum3);
+						cv=new CellView();
+						cv.setAutosize(true);
+						hoja_xls.setColumnView(4,cv);
+						
+						//Cargamos tipo cuenta bancaria
+						jxl.write.Number labnum4 = new jxl.write.Number(5, i+1,Double.parseDouble(tab_tabla2.getValor(i, "tipo_cuenta_sptrd")), formato_celda);
+						hoja_xls.addCell(labnum4);
+						cv=new CellView();
+						cv.setAutosize(true);
+						hoja_xls.setColumnView(5,cv);
+						
+						//Cargamos VALOR PAGAR
+						jxl.write.Number labnum = new jxl.write.Number(6, i+1,Double.parseDouble(tab_tabla2.getValor(i, "monto_transferido_sptrd")), formato_celda);
+						hoja_xls.addCell(labnum);
+						cv=new CellView();
+						cv.setAutosize(true);
+						hoja_xls.setColumnView(6,cv);
+						
+						//Cargamos CODIGO CONCEPTO
+						//System.out.println("antes concepto ");
+
+						TablaGenerica tab_concepto=utilitario.consultar("select ide_tetic,detalle_tetic,codigo_tetic from tes_tipo_concepto where ide_tetic in (select ide_tetic from spi_transferencias where ide_sptra="+tab_tabla1.getValorSeleccionado()+")");
+						//System.out.println(" concepto ");
+						//tab_concepto.imprimirSql();
+						jxl.write.Number labnum5 = new jxl.write.Number(7, i+1,Double.parseDouble(tab_concepto.getValor("codigo_tetic")), formato_celda);
+						hoja_xls.addCell(labnum5);
+						cv=new CellView();
+						cv.setAutosize(true);
+						hoja_xls.setColumnView(7,cv);
+						
+						//Cargamos RUC
+						TablaGenerica tab_detalle=utilitario.consultar("select ide_sptra,detalle_tranferencia_sptra from spi_transferencias where ide_sptra="+tab_tabla1.getValorSeleccionado());
+						tab_detalle.imprimirSql();
+
+						lab2 = new jxl.write.Label(8, i+1,tab_detalle.getValor( "detalle_tranferencia_sptra"), formato_celda);
+						hoja_xls.addCell(lab2);
+						cv=new CellView();
+						cv.setAutosize(true);
+						hoja_xls.setColumnView(8,cv);
+					
+					
+				int_fila=int_fila+1;
+			}
+
+
+
+			archivo_xls.write(); 
+			archivo_xls.close(); 
+			FacesContext.getCurrentInstance().getExternalContext().redirect(extContext.getRequestContextPath() + "/" + nom); 
+		} catch (Exception e) { 
+			System.out.println("Error no se genero el XLS :" + e.getMessage()); 
+		} 
+	}
 
 
 	public void seleccionarTabla1(SelectEvent evt){
@@ -413,7 +626,7 @@ public class pre_spi extends Pantalla {
 				String str_rol=sel_tab_tipo_nomina.getSeleccionados();
 				if(str_rol!=null && !str_rol.isEmpty()){
 					sel_tab_tipo_nomina.cerrar();
-					TablaGenerica tab_importa=utilitario.consultar("select deta.VALOR_NRDRO,APELLIDO_PATERNO_GTEMP || ' ' || APELLIDO_MATERNO_GTEMP || ' ' || PRIMER_NOMBRE_GTEMP || ' ' || SEGUNDO_NOMBRE_GTEMP AS NOMBRES,CODIGO_GTTCB, DOCUMENTO_IDENTIDAD_GTEMP,NUMERO_CUENTA_GTCBE,CODIGO_BANCO_GEINS from NRH_DETALLE_ROL deta inner join NRH_DETALLE_RUBRO dtr on DETA.IDE_NRDER=DTR.IDE_NRDER inner join GEN_EMPLEADOS_DEPARTAMENTO_PAR par on deta.ide_geedp=par.ide_geedp inner join GTH_EMPLEADO emp on par.ide_gtemp=emp.ide_gtemp left join GTH_CUENTA_BANCARIA_EMPLEADO cuenta on cuenta.IDE_GTEMP=emp.IDE_GTEMP  and ACREDITACION_GTCBE=true left join GEN_INSTITUCION insti on insti.IDE_GEINS=cuenta.IDE_GEINS  left join GTH_TIPO_CUENTA_BANCARIA tipoc on cuenta.IDE_GTTCB=tipoc.IDE_GTTCB where DETA.IDE_NRROL IN (SELECT IDE_NRROL FROM NRH_ROL WHERE IDE_GEPRO = "+str_seleccionados+" AND IDE_NRROL in("+str_rol+"))  and DTR.IDE_NRRUB="+utilitario.getVariable("p_nrh_rubro_valor_recibir")+" and deta.VALOR_NRDRO > 0 order by APELLIDO_PATERNO_GTEMP ");
+					TablaGenerica tab_importa=utilitario.consultar("select deta.VALOR_NRDRO,substring (APELLIDO_PATERNO_GTEMP || ' ' || (case when APELLIDO_MATERNO_GTEMP is null then '' else APELLIDO_MATERNO_GTEMP end) || ' ' || PRIMER_NOMBRE_GTEMP || ' ' || (case when SEGUNDO_NOMBRE_GTEMP is null then '' else SEGUNDO_NOMBRE_GTEMP  end)  from 1 for 30) AS NOMBRES,CODIGO_GTTCB, DOCUMENTO_IDENTIDAD_GTEMP,NUMERO_CUENTA_GTCBE,CODIGO_BANCO_GEINS from NRH_DETALLE_ROL deta inner join NRH_DETALLE_RUBRO dtr on DETA.IDE_NRDER=DTR.IDE_NRDER inner join GEN_EMPLEADOS_DEPARTAMENTO_PAR par on deta.ide_geedp=par.ide_geedp inner join GTH_EMPLEADO emp on par.ide_gtemp=emp.ide_gtemp left join GTH_CUENTA_BANCARIA_EMPLEADO cuenta on cuenta.IDE_GTEMP=emp.IDE_GTEMP  and ACREDITACION_GTCBE=true left join GEN_INSTITUCION insti on insti.IDE_GEINS=cuenta.IDE_GEINS  left join GTH_TIPO_CUENTA_BANCARIA tipoc on cuenta.IDE_GTTCB=tipoc.IDE_GTTCB where DETA.IDE_NRROL IN (SELECT IDE_NRROL FROM NRH_ROL WHERE IDE_GEPRO = "+str_seleccionados+" AND IDE_NRROL in("+str_rol+"))  and DTR.IDE_NRRUB="+utilitario.getVariable("p_nrh_rubro_valor_recibir")+" and deta.VALOR_NRDRO > 0 order by APELLIDO_PATERNO_GTEMP ");
 					tab_tabla2.setDibujo(false);			
 					String p_sri_tipo_moneda_spi=utilitario.getVariable("p_sri_tipo_moneda_spi");
 					String p_sri_tipo_pago_spi=utilitario.getVariable("p_sri_tipo_pago_spi");
