@@ -21,6 +21,7 @@ public class pre_sub_actividad extends Pantalla {
 		tab_sub_actividad.setId("tab_sub_actividad");
 		tab_sub_actividad.setNumeroTabla(1);
 		tab_sub_actividad.setTabla("pre_sub_actividad", "ide_prsua", 1);
+		tab_sub_actividad.getColumna("codigo_prsua").setLectura(true);
 		tab_sub_actividad.dibujar();
 		PanelTabla pat_sub_actividad=new PanelTabla();
 		pat_sub_actividad.setPanelTabla(tab_sub_actividad);
@@ -39,19 +40,18 @@ public class pre_sub_actividad extends Pantalla {
 		// TODO Auto-generated method stub
 		tab_sub_actividad.insertar();
 		
-		tab_sub_actividad.setValor("codigo_prsua", ser_contabilidad.numeroSecuencial(par_sub_activdad));
-		ser_contabilidad.guardaSecuencial(ser_contabilidad.numeroSecuencial(par_sub_activdad),par_sub_activdad);
 
 	}
 
 	@Override
 	public void guardar() {
 		// TODO Auto-generated method stub
-		/*al momento de inserta ya guardo no requiero volver a guardar el secuencial
+		
 		if(tab_sub_actividad.isFilaInsertada()){
+			tab_sub_actividad.setValor("codigo_prsua", ser_contabilidad.numeroSecuencial(par_sub_activdad));
 			ser_contabilidad.guardaSecuencial(ser_contabilidad.numeroSecuencial(par_sub_activdad),par_sub_activdad);
+
 		}
-		*/
 		tab_sub_actividad.guardar();
 		guardarPantalla();
 		

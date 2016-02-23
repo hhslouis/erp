@@ -11,7 +11,9 @@ import framework.componentes.Combo;
 import framework.componentes.Confirmar;
 import framework.componentes.Division;
 import framework.componentes.Etiqueta;
+import framework.componentes.Grid;
 import framework.componentes.PanelTabla;
+import framework.componentes.Radio;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import paq_contabilidad.ejb.ServicioContabilidad;
@@ -24,6 +26,10 @@ public class pre_liquida_certificacion extends Pantalla {
 	private SeleccionTabla set_poa=new SeleccionTabla();
 	private SeleccionTabla set_certificacion=new SeleccionTabla();
 	private Combo com_anio=new Combo();
+	private Radio rad_imprimir= new Radio();
+	public static String par_modulosec_certificacion;
+
+
 
 	
 	 @EJB
@@ -36,10 +42,36 @@ public class pre_liquida_certificacion extends Pantalla {
 	public pre_liquida_certificacion (){
 		
 		com_anio.setCombo(ser_contabilidad.getAnioDetalle("true,false","true,false"));
-		com_anio.setMetodo("seleccionaElAnio");
 		bar_botones.agregarComponente(new Etiqueta("Seleccione El Año:"));
 		bar_botones.agregarComponente(com_anio);
+		par_modulosec_certificacion=utilitario.getVariable("p_modulo_secuencialcertificacion");
 
+	/////boton buscar poa
+		Boton bot_certificacion=new Boton();
+		bot_certificacion.setIcon("ui-icon-person");
+		bot_certificacion.setValue("Buscar Certificación");
+		bot_certificacion.setMetodo("importarCertificacion");
+		//bar_botones.agregarBoton(bot_certificacion);
+		
+		Grid gri_formulario = new Grid();
+    	gri_formulario.setColumns(2);
+    	
+		List listax = new ArrayList();
+	       Object fila1x[] = {
+	           "0", "PARCIAL"
+	       };
+	       Object fila2x[] = {
+	           "1", "TOTAL"
+	       };
+	       
+	       listax.add(fila1x);
+	       listax.add(fila2x);
+	       rad_imprimir.setId("rad_imprimir");
+	       rad_imprimir.setRadio(listax);
+	       rad_imprimir.setValue(fila2x);
+	    gri_formulario.getChildren().add(rad_imprimir);
+		gri_formulario.getChildren().add(bot_certificacion);
+		
 		tab_liquida_certificacion.setId("tab_liquida_certificacion");
 		tab_liquida_certificacion.setHeader("LIQUIDACION CERTIFICACION");
 		tab_liquida_certificacion.setTabla("pre_liquida_certificacion", "ide_prlce", 1);
@@ -60,10 +92,15 @@ public class pre_liquida_certificacion extends Pantalla {
 	       lista.add(fila2);
 	       tab_liquida_certificacion.getColumna("total_parcial_prlce").setRadio(lista, "1");
 	       tab_liquida_certificacion.getColumna("total_parcial_prlce").setRadioVertical(true);
-	 
+	       tab_liquida_certificacion.getColumna("total_parcial_prlce").setLectura(true);
+	    tab_liquida_certificacion.getColumna("valor_total_prlce").setValorDefecto("0.00");
+	    tab_liquida_certificacion.getColumna("valor_total_prlce").setEtiqueta();
+	    tab_liquida_certificacion.getColumna("valor_total_prlce").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
+
 		tab_liquida_certificacion.agregarRelacion(tab_detalle);
 		tab_liquida_certificacion.dibujar();
 		PanelTabla pat_liquida =new PanelTabla();
+		pat_liquida.setHeader(gri_formulario);
 		pat_liquida.setPanelTabla(tab_liquida_certificacion);
 		
 		///// detalle liquida certificacion
@@ -72,10 +109,19 @@ public class pre_liquida_certificacion extends Pantalla {
 		tab_detalle.setHeader("DETALLE LIQUIDACION CERTIFICACION");
 		tab_detalle.setTabla("pre_detalle_liquida_certif", "ide_prdcl", 2);
 		tab_detalle.getColumna("activo_prdcl").setValorDefecto("true");
+		tab_detalle.getColumna("activo_prdcl").setLectura(true);
 		tab_detalle.getColumna("ide_prpoa").setCombo(ser_presupuesto.getPoaTodos());
 		tab_detalle.getColumna("ide_prpoa").setAutoCompletar();
+		tab_detalle.getColumna("ide_prpoa").setLectura(true);
+		tab_detalle.getColumna("ide_prfuf").setCombo("pre_fuente_financiamiento","ide_prfuf","detalle_prfuf","");
+		tab_detalle.getColumna("ide_prfuf").setAutoCompletar();
+		tab_detalle.getColumna("ide_prfuf").setLectura(true);
+		tab_detalle.getColumna("valor_certificado_prdcl").setLectura(true);
+		//tab_detalle.getColumna("valor_liquidado_prdcl").setLectura(true);
+
 		tab_detalle.dibujar();
 		PanelTabla pat_detalle=new PanelTabla();
+		
 		pat_detalle.setPanelTabla(tab_detalle);
 		
 		
@@ -84,14 +130,14 @@ public class pre_liquida_certificacion extends Pantalla {
 		
 		agregarComponente(div_divi);
 
-	
+	/*
 	/////boton buscar poa
 			Boton bot_buscar=new Boton();
 			bot_buscar.setIcon("ui-icon-person");
 			bot_buscar.setValue("Buscar POA");
 			bot_buscar.setMetodo("importarPoa");
 			bar_botones.agregarBoton(bot_buscar);
-
+*/
 			set_poa.setId("set_poa");
 			set_poa.setSeleccionTabla(ser_presupuesto.getPoa("-1","true","true"),"ie_prpoa");
 			set_poa.setTitle("Seleccione Poa");
@@ -111,16 +157,13 @@ public class pre_liquida_certificacion extends Pantalla {
 			agregarComponente(set_poa);
 
 
-		/////boton buscar poa
-			Boton bot_certificacion=new Boton();
-			bot_certificacion.setIcon("ui-icon-person");
-			bot_certificacion.setValue("Buscar Certificación");
-			bot_certificacion.setMetodo("importarCertificacion");
-			bar_botones.agregarBoton(bot_certificacion);
+		
 
 			set_certificacion.setId("set_certificacion");
 			set_certificacion.setSeleccionTabla(ser_presupuesto.getCertificacion("true,false"),"ide_prcer");
 			set_certificacion.setTitle("Seleccione Certificación");
+			set_certificacion.getTab_seleccion().getColumna("nro_certificacion_prcer").setFiltro(true);
+
 			set_certificacion.setRadio();
 			set_certificacion.getBot_aceptar().setMetodo("aceptarCertificacion");
 			agregarComponente(set_certificacion);
@@ -152,6 +195,7 @@ public class pre_liquida_certificacion extends Pantalla {
 				tab_detalle.insertar();
 				tab_detalle.setValor("ide_prpoa", tab_poa.getValor(i, "ide_prpoa"));
 				tab_detalle.setValor("valor_certificado_prdcl", tab_poa.getValor("presupuesto_codificado_prpoa"));
+				
 			}
 			set_poa.cerrar();
 			utilitario.addUpdate("tab_detalle");
@@ -181,14 +225,65 @@ public class pre_liquida_certificacion extends Pantalla {
 		String str_seleccionado = set_certificacion.getValorSeleccionado();
 		
 		if (str_seleccionado!=null){
+
 			tab_liquida_certificacion.insertar();
 			tab_liquida_certificacion.setValor("ide_prcer", str_seleccionado);
+			tab_liquida_certificacion.setValor("total_parcial_prlce", rad_imprimir.getValue().toString());
+			tab_liquida_certificacion.setValor("sec_liquidacion_prlce", ser_contabilidad.numeroSecuencial(par_modulosec_certificacion));
+			// Primera validacion cuando es una liquidacion total de la certificacion
+			if(rad_imprimir.getValue().equals("1")){
+			TablaGenerica tab_valida_presupuesto = utilitario.consultar("select * from pre_tramite where ide_prcer="+str_seleccionado);
+				if(tab_valida_presupuesto.getTotalFilas()>0){
+					utilitario.agregarMensajeError("No se puede realizar una Liquidación Total", "Existen ya ejecutados compromisos con la certificacion seleccionada");
+					tab_liquida_certificacion.limpiar();
+					return;
+
+				}
+				else{
+					
+					TablaGenerica tab_consulta_poacer = utilitario.consultar("select ide_prpoc,ide_prpoa,ide_prfuf,valor_certificado_prpoc,valor_certificado_prpoc* (-1) as total_liquidado from pre_poa_certificacion  where ide_prcer="+str_seleccionado);
+					if(tab_consulta_poacer.getTotalFilas()>0){
+						for(int i=0;i<tab_consulta_poacer.getTotalFilas();i++){
+							tab_detalle.insertar();
+							tab_detalle.setValor(i, "ide_prpoa", tab_consulta_poacer.getValor(i, "ide_prpoa"));;
+							tab_detalle.setValor(i, "ide_prfuf", tab_consulta_poacer.getValor(i, "ide_prfuf"));;
+							tab_detalle.setValor(i, "valor_certificado_prdcl", tab_consulta_poacer.getValor(i, "valor_certificado_prpoc"));;
+							tab_detalle.setValor(i, "valor_liquidado_prdcl", tab_consulta_poacer.getValor(i, "total_liquidado"));;
+							tab_detalle.setValor(i, "activo_prdcl", "true");;
+
+						}
+						tab_liquida_certificacion.setValor("valor_total_prlce", tab_detalle.getSumaColumna("valor_liquidado_prdcl")+"");
+					}
+					
+				
+				}
 			}
+			// Segunda validacion cuando es una liquidacion parcial de la certificacion
+			else if(rad_imprimir.getValue().equals("0")){
+				TablaGenerica tab_poa = ser_presupuesto.getTablaGenericaCert(str_seleccionado);		
+				for(int i=0;i<tab_poa.getTotalFilas();i++){
+					tab_detalle.insertar();
+					tab_detalle.setValor("ide_prpoa", tab_poa.getValor(i, "ide_prpoa"));
+					tab_detalle.setValor("ide_prfuf", tab_poa.getValor(i, "ide_prfuf"));
+					tab_detalle.setValor("valor_certificado_prdcl", tab_poa.getValor(i, "saldo_comprometer"));
+					TablaGenerica tab_consulta_negativo=utilitario.consultar("select 1 as codigo,(-1)*"+tab_poa.getValor(i, "saldo_comprometer")+" as valor_liquidar");
+					
+					tab_detalle.setValor("valor_liquidado_prdcl",tab_consulta_negativo.getValor("valor_liquidar"));
+					tab_detalle.setValor("activo_prdcl", "true");
+
+				}
+				tab_liquida_certificacion.setValor("valor_total_prlce", tab_detalle.getSumaColumna("valor_liquidado_prdcl")+"");
+
+			}
+			
+		}
 			set_certificacion.cerrar();
-			utilitario.addUpdate("tab_liquida_certificacion");
+			utilitario.addUpdate("tab_liquida_certificacion"); 
 		}
 	
-
+public void calcularTotalLiquidacion(){
+	double dou_valo_liquidado=0;
+}
 
 	
 	
@@ -207,6 +302,9 @@ public class pre_liquida_certificacion extends Pantalla {
 
 	@Override
 	public void guardar() {
+		if(tab_liquida_certificacion.isFilaInsertada()){
+			ser_contabilidad.guardaSecuencial(ser_contabilidad.numeroSecuencial(par_modulosec_certificacion), par_modulosec_certificacion);
+		}
 		// TODO Auto-generated method stub
 		if(tab_liquida_certificacion.guardar()){
 			if(tab_detalle.guardar()){

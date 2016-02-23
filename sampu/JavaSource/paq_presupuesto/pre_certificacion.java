@@ -296,13 +296,14 @@ public void aceptarReporte(){
 		if (rep_reporte.isVisible()){
 			p_parametros=new HashMap();		
 			rep_reporte.cerrar();	
-			p_parametros.put("titulo","Certificaciòn Presupuestaria");
+			p_parametros.put("titulo","CERTIFICACION PRESUPUESTARIA");
 			p_parametros.put("ide_prcer", Integer.parseInt(tab_certificacion.getValor("ide_prcer")));
 			p_parametros.put("jefe_presupuesto", utilitario.getVariable("p_nombre_jefe_presupuesto"));
 			p_parametros.put("coordinador_finaciero",  utilitario.getVariable("p_nombre_coordinador_fin"));
 			p_parametros.put("ide_geani", Integer.parseInt("1"));
 
 			self_reporte.setSeleccionFormatoReporte(p_parametros,rep_reporte.getPath());
+			
 		self_reporte.dibujar();
 		
 		}
@@ -368,19 +369,17 @@ public void aceptarReporte(){
 
 			if(tab_poa_certificacion.guardar()){
 				guardarPantalla();
-				////ojosql provisional
-				String sql="delete from pre_mensual where ide_prcer in ("+tab_certificacion.getValor("ide_prcer")+");"
-+" INSERT INTO pre_mensual(ide_prmen, ide_pranu, ide_prtra,ide_comov, ide_codem, fecha_ejecucion_prmen, comprobante_prmen, devengado_prmen, cobrado_prmen," 
-+"             cobradoc_prmen, pagado_prmen, comprometido_prmen, valor_anticipo_prmen, "
-   +"          activo_prmen,  certificado_prmen, ide_prfuf,ide_prcer)"
-+" select row_number()over(order by a.ide_prcer)   +(select (case when max(ide_prmen) is null then 0 else max(ide_prmen) end) as codigo from pre_mensual)  as codigo,"
-+" b.ide_pranu,null,null,null,fecha_prcer,num_documento_prcer,0,0,0,0,0,0,true,valor_certificado_prpoc ,a.ide_prfuf,a.ide_prcer"
-+" from   pre_poa_certificacion a,pre_anual b,pre_certificacion c"
-+" where a.ide_prpoa =b.ide_prpoa"
-+" and a.ide_prcer =c.ide_prcer"
-+" and a.ide_prcer ="+tab_certificacion.getValor("ide_prcer");
-				utilitario.getConexion().ejecutarSql(sql);
-				
+				if(tab_poa_certificacion.getTotalFilas()>0){
+					for(int i=0;i<tab_poa_certificacion.getTotalFilas();i++){
+						ser_presupuesto.trigValidaFuenteEjecucion(tab_poa_certificacion.getValor(i, "ide_prpoa"),tab_poa_certificacion.getValor(i, "ide_prfuf"));
+						ser_presupuesto.trigEjecutaCertificacion(tab_poa_certificacion.getValor(i, "ide_prpoa"),tab_poa_certificacion.getValor(i, "ide_prfuf"));
+						ser_presupuesto.trigActualizaCertificadoPoa(tab_poa_certificacion.getValor(i, "ide_prpoa"));
+					}
+					
+					//Triger envia a la ejcucion presupuestaria pre_mensual
+					ser_presupuesto.trigCertificacionPreMensual(tab_certificacion.getValor("ide_prcer"));
+				}
+								
 			}
 		}
 	}

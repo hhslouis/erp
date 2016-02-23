@@ -856,14 +856,23 @@ public void aceptarSelResolucion (){
 			guardarPantalla();
 
         }
-        
-        if (tab_poa.guardar()) {
+        		
+		if (tab_poa.guardar()) {
 
 			if (tab_mes.guardar()) {				
 					if(tab_reforma.guardar()){
-						if(tab_financiamiento_reforma.guardar()){
-							tab_archivo.guardar();	
+						if(tab_financiamiento_reforma.guardar()){			
+							
+							tab_archivo.guardar();
 							guardarPantalla();
+							if(tab_financiamiento_reforma.isFocus()){
+								//triger que se ejcuta cuando realiza Insert, Update, Delete en las reformas por fuentes
+							ser_presupuesto.trigActualizaReformaFuente(tab_poa.getValor("ide_prpoa"));
+							tab_reforma.ejecutarSql();
+							//triger que se ejcuta cuando realiza Insert, Update, Delete en las reformas
+							ser_presupuesto.trigActualizaReforma(tab_poa.getValor("ide_prpoa"));
+						    tab_poa.ejecutarSql();
+							}
 						}
 					}				
 			}
@@ -906,7 +915,7 @@ public void aceptarSelResolucion (){
 			tab_financiamiento_reforma.eliminar();
 		}
 	}
-
+	
 	public void filtrarAnio(){
 
 		if(com_anio.getValue()!=null){

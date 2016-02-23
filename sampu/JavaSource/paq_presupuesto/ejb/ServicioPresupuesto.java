@@ -77,7 +77,7 @@ TablaGenerica getTablaGenericaFuncionPro(String ideanio){
 	
 }
 public String getTramite (String activo){
-	String tab_tramite="select ide_prtra,numero_oficio_prtra from pre_tramite where activo_prtra in ("+activo+") " +
+	String tab_tramite="select ide_prtra,ide_prtra as nro_compromiso,numero_oficio_prtra from pre_tramite where activo_prtra in ("+activo+") " +
 			" order by numero_oficio_prtra";
 	return tab_tramite;
 	

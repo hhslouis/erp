@@ -478,6 +478,7 @@ public void importarPeticionario(){
 		}
 		
 		tab_tramite.setValor("total_compromiso_prtra",tab_poa_tramite.getSumaColumna("comprometido_prpot")+"");
+		tab_tramite.modificar(tab_tramite.getFilaActual());
 		utilitario.addUpdateTabla(tab_tramite, "total_compromiso_prtra","");	
 
 	}
