@@ -3,6 +3,8 @@ package paq_tesoreria;
 import javax.ejb.EJB;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import org.primefaces.event.SelectEvent;
+
 import framework.aplicacion.TablaGenerica;
 import framework.componentes.Boton;
 import framework.componentes.Division;
@@ -79,9 +81,16 @@ public class pre_adq_factura_retencion extends Pantalla {
          tab_adq_factura.getColumna("IDE_ADSOC").setLectura(true);
          tab_adq_factura.getColumna("subtotal_adfac").setLectura(true);
          tab_adq_factura.getColumna("valor_iva_adfac").setLectura(true);
-         
-         
-         tab_adq_factura.setTipoFormulario(true);
+         tab_adq_factura.getColumna("num_factura_adfac").setLectura(true);
+         tab_adq_factura.getColumna("fecha_factura_adfac").setLectura(true);
+         tab_adq_factura.getColumna("detalle_adfac").setLectura(true);
+         tab_adq_factura.getColumna("total_adfac").setLectura(true);
+         tab_adq_factura.getColumna("base_iva_adfac").setLectura(true);
+         tab_adq_factura.getColumna("activo_adfac").setLectura(true);
+         tab_adq_factura.getColumna("valor_descuento_adfac").setVisible(false);
+         tab_adq_factura.getColumna("porcent_desc_adfac").setVisible(false);
+         tab_adq_factura.getColumna("aplica_descuento_adfac").setVisible(false);
+         tab_adq_factura.onSelect("actualizaPantallas2");
          tab_adq_factura.getGrid().setColumns(4);
          tab_adq_factura.agregarRelacion(tab_retencion);
          tab_adq_factura.dibujar();
@@ -98,6 +107,7 @@ public class pre_adq_factura_retencion extends Pantalla {
          tab_retencion.getColumna("total_ret_teret").setValorDefecto("0.00");
          tab_retencion.getColumna("activo_teret").setValorDefecto("true");
          tab_retencion.getColumna("activo_teret").setLectura(true);
+         tab_retencion.getColumna("ide_tecpo").setVisible(false);
          tab_retencion.getColumna("fecha_teret").setValorDefecto(utilitario.getFechaActual());
          tab_retencion.setTipoFormulario(true);
          tab_retencion.getGrid().setColumns(4);
@@ -292,14 +302,16 @@ public class pre_adq_factura_retencion extends Pantalla {
                  tab_detalle_retencion.setValor("ide_teimp",str_seleccionado);
                  tab_detalle_retencion.setValor("valor_retenido_teder", dou_valor_resultado+"");   
                  String valorx=tab_detalle_retencion.getSumaColumna("valor_retenido_teder")+"";
-                tab_retencion.setValor("total_ret_teret", valorx);       
+                tab_retencion.setValor("total_ret_teret", utilitario.getFormatoNumero(valorx,2));   
+                tab_retencion.modificar(tab_retencion.getFilaActual());
             }
 
              set_retencion.cerrar();
               utilitario.addUpdateTabla(tab_detalle_retencion, "valor_retenido_teder,base_imponible_teder,ide_teimp","");
               utilitario.addUpdateTabla(tab_retencion, "total_ret_teret","");
              calcularValorPago();
-             utilitario.addUpdateTabla(tab_comprobante, "valor_pago_tecpo,","");
+             //comentado la linea siguiente porque se calcula sobre la factura
+            // utilitario.addUpdateTabla(tab_comprobante, "valor_pago_tecpo,","");
 
          }
 
@@ -316,7 +328,7 @@ public class pre_adq_factura_retencion extends Pantalla {
 
      	try {
  			//Obtenemos el valor de la cantidad
-     		dou_val_compra=Double.parseDouble(tab_comprobante.getValor("valor_compra_tecpo"));
+     		dou_val_compra=Double.parseDouble(tab_adq_factura.getValor("subtotal_adfac"));
  		} catch (Exception e) {
  		}
      	try {
@@ -328,10 +340,12 @@ public class pre_adq_factura_retencion extends Pantalla {
      	dou_valor_pago=dou_val_compra-dou_total_retencion;
      //	dou_valor_iva=dou_val_compra*duo_iva;
      	
+     /* COMENTADO PORQUE YA SE REALIZA LA RETENCION A LA FACTURA
      	tab_comprobante.setValor("valor_pago_tecpo", utilitario.getFormatoNumero(dou_valor_pago,2));
      	//tab_comprobante.setValor("valor_iva_tecpo", utilitario.getFormatoNumero(dou_valor_iva,2));
      	tab_comprobante.modificar(tab_comprobante.getFilaActual());//para que haga el update
      	utilitario.addUpdateTabla(tab_comprobante,"valor_pago_tecpo,","");
+     */
      }
 
     
@@ -339,17 +353,10 @@ public class pre_adq_factura_retencion extends Pantalla {
 	@Override
 	public void insertar() {
 		// TODO Auto-generated method stub
-		 if (tab_comprobante.isFocus()) {
-			 utilitario.agregarMensajeInfo("No puede insertar", "Debe buscar Solicitud de Compra o una certificaciòn presupuestaria");
-			 //tab_comprobante.insertar();
-	        }
-
-	        else if (tab_detalle_movimiento.isFocus()){
-	            tab_detalle_movimiento.insertar();
-	            tab_detalle_movimiento.setValor("ide_comov", tab_comprobante.getValor("ide_comov"));
-	        }
-	        else if (tab_retencion.isFocus()) {
-	            tab_retencion.insertar();
+		 if (tab_retencion.isFocus()) {
+			 
+			 tab_retencion.insertar();
+			 tab_retencion.setValor("observacion_teret", tab_adq_factura.getValor("detalle_adfac").substring(0, 99));
 
 	        }
 	        else if (tab_detalle_retencion.isFocus()) {
@@ -358,13 +365,22 @@ public class pre_adq_factura_retencion extends Pantalla {
 	        }    
 	
 	}
-
+public void actualizaPantallas(){
+	tab_retencion.ejecutarValorForanea(tab_adq_factura.getValorSeleccionado());
+	tab_detalle_retencion.ejecutarValorForanea(tab_retencion.getValorSeleccionado());
+}
+public void actualizaPantallas2(SelectEvent evt){
+	tab_adq_factura.seleccionarFila(evt);
+	tab_retencion.ejecutarValorForanea(tab_adq_factura.getValor("ide_adfac"));
+	tab_detalle_retencion.ejecutarValorForanea(tab_retencion.getValor("ide_teret"));
+}
 	/////botones fin,siguiente,atras,ultimo.inicio
 	  @Override
 	    public void inicio() {
 	        // TODO Auto-generated method stub
 	    
 	        super.inicio();
+	       // actualizaPantallas();
 	    }
 	    @Override
 	    public void siguiente() {
@@ -372,12 +388,14 @@ public class pre_adq_factura_retencion extends Pantalla {
 	      
 
 	        super.siguiente();
+	      //  actualizaPantallas();
 	    }
 	    @Override
 	    public void atras() {
 	        // TODO Auto-generated method stub
 	    
 	        super.atras();
+	        //actualizaPantallas();
 	    }
 
 	    @Override
@@ -386,6 +404,7 @@ public class pre_adq_factura_retencion extends Pantalla {
 	  
 
 	        super.fin();
+	        //actualizaPantallas();
 	    }
 
 	@Override

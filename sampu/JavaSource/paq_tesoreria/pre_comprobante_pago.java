@@ -5,12 +5,16 @@ import javax.faces.event.AjaxBehaviorEvent;
 
 import framework.aplicacion.TablaGenerica;
 import framework.componentes.Boton;
+import framework.componentes.Calendario;
+import framework.componentes.Combo;
+import framework.componentes.Dialogo;
 import framework.componentes.Division;
 import framework.componentes.Etiqueta;
 import framework.componentes.Grid;
 import framework.componentes.PanelTabla;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
+import framework.componentes.TablaGrid;
 import framework.componentes.Tabulador;
 import paq_adquisicion.ejb.ServicioAdquisicion;
 import paq_bodega.ejb.ServicioBodega;
@@ -30,9 +34,12 @@ public class pre_comprobante_pago extends Pantalla {
     private SeleccionTabla set_solicitud=new SeleccionTabla();
     private SeleccionTabla set_tramite=new SeleccionTabla();
     private SeleccionTabla set_contabilizar=new SeleccionTabla();
-
+    private SeleccionTabla set_anticipo_empleado=new SeleccionTabla();
+    private Combo com_tipo_concepto = new Combo();
+    private Calendario cal_fecha_inicial = new Calendario();
     private SeleccionTabla set_impuesto=new SeleccionTabla();
     private SeleccionTabla set_retencion=new SeleccionTabla();
+    private Dialogo dia_anticipo=new Dialogo();
 	public static String par_impuesto_renta;
 	public static String par_impuesto_iva;
 	public static String par_movimiento_devengado;
@@ -45,7 +52,11 @@ public class pre_comprobante_pago extends Pantalla {
 	public static String par_cuenta_iva;
 	public static String par_lugar_aplica_iva_cierra;
 	public static String par_cuenta_iva_cierra;
-	
+	public static String par_sec_comprobante_pago;
+	public static String par_anio_vigente;
+	public static String par_asiento_anticipo;
+	public static String par_estado_devengado;
+
 	public static double par_iva;
 
  
@@ -83,6 +94,11 @@ public class pre_comprobante_pago extends Pantalla {
 		par_cuenta_iva=utilitario.getVariable("p_cuenta_iva");
 		par_lugar_aplica_iva_cierra=utilitario.getVariable("p_lugar_ejecuta_iva_cierra");
 		par_cuenta_iva_cierra=utilitario.getVariable("p_cuenta_iva_cierra");
+		par_sec_comprobante_pago=utilitario.getVariable("p_modulo_comprobante_pago");
+		par_anio_vigente=utilitario.getVariable("p_anio_vigente");
+		par_asiento_anticipo=utilitario.getVariable("p_asiento_anticipo");
+		par_estado_devengado=utilitario.getVariable("p_estado_devengado");
+
     	///tabuladores
     	 Tabulador tab_tabulador = new Tabulador();
          tab_tabulador.setId("tab_tabulador");
@@ -115,7 +131,6 @@ public class pre_comprobante_pago extends Pantalla {
          tab_comprobante.getColumna("fecha_tecpo").setValorDefecto(utilitario.getFechaActual());
          tab_comprobante.setTipoFormulario(true);
          tab_comprobante.getGrid().setColumns(4);
-         tab_comprobante.agregarRelacion(tab_retencion);
          tab_comprobante.dibujar();
          PanelTabla pat_comprobante=new PanelTabla();
          pat_comprobante.setPanelTabla(tab_comprobante);
@@ -132,6 +147,11 @@ public class pre_comprobante_pago extends Pantalla {
          tab_detalle_movimiento.getColumna("detalle_codem").setVisible(false);
          tab_detalle_movimiento.getColumna("ide_prcla").setCombo(ser_Presupuesto.getCatalogoPresupuestario("true,false"));
          tab_detalle_movimiento.getColumna("ide_prcla").setAutoCompletar();
+         tab_detalle_movimiento.getColumna("ide_prcla").setVisible(false);
+         tab_detalle_movimiento.getColumna("ide_prpro").setVisible(false);
+         tab_detalle_movimiento.getColumna("ide_tetic").setVisible(false);
+         tab_detalle_movimiento.getColumna("ide_tepro").setVisible(false);
+
          tab_detalle_movimiento.getColumna("ide_prpro").setCombo("pre_programa", "ide_prpro", "cod_programa_prpro", "");
          tab_detalle_movimiento.getColumna("ide_cocac").setCombo(ser_contabilidad.servicioCatalogoCuentasTransaccion("1"));
          tab_detalle_movimiento.getColumna("ide_cocac").setAutoCompletar();
@@ -146,7 +166,7 @@ public class pre_comprobante_pago extends Pantalla {
          PanelTabla pat_detalle_movimiento=new PanelTabla();
          pat_detalle_movimiento.setPanelTabla(tab_detalle_movimiento);
 
-
+         /* SE COMENTA PORQUE YA SE IMPLEMENTO RETENCIONES POR FACTURA
          ///RETENCION
          tab_retencion.setId("tab_retencion");
          tab_retencion.setIdCompleto("tab_tabulador:tab_retencion");
@@ -207,11 +227,11 @@ public class pre_comprobante_pago extends Pantalla {
 
          tab_tabulador.agregarTab("DETALLE MOVIMIENTO", pat_detalle_movimiento);//intancia los tabuladores 
          tab_tabulador.agregarTab("RETENCION", gri);
-
+		 */
          Division div_division =new Division();
-         div_division.dividir2(pat_comprobante, tab_tabulador, "50%", "H");
+         div_division.dividir2(pat_comprobante, pat_detalle_movimiento, "50%", "H");
          agregarComponente(div_division);
-         
+         /*
          ///boton tipo impuesto
          Boton bot_impuesto=new Boton();
          bot_impuesto.setIcon("ui-icon-person");
@@ -235,18 +255,18 @@ public class pre_comprobante_pago extends Pantalla {
  		set_retencion.setRadio();
          agregarComponente(set_retencion);
          
-         
+         */
 
 
 
-
+         /*
          ////boton solicitud compra
          Boton bot_buscar1=new Boton();
          bot_buscar1.setIcon("ui-icon-person");
          bot_buscar1.setValue("Buscar Solicitud Compra ");
          bot_buscar1.setMetodo("importarSolicitudCompra");
          bar_botones.agregarBoton(bot_buscar1);
-
+		*/
          set_solicitud.setId("set_solicitud");
          set_solicitud.setSeleccionTabla(ser_Adquisicion.getSolicitudCompra("true"),"ide_adsoc");
          set_solicitud.setTitle("SELECCION UNA SOLICITUD DE COMPRA");        
@@ -256,13 +276,13 @@ public class pre_comprobante_pago extends Pantalla {
          ///certificacion presupuestaria
          Boton bot_busca=new Boton();
          bot_busca.setIcon("ui-icon-person");
-         bot_busca.setValue("Buscar Certificaciòn Presupuestaria ");
+         bot_busca.setValue("Buscar Compromiso Presupuestario");
          bot_busca.setMetodo("importarCertificacionPresupuestaria");
          bar_botones.agregarBoton(bot_busca);
 
          set_tramite.setId("set_tramite");
          set_tramite.setSeleccionTabla(ser_Presupuesto.getTramite("true"),"ide_prtra");
-         set_tramite.setTitle("SELECCION UNA CERTIFICACION PRESUPUESTARIA");        
+         set_tramite.setTitle("SELECCION UN COMPROMISO PRESUPUESTARIO");        
          set_tramite.getBot_aceptar().setMetodo("aceptarCertificacionPresupuestaria");
          set_tramite.setRadio();
          agregarComponente(set_tramite);
@@ -279,7 +299,143 @@ public class pre_comprobante_pago extends Pantalla {
          set_contabilizar.setTitle("SELECCIONE LA CUENTA CONTABLE A EJECUTAR");        
          set_contabilizar.getBot_aceptar().setMetodo("aceptarAsiento");
          agregarComponente(set_contabilizar);
+         
+         //generar anticipos empleados
+         Boton bot_anticipo=new Boton();
+         bot_anticipo.setIcon("ui-icon-person");
+         bot_anticipo.setValue("Generar Asiento Anticipos");
+         bot_anticipo.setMetodo("seleccionarAnticipo");
+         bar_botones.agregarBoton(bot_anticipo);
+         
+         set_anticipo_empleado.setId("set_anticipo_empleado");
+         set_anticipo_empleado.setSeleccionTabla(ser_contabilidad.getConsultaAnticipos(),"ide_nrant");
+         set_anticipo_empleado.setTitle("SELECCIONE LA CUENTA CONTABLE A EJECUTAR");        
+         set_anticipo_empleado.getBot_aceptar().setMetodo("aceptarAnticipo");
+         agregarComponente(set_anticipo_empleado);
+         
+         // grid datos del anticipo
+         Grid gri_anticipo = new Grid();
+         gri_anticipo.setColumns(2);
+         gri_anticipo.getChildren().add(new Etiqueta("Concepto de Pago: "));
+         com_tipo_concepto.setId("com_tipo_concepto");
+         com_tipo_concepto.setCombo("select ide_tetic,detalle_tetic,codigo_tetic from tes_tipo_concepto order by detalle_tetic");
+         gri_anticipo.getChildren().add(com_tipo_concepto);
+         gri_anticipo.getChildren().add(new Etiqueta("Fecha: "));
+         cal_fecha_inicial.setId("cal_fecha_inicial_debito");
+		 cal_fecha_inicial.setFechaActual();
+		 gri_anticipo.getChildren().add(cal_fecha_inicial);
+		 dia_anticipo.setId("dia_anticipo");
+		 dia_anticipo.getBot_aceptar().setMetodo("aceptarAnticipo");
+		 dia_anticipo.setDialogo(gri_anticipo);
+		 agregarComponente(dia_anticipo);
+		
+
      }
+    public void seleccionarAnticipo(){
+    	set_anticipo_empleado.getTab_seleccion().setSql(ser_contabilidad.getConsultaAnticipos());
+    	set_anticipo_empleado.getTab_seleccion().ejecutarSql();
+    	set_anticipo_empleado.dibujar();
+
+    }
+    String str_seleccionados="";
+    public void aceptarAnticipo(){
+    	//String str_seleccionados="";
+    	String valor_debe="0";
+        String valor_haber="0";
+    	if(set_anticipo_empleado.isVisible()){
+    		
+    		if(set_anticipo_empleado.getSeleccionados() !=null){
+    			str_seleccionados=set_anticipo_empleado.getSeleccionados();
+ 
+    			set_anticipo_empleado.cerrar();
+    			dia_anticipo.dibujar();
+    		}
+    		else {
+    			utilitario.agregarMensajeError("Seleccione un Registro", "Debe seleccionar al menos un registro para continuar");
+    		}
+    	}
+    	else if (dia_anticipo.isVisible()){
+    		//System.out.println("entro a imprimir lso anteicipos "+str_seleccionados);
+   	 		TablaGenerica tab_anticipos=utilitario.consultar("select a.ide_nrant,a.ide_gtemp,a.ide_geedp,apellido_paterno_gtemp,apellido_materno_gtemp,primer_nombre_gtemp,segundo_nombre_gtemp,detalle_nrmoa,fecha_solicitud_nrant,monto_aprobado_nrant"
+    				+" from nrh_anticipo a left join nrh_motivo_anticipo c on a.ide_nrmoa = c.ide_nrmoa left join gth_empleado d on a.ide_gtemp = d.ide_gtemp where ide_nrant  in ("+str_seleccionados+")");
+
+    		tab_anticipos.imprimirSql();
+       		String sql_insert="";
+            ser_contabilidad.limpiarAcceso("tes_comprobante_pago");
+            ser_contabilidad.limpiarAcceso("cont_detalle_movimiento");
+
+    		for (int i=0;i<tab_anticipos.getTotalFilas();i++){
+    			String str_nombre_empleado=tab_anticipos.getValor(i, "apellido_paterno_gtemp")+" "+tab_anticipos.getValor(i, "apellido_materno_gtemp")+" "+tab_anticipos.getValor(i, "primer_nombre_gtemp")+" "+tab_anticipos.getValor(i, "segundo_nombre_gtemp");
+    			// Consulto codigo maximo de la cabecera del comprobante de pago
+				TablaGenerica tab_maximo_comprobante =utilitario.consultar(ser_contabilidad.servicioCodigoMaximo("tes_comprobante_pago", "ide_tecpo"));
+				String maximo_comprobante=tab_maximo_comprobante.getValor("codigo");
+				// consulta el codigo maximo del secuencia del numero de comprobante  
+				String secuencia_maximo=ser_contabilidad.numeroSecuencial(par_sec_comprobante_pago);
+    			sql_insert="insert into tes_comprobante_pago (ide_tecpo,ide_tetic,ide_geedp,ide_coest,fecha_tecpo,comprobante_egreso_tecpo,detalle_tecpo,fecha_pago_tecpo,activo_tecpo,valor_pago_tecpo,ide_nrant)"
+    					+ " values ("+maximo_comprobante+","+com_tipo_concepto.getValue()+","+tab_anticipos.getValor(i, "ide_geedp")+","+par_estado_devengado+",'"+cal_fecha_inicial.getFecha()+"','"+secuencia_maximo+"','ANTICIPO SUELDO DEL FUNCIONARIO(A): "+str_nombre_empleado+", MOTIVO DEL ANTICIPO: "+tab_anticipos.getValor(i, "detalle_nrmoa")+"','"+cal_fecha_inicial.getFecha()+"',true,"+tab_anticipos.getValor(i, "monto_aprobado_nrant")+","+tab_anticipos.getValor(i, "ide_nrant")+")";
+    			utilitario.getConexion().ejecutarSql(sql_insert);
+    			// actualizamos el secuencial
+    			ser_contabilidad.guardaSecuencial(ser_contabilidad.numeroSecuencial(par_sec_comprobante_pago), par_sec_comprobante_pago);
+    			// consulto el numero de asiento generado por el disparador paracargar lso detalles del asiento contable
+    			TablaGenerica tab_consulta_movimiento=utilitario.consultar("select ide_tecpo, ide_comov from tes_comprobante_pago where ide_tecpo="+maximo_comprobante);
+    			TablaGenerica tab_cuenta_anticipo_empleado=utilitario.consultar("select * from gth_cuenta_anticipo where ide_gtemp="+tab_anticipos.getValor(i,"ide_gtemp")+" and ide_geani="+par_anio_vigente);
+    			//System.out.println("imprimo cuenta d eanticiopo");
+    			//tab_cuenta_anticipo_empleado.imprimirSql();
+    			// INSERTO EN LA TABLA DEL detalle del asiento contable
+				// Consulto codigo maximo del detalle del movimiento
+				TablaGenerica tab_maximo_detalle =utilitario.consultar(ser_contabilidad.servicioCodigoMaximo("cont_detalle_movimiento", "ide_codem"));
+				String maximo_detalle=tab_maximo_detalle.getValor("codigo");
+
+				
+    			String sqlinsertaprimeralinea ="insert into cont_detalle_movimiento (ide_codem,ide_comov,debe_codem,haber_codem,activo_codem,ide_cocac,ide_gelua)"
+    					+" values ( "+maximo_detalle+","+tab_consulta_movimiento.getValor("ide_comov")+","+tab_anticipos.getValor(i, "monto_aprobado_nrant")+",0,true,"+tab_cuenta_anticipo_empleado.getValor("ide_cocac")+","+par_debe+" );";
+    			utilitario.getConexion().ejecutarSql(sqlinsertaprimeralinea);
+
+    			//cosnulto cuenta que se mueve al ahaber del asiento tipo de anticipos
+    			TablaGenerica tab_asiento_tipo=utilitario.consultar("select ide_coast,ide_gelua,ide_cocac from cont_asiento_tipo where ide_conac ="+par_asiento_anticipo);
+    			
+    			for (int j=0;j<tab_asiento_tipo.getTotalFilas();j++){	
+    			//isnerta debe
+    					if(tab_asiento_tipo.getValor(j,"ide_gelua").equals(par_debe)){
+    						valor_debe=tab_anticipos.getValor(i, "monto_aprobado_nrant");
+    						valor_haber="0";
+    					}
+    					//isnerta haber
+    					else if(tab_asiento_tipo.getValor(j,"ide_gelua").equals(par_haber)){
+    						valor_haber=tab_anticipos.getValor(i, "monto_aprobado_nrant");   
+    						valor_debe="0";
+    					}
+    					
+    					// INSERTO EN LA TABLA DEL detalle del asiento contable
+    					// Consulto codigo maximo del detalle del movimiento
+    					TablaGenerica tab_maximo_detalle2 =utilitario.consultar(ser_contabilidad.servicioCodigoMaximo("cont_detalle_movimiento", "ide_codem"));
+    					String maximo_detalle2=tab_maximo_detalle2.getValor("codigo");
+
+    					
+    	    			String sqlinsertaprimeralinea2 ="insert into cont_detalle_movimiento (ide_codem,ide_comov,debe_codem,haber_codem,activo_codem,ide_cocac,ide_gelua)"
+    	    					+" values ( "+maximo_detalle2+","+tab_consulta_movimiento.getValor("ide_comov")+","+valor_debe+","+valor_haber+",true,"+tab_asiento_tipo.getValor(j, "ide_cocac")+","+tab_asiento_tipo.getValor(j, "ide_gelua")+" );";
+    	    			utilitario.getConexion().ejecutarSql(sqlinsertaprimeralinea2);
+
+    			}
+    			
+    		}
+    		utilitario.agregarMensaje("Contabilizado Correctamente", "Asientos de Anticipos generedos");
+    		dia_anticipo.cerrar();
+    		tab_comprobante.ejecutarSql();
+    		utilitario.addUpdate("tab_comprobante");
+    		//System.out.println("nuemro de comprobante "+tab_comprobante.getValor("ide_comov"));
+            tab_detalle_movimiento.setCondicion("ide_comov="+tab_comprobante.getValor("ide_comov"));    
+            tab_detalle_movimiento.ejecutarSql();
+    		utilitario.addUpdate("tab_detalle_movimiento");
+            tab_comprobante.imprimirSql();
+            tab_detalle_movimiento.imprimirSql();
+    	
+    	}
+    	else{
+    		utilitario.agregarMensaje("Un gusto saludarle", "Tenga un buen dia");
+    	
+    	}
+    }
     public void aceptarAsiento(){
         String str_seleccionado = set_contabilizar.getSeleccionados();
         String valor_debe="0";
@@ -380,28 +536,7 @@ public class pre_comprobante_pago extends Pantalla {
 		String sqlinsertaprimeralineaiva ="insert into cont_detalle_movimiento (ide_codem,ide_comov,debe_codem,haber_codem,activo_codem,ide_cocac,ide_gelua)"
 		+" values ( "+maximo_detalleiva+","+tab_comprobante.getValor("ide_comov")+","+valor_debe+","+valor_haber+",true,"+par_cuenta_iva+","+par_lugar_aplica_iva+" );";
  			utilitario.getConexion().ejecutarSql(sqlinsertaprimeralineaiva);
-    /*    			
- 			  // INSERTO EN LA TABLA DEL detalle del asiento contable de iva cierre
- 	        // Consulto codigo maximo de la cabecera del asiento factura
- 	        
- 	        			 if(par_lugar_aplica_iva_cierra.equals(par_debe)){
- 	        					valor_debe=tab_valor_comprobante.getValor("valor_iva_tecpo");
- 	        					valor_haber="0";
- 	        				}
- 	        				//isnerta haber
- 	        				else if(par_lugar_aplica_iva_cierra.equals(par_haber)){
- 	        					valor_haber=tab_valor_comprobante.getValor("valor_iva_tecpo");   
- 	        					valor_debe="0";
- 	        				}			
- 	        TablaGenerica tab_maximo_detalleivacierra =utilitario.consultar(ser_contabilidad.servicioCodigoMaximo("cont_detalle_movimiento", "ide_codem"));
- 	        String maximo_detalleivacierra=tab_maximo_detalleivacierra.getValor("codigo");
- 	 				
- 			String sqlinsertaprimeralineaivacierra ="insert into cont_detalle_movimiento (ide_codem,ide_comov,debe_codem,haber_codem,activo_codem,ide_cocac,ide_gelua)"
- 			+" values ( "+maximo_detalleivacierra+","+tab_comprobante.getValor("ide_comov")+","+valor_debe+","+valor_haber+",true,"+par_cuenta_iva_cierra+","+par_lugar_aplica_iva_cierra+" );";
- 	 			utilitario.getConexion().ejecutarSql(sqlinsertaprimeralineaivacierra);
- 	*/
- 	 ///////      
- 			
+
  		TablaGenerica tab_consulta_retencion=utilitario.consultar(ser_Tesoreria.getConsultaRetencion(tab_comprobante.getValor("ide_tecpo")));	
  		 		
  		for(int k=0;k<tab_consulta_retencion.getTotalFilas();k++){
@@ -425,19 +560,7 @@ public class pre_comprobante_pago extends Pantalla {
 
  		}
  		
- 		
- 		String sql_presu="delete from pre_mensual where ide_tecpo in ("+tab_comprobante.getValor("ide_tecpo")+");"
-+" INSERT INTO pre_mensual(ide_prmen, ide_pranu, ide_prtra,ide_comov, ide_codem, fecha_ejecucion_prmen, comprobante_prmen, devengado_prmen, cobrado_prmen," 
-   +"         cobradoc_prmen, pagado_prmen, comprometido_prmen, valor_anticipo_prmen, "
-   +"         activo_prmen,  certificado_prmen, ide_prfuf,ide_prcer,ide_tecpo)"
-+" select row_number()over(order by a.ide_prtra)   +(select (case when max(ide_prmen) is null then 0 else max(ide_prmen) end) as codigo from pre_mensual)  as codigo,"
-+" b.ide_pranu,a.ide_prtra,"+tab_comprobante.getValor("ide_comov")+",null,fecha_tramite_prtra,comprobante_egreso_tecpo,valor_pago_tecpo,0,0,valor_pago_tecpo,0,0,true,0,a.ide_prfuf,null,d.ide_tecpo"
-+" from   pre_poa_tramite a,pre_anual b,pre_tramite c,tes_comprobante_pago d"
-+" where a.ide_prpoa =b.ide_prpoa"
-+" and a.ide_prtra =c.ide_prtra"
-+" and c.ide_prtra = d.ide_prtra"
-+" and d.ide_tecpo ="+tab_comprobante.getValor("ide_tecpo")+";";
- 		utilitario.getConexion().ejecutarSql(sql_presu);
+ 
         set_contabilizar.cerrar();			
         tab_comprobante.ejecutarSql();
         tab_detalle_movimiento.setCondicion("ide_comov="+tab_comprobante.getValor("ide_comov"));    
@@ -487,8 +610,7 @@ public class pre_comprobante_pago extends Pantalla {
      }
 
      public void importarCertificacionPresupuestaria(){
-     	System.out.println("entra a metodo impostar cer. presu");
-
+     	//System.out.println("entra a metodo impostar cer. presu");
 
          set_tramite.getTab_seleccion().setSql(ser_Presupuesto.getTramite("true"));
          set_tramite.getTab_seleccion().ejecutarSql();
@@ -504,9 +626,10 @@ public class pre_comprobante_pago extends Pantalla {
          TablaGenerica tab_tramite=ser_Presupuesto.getTablaGenericaTramite(str_seleccionado);
          if (str_seleccionado!=null){
              tab_comprobante.insertar();
-             tab_detalle_movimiento.limpiar();
+             tab_detalle_movimiento.ejecutarSql();
              tab_detalle_movimiento.setColumnaSuma("haber_codem,debe_codem"); 
              tab_comprobante.setValor("ide_prtra",tab_tramite.getValor("ide_prtra"));
+             
          }
          set_tramite.cerrar();
          utilitario.addUpdate("tab_comprobante");
@@ -665,43 +788,54 @@ public class pre_comprobante_pago extends Pantalla {
 	/////botones fin,siguiente,atras,ultimo.inicio
 	  @Override
 	    public void inicio() {
+	        super.inicio();
+
 	        // TODO Auto-generated method stub
 	        if (tab_comprobante.isFocus()){
 	            tab_detalle_movimiento.setCondicion("ide_comov="+tab_comprobante.getValor("ide_comov"));
-
+	            tab_detalle_movimiento.ejecutarSql();
 	        }
-	        super.inicio();
 	    }
 	    @Override
 	    public void siguiente() {
 	        // TODO Auto-generated method stub
+	    	super.siguiente();
 	        if (tab_comprobante.isFocus()){
 	            tab_detalle_movimiento.setCondicion("ide_comov="+tab_comprobante.getValor("ide_comov"));
+	             tab_detalle_movimiento.ejecutarSql();
+	            utilitario.addUpdate("tab_detalle_movimiento");
 
 	        }
 
-	        super.siguiente();
+	        
 	    }
 	    @Override
 	    public void atras() {
+	        super.atras();
+
 	        // TODO Auto-generated method stub
 	        if (tab_comprobante.isFocus()){
 	            tab_detalle_movimiento.setCondicion("ide_comov="+tab_comprobante.getValor("ide_comov"));
+	           
+	            System.out.println("valor ide_comov "+tab_comprobante.getValor("ide_comov"));
+	            tab_detalle_movimiento.ejecutarSql();
+	            tab_detalle_movimiento.imprimirSql();
 
 	        }
 
-	        super.atras();
 	    }
 
 	    @Override
 	    public void fin() {
+	        super.fin();
+
 	        // TODO Auto-generated method stub
 	        if (tab_comprobante.isFocus()){
 	            tab_detalle_movimiento.setCondicion("ide_comov="+tab_comprobante.getValor("ide_comov"));
+	            tab_detalle_movimiento.ejecutarSql();
 
 	        }
 
-	        super.fin();
 	    }
 
 	@Override
@@ -813,6 +947,18 @@ public class pre_comprobante_pago extends Pantalla {
 
 	public void setSet_contabilizar(SeleccionTabla set_contabilizar) {
 		this.set_contabilizar = set_contabilizar;
+	}
+	public SeleccionTabla getSet_anticipo_empleado() {
+		return set_anticipo_empleado;
+	}
+	public void setSet_anticipo_empleado(SeleccionTabla set_anticipo_empleado) {
+		this.set_anticipo_empleado = set_anticipo_empleado;
+	}
+	public Dialogo getDia_anticipo() {
+		return dia_anticipo;
+	}
+	public void setDia_anticipo(Dialogo dia_anticipo) {
+		this.dia_anticipo = dia_anticipo;
 	}
 
 }
