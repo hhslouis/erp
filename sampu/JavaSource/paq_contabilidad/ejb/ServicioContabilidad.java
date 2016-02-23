@@ -533,5 +533,19 @@ public void limpiarAcceso(String tabla){
 	String sql="delete from sis_bloqueo where tabla_bloq ilike '"+tabla+"';";
 	utilitario.getConexion().ejecutarSql(sql);
 }
+/**
+ * Metodo que devuelve el sql para consultar lso anticpio pendientes de contabilizar de lso empleados
+ * @return String sql para contar anticpios pendientes
+ */
+public String getConsultaAnticipos(){
+	    String sql="select a.ide_nrant,a.ide_gtemp,a.ide_geedp,apellido_paterno_gtemp,apellido_materno_gtemp,primer_nombre_gtemp,segundo_nombre_gtemp,detalle_nrmoa,fecha_solicitud_nrant,monto_aprobado_nrant"
+	    		+" from nrh_anticipo a"
+	    		+" left join tes_comprobante_pago b on a.ide_nrant = b.ide_nrant"
+	    		+" left join nrh_motivo_anticipo c on a.ide_nrmoa = c.ide_nrmoa"
+	    		+" left join gth_empleado d on a.ide_gtemp = d.ide_gtemp"
+	    		+" where aprobado_nrant =true "
+	    		+" and b.ide_nrant is null";
+		return sql;
+}
 }
 
