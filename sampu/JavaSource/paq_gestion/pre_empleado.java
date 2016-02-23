@@ -214,7 +214,9 @@ public class pre_empleado extends Pantalla {
 
 		set_cuenta_anticipo.setId("set_cuenta_anticipo");
 		set_cuenta_anticipo.setSeleccionTabla(ser_contabilidad.servicioCatalogoCuentaAnio("true","-1"),"ide_cocac");
-		set_cuenta_anticipo.getTab_seleccion().getColumna("ide_cocac").setFiltro(true);
+		set_cuenta_anticipo.getTab_seleccion().getColumna("cue_codigo_cocac").setFiltro(true);
+		set_cuenta_anticipo.getTab_seleccion().getColumna("cue_descripcion_cocac").setFiltro(true);
+
 		set_cuenta_anticipo.getBot_aceptar().setMetodo("aceptarCuentaAnticipo");
 		set_cuenta_anticipo.setRadio();
 		set_cuenta_anticipo.getTab_seleccion().ejecutarSql();
