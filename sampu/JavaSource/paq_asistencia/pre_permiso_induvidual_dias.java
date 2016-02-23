@@ -135,8 +135,7 @@ public class pre_permiso_induvidual_dias extends Pantalla {
 				"LEFT JOIN GTH_EMPLEADO EMP ON EMP.IDE_GTEMP=EPAR.IDE_GTEMP " +
 				"LEFT JOIN SIS_SUCURSAL SUCU ON SUCU.IDE_SUCU=EPAR.IDE_SUCU " +
 				"LEFT JOIN GEN_DEPARTAMENTO DEPA ON DEPA.IDE_GEDEP=EPAR.IDE_GEDEP " +
-				"LEFT JOIN GEN_AREA AREA ON AREA.IDE_GEARE=EPAR.IDE_GEARE " +
-				"WHERE EPAR.ACTIVO_GEEDP=true");
+				"LEFT JOIN GEN_AREA AREA ON AREA.IDE_GEARE=EPAR.IDE_GEARE " );
 		tab_permisos.getColumna("GEN_IDE_GEEDP").setAutoCompletar();
 		tab_permisos.getColumna("GEN_IDE_GEEDP2").setCombo(tab_permisos.getColumna("GEN_IDE_GEEDP").getListaCombo());
 		tab_permisos.getColumna("GEN_IDE_GEEDP2").setAutoCompletar();

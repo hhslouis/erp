@@ -87,5 +87,22 @@ public class ServicioAsistencia {
 				" limit 1"); 
 		return tab_asi_vacacion;
 	}
-
+	public String getConsultaAsistencia(String fecha_inicial,String fecha_final){
+		String tab_asi_vacacion="select a.ide_aspvh,a.ide_asmot,a.ide_gtemp,a.ide_geedp,documento_identidad_gtemp,apellido_paterno_gtemp,apellido_materno_gtemp,primer_nombre_gtemp,segundo_nombre_gtemp,"
+				+" titulo_cargo_gepgc,nom_sucu,detalle_geare,detalle_gttem,fecha_solicitud_aspvh,(case when aprobado_tthh_aspvh is true then 'Aprobado' else 'No Aprobado' end) as aprobado_talento_humano,"
+				+" fecha_desde_aspvh,fecha_hasta_aspvh,detalle_aspvh,nro_dias_aspvh,tipo_aspvh,(case when tipo_aspvh=1 then 'Permisos Horas' when tipo_aspvh = 2 then 'Vacaciones' when tipo_aspvh =3 then 'Horas Extras' when tipo_aspvh =4 then 'Permisos por Dias'  end) as tipo_solicitud,"
+				+" nro_documento_aspvh,nro_horas_aspvh,hora_desde_aspvh,hora_hasta_aspvh,aprobado_tthh_aspvh,"
+				+" razon_anula_aspvh,documento_anula_aspvh,fecha_anula_aspvh"
+				+" from asi_permisos_vacacion_hext a"
+				+" left join asi_motivo b on a.ide_asmot = b.ide_asmot"
+				+" left join gth_empleado c on a.ide_gtemp = c.ide_gtemp"
+				+" left join gen_empleados_departamento_par d on a.ide_geedp = d.ide_geedp"
+				+" left join gen_partida_grupo_cargo e on d.ide_gepgc = e.ide_gepgc"
+				+" left join gen_cargo_funcional f on d.ide_gecaf = f.ide_gecaf"
+				+" left join gen_area g on d.ide_geare = g.ide_geare"
+				+" left join gth_tipo_empleado h on d.ide_gttem = h.ide_gttem left join sis_sucursal i on e.ide_sucu = i.ide_sucu"
+				+" where fecha_solicitud_aspvh between '"+fecha_inicial+"' and '"+fecha_final+"' "
+				+" order by detalle_gttem,apellido_paterno_gtemp,fecha_solicitud_aspvh desc"; 
+		return tab_asi_vacacion;
+	}
 }
