@@ -48,9 +48,8 @@ public class tes_banco_movimiento extends Pantalla {
         tab_tabla1.getColumna("ide_cocac").setCombo("select ide_cocac,cue_codigo_cocac,cue_descripcion_cocac  " +
         		"from cont_catalogo_cuenta " +
         		"where activo_cocac=true");
-        tab_tabla1.getColumna("ide_tebac").setCombo("select ide_tebac,nro_cuenta_tebac " +
-        		"from tes_banco_cuenta " +
-        		"where activo_tebac=true");
+        tab_tabla1.getColumna("ide_cocac").setAutoCompletar();
+        //tab_tabla1.getColumna("ide_tebac").setVisible(false);
         tab_tabla1.getColumna("ACTIVO_tebaa").setValorDefecto("true"); 
 		tab_tabla1.setCondicion("ide_tebaa=-1");
         tab_tabla1.agregarRelacion(tab_tabla2);
@@ -91,6 +90,7 @@ public class tes_banco_movimiento extends Pantalla {
     @Override
     public void insertar() {
     	if(aut_movimniento.getValor()!=null){
+    		tab_tabla1.setCondicion("ide_tebac="+aut_movimniento.getValor());
         utilitario.getTablaisFocus().insertar();
     	 }
     	else
