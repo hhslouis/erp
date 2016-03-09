@@ -92,7 +92,7 @@ public class pre_banco_movimiento extends Pantalla {
     public void insertar() {
     	
 		if(aut_movimniento.getValor()==null){
-			utilitario.agregarMensaje("No se puede insertar", "Debe Seleccionar un Año");
+			utilitario.agregarMensaje("No se puede insertar", "Debe Elegir una cuenta");
 			return;
 
 		}
