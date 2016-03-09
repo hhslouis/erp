@@ -232,13 +232,15 @@ public class pre_reforma_grupo extends Pantalla {
 			TablaGenerica tab_poa = ser_presupuesto.getTablaGenericaPoa(str_seleccionados);		
 			for(int i=0;i<tab_poa.getTotalFilas();i++){
 				//TablaGenerica saldo_poa=utilitario.consultar(ser_presupuesto.getSaldoPoa(tab_poa.getValor( i,"ide_prepoa")));
-			
+		
 				tab_reforma_grupo.insertar();
 				tab_reforma_grupo.setValor("pre_proa", tab_poa.getValor( i,"ide_prpoa"));
 				TablaGenerica tab_fuente_financiamiento=utilitario.consultar("select ide_prpof, " +
 						"ide_prfuf,ide_prpoa,ide_coest,valor_financiamiento_prpof,activo_prpof  " +
 						"from pre_poa_financiamiento " +
 						"where ide_prpoa="+tab_poa.getValor(i,"ide_prpoa"));
+				
+				
 				
 				par_modulo_municipio=utilitario.getVariable("p_modulo_municipio");
 				par_modulo_hospitalarios=utilitario.getVariable("p_modulo_hospitalario");
@@ -271,12 +273,16 @@ public class pre_reforma_grupo extends Pantalla {
 								tab_reforma_grupo.setValor("valor_reforma1", tab_saldos_grupo_fuente.getValor(k,"valor_saldo_fuente"));
 						
 						 
-						 }					
+						 }		
+							
+							
+
 						}	
 						
+						
+						
 					 }
-				 
-
+			
 				 
 				
 					
@@ -482,14 +488,32 @@ public class pre_reforma_grupo extends Pantalla {
 					}
 				}
 //					
+				
+			
+			   
 //				//	ser_presupuesto.getPoaSaldosFuenteFinanciamiento(com_anio.getValue().toString(), tab_fuente_financiamiento.getValor(j,"ide_prfuf") ,"0","-1");
 //			
 				
 //				
 		}
+			for(int i=0;i<tab_poa.getTotalFilas();i++){
+
+			
+			String valor_nuevo="0";
+			if (tab_reforma_grupo.getValor(i,"valor_reforma1")==null) {
+				System.out.println("valor nuevo =0");
+						valor_nuevo="0";
+			tab_reforma_grupo.setValor(i,"valor_reforma1", valor_nuevo);
+			tab_reforma_grupo.getColumna("valor_reforma1").setLectura(true);
+			tab_reforma_grupo.getColumna("saldo_reforma1").setLectura(true);
+utilitario.addUpdate("tab_reforma_grupo");
+						
+			}else
+				System.out.println("valor nuevo =1 ");
+				valor_nuevo= tab_reforma_grupo.getValor(i,"valor_reforma1");
 			set_poa.cerrar();
 			utilitario.addUpdate("tab_reforma_grupo");
-
+			}
 		}
 		else{
 			utilitario.agregarMensajeInfo("Debe seleccionar al menos un registro", "");
