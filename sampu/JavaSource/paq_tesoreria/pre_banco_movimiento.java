@@ -49,6 +49,7 @@ public class pre_banco_movimiento extends Pantalla {
         		"from cont_catalogo_cuenta " +
         		"where activo_cocac=true");
         tab_tabla1.getColumna("ide_cocac").setAutoCompletar();
+        tab_tabla1.getColumna("ide_tebac").setVisible(false);
         //tab_tabla1.getColumna("ide_tebac").setVisible(false);
         tab_tabla1.getColumna("ACTIVO_tebaa").setValorDefecto("true"); 
 		tab_tabla1.setCondicion("ide_tebaa=-1");
@@ -58,7 +59,7 @@ public class pre_banco_movimiento extends Pantalla {
         pat_panel1.setPanelTabla(tab_tabla1);
         
         tab_tabla2.setId("tab_tabla2");
-        tab_tabla2.setTabla("pre_banco_movimiento", "ide_tebam",2);
+        tab_tabla2.setTabla("tes_banco_movimiento", "ide_tebam",2);
 
 
         tab_tabla2.getColumna("ACTIVO_tebam").setValorDefecto("true"); 
@@ -89,13 +90,21 @@ public class pre_banco_movimiento extends Pantalla {
 
     @Override
     public void insertar() {
-    	if(aut_movimniento.getValor()!=null){
-    		tab_tabla1.setCondicion("ide_tebac="+aut_movimniento.getValor());
-        utilitario.getTablaisFocus().insertar();
-    	 }
-    	else
-       	utilitario.agregarMensajeInfo("Debe seleccionar un una cuenta banco", "");
-    		
+    	
+		if(aut_movimniento.getValor()==null){
+			utilitario.agregarMensaje("No se puede insertar", "Debe Seleccionar un Año");
+			return;
+
+		}
+		if(tab_tabla1.isFocus()){
+			tab_tabla1.insertar();
+			tab_tabla1.setValor("ide_tebac",aut_movimniento.getValor()+"");
+			}
+		else if(tab_tabla2.isFocus()){
+			tab_tabla2.insertar();
+		}
+    	
+    	
     }
 
     @Override
