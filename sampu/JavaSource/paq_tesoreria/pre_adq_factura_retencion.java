@@ -90,7 +90,14 @@ public class pre_adq_factura_retencion extends Pantalla {
          tab_adq_factura.getColumna("valor_descuento_adfac").setVisible(false);
          tab_adq_factura.getColumna("porcent_desc_adfac").setVisible(false);
          tab_adq_factura.getColumna("aplica_descuento_adfac").setVisible(false);
+ 	     tab_adq_factura.getColumna("ide_tepro").setCombo(ser_Bodega.getProveedor("true,false"));
+ 		 tab_adq_factura.getColumna("ide_tepro").setLectura(true);
+ 		 tab_adq_factura.getColumna("ide_tepro").setAutoCompletar();
+ 		 tab_adq_factura.getColumna("IDE_PRTRA").setCombo(ser_Presupuesto.getTramite("true"));
+ 		 tab_adq_factura.getColumna("IDE_PRTRA").setAutoCompletar();
+ 		 tab_adq_factura.getColumna("IDE_PRTRA").setLectura(true);
          tab_adq_factura.onSelect("actualizaPantallas2");
+         tab_adq_factura.setTipoFormulario(true);
          tab_adq_factura.getGrid().setColumns(4);
          tab_adq_factura.agregarRelacion(tab_retencion);
          tab_adq_factura.dibujar();
@@ -130,6 +137,7 @@ public class pre_adq_factura_retencion extends Pantalla {
          tab_detalle_retencion.getColumna("ide_teimp").setCombo("tes_impuesto", "ide_teimp", "codigo_teimp,porcentaje_teimp,detalle_teimp", "");
          tab_detalle_retencion.getColumna("ide_teimp").setLectura(true);
          tab_detalle_retencion.getColumna("ide_teimp").setAutoCompletar();
+         tab_detalle_retencion.getColumna("base_imponible_teder").setMetodoChange("recalcular");
          tab_detalle_retencion.getColumna("valor_retenido_teder").setEtiqueta();
          tab_detalle_retencion.getColumna("valor_retenido_teder").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
          tab_detalle_retencion.getColumna("valor_retenido_teder").setValorDefecto("0.00");
@@ -181,12 +189,52 @@ public class pre_adq_factura_retencion extends Pantalla {
          set_retencion.setTitle("SELECCIONE UNA RETENCIÓN");        
          set_retencion.getBot_aceptar().setMetodo("aceptarImpuesto");
          set_retencion.getTab_seleccion().getColumna("CODIGO_TEIMP").setFiltro(true);
- 		set_retencion.getTab_seleccion().getColumna("DETALLE_TEIMP").setFiltro(true);
- 		set_retencion.setRadio();
+ 		 set_retencion.getTab_seleccion().getColumna("DETALLE_TEIMP").setFiltro(true);
+ 		 set_retencion.setRadio();
          agregarComponente(set_retencion);
          
+         //agregar compromiso presupuesto
+         Boton bot_busca=new Boton();
+         bot_busca.setIcon("ui-icon-person");
+         bot_busca.setValue("Agregar Compromiso Presupuestario");
+         bot_busca.setMetodo("importarCertificacionPresupuestaria");
+         bar_botones.agregarBoton(bot_busca);
+         
+         set_tramite.setId("set_tramite");
+         set_tramite.setSeleccionTabla(ser_Presupuesto.getTramite("true"),"ide_prtra");
+         set_tramite.setTitle("SELECCION UN COMPROMISO PRESUPUESTARIO");  
+         set_tramite.getTab_seleccion().getColumna("nro_compromiso").setFiltro(true);
+         set_tramite.getTab_seleccion().getColumna("numero_oficio_prtra").setFiltro(true);
+         set_tramite.getTab_seleccion().getColumna("observaciones_prtra").setFiltro(true);
+         
+         set_tramite.getBot_aceptar().setMetodo("aceptarCertificacionPresupuestaria");
+         set_tramite.setRadio();
+         agregarComponente(set_tramite);
     
      }
+   ///recalcular valores
+ 	
+   	public void recalcular(AjaxBehaviorEvent evt){
+   		tab_detalle_retencion.modificar(evt);
+        TablaGenerica tab_rentas= utilitario.consultar(ser_Tesoreria.getImpuestoCalculo(tab_detalle_retencion.getValor("ide_teimp")));
+
+
+			double dou_valor_impuesto=0;
+            double dou_porcentaje_calculo=0;
+            double dou_valor_resultado=0;
+
+            dou_porcentaje_calculo=Double.parseDouble(tab_rentas.getValor("porcentaje_teimp"));
+            dou_valor_impuesto=Double.parseDouble(tab_detalle_retencion.getValor("base_imponible_teder"));
+            dou_valor_resultado=(dou_porcentaje_calculo*dou_valor_impuesto)/100;
+  
+            tab_detalle_retencion.setValor("valor_retenido_teder",utilitario.getFormatoNumero( dou_valor_resultado,2)+"");   
+            String valorx=tab_detalle_retencion.getSumaColumna("valor_retenido_teder")+"";
+            tab_retencion.setValor("total_ret_teret", utilitario.getFormatoNumero(valorx,2));   
+            tab_retencion.modificar(tab_retencion.getFilaActual());
+            utilitario.addUpdateTabla(tab_detalle_retencion, "valor_retenido_teder,base_imponible_teder,ide_teimp","");
+            utilitario.addUpdateTabla(tab_retencion, "total_ret_teret",""); 
+        }  
+   
    ///sacar valores
  	
    	public void calcularTotal(AjaxBehaviorEvent evt){
@@ -215,9 +263,6 @@ public class pre_adq_factura_retencion extends Pantalla {
      }
 
      public void importarCertificacionPresupuestaria(){
-     	System.out.println("entra a metodo impostar cer. presu");
-
-
          set_tramite.getTab_seleccion().setSql(ser_Presupuesto.getTramite("true"));
          set_tramite.getTab_seleccion().ejecutarSql();
          set_tramite.dibujar();
@@ -225,19 +270,17 @@ public class pre_adq_factura_retencion extends Pantalla {
      }
 
      public void aceptarCertificacionPresupuestaria(){
-     	System.out.println("entra a metodo aceptar cert");
-
 
          String str_seleccionado = set_tramite.getValorSeleccionado();
          TablaGenerica tab_tramite=ser_Presupuesto.getTablaGenericaTramite(str_seleccionado);
          if (str_seleccionado!=null){
-             tab_comprobante.insertar();
-             tab_detalle_movimiento.limpiar();
-             tab_detalle_movimiento.setColumnaSuma("haber_codem,debe_codem"); 
-             tab_comprobante.setValor("ide_prtra",tab_tramite.getValor("ide_prtra"));
+             tab_adq_factura.setValor("ide_prtra",tab_tramite.getValor("ide_prtra"));
+             tab_adq_factura.modificar(tab_adq_factura.getFilaActual());
+             tab_adq_factura.guardar();
+             guardarPantalla();
          }
          set_tramite.cerrar();
-         utilitario.addUpdate("tab_comprobante");
+         utilitario.addUpdate("tab_adq_factura");
      }
      
      ////boton impuesto
@@ -258,7 +301,6 @@ public class pre_adq_factura_retencion extends Pantalla {
      }
      String str_seleccionado="";
      public void aceptarImpuesto(){
-     	System.out.println("entra a metodo aceptar impues");
 
          if(set_impuesto.isVisible()){
              if (set_impuesto.getValorSeleccionado()!=null){
@@ -300,7 +342,7 @@ public class pre_adq_factura_retencion extends Pantalla {
             if (set_retencion.getValorSeleccionado()!=null){
 
                  tab_detalle_retencion.setValor("ide_teimp",str_seleccionado);
-                 tab_detalle_retencion.setValor("valor_retenido_teder", dou_valor_resultado+"");   
+                 tab_detalle_retencion.setValor("valor_retenido_teder",utilitario.getFormatoNumero( dou_valor_resultado,2)+"");   
                  String valorx=tab_detalle_retencion.getSumaColumna("valor_retenido_teder")+"";
                 tab_retencion.setValor("total_ret_teret", utilitario.getFormatoNumero(valorx,2));   
                 tab_retencion.modificar(tab_retencion.getFilaActual());
@@ -354,9 +396,15 @@ public class pre_adq_factura_retencion extends Pantalla {
 	public void insertar() {
 		// TODO Auto-generated method stub
 		 if (tab_retencion.isFocus()) {
-			 
+			 String str_observacion="";
+			 if(tab_adq_factura.getValor("detalle_adfac").length()>100){
+				 str_observacion=tab_adq_factura.getValor("detalle_adfac").substring(100);
+			 }
+			 else {
+				 str_observacion=tab_adq_factura.getValor("detalle_adfac");
+			 }
 			 tab_retencion.insertar();
-			 tab_retencion.setValor("observacion_teret", tab_adq_factura.getValor("detalle_adfac").substring(0, 99));
+			 tab_retencion.setValor("observacion_teret",str_observacion );
 
 	        }
 	        else if (tab_detalle_retencion.isFocus()) {
@@ -416,10 +464,6 @@ public void actualizaPantallas2(SelectEvent evt){
 	                if( tab_retencion.guardar()){
 	                    if(tab_detalle_retencion.guardar()){
 	                        guardarPantalla();
-
-	                        tab_adq_factura.ejecutarSql();
-	                  
-	                    
 	                    }
 	                }
 	            
