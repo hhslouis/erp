@@ -30,6 +30,7 @@ public class pre_factura_compras extends Pantalla{
 	public static double par_iva;
 	private Dialogo dia_recepcion = new Dialogo();
 	private Dialogo dia_aplica_descuento = new Dialogo();
+	private SeleccionTabla set_proveedor=new SeleccionTabla();
 
 	private	Radio lis_recepcion=new Radio();
 	private	Radio lis_aplica_descuento=new Radio();
@@ -62,6 +63,9 @@ public class pre_factura_compras extends Pantalla{
 		tab_adq_factura.getColumna("porcent_desc_adfac").setVisible(false);
 		tab_adq_factura.getColumna("valor_descuento_adfac").setVisible(false);
 		tab_adq_factura.getColumna("aplica_descuento_adfac").setVisible(false);
+		tab_adq_factura.getColumna("ide_tepro").setCombo(ser_bodega.getProveedor("true,false"));
+		tab_adq_factura.getColumna("ide_tepro").setLectura(true);
+		tab_adq_factura.getColumna("ide_tepro").setAutoCompletar();
 
 		tab_adq_factura.getColumna("valor_descuento_adfac").setMetodoChange("calcularDescuento");
 		tab_adq_factura.getColumna("total_adfac").setEtiqueta();
@@ -189,7 +193,44 @@ public class pre_factura_compras extends Pantalla{
 				dia_aplica_descuento.setWidth("40%");
 				dia_aplica_descuento.setDynamic(false);
 				agregarComponente(dia_aplica_descuento);
+				
+				Boton bot_proveedor = new Boton();
+				bot_proveedor.setValue("Proveedor");
+				bot_proveedor.setTitle("PROVEEDOR");
+				bot_proveedor.setIcon("ui-icon-person");
+				bot_proveedor.setMetodo("importarProveedor");
+				bar_botones.agregarBoton(bot_proveedor);
+				
+				set_proveedor.setId("set_proveedor");
+				set_proveedor.setSeleccionTabla(ser_bodega.getProveedor("null"),"ide_tepro");
+				set_proveedor.getTab_seleccion().getColumna("NOMBRE_TEPRO").setNombreVisual("Nombre Proveedor");
+				set_proveedor.getTab_seleccion().getColumna("RUC_TEPRO").setNombreVisual("Ruc Proveedor");
+				set_proveedor.getTab_seleccion().getColumna("NOMBRE_TEPRO").setFiltro(true);
+				set_proveedor.getTab_seleccion().getColumna("RUC_TEPRO").setFiltro(true);
+				set_proveedor.setTitle("Seleccione Proveedor");
+				set_proveedor.getBot_aceptar().setMetodo("aceptarProveedor");
+				set_proveedor.setRadio();
+				agregarComponente(set_proveedor);
 
+	}
+	public void importarProveedor(){
+		set_proveedor.getTab_seleccion().setSql(ser_bodega.getProveedor("true"));
+		set_proveedor.getTab_seleccion().ejecutarSql();
+		set_proveedor.dibujar();
+	
+	}
+
+	public  void aceptarProveedor(){
+		String str_seleccionado = set_proveedor.getValorSeleccionado();
+		TablaGenerica tab_proveedor=ser_bodega.getTablaProveedor(str_seleccionado);
+		if (str_seleccionado!=null){			
+			tab_adq_factura.setValor("ide_tepro",str_seleccionado);
+			tab_adq_factura.modificar(tab_adq_factura.getFilaActual());
+			tab_adq_factura.guardar(); 
+			guardarPantalla();
+		}
+		set_proveedor.cerrar();
+		utilitario.addUpdate("tab_adq_factura");
 	}
 	public void cancelarFactura(){
 
@@ -237,6 +278,8 @@ public class pre_factura_compras extends Pantalla{
 			tab_adq_factura.insertar();
 			tab_adq_factura.setValor("ide_adsoc",str_seleccionado);
 			tab_adq_factura.setValor("detalle_adfac",tab_solicitud.getValor("detalle_adsoc"));
+			tab_adq_factura.setValor("ide_tepro",tab_solicitud.getValor("ide_tepro"));
+
 		}
 		utilitario.addUpdateTabla(tab_adq_factura, "ide_adsoc,detalle_adfac", "");
 		set_solicitud.cerrar();
@@ -449,6 +492,12 @@ public class pre_factura_compras extends Pantalla{
 	}
 	public void setDia_aplica_descuento(Dialogo dia_aplica_descuento) {
 		this.dia_aplica_descuento = dia_aplica_descuento;
+	}
+	public SeleccionTabla getSet_proveedor() {
+		return set_proveedor;
+	}
+	public void setSet_proveedor(SeleccionTabla set_proveedor) {
+		this.set_proveedor = set_proveedor;
 	}
 
 }
