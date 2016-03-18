@@ -106,7 +106,7 @@ public class pre_adq_factura_retencion extends Pantalla {
          
          ///RETENCION
          tab_retencion.setId("tab_retencion");
-         tab_retencion.setIdCompleto("tab_tabulador:tab_retencion");
+         //tab_retencion.setIdCompleto("tab_tabulador:tab_retencion");
          //tab_retencion.setHeader("RETENCION");
          tab_retencion.setTabla("tes_retencion", "ide_teret", 2);
          tab_retencion.getColumna("total_ret_teret").setEtiqueta();
@@ -131,7 +131,7 @@ public class pre_adq_factura_retencion extends Pantalla {
       
          ///DETALLE RETENCION
          tab_detalle_retencion.setId("tab_detalle_retencion");
-         tab_detalle_retencion.setIdCompleto("tab_tabulador:tab_detalle_retencion");
+         //tab_detalle_retencion.setIdCompleto("tab_tabulador:tab_detalle_retencion");
          //tab_detalle_retencion.setHeader("DETALLE RETENCION");
          tab_detalle_retencion.setTabla("tes_detalle_retencion", "ide_teder", 3);
          tab_detalle_retencion.getColumna("ide_teimp").setCombo("tes_impuesto", "ide_teimp", "codigo_teimp,porcentaje_teimp,detalle_teimp", "");
@@ -144,7 +144,7 @@ public class pre_adq_factura_retencion extends Pantalla {
          tab_detalle_retencion.getColumna("activo_teder").setValorDefecto("true");
          tab_detalle_retencion.getColumna("activo_teder").setLectura(true);
          tab_detalle_retencion.setTipoFormulario(true);
-         tab_detalle_retencion.getGrid().setColumns(2);
+         tab_detalle_retencion.getGrid().setColumns(4);
          tab_detalle_retencion.dibujar();
          PanelTabla pat_detalle_retencion=new PanelTabla();
          pat_detalle_retencion.setPanelTabla(tab_detalle_retencion);
@@ -164,10 +164,10 @@ public class pre_adq_factura_retencion extends Pantalla {
 
 
    //      tab_tabulador.agregarTab("DETALLE MOVIMIENTO", pat_detalle_movimiento);//intancia los tabuladores 
-         tab_tabulador.agregarTab("RETENCION", gri);
+   //      tab_tabulador.agregarTab("RETENCION", gri);
 
          Division div_division =new Division();
-         div_division.dividir2(pat_factura, tab_tabulador, "50%", "H");
+         div_division.dividir3(pat_factura, pat_retencion, pat_detalle_retencion, "45%", "30%", "H");
          agregarComponente(div_division);
          
          ///boton tipo impuesto
@@ -428,6 +428,7 @@ public void actualizaPantallas2(SelectEvent evt){
 	        // TODO Auto-generated method stub
 	    
 	        super.inicio();
+	        tab_detalle_retencion.ejecutarValorForanea(tab_retencion.getValorSeleccionado());
 	       // actualizaPantallas();
 	    }
 	    @Override
@@ -436,6 +437,8 @@ public void actualizaPantallas2(SelectEvent evt){
 	      
 
 	        super.siguiente();
+	        tab_detalle_retencion.ejecutarValorForanea(tab_retencion.getValorSeleccionado());
+
 	      //  actualizaPantallas();
 	    }
 	    @Override
@@ -443,6 +446,8 @@ public void actualizaPantallas2(SelectEvent evt){
 	        // TODO Auto-generated method stub
 	    
 	        super.atras();
+	        tab_detalle_retencion.ejecutarValorForanea(tab_retencion.getValorSeleccionado());
+
 	        //actualizaPantallas();
 	    }
 
@@ -452,6 +457,8 @@ public void actualizaPantallas2(SelectEvent evt){
 	  
 
 	        super.fin();
+	        tab_detalle_retencion.ejecutarValorForanea(tab_retencion.getValorSeleccionado());
+
 	        //actualizaPantallas();
 	    }
 

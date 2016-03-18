@@ -68,9 +68,11 @@ public class pre_movimiento_facturacion extends Pantalla{
 	private Combo com_mes_credito = new Combo();
 	private Texto txt_comprobante_credito = new Texto();
 	private AreaTexto txt_area_detalle_asiento_credito = new AreaTexto();
-	private String str_tipo_asiento="";
+	private String str_tipo_asiento="null";
 	private String str_asiento_seleccionado="";
 	private String str_individual="";
+	private String str_grupo_material="";
+	private String str_anio_anterior="";
 	private String str_tipo_emision=utilitario.getVariable("p_factura_emitido");
 	private String str_tipo_pagado=utilitario.getVariable("p_factura_pagado");
 	private String str_parametro_tipo_asiento="";
@@ -93,11 +95,13 @@ public class pre_movimiento_facturacion extends Pantalla{
 	private String p_modulo_factruracion="";
 	private String p_modulo_nota_debito="";
 	private String p_modulo_nota_credito="";
+	private String p_sec_ingresos="";
 	
 	public pre_movimiento_facturacion (){
 		p_modulo_factruracion=utilitario.getVariable("p_modulo_facturacion");
 		p_modulo_nota_debito=utilitario.getVariable("p_modulo_nota_debito");
 		p_modulo_nota_credito=utilitario.getVariable("p_modulo_nota_credito");		
+		p_sec_ingresos=utilitario.getVariable("p_modulo_ingresos");		
 		
 		/*
 		// agrego etiqueta para seleccionare le stado d el afactura
@@ -149,6 +153,7 @@ public class pre_movimiento_facturacion extends Pantalla{
 		tab_movimiento.setId("tab_movimiento");
 		tab_movimiento.setHeader("MOVIMIENTOS");
 		tab_movimiento.setTabla("cont_movimiento", "ide_comov", 1);
+		tab_movimiento.setCampoOrden("ide_comov desc");
 		tab_movimiento.getColumna("ide_cotim").setCombo("cont_tipo_movimiento", "ide_cotim", "detalle_cotim", "");
 		tab_movimiento.getColumna("ide_cotia").setCombo("cont_tipo_asiento", "ide_cotia", "detalle_cotia", "");
 		tab_movimiento.getColumna("ide_geare").setCombo("gen_area", "ide_geare", "detalle_geare", "");
@@ -183,6 +188,12 @@ public class pre_movimiento_facturacion extends Pantalla{
 		tab_detalle_movimiento.getColumna("debe_codem").setMetodoChange("calcularTotal");			
 		tab_detalle_movimiento.getColumna("ide_gelua").setCombo("gen_lugar_aplica","ide_gelua","detalle_gelua","");
 
+		tab_detalle_movimiento.getColumna("ide_tetic").setVisible(false);
+        tab_detalle_movimiento.getColumna("ide_tepro").setVisible(false);
+        tab_detalle_movimiento.getColumna("conciliado_codem").setVisible(false);
+        tab_detalle_movimiento.getColumna("transferencia_codem").setVisible(false);
+        tab_detalle_movimiento.getColumna("fecha_concilia_codem").setVisible(false);
+        tab_detalle_movimiento.getColumna("documento_codem").setVisible(false);
 		tab_detalle_movimiento.getGrid().setColumns(4);
 		tab_detalle_movimiento.dibujar();
 		PanelTabla pat_detalle_movimiento=new PanelTabla();
@@ -321,7 +332,7 @@ public class pre_movimiento_facturacion extends Pantalla{
 	public void inicializaFacturasContabilidad(){
 		sel_factura_contabilidad.setId("sel_factura_contabilidad");
 		sel_factura_contabilidad.setTitle("FACTURAS POR CONTABILIZAR");
-		sel_factura_contabilidad.setSeleccionTabla(ser_Facturacion.getDatosFacturaContabilidad("1", "1900-01-01", "1900-01-01",str_tipo_asiento), "ide_fafac");
+		sel_factura_contabilidad.setSeleccionTabla(ser_Facturacion.getDatosFacturaContabilidad("1", "1900-01-01", "1900-01-01",str_tipo_asiento,"0","<0","0"), "ide_fafac");
 		sel_factura_contabilidad.getTab_seleccion().getColumna("ide_comov").setVisible(false);
 		sel_factura_contabilidad.getTab_seleccion().getColumna("ide_coest").setVisible(false);
 		sel_factura_contabilidad.getTab_seleccion().getColumna("ide_conac").setVisible(false);
@@ -349,7 +360,7 @@ public class pre_movimiento_facturacion extends Pantalla{
 	public void inicializaNotaCreditoContabilidad(){
 		sel_nota_credito.setId("sel_nota_credito");
 		sel_nota_credito.setTitle("NOTAS DE CREDITO POR CONTABILIZAR");
-		sel_nota_credito.setSeleccionTabla(ser_Facturacion.getDatosNotaCreditoContabilidad("1", "1900-01-01", "1900-01-01",str_tipo_asiento), "ide_fafac");
+		sel_nota_credito.setSeleccionTabla(ser_Facturacion.getDatosNotaCreditoContabilidad("1", "1900-01-01", "1900-01-01",str_tipo_asiento,"0"), "ide_fafac");
 		sel_nota_credito.getTab_seleccion().getColumna("ide_comov").setVisible(false);
 		sel_nota_credito.getTab_seleccion().getColumna("ide_coest").setVisible(false);
 		sel_nota_credito.getTab_seleccion().getColumna("ide_conac").setVisible(false);
@@ -417,10 +428,13 @@ public class pre_movimiento_facturacion extends Pantalla{
 		if(sel_nombre_asiento.isVisible()){
 			if(sel_nombre_asiento.getValorSeleccionado()!=null){
 			str_asiento_seleccionado=sel_nombre_asiento.getValorSeleccionado();	
-			TablaGenerica tab_asiento_seleccionado= utilitario.consultar("select ide_conac,ide_gemod,detalle_conac,individual_conac,ide_coest from cont_nombre_asiento_contable where ide_conac ="+str_asiento_seleccionado);
+			TablaGenerica tab_asiento_seleccionado= utilitario.consultar("select ide_conac,ide_gemod,detalle_conac,individual_conac,ide_coest,ide_bogrm,anio_anterior_conac from cont_nombre_asiento_contable where ide_conac ="+str_asiento_seleccionado);
 			str_tipo_asiento = tab_asiento_seleccionado.getValor("ide_coest");
 			str_individual = tab_asiento_seleccionado.getValor("individual_conac");
 			str_ide_conac =tab_asiento_seleccionado.getValor("ide_conac");
+			str_grupo_material =tab_asiento_seleccionado.getValor("ide_bogrm");
+			str_anio_anterior =tab_asiento_seleccionado.getValor("anio_anterior_conac");
+
 			sel_nombre_asiento.cerrar();		
 			sec_importar.dibujar();
 			}
@@ -440,10 +454,20 @@ public class pre_movimiento_facturacion extends Pantalla{
 			// Indico que el asiento es de tipo recaudacion
 			if(str_tipo_asiento.equals(str_tipo_pagado))
 			{	
+				
+				//obtenemos el anio para indicar si vamos a contabilizar anios vigentes o anios anteriores
+				TablaGenerica anio_vigente=utilitario.consultar("select ide_geani,detalle_geani from gen_anio where ide_geani="+utilitario.getVariable("p_anio_vigente"));
+				if(str_anio_anterior.equals("true")){
+				  str_anio_anterior=" < "+anio_vigente.getValor("detalle_geani");	
+				}
+				else {
+					str_anio_anterior=" >= "+anio_vigente.getValor("detalle_geani");		
+				}
+				
 				str_parametro_tipo_asiento="2";
 			}			
 			sel_factura_contabilidad.setTitle("FACTURAS POR CONTABILIZAR DEL "+sec_importar.getFecha1String()+" AL "+sec_importar.getFecha2String());
-			sel_factura_contabilidad.setSql(ser_Facturacion.getDatosFacturaContabilidad(str_parametro_tipo_asiento, sec_importar.getFecha1String(), sec_importar.getFecha2String(),str_tipo_asiento));
+			sel_factura_contabilidad.setSql(ser_Facturacion.getDatosFacturaContabilidad(str_parametro_tipo_asiento, sec_importar.getFecha1String(), sec_importar.getFecha2String(),str_tipo_asiento,str_grupo_material,str_anio_anterior,str_tipo_asiento));
 			sel_factura_contabilidad.getTab_seleccion().getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
 			sel_factura_contabilidad.getTab_seleccion().ejecutarSql();
 			sel_factura_contabilidad.dibujar();
@@ -453,6 +477,7 @@ public class pre_movimiento_facturacion extends Pantalla{
 			if(sel_factura_contabilidad.getSeleccionados() !=null){
 				str_seleccionados_contabilidad=sel_factura_contabilidad.getSeleccionados();
 				sel_factura_contabilidad.cerrar();
+				txt_comprobante.setValue(ser_contabilidad.numeroSecuencial(p_sec_ingresos));
 				dia_cabecera_asiento.dibujar();
 				
 				
@@ -557,8 +582,8 @@ public class pre_movimiento_facturacion extends Pantalla{
 					String maximo_detalle_movimiento=tab_codigo_detalle.getValor("codigo");
 
 					// inserto el detalle de los asientos insert into cont_detalle_movimiento (ide_codem,ide_comov,debe_codem,haber_codem,detalle_codem,activo_codem,ide_cocac)
-					str_insert_contabilidad_detalle="insert into cont_detalle_movimiento (ide_codem,ide_comov,debe_codem,haber_codem,detalle_codem,activo_codem,ide_cocac)";						
-					str_insert_contabilidad_detalle +=" values ("+maximo_detalle_movimiento+","+maximo_cont_movimiento+","+tab_inserta_detalle.getValor(j, "valor_asiento")+",0,'"+tab_inserta_detalle.getValor(j, "detalle_bogrm")+" "+tab_inserta_detalle.getValor(j, "secuencial_fafac")+"',true,"+tab_inserta_detalle.getValor(j, "ide_cocac")+")"; 
+					str_insert_contabilidad_detalle="insert into cont_detalle_movimiento (ide_codem,ide_comov,debe_codem,haber_codem,detalle_codem,activo_codem,ide_cocac,ide_gelua)";						
+					str_insert_contabilidad_detalle +=" values ("+maximo_detalle_movimiento+","+maximo_cont_movimiento+","+tab_inserta_detalle.getValor(j, "valor_asiento")+",0,'"+tab_inserta_detalle.getValor(j, "detalle_bogrm")+" "+tab_inserta_detalle.getValor(j, "secuencial_fafac")+"',true,"+tab_inserta_detalle.getValor(j, "ide_cocac")+","+tab_inserta_detalle.getValor(j, "ide_gelua")+")"; 
 					utilitario.getConexion().ejecutarSql(str_insert_contabilidad_detalle);
 				}
 				
@@ -569,8 +594,8 @@ public class pre_movimiento_facturacion extends Pantalla{
 					String maximo_detalle_movimiento=tab_codigo_detalle.getValor("codigo");
 
 					// inserto el detalle de los asientos insert into cont_detalle_movimiento (ide_codem,ide_comov,debe_codem,haber_codem,detalle_codem,activo_codem,ide_cocac)
-					str_insert_contabilidad_detalle="insert into cont_detalle_movimiento (ide_codem,ide_comov,debe_codem,haber_codem,detalle_codem,activo_codem,ide_cocac)";						
-					str_insert_contabilidad_detalle +=" values ("+maximo_detalle_movimiento+","+maximo_cont_movimiento+",0,"+tab_inserta_detalle_haber.getValor(j, "valor_asiento")+",'"+tab_inserta_detalle_haber.getValor(j, "detalle_bogrm")+" "+tab_inserta_detalle_haber.getValor(j, "secuencial_fafac")+"',true,"+tab_inserta_detalle_haber.getValor(j, "ide_cocac")+")"; 
+					str_insert_contabilidad_detalle="insert into cont_detalle_movimiento (ide_codem,ide_comov,debe_codem,haber_codem,detalle_codem,activo_codem,ide_cocac,ide_gelua)";						
+					str_insert_contabilidad_detalle +=" values ("+maximo_detalle_movimiento+","+maximo_cont_movimiento+",0,"+tab_inserta_detalle_haber.getValor(j, "valor_asiento")+",'"+tab_inserta_detalle_haber.getValor(j, "detalle_bogrm")+" "+tab_inserta_detalle_haber.getValor(j, "secuencial_fafac")+"',true,"+tab_inserta_detalle_haber.getValor(j, "ide_cocac")+","+tab_inserta_detalle_haber.getValor(j, "ide_gelua")+")"; 
 					utilitario.getConexion().ejecutarSql(str_insert_contabilidad_detalle);
 				}
 
@@ -580,6 +605,8 @@ public class pre_movimiento_facturacion extends Pantalla{
 			tab_movimiento.ejecutarSql();
 			tab_detalle_movimiento.ejecutarValorForanea(tab_movimiento.getValorSeleccionado());
 			utilitario.addUpdate("tab_movimiento");
+			///guardo secuencial del comprobante de ingresos
+			ser_contabilidad.guardaSecuencial(ser_contabilidad.numeroSecuencial(p_sec_ingresos), p_sec_ingresos);
 
 		}
 		else {
@@ -629,6 +656,7 @@ public class pre_movimiento_facturacion extends Pantalla{
 			if(sel_nota_debito.getSeleccionados() !=null){
 				str_seleccionados_contabilidad=sel_nota_debito.getSeleccionados();
 				sel_nota_debito.cerrar();
+				txt_comprobante_debito.setValue(ser_contabilidad.numeroSecuencial(p_sec_ingresos));
 				dia_cabecera_asiento_debito.dibujar();
 				
 				
@@ -733,8 +761,8 @@ public class pre_movimiento_facturacion extends Pantalla{
 					String maximo_detalle_movimiento=tab_codigo_detalle.getValor("codigo");
 
 					// inserto el detalle de los asientos insert into cont_detalle_movimiento (ide_codem,ide_comov,debe_codem,haber_codem,detalle_codem,activo_codem,ide_cocac)
-					str_insert_contabilidad_detalle="insert into cont_detalle_movimiento (ide_codem,ide_comov,debe_codem,haber_codem,detalle_codem,activo_codem,ide_cocac)";						
-					str_insert_contabilidad_detalle +=" values ("+maximo_detalle_movimiento+","+maximo_cont_movimiento+","+tab_inserta_detalle.getValor(j, "interes")+",0,'"+tab_inserta_detalle.getValor(j, "detalle_bogrm")+" "+tab_inserta_detalle.getValor(j, "secuencial_fafac")+"',true,"+tab_inserta_detalle.getValor(j, "ide_cocac")+")"; 
+					str_insert_contabilidad_detalle="insert into cont_detalle_movimiento (ide_codem,ide_comov,debe_codem,haber_codem,detalle_codem,activo_codem,ide_cocac,ide_gelua)";						
+					str_insert_contabilidad_detalle +=" values ("+maximo_detalle_movimiento+","+maximo_cont_movimiento+","+tab_inserta_detalle.getValor(j, "interes")+",0,'"+tab_inserta_detalle.getValor(j, "detalle_bogrm")+" "+tab_inserta_detalle.getValor(j, "secuencial_fafac")+"',true,"+tab_inserta_detalle.getValor(j, "ide_cocac")+","+tab_inserta_detalle.getValor(j, "ide_gelua")+")"; 
 					utilitario.getConexion().ejecutarSql(str_insert_contabilidad_detalle);
 				}
 				
@@ -745,8 +773,8 @@ public class pre_movimiento_facturacion extends Pantalla{
 					String maximo_detalle_movimiento=tab_codigo_detalle.getValor("codigo");
 
 					// inserto el detalle de los asientos insert into cont_detalle_movimiento (ide_codem,ide_comov,debe_codem,haber_codem,detalle_codem,activo_codem,ide_cocac)
-					str_insert_contabilidad_detalle="insert into cont_detalle_movimiento (ide_codem,ide_comov,debe_codem,haber_codem,detalle_codem,activo_codem,ide_cocac)";						
-					str_insert_contabilidad_detalle +=" values ("+maximo_detalle_movimiento+","+maximo_cont_movimiento+",0,"+tab_inserta_detalle_haber.getValor(j, "interes")+",'"+tab_inserta_detalle_haber.getValor(j, "detalle_bogrm")+" "+tab_inserta_detalle_haber.getValor(j, "secuencial_fafac")+"',true,"+tab_inserta_detalle_haber.getValor(j, "ide_cocac")+")"; 
+					str_insert_contabilidad_detalle="insert into cont_detalle_movimiento (ide_codem,ide_comov,debe_codem,haber_codem,detalle_codem,activo_codem,ide_cocac,ide_gelua)";						
+					str_insert_contabilidad_detalle +=" values ("+maximo_detalle_movimiento+","+maximo_cont_movimiento+",0,"+tab_inserta_detalle_haber.getValor(j, "interes")+",'"+tab_inserta_detalle_haber.getValor(j, "detalle_bogrm")+" "+tab_inserta_detalle_haber.getValor(j, "secuencial_fafac")+"',true,"+tab_inserta_detalle_haber.getValor(j, "ide_cocac")+","+tab_inserta_detalle_haber.getValor(j, "ide_gelua")+")"; 
 					utilitario.getConexion().ejecutarSql(str_insert_contabilidad_detalle);
 				}
 
@@ -756,6 +784,8 @@ public class pre_movimiento_facturacion extends Pantalla{
 			tab_movimiento.ejecutarSql();
 			tab_detalle_movimiento.ejecutarValorForanea(tab_movimiento.getValorSeleccionado());
 			utilitario.addUpdate("tab_movimiento");
+			///guardo secuencial del comprobante de ingresos
+			ser_contabilidad.guardaSecuencial(ser_contabilidad.numeroSecuencial(p_sec_ingresos), p_sec_ingresos);
 
 		}
 
@@ -770,10 +800,12 @@ public class pre_movimiento_facturacion extends Pantalla{
 		if(sel_nombre_asiento_credito.isVisible()){
 			if(sel_nombre_asiento_credito.getValorSeleccionado()!=null){
 				str_asiento_seleccionado=sel_nombre_asiento_credito.getValorSeleccionado();	
-				TablaGenerica tab_asiento_seleccionado= utilitario.consultar("select ide_conac,ide_gemod,detalle_conac,individual_conac,ide_coest from cont_nombre_asiento_contable where ide_conac ="+str_asiento_seleccionado);
+				TablaGenerica tab_asiento_seleccionado= utilitario.consultar("select ide_conac,ide_gemod,detalle_conac,individual_conac,ide_coest,ide_bogrm from cont_nombre_asiento_contable where ide_conac ="+str_asiento_seleccionado);
 				str_tipo_asiento = tab_asiento_seleccionado.getValor("ide_coest");
 				str_individual = tab_asiento_seleccionado.getValor("individual_conac");
 				str_ide_conac =tab_asiento_seleccionado.getValor("ide_conac");
+				str_grupo_material =tab_asiento_seleccionado.getValor("ide_bogrm");
+
 				sel_nombre_asiento_credito.cerrar();		
 				sel_cal_credito.dibujar();
 				}
@@ -796,7 +828,7 @@ public class pre_movimiento_facturacion extends Pantalla{
 				str_parametro_tipo_asiento="2";
 			}			
 			sel_nota_credito.setTitle("FACTURAS POR CONTABILIZAR DEL "+sel_cal_credito.getFecha1String()+" AL "+sel_cal_credito.getFecha2String());
-			sel_nota_credito.setSql(ser_Facturacion.getDatosNotaCreditoContabilidad(str_parametro_tipo_asiento, sel_cal_credito.getFecha1String(), sel_cal_credito.getFecha2String(),str_tipo_asiento));
+			sel_nota_credito.setSql(ser_Facturacion.getDatosNotaCreditoContabilidad(str_parametro_tipo_asiento, sel_cal_credito.getFecha1String(), sel_cal_credito.getFecha2String(),str_tipo_asiento,str_grupo_material));
 			sel_nota_credito.getTab_seleccion().getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
 			sel_nota_credito.getTab_seleccion().ejecutarSql();
 			sel_nota_credito.dibujar();
@@ -806,6 +838,7 @@ public class pre_movimiento_facturacion extends Pantalla{
 			if(sel_nota_credito.getSeleccionados() !=null){
 				str_seleccionados_contabilidad=sel_nota_credito.getSeleccionados();
 				sel_nota_credito.cerrar();
+				txt_comprobante_credito.setValue(ser_contabilidad.numeroSecuencial(p_sec_ingresos));
 				dia_cabecera_asiento_credito.dibujar();
 				
 				
@@ -918,8 +951,8 @@ public class pre_movimiento_facturacion extends Pantalla{
 					String maximo_detalle_movimiento=tab_codigo_detalle.getValor("codigo");
 
 					// inserto el detalle de los asientos insert into cont_detalle_movimiento (ide_codem,ide_comov,debe_codem,haber_codem,detalle_codem,activo_codem,ide_cocac)
-					str_insert_contabilidad_detalle="insert into cont_detalle_movimiento (ide_codem,ide_comov,debe_codem,haber_codem,detalle_codem,activo_codem,ide_cocac)";						
-					str_insert_contabilidad_detalle +=" values ("+maximo_detalle_movimiento+","+maximo_cont_movimiento+","+tab_inserta_detalle.getValor(j, "valor_asiento")+",0,'"+tab_inserta_detalle.getValor(j, "detalle_bogrm")+" "+tab_inserta_detalle.getValor(j, "secuencial_fafac")+"',true,"+tab_inserta_detalle.getValor(j, "ide_cocac")+")"; 
+					str_insert_contabilidad_detalle="insert into cont_detalle_movimiento (ide_codem,ide_comov,debe_codem,haber_codem,detalle_codem,activo_codem,ide_cocac,ide_gelua)";						
+					str_insert_contabilidad_detalle +=" values ("+maximo_detalle_movimiento+","+maximo_cont_movimiento+","+tab_inserta_detalle.getValor(j, "valor_asiento")+",0,'"+tab_inserta_detalle.getValor(j, "detalle_bogrm")+" "+tab_inserta_detalle.getValor(j, "secuencial_fafac")+"',true,"+tab_inserta_detalle.getValor(j, "ide_cocac")+","+tab_inserta_detalle.getValor(j, "ide_gelua")+")"; 
 					utilitario.getConexion().ejecutarSql(str_insert_contabilidad_detalle);
 				}
 				
@@ -930,16 +963,19 @@ public class pre_movimiento_facturacion extends Pantalla{
 					String maximo_detalle_movimiento=tab_codigo_detalle.getValor("codigo");
 
 					// inserto el detalle de los asientos insert into cont_detalle_movimiento (ide_codem,ide_comov,debe_codem,haber_codem,detalle_codem,activo_codem,ide_cocac)
-					str_insert_contabilidad_detalle="insert into cont_detalle_movimiento (ide_codem,ide_comov,debe_codem,haber_codem,detalle_codem,activo_codem,ide_cocac)";						
-					str_insert_contabilidad_detalle +=" values ("+maximo_detalle_movimiento+","+maximo_cont_movimiento+",0,"+tab_inserta_detalle_haber.getValor(j, "valor_asiento")+",'"+tab_inserta_detalle_haber.getValor(j, "detalle_bogrm")+" "+tab_inserta_detalle_haber.getValor(j, "secuencial_fafac")+"',true,"+tab_inserta_detalle_haber.getValor(j, "ide_cocac")+")"; 
+					str_insert_contabilidad_detalle="insert into cont_detalle_movimiento (ide_codem,ide_comov,debe_codem,haber_codem,detalle_codem,activo_codem,ide_cocac,ide_gelua)";						
+					str_insert_contabilidad_detalle +=" values ("+maximo_detalle_movimiento+","+maximo_cont_movimiento+",0,"+tab_inserta_detalle_haber.getValor(j, "valor_asiento")+",'"+tab_inserta_detalle_haber.getValor(j, "detalle_bogrm")+" "+tab_inserta_detalle_haber.getValor(j, "secuencial_fafac")+"',true,"+tab_inserta_detalle_haber.getValor(j, "ide_cocac")+","+tab_inserta_detalle_haber.getValor(j, "ide_gelua")+")"; 
 					utilitario.getConexion().ejecutarSql(str_insert_contabilidad_detalle);
 				}
 
 				
 			}
 			
+			tab_movimiento.ejecutarSql();
+			tab_detalle_movimiento.ejecutarValorForanea(tab_movimiento.getValorSeleccionado());
 			utilitario.addUpdate("tab_movimiento");
-			//tab_detalle_movimiento.ejecutarValorForanea(tab_movimiento.getValorSeleccionado());
+			///guardo secuencial del comprobante de ingresos
+			ser_contabilidad.guardaSecuencial(ser_contabilidad.numeroSecuencial(p_sec_ingresos), p_sec_ingresos);
 
 		}
 
