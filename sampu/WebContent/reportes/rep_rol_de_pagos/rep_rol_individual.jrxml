@@ -267,7 +267,7 @@ ORDER BY TIPORUBRO.IDE_NRTIR,EMPLEADO]]>
 				<text><![CDATA[FECHA DESDE:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" pattern="yyyy/MM/dd" isBlankWhenNull="true">
-				<reportElement uuid="580efc66-2ebf-4a7c-87ac-09b58c2e06e1" x="223" y="82" width="51" height="11"/>
+				<reportElement uuid="580efc66-2ebf-4a7c-87ac-09b58c2e06e1" x="222" y="82" width="51" height="11"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
