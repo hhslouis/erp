@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_comprobante_asiento" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4f88d28a-8afc-4abc-95b3-23e811e4bb26">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_comprobante_tesoreria" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4f88d28a-8afc-4abc-95b3-23e811e4bb26">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -24,13 +24,15 @@
 		</box>
 	</style>
 	<subDataset name="Table Dataset 1" uuid="2eca6681-4e68-42e8-bf4d-1749889572f0"/>
-	<parameter name="SUBREPORT_DIR" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["D:\\workspace\\biess\\WebContent\\reportes\\rep_gestion\\"]]></defaultValueExpression>
+	</parameter>
 	<parameter name="ide_sucu" class="java.lang.Integer"/>
 	<parameter name="ide_empr" class="java.lang.Integer"/>
 	<parameter name="ide_usua" class="java.lang.Integer"/>
 	<parameter name="titulo" class="java.lang.String"/>
 	<parameter name="p_valor_pagar" class="java.lang.String"/>
-	<parameter name="P_contador_general" class="java.lang.String"/>
+	<parameter name="p_contador_general" class="java.lang.String"/>
 	<parameter name="p_ide_comov" class="java.lang.Integer"/>
 	<queryString>
 		<![CDATA[select a.ide_comov,c.ide_codem,mov_fecha_comov,nro_comprobante_comov,(case when a.ide_tepro is null then e.empleado else d.nombre_tepro end) as nombre_tepro,
@@ -102,7 +104,7 @@ order by ide_gelua]]>
 	<title>
 		<band height="79" splitType="Stretch">
 			<subreport>
-				<reportElement uuid="3a3418cc-c14f-4f1f-be87-df8e6afa8ebd" x="0" y="0" width="555" height="79"/>
+				<reportElement uuid="f482c810-b464-4181-a969-7b5006ceb234" x="0" y="0" width="555" height="79"/>
 				<subreportParameter name="SUBREPORT_DIR">
 					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -119,7 +121,7 @@ order by ide_gelua]]>
 					<subreportParameterExpression><![CDATA[$P{titulo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/reportes/rep_sistema/rep_cabecera.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"/reportes/rep_sistema/rep_cabecera.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
@@ -206,14 +208,14 @@ order by ide_gelua]]>
 				<textFieldExpression><![CDATA[$F{valor}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="29eb04ef-5639-4261-9372-a7873a97a026" x="18" y="81" width="109" height="21"/>
+				<reportElement uuid="29eb04ef-5639-4261-9372-a7873a97a026" x="18" y="85" width="109" height="17"/>
 				<textElement>
 					<font size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[VALOR EN LETRAS:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
-				<reportElement uuid="6764aa80-9002-4c18-8f1a-e390f1bac773" x="133" y="81" width="419" height="21"/>
+				<reportElement uuid="6764aa80-9002-4c18-8f1a-e390f1bac773" x="133" y="85" width="419" height="17"/>
 				<textElement>
 					<font size="10"/>
 				</textElement>
@@ -321,7 +323,7 @@ order by ide_gelua]]>
 				<reportElement uuid="20309793-b910-4a9e-b9e7-7290f2a80787" x="554" y="0" width="1" height="15"/>
 			</line>
 			<line>
-				<reportElement uuid="9f6ea661-30e7-4c58-b86d-b2e905d3819a" x="-1" y="0" width="1" height="15"/>
+				<reportElement uuid="9f6ea661-30e7-4c58-b86d-b2e905d3819a" x="0" y="0" width="1" height="15"/>
 			</line>
 		</band>
 	</detail>
@@ -360,7 +362,7 @@ order by ide_gelua]]>
 			<textField>
 				<reportElement uuid="92059c4d-44a8-4874-a5a9-7da9e27af65d" x="132" y="79" width="285" height="20"/>
 				<textElement textAlignment="Center"/>
-				<textFieldExpression><![CDATA[$P{P_contador_general}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_contador_general}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement uuid="2b8b3f6d-e781-4c11-8462-55d163408996" x="122" y="75" width="300" height="1"/>
