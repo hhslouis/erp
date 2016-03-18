@@ -19,7 +19,9 @@
 	<parameter name="titulo" class="java.lang.String"/>
 	<parameter name="ide_geani" class="java.lang.Integer"/>
 	<queryString>
-		<![CDATA[select * from pre_certificacion a
+		<![CDATA[select a.ide_prcer,nro_certificacion_prcer,abreviatura_prfuf,fecha_prcer,detalle_prcer,codigo_clasificador_prcla,descripcion_clasificador_prcla,
+detalle_prfup,codigo_prfup,valor_certificado_prpoc
+from pre_certificacion a
 left join pre_poa_certificacion b on a.ide_prcer= b.ide_prcer
 left join pre_poa c on c.ide_prpoa = b.ide_prpoa
 left join pre_clasificador d on d.ide_prcla= c.ide_prcla
@@ -30,112 +32,15 @@ where a.ide_prcer=$P{ide_prcer}]]>
 	<field name="ide_prcer" class="java.lang.Long">
 		<fieldDescription><![CDATA[ide_prcer]]></fieldDescription>
 	</field>
-	<field name="ide_geedp" class="java.lang.Long">
-		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla gen_empleados_departamento_par, valor entero generado.]]></fieldDescription>
+	<field name="nro_certificacion_prcer" class="java.lang.Long">
+		<fieldDescription><![CDATA[nro_certificacion_prcer]]></fieldDescription>
 	</field>
-	<field name="gen_ide_geedp" class="java.lang.Long"/>
-	<field name="num_documento_prcer" class="java.lang.String">
-		<fieldDescription><![CDATA[num_documento_prcer]]></fieldDescription>
-	</field>
+	<field name="abreviatura_prfuf" class="java.lang.String"/>
 	<field name="fecha_prcer" class="java.sql.Date">
 		<fieldDescription><![CDATA[fecha_prcer]]></fieldDescription>
 	</field>
 	<field name="detalle_prcer" class="java.lang.String">
 		<fieldDescription><![CDATA[detalle_prcer]]></fieldDescription>
-	</field>
-	<field name="valor_certificacion_prcer" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[valor_certificacion_prcer]]></fieldDescription>
-	</field>
-	<field name="nro_certificacion_prcer" class="java.lang.Long">
-		<fieldDescription><![CDATA[nro_certificacion_prcer]]></fieldDescription>
-	</field>
-	<field name="valor_liberado_prcer" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[valor_liberado_prcer]]></fieldDescription>
-	</field>
-	<field name="valor_disponible_prcer" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[valor_disponible_prcer]]></fieldDescription>
-	</field>
-	<field name="activo_prcer" class="java.lang.Boolean">
-		<fieldDescription><![CDATA[Define el estado del registro si se encuentra activo o inactivo.]]></fieldDescription>
-	</field>
-	<field name="usuario_ingre" class="java.lang.String">
-		<fieldDescription><![CDATA[Este campo define el ultimo usuario que realiza la actualizacion del registro.]]></fieldDescription>
-	</field>
-	<field name="fecha_ingre" class="java.sql.Date">
-		<fieldDescription><![CDATA[Este campo define la fecha que se realizo el ingreso por primera ves el registro.]]></fieldDescription>
-	</field>
-	<field name="hora_ingre" class="java.sql.Time">
-		<fieldDescription><![CDATA[Este campo define la ultima hora que el usuario realiza la actualizacion del registro.]]></fieldDescription>
-	</field>
-	<field name="usuario_actua" class="java.lang.String">
-		<fieldDescription><![CDATA[Este campo define el ultimo usuario que realiza la actualizacion del registro.]]></fieldDescription>
-	</field>
-	<field name="fecha_actua" class="java.sql.Date">
-		<fieldDescription><![CDATA[Este campo define la ultima fecha que realiza la actualizacion del registro.]]></fieldDescription>
-	</field>
-	<field name="hora_actua" class="java.sql.Time">
-		<fieldDescription><![CDATA[Este campo define la hora que se realizo el ingreso por primera ves el registro.]]></fieldDescription>
-	</field>
-	<field name="ide_geani" class="java.lang.Long">
-		<fieldDescription><![CDATA[ide_geani]]></fieldDescription>
-	</field>
-	<field name="ide_gtemp" class="java.lang.Long"/>
-	<field name="ide_prpoc" class="java.lang.Long">
-		<fieldDescription><![CDATA[ide_prpoc]]></fieldDescription>
-	</field>
-	<field name="ide_prpoa" class="java.lang.Long">
-		<fieldDescription><![CDATA[ide_prpoa]]></fieldDescription>
-	</field>
-	<field name="valor_certificado_prpoc" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[valor_certificado_prpoc]]></fieldDescription>
-	</field>
-	<field name="activo_prpoc" class="java.lang.Boolean">
-		<fieldDescription><![CDATA[Define el estado del registro si se encuentra activo o inactivo.]]></fieldDescription>
-	</field>
-	<field name="ide_prfuf" class="java.lang.Integer">
-		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla pre_clasificador.]]></fieldDescription>
-	</field>
-	<field name="saldo_certificacion_prpoc" class="java.math.BigDecimal"/>
-	<field name="ide_coest" class="java.lang.Long"/>
-	<field name="ide_prcla" class="java.lang.Long"/>
-	<field name="ide_prfup" class="java.lang.Long">
-		<fieldDescription><![CDATA[Este campo define la clave primaria de la tabla pre_funcion_programa]]></fieldDescription>
-	</field>
-	<field name="objeto_programa_prpoa" class="java.lang.String">
-		<fieldDescription><![CDATA[objeto_programa_prpoa]]></fieldDescription>
-	</field>
-	<field name="objetivo_proyecto_prpoa" class="java.lang.String">
-		<fieldDescription><![CDATA[objetivo_proyecto_prpoa]]></fieldDescription>
-	</field>
-	<field name="meta_proyecto_prpoa" class="java.lang.String">
-		<fieldDescription><![CDATA[meta_proyecto_prpoa]]></fieldDescription>
-	</field>
-	<field name="fecha_inicio_prpoa" class="java.sql.Date">
-		<fieldDescription><![CDATA[fecha_inicio_prpoa]]></fieldDescription>
-	</field>
-	<field name="fecha_fin_prpoa" class="java.sql.Date">
-		<fieldDescription><![CDATA[fecha_fin_prpoa]]></fieldDescription>
-	</field>
-	<field name="num_resolucion_prpoa" class="java.lang.String">
-		<fieldDescription><![CDATA[num_resolucion_prpoa]]></fieldDescription>
-	</field>
-	<field name="presupuesto_inicial_prpoa" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[presupuesto_inicial_prpoa]]></fieldDescription>
-	</field>
-	<field name="presupuesto_codificado_prpoa" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[presupuesto_codificado_prpoa]]></fieldDescription>
-	</field>
-	<field name="activo_prpoa" class="java.lang.Boolean">
-		<fieldDescription><![CDATA[Define el estado del registro si se encuentra activo o inactivo.]]></fieldDescription>
-	</field>
-	<field name="ide_geare" class="java.lang.Long"/>
-	<field name="reforma_prpoa" class="java.math.BigDecimal"/>
-	<field name="valor_certificado_prpoa" class="java.math.BigDecimal"/>
-	<field name="valor_compromiso_prpoa" class="java.math.BigDecimal"/>
-	<field name="valor_devengado_prpoa" class="java.math.BigDecimal"/>
-	<field name="ejecutado_presupuesto_prpoa" class="java.lang.Boolean"/>
-	<field name="pre_ide_prcla" class="java.lang.Long">
-		<fieldDescription><![CDATA[pre_ide_prcla]]></fieldDescription>
 	</field>
 	<field name="codigo_clasificador_prcla" class="java.lang.String">
 		<fieldDescription><![CDATA[codigo_clasificador_prcla]]></fieldDescription>
@@ -143,49 +48,15 @@ where a.ide_prcer=$P{ide_prcer}]]>
 	<field name="descripcion_clasificador_prcla" class="java.lang.String">
 		<fieldDescription><![CDATA[descripcion_clasificador_prcla]]></fieldDescription>
 	</field>
-	<field name="tipo_prcla" class="java.lang.Long">
-		<fieldDescription><![CDATA[Este tipo no puede ser nulo ya que interviene en muchas clases]]></fieldDescription>
-	</field>
-	<field name="nivel_prcla" class="java.lang.Long">
-		<fieldDescription><![CDATA[nivel_prcla]]></fieldDescription>
-	</field>
-	<field name="grupo_prcla" class="java.lang.String">
-		<fieldDescription><![CDATA[grupo_prcla]]></fieldDescription>
-	</field>
-	<field name="sigefc_prcla" class="java.lang.Boolean">
-		<fieldDescription><![CDATA[sigefc_prcla]]></fieldDescription>
-	</field>
-	<field name="activo_prcla" class="java.lang.Boolean">
-		<fieldDescription><![CDATA[Define el estado del registro si se encuentra activo o inactivo.]]></fieldDescription>
-	</field>
-	<field name="ide_prgre" class="java.lang.Integer"/>
-	<field name="pre_ide_prfup" class="java.lang.Long">
-		<fieldDescription><![CDATA[pre_ide_prfup]]></fieldDescription>
-	</field>
 	<field name="detalle_prfup" class="java.lang.String">
 		<fieldDescription><![CDATA[detalle_prfup]]></fieldDescription>
 	</field>
 	<field name="codigo_prfup" class="java.lang.String">
 		<fieldDescription><![CDATA[codigo_prfup]]></fieldDescription>
 	</field>
-	<field name="activo_prfup" class="java.lang.Boolean">
-		<fieldDescription><![CDATA[Define el estado del registro si se encuentra activo o inactivo.]]></fieldDescription>
+	<field name="valor_certificado_prpoc" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[valor_certificado_prpoc]]></fieldDescription>
 	</field>
-	<field name="ide_prnfp" class="java.lang.Integer"/>
-	<field name="ide_prsua" class="java.lang.Long"/>
-	<field name="detalle_prfuf" class="java.lang.String">
-		<fieldDescription><![CDATA[detalle_prfuf]]></fieldDescription>
-	</field>
-	<field name="activo_prfuf" class="java.lang.Boolean">
-		<fieldDescription><![CDATA[Define el estado del registro si se encuentra activo o inactivo.]]></fieldDescription>
-	</field>
-	<field name="abreviatura_prfuf" class="java.lang.String"/>
-	<variable name="valor_certificacion_prcer_1" class="java.math.BigDecimal" resetType="Page" calculation="Sum">
-		<variableExpression><![CDATA[$F{valor_certificacion_prcer}]]></variableExpression>
-	</variable>
-	<variable name="valor_certificacion_prcer_2" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{valor_certificacion_prcer}]]></variableExpression>
-	</variable>
 	<variable name="valor_certificado_prpoc_1" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{valor_certificado_prpoc}]]></variableExpression>
 	</variable>
@@ -255,7 +126,7 @@ where a.ide_prcer=$P{ide_prcer}]]>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{nro_certificacion_prcer}]]></textFieldExpression>
 			</textField>
-			<textField pattern="EEEEE dd MMMMM yyyy">
+			<textField pattern="dd/MM/yyyy">
 				<reportElement uuid="e814e9f6-1e40-4ae5-92d2-a442e65d6156" x="355" y="25" width="184" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{fecha_prcer}]]></textFieldExpression>
@@ -268,7 +139,7 @@ where a.ide_prcer=$P{ide_prcer}]]>
 				<text><![CDATA[Partida]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="9e88eca2-8883-42ea-8d43-a6cc6ea695b3" x="176" y="86" width="100" height="20"/>
+				<reportElement uuid="9e88eca2-8883-42ea-8d43-a6cc6ea695b3" x="89" y="86" width="100" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
@@ -281,6 +152,13 @@ where a.ide_prcer=$P{ide_prcer}]]>
 				</textElement>
 				<text><![CDATA[Valor]]></text>
 			</staticText>
+			<staticText>
+				<reportElement uuid="549bf0e4-2d5f-4cf1-bc97-a391ab5386b9" x="239" y="86" width="100" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Actividad]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -289,14 +167,14 @@ where a.ide_prcer=$P{ide_prcer}]]>
 	<detail>
 		<band height="15" splitType="Stretch">
 			<textField>
-				<reportElement uuid="fa445641-4a59-4e30-8816-c47a0b6945a4" x="8" y="0" width="94" height="15"/>
+				<reportElement uuid="fa445641-4a59-4e30-8816-c47a0b6945a4" x="3" y="0" width="81" height="15"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{codigo_clasificador_prcla}+" - "+$F{abreviatura_prfuf}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement uuid="c0df7ab0-97dd-4fb3-a3cb-0d942c1685ca" x="102" y="0" width="354" height="15"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="c0df7ab0-97dd-4fb3-a3cb-0d942c1685ca" x="89" y="0" width="147" height="15"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
@@ -306,6 +184,13 @@ where a.ide_prcer=$P{ide_prcer}]]>
 				<reportElement uuid="d48f9756-0e6c-43f9-9431-cd3045f74a31" x="456" y="0" width="101" height="15"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{valor_certificado_prpoc}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="265e6ecd-de08-4d74-a6f3-2c3a6073c875" x="239" y="0" width="217" height="15"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codigo_prfup}+" "+$F{detalle_prfup}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
