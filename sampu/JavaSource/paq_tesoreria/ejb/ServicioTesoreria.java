@@ -49,12 +49,13 @@ public String getImpuestoCalculo (String codigo){
 public String getConsultaRetencion(String comprobante){
 	
 	String tab_impuesto="select a.ide_teder,base_imponible_teder,valor_retenido_teder,ide_cocac,ide_gelua,aplica_formula_teast,formula_teast,"
-			+" (case when aplica_formula_teast =true then 0 else base_imponible_teder end) as resultado"
-			+" from tes_detalle_retencion a,tes_asiento_tipo b, tes_comprobante_pago c,tes_retencion d"
-			+" where a.ide_teimp =b.ide_teimp"
-			+" and c.ide_tecpo = d.ide_tecpo"
-			+" and a.ide_teret = d.ide_teret"
-			+" and c.ide_tecpo in ("+comprobante+")";
+			 +" (case when aplica_formula_teast =true then 0 else base_imponible_teder end) as resultado"
+			 +" from tes_detalle_retencion a,tes_asiento_tipo b, tes_comprobante_pago c,tes_retencion d,adq_factura e"
+			 +" where a.ide_teimp =b.ide_teimp"
+			 +" and a.ide_teret = d.ide_teret"
+			 +" and d.ide_adfac = e.ide_adfac"
+			 +" and c.ide_adsoc = e.ide_adsoc"
+			 +" and c.ide_tecpo in ("+comprobante+")";
 
 	return tab_impuesto;
 	
@@ -70,10 +71,11 @@ public String getConsultaRetencionCalcula(String comprobante,String formula){
 	
 	String tab_impuesto="select a.ide_teder,base_imponible_teder,valor_retenido_teder,ide_cocac,ide_gelua,aplica_formula_teast,formula_teast,"
 			+" (case when aplica_formula_teast =true then "+formula+" else base_imponible_teder end) as resultado"
-			+" from tes_detalle_retencion a,tes_asiento_tipo b, tes_comprobante_pago c,tes_retencion d"
+			+" from tes_detalle_retencion a,tes_asiento_tipo b, tes_comprobante_pago c,tes_retencion d,adq_factura e"
 			+" where a.ide_teimp =b.ide_teimp"
-			+" and c.ide_tecpo = d.ide_tecpo"
 			+" and a.ide_teret = d.ide_teret"
+			+" and d.ide_adfac = e.ide_adfac"
+			+" and c.ide_adsoc = e.ide_adsoc"
 			+" and c.ide_tecpo in ("+comprobante+")";
 
 	return tab_impuesto;
@@ -148,6 +150,14 @@ public String getFacturaClientes(String cliente,String tipo,String fecha_inicial
 					factura_clientes +=" order by a.ide_recli,grupo,ide_fafac";
 	//System.out.println("consulta clientes "+ factura_clientes);
 	return factura_clientes;
+}
+public String getFacturaRetencion(String ide_prtra){
+	
+	String tab_impuesto="select a.ide_adfac,ide_adsoc,ide_prtra,valor_retenido,detalle_adfac||' FACTURA: '||num_factura_adfac as detalle,ide_tepro,subtotal_adfac,valor_iva_adfac,total_adfac " 
+						+" from adq_factura a, ( select ide_adfac,sum(total_ret_teret) as valor_retenido from tes_retencion group by ide_adfac ) b where a.ide_adfac = b.ide_adfac and ide_prtra ="+ide_prtra;
+
+	return tab_impuesto;
+	
 }
 }
 
