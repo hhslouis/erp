@@ -962,7 +962,7 @@ public class pre_anticipos extends Pantalla {
 			return;
 		}
 
-		if (ser_anticipo.getNumVecesGaranteAnticipo(aut_empleado_autoriza_memo.getValor())>=2){
+		if (ser_anticipo.getNumVecesGaranteAnticipo(aut_empleado_autoriza_memo.getValor())>1){
 			utilitario.agregarMensajeInfo("No se puede continuar","El garante seleccionado ya no puede ser garante de otro anticipo");
 			return;
 		}
