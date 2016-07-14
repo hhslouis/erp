@@ -62,6 +62,19 @@ public class pre_catalogo_cuenta extends Pantalla{
        tab_tipo_catalogo_cuenta.setCampoPadre("con_ide_cocac"); //necesarios para el arbol ide recursivo
 		tab_tipo_catalogo_cuenta.setCampoNombre("(select cue_codigo_cocac||' '|| cue_descripcion_cocac as cue_descripcion_cocac from cont_catalogo_cuenta b where b.ide_cocac=cont_catalogo_cuenta.ide_cocac)"); //necesarios para el arbol campo a mostrarse
 		tab_tipo_catalogo_cuenta.agregarArbol(arb_catalogo_cuenta);//necesarios para el arbol
+	  	// para contruir los radios
+	   List listasaldo = new ArrayList();
+       Object filas1[] = {
+           "2", "SALDO ACREEDOR"
+       };
+       Object filas2[] = {
+           "1", "SALDO DEUDOR"
+       };
+       
+       listasaldo.add(filas1);
+       listasaldo.add(filas2);
+       tab_tipo_catalogo_cuenta.getColumna("saldo_cocac").setCombo(listasaldo);
+		
 		tab_tipo_catalogo_cuenta.dibujar();
 		PanelTabla pat_tipo_catalogo_cuenta = new PanelTabla();
 		pat_tipo_catalogo_cuenta.setPanelTabla(tab_tipo_catalogo_cuenta);

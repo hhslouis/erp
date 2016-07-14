@@ -27,6 +27,8 @@ public class pre_asiento_tipo extends Pantalla{
 		tab_asiento_contable.setTabla("cont_nombre_asiento_contable", "ide_conac", 1);
 		tab_asiento_contable.getColumna("ide_gemod").setCombo("select ide_gemod,detalle_gemod from gen_modulo");
 		tab_asiento_contable.getColumna("ide_coest").setCombo("cont_estado","ide_coest","detalle_coest","");
+		tab_asiento_contable.getColumna("ide_bogrm").setCombo("select ide_bogrm,detalle_bogrm from bodt_grupo_material order by detalle_bogrm");
+		tab_asiento_contable.getColumna("ide_bogrm").setAutoCompletar();
 		tab_asiento_contable.agregarRelacion(tab_estado);
 		tab_asiento_contable.agregarRelacion(tab_reglas_asiento);
 		tab_asiento_contable.dibujar();

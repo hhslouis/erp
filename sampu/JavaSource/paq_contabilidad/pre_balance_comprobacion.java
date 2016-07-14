@@ -12,6 +12,7 @@ import framework.componentes.Division;
 import framework.componentes.Etiqueta;
 import framework.componentes.PanelTabla;
 import framework.componentes.Radio;
+import framework.componentes.SeleccionCalendario;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import paq_contabilidad.ejb.ServicioContabilidad;
@@ -28,6 +29,7 @@ public class pre_balance_comprobacion extends Pantalla{
 	private Combo com_nivel_cuenta_final = new Combo();
 	
 	public static String par_tipo_asiento_inicial;
+	private SeleccionCalendario sel_calendario=new SeleccionCalendario();
 
 	
 	@EJB
@@ -81,7 +83,45 @@ public class pre_balance_comprobacion extends Pantalla{
 		agregarComponente(div1);
 		
 		
+		Boton bot_actualizar=new Boton();
+		bot_actualizar.setIcon("ui-icon-person");
+		bot_actualizar.setValue("Recalcular Balance Comprobacion");
+		bot_actualizar.setMetodo("generarCedula");
+		bar_botones.agregarBoton(bot_actualizar);	
 		
+		inicializaCalendario();
+		
+	}
+	public void inicializaCalendario(){
+		sel_calendario.setTitle("SELECCION DE FECHAS");
+		sel_calendario.setFooter("Seleccione un Rango de fechas");
+		sel_calendario.setFecha1(utilitario.sumarDiasFecha(utilitario.getDate(), -1));
+		sel_calendario.setFecha2(utilitario.sumarDiasFecha(utilitario.getDate(), -1));
+		sel_calendario.getBot_aceptar().setMetodo("generarCedula");
+		agregarComponente(sel_calendario);
+	}
+	
+	public void generarCedula(){
+		if(com_anio.getValue()==null){
+			utilitario.agregarMensajeInfo("Selecione un Año", "");
+			return;			
+
+		}
+		TablaGenerica tab_valida_anio=utilitario.consultar("select 1 as codigo, 2 as resultado from tes_caja where not extract(year from cast('"+sel_calendario.getFecha1String()+"' as date)) =extract(year from cast('"+sel_calendario.getFecha2String()+"' as date))");
+		if(tab_valida_anio.getTotalFilas()>0){
+			utilitario.agregarMensajeError("Fechas no Validas", "Favor ingrese fechas que se encuentren dentro de un mismo año");
+			return;
+		}
+		if(sel_calendario.isVisible()){
+			sel_calendario.cerrar();
+			ser_contabilidad.generarBalComprobacion(com_anio.getValue().toString(), sel_calendario.getFecha1().toString(), sel_calendario.getFecha2().toString(), par_tipo_asiento_inicial);
+			tab_balance_inicial.setCondicion("ide_geani="+com_anio.getValue()+" and ide_cocac in (select ide_cocac from cont_catalogo_cuenta where nivel_cocac between "+com_nivel_cuenta_inicial.getValue()+" and "+com_nivel_cuenta_final.getValue()+")");
+			tab_balance_inicial.ejecutarSql();
+			utilitario.addUpdate("tab_balance_inicial");
+		}
+		else{
+			sel_calendario.dibujar();
+		}
 	}
 		public void seleccionaElAnio (){
 		if(com_anio.getValue()==null){
@@ -172,6 +212,12 @@ public class pre_balance_comprobacion extends Pantalla{
 	}
 	public void setCon_guardar(Confirmar con_guardar) {
 		this.con_guardar = con_guardar;
+	}
+	public SeleccionCalendario getSel_calendario() {
+		return sel_calendario;
+	}
+	public void setSel_calendario(SeleccionCalendario sel_calendario) {
+		this.sel_calendario = sel_calendario;
 	}
 
 	

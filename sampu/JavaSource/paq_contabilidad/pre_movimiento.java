@@ -78,6 +78,7 @@ public class pre_movimiento extends Pantalla{
 		tab_movimiento.setHeader("MOVIMIENTOS");
 		tab_movimiento.setTabla("cont_movimiento", "ide_comov", 1);
 		tab_movimiento.setCondicion("ide_geani=-1");
+		tab_movimiento.setCampoOrden("ide_comov desc");
 		tab_movimiento.getColumna("ide_gemod").setCombo("gen_modulo", "ide_gemod", "detalle_gemod", "");
 		tab_movimiento.getColumna("ide_cotim").setCombo("cont_tipo_movimiento", "ide_cotim", "detalle_cotim", "");
 		tab_movimiento.getColumna("ide_cotia").setCombo("cont_tipo_asiento", "ide_cotia", "detalle_cotia", "");
@@ -176,6 +177,7 @@ public class pre_movimiento extends Pantalla{
 	public void generarTransacciones(){
 		double dou_valor_debe=0;
 		double dou_valor_haber=0;
+		String str_tipo_concepto=null;
 		System.out.println("entre a fromar "+tab_movimiento.getValor("ide_comov"));
 		if(com_anio.getValue()==null){
 			utilitario.agregarMensajeError("No se puede insertar", "Debe Seleccionar un Año");
@@ -185,6 +187,10 @@ public class pre_movimiento extends Pantalla{
 			utilitario.agregarMensajeError("No se puede insertar", "Debe Guardaruna Cabecera de Movimiento Contable");
 			return;
 		}
+		
+		//if(com_tipo_concepto.getValue().toString()!=null){
+			//str_tipo_concepto=com_tipo_concepto.getValue().toString();
+		//}
 		
 		if(dia_movimientos.isVisible()){
 			
@@ -201,7 +207,7 @@ public class pre_movimiento extends Pantalla{
 			tab_detalle_movimiento.setValor("haber_codem", dou_valor_haber+"");
 			tab_detalle_movimiento.setValor("ide_cocac",aut_catalogo.getValor());
 			tab_detalle_movimiento.setValor("ide_tepro", aut_proveedor.getValor());
-			tab_detalle_movimiento.setValor("ide_tetic", com_tipo_concepto.getValue().toString());
+			tab_detalle_movimiento.setValor("ide_tetic",com_tipo_concepto.getValue()+"" );
 			tab_detalle_movimiento.setValor("ide_comov", tab_movimiento.getValor("ide_comov"));
 			tab_detalle_movimiento.setValor("transferencia_codem", chk_transferencia.getValue().toString());
 
