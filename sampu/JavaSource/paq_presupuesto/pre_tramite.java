@@ -3,6 +3,7 @@ package paq_presupuesto;
 import javax.ejb.EJB;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,7 +56,7 @@ public class pre_tramite extends Pantalla   {
 
 	private SeleccionTabla set_peticionario=new SeleccionTabla();
 	private SeleccionTabla set_responsable=new SeleccionTabla();
-
+	private Etiqueta eti_mensaje = new Etiqueta();
 
 	private String empleado;
 
@@ -119,6 +120,7 @@ public class pre_tramite extends Pantalla   {
 		tab_tramite.getColumna("ide_gtemp").setAutoCompletar();
 		tab_tramite.getColumna("fecha_tramite_prtra").setValorDefecto(utilitario.getFechaActual());
 		tab_tramite.setCondicion("ide_geani=-1"); 
+			
 		tab_tramite.getColumna("total_compromiso_prtra").setEtiqueta();
 		tab_tramite.getColumna("total_compromiso_prtra").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
 		tab_tramite.getColumna("activo_prtra").setValorDefecto("true");
@@ -134,9 +136,12 @@ public class pre_tramite extends Pantalla   {
 		PanelTabla pat_tramite=new PanelTabla();
 		pat_tramite.setPanelTabla(tab_tramite);
 
-		///poa tramite
+		
+		///poa tramite +
+
+		
 		tab_poa_tramite.setId("tab_poa_tramite");
-		tab_poa_tramite.setHeader("POA TRAMITE");
+		tab_poa_tramite.setHeader("POA TRAMITE ");
 		tab_poa_tramite.setIdCompleto("tab_tabulador:tab_poa_tramite");
 		tab_poa_tramite.setTabla("pre_poa_tramite", "ide_prpot", 2);
 		tab_poa_tramite.getColumna("ide_prpoa").setCombo(ser_presupuesto.getPoaTodos());
@@ -152,6 +157,10 @@ public class pre_tramite extends Pantalla   {
 		
 		tab_poa_tramite.dibujar();
 		PanelTabla pat_panel2=new PanelTabla();
+		eti_mensaje.setId("eti_mensaje");
+		eti_mensaje.setStyle("font-size: 13px;color: red;font-weight: bold");
+		
+		pat_panel2.setHeader(eti_mensaje);
 		pat_panel2.setPanelTabla(tab_poa_tramite);
 
 		//// documento habilitante
@@ -376,7 +385,6 @@ public void importarPeticionario(){
 
 	public  void aceptarPoa(){
 		String str_seleccionados = set_poa.getSeleccionados();
-
 		if (str_seleccionados!=null){
 			TablaGenerica tab_poa = ser_presupuesto.getTablaGenericaCert(str_seleccionados);		
 			for(int i=0;i<tab_poa.getTotalFilas();i++){
@@ -389,9 +397,12 @@ public void importarPeticionario(){
 				tab_poa_tramite.setValor("activo_prpot", "true");
 
 			}
+			
+			tab_tramite.setValor("total_compromiso_prtra",utilitario.getFormatoNumero(tab_poa_tramite.getSumaColumna("comprometido_prpot"),2)+"");
 			tab_tramite.setValor("ide_prcer", tab_poa.getValor("ide_prcer"));
 			tab_tramite.setValor("observaciones_prtra",tab_tramite.getValor("observaciones_prtra") + tab_poa.getValor("detalle_prcer"));
 			tab_tramite.modificar(tab_tramite.getFilaActual());
+			
 			set_poa.cerrar();
 			utilitario.addUpdate("tab_poa_tramite,tab_tramite");
 		}
@@ -464,22 +475,38 @@ public void importarPeticionario(){
 		
 		valor_comprometido= Double.parseDouble(tab_poa_tramite.getValor("comprometido_prpot"));
 		valor_saldo=Double.parseDouble(tab_poa_tramite.getValor("saldo_comprometido_prpot"));
+		
 		if(valor_comprometido<=0){
-			utilitario.agregarMensajeError("Ingrese un valor positivo o mayor a cero", "Ingrese un valor positivo o mayor a cero");
+			
+			eti_mensaje.setValue("<img src='imagenes/stop.png' /> Ingrese un valor positivo o mayor a cero");
+//			utilitario.agregarMensajeError("Ingrese un valor positivo o mayor a cero", "Ingrese un valor positivo o mayor a cero");
 		    tab_poa_tramite.setValor("comprometido_prpot", "0");
-		    utilitario.addUpdateTabla(tab_poa_tramite, "comprometido_prpot","");
+		    utilitario.addUpdateTabla(tab_poa_tramite, "comprometido_prpot","tab_tabulador:eti_mensaje");
+		    
+			tab_tramite.setValor("total_compromiso_prtra",utilitario.getFormatoNumero(tab_poa_tramite.getSumaColumna("comprometido_prpot"),2)+"");
+			tab_tramite.modificar(tab_tramite.getFilaActual());
+			utilitario.addUpdateTabla(tab_tramite, "total_compromiso_prtra","");
+			
 		    return;
 		}
 		if(valor_saldo<valor_comprometido){
-			utilitario.agregarMensajeError("No puede Exceder valor asignado", "Ingrese un valor menor igual al disponible en saldo: "+valor_saldo);
+			eti_mensaje.setValue("<img src='imagenes/stop.png' /> El Valor que Desea Comprometer Excede el Saldo Disponible: "+valor_saldo);
+
+//			utilitario.agregarMensajeError("No puede Exceder valor asignado", "Ingrese un valor menor igual al disponible en saldo: "+valor_saldo);
 		    tab_poa_tramite.setValor("comprometido_prpot", "0");
-		    utilitario.addUpdateTabla(tab_poa_tramite, "comprometido_prpot","");
+		    utilitario.addUpdateTabla(tab_poa_tramite, "comprometido_prpot","tab_tabulador:eti_mensaje");
+
+			tab_tramite.setValor("total_compromiso_prtra",utilitario.getFormatoNumero(tab_poa_tramite.getSumaColumna("comprometido_prpot"),2)+"");
+			tab_tramite.modificar(tab_tramite.getFilaActual());
+			utilitario.addUpdateTabla(tab_tramite, "total_compromiso_prtra","");
+			
 		    return;
 		}
 		
-		tab_tramite.setValor("total_compromiso_prtra",tab_poa_tramite.getSumaColumna("comprometido_prpot")+"");
+		eti_mensaje.setValue("");
+		tab_tramite.setValor("total_compromiso_prtra",utilitario.getFormatoNumero(tab_poa_tramite.getSumaColumna("comprometido_prpot"),2)+"");
 		tab_tramite.modificar(tab_tramite.getFilaActual());
-		utilitario.addUpdateTabla(tab_tramite, "total_compromiso_prtra","");	
+		utilitario.addUpdateTabla(tab_tramite, "total_compromiso_prtra","tab_tabulador:eti_mensaje");	
 
 	}
 	@Override
@@ -501,7 +528,8 @@ public void importarPeticionario(){
 			utilitario.addUpdate("tab_tramite");
 		}
 		else if(tab_poa_tramite.isFocus()){
-			tab_poa_tramite.insertar();
+			utilitario.agregarMensajeError("No puede insertar", "Debe Buscar y Seleccionar una Certificación Presupuestaria para agregar un registro");
+			//tab_poa_tramite.insertar();
 		}
 		else if(tab_archivo.isFocus()){
 			tab_archivo.insertar();
@@ -515,6 +543,28 @@ public void importarPeticionario(){
 	@Override
 	public void guardar() {
 		// TODO Auto-generated method stub
+		boolean bool_valida_valor=false;
+		double dou_compormetido=0;
+		if(tab_poa_tramite.getTotalFilas()>0){
+			
+			for(int i=0; i<tab_poa_tramite.getTotalFilas();i++){
+				try{
+				 dou_compormetido= Double.parseDouble(tab_poa_tramite.getValor(i, "comprometido_prpot"));
+				} catch (Exception e){
+					bool_valida_valor=true;
+				}
+				if(dou_compormetido==0){
+					bool_valida_valor=true;
+				}
+			}
+			if(bool_valida_valor==true){
+				utilitario.agregarMensajeError("No se puede guardar", "Existen Compromisos con Valor 0 o Valores en Blanco, Revice Porfavor");
+				eti_mensaje.setValue("");
+				utilitario.addUpdate("tab_tabulador:eti_mensaje");
+			return;
+			}
+		}
+		
 		if (tab_tramite.guardar()){
 			if (tab_poa_tramite.guardar()){
 				if (tab_documento.guardar()){
@@ -530,7 +580,9 @@ public void importarPeticionario(){
 						//Triger envia a la ejcucion presupuestaria pre_mensual
 						ser_presupuesto.trigCompromisoPreMensual(tab_tramite.getValor("ide_prtra"));
 					}
-				
+					// actualizo la etiqueta en caso que tenga algun mensaje
+					eti_mensaje.setValue("");
+					utilitario.addUpdate("tab_tabulador:eti_mensaje");
 				}
 			}
 		}

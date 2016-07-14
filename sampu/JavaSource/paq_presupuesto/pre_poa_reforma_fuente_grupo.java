@@ -71,7 +71,7 @@ public class pre_poa_reforma_fuente_grupo extends Pantalla {
 		
 		Boton bot_buscar = new Boton();
 		bot_buscar.setIcon("ui-icon-person");
-		bot_buscar.setValue("Buscar POA");
+		bot_buscar.setValue("Buscar POAaaaaaaaa");
 		bot_buscar.setMetodo("mostrarSetReformaFuente");
 		bar_botones.agregarBoton(bot_buscar); 
 		

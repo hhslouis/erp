@@ -10,6 +10,7 @@ import javax.ejb.EJB;
 import javax.faces.event.AjaxBehaviorEvent;
 
 import paq_contabilidad.ejb.ServicioContabilidad;
+import paq_general.ejb.ServicioGeneral;
 import paq_presupuesto.ejb.ServicioPresupuesto;
 import paq_sistema.aplicacion.Pantalla;
 import framework.aplicacion.TablaGenerica;
@@ -40,15 +41,19 @@ public class pre_poa_reforma_fuente extends Pantalla {
 	private Calendario cal_fecha_reforma=new Calendario();
 	private Dialogo dia_busca_resolucion = new Dialogo();
 	private Radio rad_imprimir= new Radio();
-	private Check che_aprobado=new Check();
+	//private Check che_aprobado=new Check();
+	private Etiqueta eti_mensajesaldos = new Etiqueta();
+	private Radio rad_aprobado= new Radio();
+
+
 	//private pre_contratacion trig_reformas = new pre_contratacion();
 
-
-
 	@EJB
-	 private ServicioPresupuesto ser_presupuesto=(ServicioPresupuesto)utilitario.instanciarEJB(ServicioPresupuesto.class);
-	  @EJB
+	private ServicioPresupuesto ser_presupuesto=(ServicioPresupuesto)utilitario.instanciarEJB(ServicioPresupuesto.class);
+	@EJB
 	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
+	@EJB
+	private ServicioGeneral ser_general = (ServicioGeneral ) utilitario.instanciarEJB(ServicioGeneral.class);
 
 	public pre_poa_reforma_fuente() {
 		
@@ -62,9 +67,7 @@ public class pre_poa_reforma_fuente extends Pantalla {
 		com_anio.setCombo(ser_contabilidad.getAnioDetalle("true,false","true,false"));
 		bar_botones.agregarComponente(new Etiqueta("Seleccione El Año:"));
 		bar_botones.agregarComponente(com_anio);
-		
-		
-		
+
 		com_fuente_financiamiento.setId("com_fuente_financiamiento");
 		com_fuente_financiamiento.setCombo("select ide_prfuf,detalle_prfuf from  pre_fuente_financiamiento order by detalle_prfuf");
 		bar_botones.agregarComponente(new Etiqueta("Fuente Financiamiento"));
@@ -77,34 +80,33 @@ public class pre_poa_reforma_fuente extends Pantalla {
 		bar_botones.agregarBoton(bot_buscar); 
 		
 		List lista = new ArrayList();
-	       Object fila1[] = {
-	           "0", "Reforma Techos"
-	       };
-	       Object fila2[] = {
-	           "1", "Reforma por Partida"
-	       };
-	       
-	       lista.add(fila1);
-	       lista.add(fila2);
-	       rad_imprimir.setId("rad_imprimir");
-	       rad_imprimir.setRadio(lista);
-	       rad_imprimir.setValue(fila2);
-	       rad_imprimir.setMetodoChange("seleccionaOpcion");
-	       rad_imprimir.setVertical();
+	    Object fila1[] = {
+	       "0", "Reforma Techos"
+	    };
+	    Object fila2[] = {
+	       "1", "Reforma por Partida"
+	    };
+	   
+	    lista.add(fila1);
+	    lista.add(fila2);
+	    rad_imprimir.setId("rad_imprimir");
+	    rad_imprimir.setRadio(lista);
+	    rad_imprimir.setValue(fila2);
+	    rad_imprimir.setMetodoChange("seleccionaOpcion");
+	    rad_imprimir.setVertical();
 	  //     bar_botones.agregarComponente(rad_imprimir);
 		
 		Boton bot_buscar_resol = new Boton();
 		bot_buscar_resol.setIcon("ui-icon-person");
-		bot_buscar_resol.setValue("Buscar Reformada");
+		bot_buscar_resol.setValue("Buscar Reformas");
 		bot_buscar_resol.setMetodo("mostrarDialogoBusca");
-	//	bar_botones.agregarBoton(bot_buscar_resol);
-		
-	
+		bar_botones.agregarBoton(bot_buscar_resol); 
+
 		Grid gri_formulario = new Grid();
     	gri_formulario.setColumns(4);
     	
     	gri_formulario.getChildren().add(rad_imprimir);
-    	gri_formulario.getChildren().add(bot_buscar_resol);
+    	//gri_formulario.getChildren().add(bot_buscar_resol);
     	
     	Etiqueta eti_total = new Etiqueta("TOTAL REFORMADO:");
     	eti_total.setStyle("font-size: 15px;font-weight: bold;text-aling:left");
@@ -112,9 +114,15 @@ public class pre_poa_reforma_fuente extends Pantalla {
        	
        	eti_valor_total.setId("eti_valor_total");
        	eti_valor_total.setValue("0.00");
-    	eti_valor_total.setStyle("font-size: 17px;color: red;font-weight: bold;text-aling:left");
+    	eti_valor_total.setStyle("font-size: 17px;color: green;font-weight: bold;text-aling:left");
        	gri_formulario.getChildren().add(eti_valor_total);
+       	
 
+       	eti_mensajesaldos.setId("eti_mensajesaldos");
+       	eti_mensajesaldos.setStyle("font-size: 18px;color: red;font-weight: bold");
+
+       	gri_formulario.getChildren().add(eti_mensajesaldos);
+       	
        	//Grid para el dialogo
        	Grid gri_guarda_reforma = new Grid();
        	gri_guarda_reforma.setColumns(2);
@@ -131,11 +139,27 @@ public class pre_poa_reforma_fuente extends Pantalla {
        	cal_fecha_reforma.setFechaActual();
        	gri_guarda_reforma.getChildren().add(cal_fecha_reforma);
        	
-       	Etiqueta eti_che_aprobado = new Etiqueta("Aprobado/No Aprobado");
+       	Etiqueta eti_che_aprobado = new Etiqueta("");
        	gri_guarda_reforma.getChildren().add(eti_che_aprobado);
-       	//che_aprobado.setValue("true");
        	
-       	gri_guarda_reforma.getChildren().add(che_aprobado);
+       	List listax = new ArrayList();
+	    Object filax1[] = {
+	       "true", "Aprobado"
+	    };
+	    Object filax2[] = {
+	       "false", "No Aprobado"
+	    };
+	   
+	    listax.add(filax1);
+	    listax.add(filax2);
+	    rad_aprobado.setId("rad_aprobado");
+	    rad_aprobado.setRadio(listax);
+	    rad_aprobado.setValue(filax1);
+	    rad_aprobado.setVertical();
+	    
+       	//che_aprobado.setValue("true");
+     
+       	gri_guarda_reforma.getChildren().add(rad_aprobado);
        	
        	dia_datos_reforma.setId("dia_datos_reforma");
        	dia_datos_reforma.setTitle("Ingrese los Siguientes Datos para Realizar la Reforma");
@@ -153,6 +177,8 @@ public class pre_poa_reforma_fuente extends Pantalla {
        	txt_num_oficio.setId("txt_num_oficio");
        	txt_num_oficio.setSize(15);
        	gri_busca_reforma.getChildren().add(txt_num_oficio);
+
+
        	
        	dia_busca_resolucion.setId("dia_busca_resolucion");
        	dia_busca_resolucion.setTitle("Ingrese Nro. Resolución Para Buscar la Reforma");
@@ -235,18 +261,22 @@ public class pre_poa_reforma_fuente extends Pantalla {
 	}
 	public void calcularReforma(AjaxBehaviorEvent evt) {
 		//System.out.println(" entre actualizar ");
+		
 		tab_poa_reforma_fuenta.modificar(evt); //Siempre es la primera linea
+		eti_mensajesaldos.setValue("");
+		utilitario.addUpdate("eti_mensajesaldos");
 		double dou_valor_reforma=0;
 		double dou_valor_saldo=0;
 		double dou_valor_reforma_individual=0;
 		double dou_valor_certificado=0;
 		double total_ejecutado=0;
+		double dou_valor_total_reformado=0;
 		String mensaje="0";
 		
 		
+		int i = tab_poa_reforma_fuenta.getFilaActual();
 		
-		for (int i = 0; i < tab_poa_reforma_fuenta.getTotalFilas(); i++) {
-			TablaGenerica tab_poa_certificado= utilitario.consultar("select ide_prpfe,valor_certificado_prpfe from pre_poa_fuente_ejecucion where ide_prfuf = "+tab_poa_reforma_fuenta.getValor(i,"ide_prfuf")+" and ide_prpoa="+tab_poa_reforma_fuenta.getValor(i,"ide_prpoa"));
+		TablaGenerica tab_poa_certificado= utilitario.consultar("select ide_prpfe,valor_certificado_prpfe from pre_poa_fuente_ejecucion where ide_prfuf = "+tab_poa_reforma_fuenta.getValor(i,"ide_prfuf")+" and ide_prpoa="+tab_poa_reforma_fuenta.getValor(i,"ide_prpoa"));
 			if(tab_poa_certificado.getTotalFilas()>0){
 				dou_valor_certificado=Double.parseDouble(tab_poa_certificado.getValor("valor_certificado_prpfe"));
 				
@@ -302,19 +332,27 @@ public class pre_poa_reforma_fuente extends Pantalla {
 			double ejcutado_inicial=0;
 			double ejecucion=0;
 			double asi_inicial=0;
+						
+			System.out.println("total_ejecutado "+total_ejecutado+" valor_ingresado " +valor_ingresado);
 			
-			
-			//System.out.println("total_ejecutado "+total_ejecutado+" valor_ingresado " +valor_ingresado);
+			if(valor_ingresado<0){
+				valor_ingresado=valor_ingresado*(-1);
+				
+					if(valor_ingresado>total_ejecutado){
+						System.out.println("intrego ver saldo insuficiente "+total_ejecutado+"   xxx  "+valor_ingresado);
+						//utilitario.agregarMensajeError("Saldo Insuficiente", "No se puede ejecutar la reforma solo dispone de un saldo incluido el valor certificado de: "+total_ejecutado);
+						eti_mensajesaldos.setValue("<img src='imagenes/stop.png' /> No se puede ejecutar la reforma solo dispone de un saldo incluido el valor certificado de: "+total_ejecutado);
 
-				/*
-			if(total_ejecutado<valor_ingresado){
-				System.out.println("intrego ver saldo insuficiente "+total_ejecutado+"   xxx  "+valor_ingresado);
-				utilitario.agregarMensajeError("Saldo Insuficiente", "No se puede ejecutar la reforma solo dispone de un saldo incluido el valor certificado de: "+total_ejecutado);
-				tab_poa_reforma_fuenta.setValor(i, "valor_reformado_prprf", "0");
-				utilitario.addUpdate("tab_poa_reforma_fuenta");
-				break;
+						tab_poa_reforma_fuenta.setValor(i, "valor_reformado_prprf", "0");
+						
+						
+						//eti_valor_total.setValue(utilitario.getFormatoNumero("0", 3));
+						utilitario.addUpdateTabla(tab_poa_reforma_fuenta, "valor_reformado_prprf", "eti_mensajesaldos");
+						//return;
+				
+					}
+			
 			}
-			*/
        		TablaGenerica tabla1= utilitario.consultar(ser_presupuesto.getInicialFuenteFinanciamiento(tab_poa_reforma_fuenta.getValor(i,"ide_prfuf"), com_anio.getValue().toString()));
        		if(tabla1.getTotalFilas()>0){
        			asi_inicial=Double.parseDouble(tabla1.getValor("valor"));
@@ -342,21 +380,34 @@ public class pre_poa_reforma_fuente extends Pantalla {
     			}
        		}
 			//System.out.println("asi_inicial "+asi_inicial+" ejecucion x "+ejecucion);
-			/*
-       		if(asi_inicial<ejecucion){
-				System.out.println("intrego ver saldo insuficiente "+asi_inicial+"   xxx  "+ejecucion);
+			
+       		//if(asi_inicial<ejecucion){
+				//System.out.println("intrego ver saldo insuficiente "+asi_inicial+"   xxx  "+ejecucion);
 
-       			utilitario.agregarMensajeError("Supera Techo Inicial", "No se puede ejecutar la reforma la fuente de financiamiento posee un Techo Máximo de: "+asi_inicial);
-				tab_poa_reforma_fuenta.setValor(i, "valor_reformado_prprf", "0");
-				utilitario.addUpdate("tab_poa_reforma_fuenta");
-				break;
-       		}
-		*/
-		} 
+       			//utilitario.agregarMensajeError("Supera Techo Inicial", "No se puede ejecutar la reforma la fuente de financiamiento posee un Techo Máximo de: "+asi_inicial);
+				//tab_poa_reforma_fuenta.setValor(i, "valor_reformado_prprf", "0");
+				//utilitario.addUpdate("tab_poa_reforma_fuenta");
+				//break;
+       		//}
 		
-		
+       	// El siguiente for me permite sumar toda la columna de las reformas	
+		 for(int j=0;j<tab_poa_reforma_fuenta.getTotalFilas();j++){
+       		try {
+				//Obtenemos el valor de la cantidad
+				dou_valor_total_reformado +=Double.parseDouble(tab_poa_reforma_fuenta.getValor(j,"valor_reformado_prprf"));
+				
+				
+				BigDecimal big_valor_reforma=new BigDecimal(dou_valor_total_reformado);
+				big_valor_reforma=big_valor_reforma.setScale(2, RoundingMode.HALF_UP);
+				
+				dou_valor_total_reformado=Double.parseDouble(big_valor_reforma+"");
+				
+			} catch (Exception e) {
+				System.out.println("Error ingreso valor reformado "+e);
+			}
+		 }
 		//System.out.println(" actaulizco el valor "+dou_valor_reforma);
-		eti_valor_total.setValue(utilitario.getFormatoNumero(dou_valor_reforma, 3));
+		eti_valor_total.setValue(utilitario.getFormatoNumero(dou_valor_total_reformado, 3));
 		utilitario.addUpdate("eti_valor_total");
 	}
 	public void mostrarDialogoBusca(){
@@ -426,6 +477,9 @@ public class pre_poa_reforma_fuente extends Pantalla {
 	@Override
 	public void guardar() {
 		// TODO Auto-generated method stub
+		eti_mensajesaldos.setValue("");
+		utilitario.addUpdate("eti_mensajesaldos");
+		
 		if(dia_datos_reforma.isVisible()){
 		   // Inserto validando reforma por partida
 			if(rad_imprimir.getValue().equals("1") && eti_valor_total.getValue().equals("0")) {
@@ -434,7 +488,8 @@ public class pre_poa_reforma_fuente extends Pantalla {
 				borrarContadores(txt_num_resolucion_guarda.getValue().toString());
 				
 				for(int i=0;i<tab_poa_reforma_fuenta.getTotalFilas();i++){
-					String sql_actualiza="update pre_poa_reforma_fuente set fecha_prprf='"+cal_fecha_reforma.getFecha()+"',resolucion_prprf='"+txt_num_resolucion_guarda.getValue().toString()+"',aprobado_prprf='"+che_aprobado.getValue()+"' where ide_prprf="+tab_poa_reforma_fuenta.getValor(i, "ide_prprf");
+					
+					String sql_actualiza="update pre_poa_reforma_fuente set fecha_prprf='"+cal_fecha_reforma.getFecha()+"',resolucion_prprf='"+txt_num_resolucion_guarda.getValue().toString()+"',aprobado_prprf='"+rad_aprobado.getValue()+"' where ide_prprf="+tab_poa_reforma_fuenta.getValor(i, "ide_prprf");
 					utilitario.getConexion().ejecutarSql(sql_actualiza);
 					//actualizarSaldosReforma(tab_poa_reforma_fuenta.getValor(i, "ide_prpoa"), tab_poa_reforma_fuenta.getValor(i, "valor_reformado_prprf"), txt_num_resolucion_guarda.getValue().toString(), cal_fecha_reforma.getFecha(), tab_poa_reforma_fuenta.getValor(i, "saldo_actual_prprf"),che_aprobado.getValue().toString());
 					ser_presupuesto.trigActualizaReformaFuente(tab_poa_reforma_fuenta.getValor(i, "ide_prpoa"));
@@ -452,7 +507,7 @@ public class pre_poa_reforma_fuente extends Pantalla {
 				borrarContadores(txt_num_resolucion_guarda.getValue().toString());
 				
 				for(int i=0;i<tab_poa_reforma_fuenta.getTotalFilas();i++){
-					String sql_actualiza="update pre_poa_reforma_fuente set fecha_prprf='"+cal_fecha_reforma.getFecha()+"',resolucion_prprf='"+txt_num_resolucion_guarda.getValue().toString()+"',aprobado_prprf='"+che_aprobado.getValue()+"' where ide_prprf="+tab_poa_reforma_fuenta.getValor(i, "ide_prprf");
+					String sql_actualiza="update pre_poa_reforma_fuente set fecha_prprf='"+cal_fecha_reforma.getFecha()+"',resolucion_prprf='"+txt_num_resolucion_guarda.getValue().toString()+"',aprobado_prprf='"+rad_aprobado.getValue()+"' where ide_prprf="+tab_poa_reforma_fuenta.getValor(i, "ide_prprf");
 					utilitario.getConexion().ejecutarSql(sql_actualiza);
 					//actualizarSaldosReforma(tab_poa_reforma_fuenta.getValor(i, "ide_prpoa"), tab_poa_reforma_fuenta.getValor(i, "valor_reformado_prprf"), txt_num_resolucion_guarda.getValue().toString(), cal_fecha_reforma.getFecha(), tab_poa_reforma_fuenta.getValor(i, "saldo_actual_prprf"),che_aprobado.getValue().toString());
 					

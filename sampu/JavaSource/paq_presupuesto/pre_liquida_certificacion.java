@@ -1,5 +1,6 @@
 package paq_presupuesto;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,7 +97,8 @@ public class pre_liquida_certificacion extends Pantalla {
 	    tab_liquida_certificacion.getColumna("valor_total_prlce").setValorDefecto("0.00");
 	    tab_liquida_certificacion.getColumna("valor_total_prlce").setEtiqueta();
 	    tab_liquida_certificacion.getColumna("valor_total_prlce").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
-
+	    tab_liquida_certificacion.setTipoFormulario(true);
+	    tab_liquida_certificacion.getGrid().setColumns(6);
 		tab_liquida_certificacion.agregarRelacion(tab_detalle);
 		tab_liquida_certificacion.dibujar();
 		PanelTabla pat_liquida =new PanelTabla();
@@ -126,7 +128,7 @@ public class pre_liquida_certificacion extends Pantalla {
 		
 		
 		Division div_divi=new Division();
-		div_divi.dividir2(pat_liquida, pat_detalle, "50%", "H");
+		div_divi.dividir2(pat_liquida, pat_detalle, "30%", "H");
 		
 		agregarComponente(div_divi);
 
@@ -245,14 +247,15 @@ public class pre_liquida_certificacion extends Pantalla {
 					if(tab_consulta_poacer.getTotalFilas()>0){
 						for(int i=0;i<tab_consulta_poacer.getTotalFilas();i++){
 							tab_detalle.insertar();
-							tab_detalle.setValor(i, "ide_prpoa", tab_consulta_poacer.getValor(i, "ide_prpoa"));;
-							tab_detalle.setValor(i, "ide_prfuf", tab_consulta_poacer.getValor(i, "ide_prfuf"));;
-							tab_detalle.setValor(i, "valor_certificado_prdcl", tab_consulta_poacer.getValor(i, "valor_certificado_prpoc"));;
-							tab_detalle.setValor(i, "valor_liquidado_prdcl", tab_consulta_poacer.getValor(i, "total_liquidado"));;
-							tab_detalle.setValor(i, "activo_prdcl", "true");;
+							tab_detalle.setValor("valor_certificado_prdcl", tab_consulta_poacer.getValor(i, "valor_certificado_prpoc"));;
+							tab_detalle.setValor("valor_liquidado_prdcl", tab_consulta_poacer.getValor(i, "total_liquidado"));;
+							tab_detalle.setValor("saldo_liquidado_prdcl", "0");
+							tab_detalle.setValor("activo_prdcl", "true");;
+							tab_detalle.setValor("ide_prpoa", tab_consulta_poacer.getValor(i, "ide_prpoa"));;
+							tab_detalle.setValor("ide_prfuf", tab_consulta_poacer.getValor(i, "ide_prfuf"));;
 
 						}
-						tab_liquida_certificacion.setValor("valor_total_prlce", tab_detalle.getSumaColumna("valor_liquidado_prdcl")+"");
+						tab_liquida_certificacion.setValor("valor_total_prlce", utilitario.getFormatoNumero(tab_detalle.getSumaColumna("valor_liquidado_prdcl"),2)+"");
 					}
 					
 				
@@ -269,6 +272,7 @@ public class pre_liquida_certificacion extends Pantalla {
 					TablaGenerica tab_consulta_negativo=utilitario.consultar("select 1 as codigo,(-1)*"+tab_poa.getValor(i, "saldo_comprometer")+" as valor_liquidar");
 					
 					tab_detalle.setValor("valor_liquidado_prdcl",tab_consulta_negativo.getValor("valor_liquidar"));
+					tab_detalle.setValor("saldo_liquidado_prdcl", "0");
 					tab_detalle.setValor("activo_prdcl", "true");
 
 				}
@@ -304,6 +308,18 @@ public void calcularTotalLiquidacion(){
 	public void guardar() {
 		if(tab_liquida_certificacion.isFilaInsertada()){
 			ser_contabilidad.guardaSecuencial(ser_contabilidad.numeroSecuencial(par_modulosec_certificacion), par_modulosec_certificacion);
+		}
+		if(tab_liquida_certificacion.getValor("total_parcial_prlce").equals("1")){
+			double saldo=0;
+			try{
+			saldo=tab_detalle.getSumaColumna("saldo_liquidado_prdcl");
+			}
+			catch (Exception e){
+				utilitario.agregarMensaje("No existe valor", "El valor del saldo deb ser valido");
+			}
+			if (saldo !=0){
+				utilitario.agregarMensajeError("No se puede guardar", "Para una Liquidacion Total de la Certificación los Saldos deben ser Cero");
+			}
 		}
 		// TODO Auto-generated method stub
 		if(tab_liquida_certificacion.guardar()){
