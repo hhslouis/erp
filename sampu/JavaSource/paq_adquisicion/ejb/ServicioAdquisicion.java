@@ -56,7 +56,7 @@ public String getSolicitud (String ide_adsoc){
 		return tab_compra;	
 	}	
 	public String getTramite (String activo){
-		String tab_estado="SELECT a.ide_prtra,fecha_tramite_prtra,numero_oficio_prtra,total_compromiso_prtra " +
+		String tab_estado="SELECT a.ide_prtra,a.ide_prtra as nro_compromiso,fecha_tramite_prtra,numero_oficio_prtra,total_compromiso_prtra " +
 				" FROM pre_tramite a, cont_estado b" +
 				" WHERE a.ide_coest=b.ide_coest and activo_prtra in ("+activo+") " +
 				" order by numero_oficio_prtra";
