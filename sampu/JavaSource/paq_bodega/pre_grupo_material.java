@@ -21,6 +21,7 @@ private ServicioContabilidad ser_contabilidad = (ServicioContabilidad) utilitari
 		tab_grupo_material.setId("tab_grupo_material");
 		tab_grupo_material.setHeader("GRUPO MATERIAL");
 		tab_grupo_material.setTabla("bodt_grupo_material","ide_bogrm", 1);
+		tab_grupo_material.getColumna("ide_prfuf").setCombo("pre_fuente_financiamiento", "ide_prfuf", "detalle_prfuf", "");
 		tab_grupo_material.agregarRelacion(tab_cont_asiento);
 		tab_grupo_material.dibujar();
 		PanelTabla pat_grupo_material=new PanelTabla();
