@@ -371,7 +371,13 @@ public class Parametros {
         lis_parametros.add(new Parametro("14", "p_estado_nota_debito_factura","Indica el estado que cambia la factura cuando se realiza la nota de debito","14","cont_estado","ide_coest","detalle_coest"));
         lis_parametros.add(new Parametro("14", "p_modulo_nota_debito","Indica el modulo que pertenece a nota de debito","14","gen_modulo","ide_gemod","detalle_gemod"));
         lis_parametros.add(new Parametro("14", "p_modulo_nota_credito","Indica el modulo que pertenece a nota de credito","14","gen_modulo","ide_gemod","detalle_gemod"));
-
+        lis_parametros.add(new Parametro("14", "p_retencion_bienes_10","Indica las retenciones del 10% por bienes para el ATS","14","tes_impuesto","ide_teimp","detalle_teimp"));
+        lis_parametros.add(new Parametro("14", "p_retencion_servicios_20","Indica las retenciones del 20% por bienes para el ATS","14","tes_impuesto","ide_teimp","detalle_teimp"));
+        lis_parametros.add(new Parametro("14", "p_retencion_bienes_30","Indica las retenciones del 30% por bienes para el ATS","14","tes_impuesto","ide_teimp","detalle_teimp"));
+        lis_parametros.add(new Parametro("14", "p_retencion_servicios_70","Indica las retenciones del 70% por bienes para el ATS","14","tes_impuesto","ide_teimp","detalle_teimp"));
+        lis_parametros.add(new Parametro("14", "p_retencion_iva_100","Indica las retenciones del 100% por bienes para el ATS","14","tes_impuesto","ide_teimp","detalle_teimp"));
+        lis_parametros.add(new Parametro("14", "p_autorizacion_retencionsri_ats","Indica el numero de autorizacion de retencion por el sri","144789899"));
+       
         /*
          *  ADQUISISCIONES = 15
          * */
@@ -381,6 +387,7 @@ public class Parametros {
         lis_parametros.add(new Parametro("15", "p_cotizacion_adquisicion","Indica el estado de la cotizacion ","11","cont_estado","ide_coest", "detalle_coest"));
         lis_parametros.add(new Parametro("15", "p_certificacion_adquisicion","Indica el estado de la certificacion de  adquisicion ","12","cont_estado","ide_coest", "detalle_coest"));
         lis_parametros.add(new Parametro("15", "p_solicitud_pago_adquisicion","Indica el estado de la solicitud pago adquisicion  ","13","cont_estado","ide_coest", "detalle_coest"));
+        lis_parametros.add(new Parametro("15", "p_solicitud_por_pagar","Indica el estado de la solicitud de compra que esta por pagarse","13","cont_estado","ide_coest", "detalle_coest"));
         lis_parametros.add(new Parametro("15", "p_empleado_adjudicador","Indica el listado de los empleados adjudicadores  ","13","gth_empleado","ide_gtemp", "documento_identidad_gtemp,apellido_paterno_gtemp, apellido_materno_gtemp, primer_nombre_gtemp,segundo_nombre_gtemp"));
         lis_parametros.add(new Parametro("15", "p_empleado_adjudica_infima","Permite filtrar el empleado responsable de adjudicar Compras por infimas Cuantìas (Coordinador Administrativo)","13","gth_empleado","ide_gtemp", "documento_identidad_gtemp,apellido_paterno_gtemp, apellido_materno_gtemp, primer_nombre_gtemp,segundo_nombre_gtemp"));
         lis_parametros.add(new Parametro("15", "p_empleado_adjudica_todos","Permite filtrar el empleado responsable de adjudicar Compras que no sean por infimas Cuantìas (Gerente General)","13","gth_empleado","ide_gtemp", "documento_identidad_gtemp,apellido_paterno_gtemp, apellido_materno_gtemp, primer_nombre_gtemp,segundo_nombre_gtemp"));
@@ -431,7 +438,8 @@ public class Parametros {
         lis_parametros.add(new Parametro("17", "p_nombre_coordinador_fin", "Indica el nombre del Coordinador Financiero", "Ing. Juan Flores"));
         lis_parametros.add(new Parametro("17", "p_nombre_jefe_presupuesto", "Indica el nombre del Jefe de Presupuesto", "Ing. Salasar Mishell"));
         lis_parametros.add(new Parametro("17", "p_anio_vigente", "Indica el año vigente","8","gen_anio","ide_geani", "detalle_geani"));
-     
+        lis_parametros.add(new Parametro("17", "p_modulo_ingresos","Indica el modulo de Ingresos", "17","gen_modulo","ide_gemod","detalle_gemod"));
+    
 
         /*
          * TESORERIA=18
