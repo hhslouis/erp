@@ -422,7 +422,21 @@ public String getMovimientosContablesSumaDebeHaber(String ide_geani,String ide_g
 	    System.out.println("cargfando para mayorizar "+sql);
 		return sql;
 }
-
+/**
+ * Metodo que devuelve los asientos contables con las respectivas sumas al debe y al haber por fechas
+ * @return String sql de los movimientos contables
+ */
+public String getMovimientosContablesSumaDebeHaberFecha(String ide_geani,String estado,String ide_cotia,String fecha_inicial,String fecha_final){
+	    String sql="select ide_cocac,sum(debe) as debe,sum(haber) as haber"
+	    		+" from cont_movimiento a"
+	    		+" left join ( select (case when debe_codem is null then 0 else debe_codem end) as debe," 
+	    			+" 	(case when haber_codem is null then 0 else haber_codem end) as haber,ide_comov,ide_cocac"
+	    			+" 	from cont_detalle_movimiento ) b on  a.ide_comov = b.ide_comov"
+	    			+" 	where  ide_geani = 8 and not ide_cocac is null and not ide_cotia= 4 and mov_fecha_comov between '2016-01-01' and '2016-01-31'"
+	    			+" 	group by ide_cocac"; 
+	    System.out.println("cargfando para mayorizar fecha"+sql);
+		return sql;
+}
 /**
  * Metodo que permite generar el balance de comprobaciòn
  * @param ide_geani recibe el año fiscal para la generaciòn del balance inicial
@@ -543,9 +557,129 @@ public String getConsultaAnticipos(){
 	    		+" left join tes_comprobante_pago b on a.ide_nrant = b.ide_nrant"
 	    		+" left join nrh_motivo_anticipo c on a.ide_nrmoa = c.ide_nrmoa"
 	    		+" left join gth_empleado d on a.ide_gtemp = d.ide_gtemp"
-	    		+" where aprobado_nrant =true "
+	    		+" where aprobado_nrant =true and a.activo_nrant=true "
 	    		+" and b.ide_nrant is null";
 		return sql;
+}
+public void generarBalComprobacion(String anio,String fecha_inicial,String fecha_final,String tipo_asiento){
+	String sql_borra_tabla="delete from cont_balance_comprobacion;";
+	utilitario.getConexion().ejecutarSql(sql_borra_tabla);
+	// inserto balance de comprobacion
+	String sql="insert into cont_balance_comprobacion (ide_cobac,ide_cocac,ide_geani,debe1_cobac,haber1_cobac,debe2_cobac,haber2_cobac,debe3_cobac,haber3_cobac"
+			+" ,debe4_cobac,haber4_cobac,debe5_cobac,haber5_cobac,debe6_cobac,haber6_cobac,debe7_cobac,haber7_cobac,debe8_cobac,haber8_cobac,debe9_cobac,haber9_cobac"
+			+" ,debe10_cobac,haber10_cobac,debe11_cobac,haber11_cobac,debe12_cobac,haber12_cobac,debe_inicial_cobac,haber_inicial_cobac,debe_acumulado_cobac,haber_acumulado_cobac"
+			+" ,debe_periodo_cobac,haber_periodo_cobac,debe_saldo_cobac,haber_saldo_cobac,fecha_inicial_cobac,fecha_final_cobac)"
+			+" select row_number() over(order by a.ide_cocac) + (select (case when max(ide_cobac) is null then 0 else max(ide_cobac) end) as codigo from cont_balance_comprobacion) as codigo,"
+			+" a.ide_cocac,a.ide_geani,0 as debe1, 0 as haber1,0 as debe2, 0 as haber2,0 as debe3, 0 as haber3,0 as debe4, 0 as haber4,0 as debe5, 0 as haber5"
+			+" ,0 as debe6, 0 as haber6,0 as debe7, 0 as haber7,0 as debe8, 0 as haber8,0 as debe9, 0 as haber9,0 as debe10, 0 as haber10"
+			+" ,0 as debe11, 0 as haber11,0 as debe12, 0 as haber12,0 as debe_inicial_cobac,0 as haber_inicial_cobac,0 as debe_acumulado_cobac,0 as haber_acumulado_cobac"
+			+" ,0 as debe_periodo_cobac,0 as haber_periodo_cobac,0 as debe_saldo_cobac,0 as haber_saldo_cobac,'"+fecha_inicial+"' as fecha_inicial_cobac,'"+fecha_final+"' as fecha_final_cobac"
+			+" from ( select a.ide_cocac,ide_geani "
+				+" 	from cont_catalogo_cuenta a, cont_vigente b where a.ide_cocac= b.ide_cocac"
+				+" 	and ide_geani ="+anio+" group by a.ide_cocac,ide_geani ) a"
+				+" 	left join cont_balance_comprobacion b on a.ide_cocac = b.ide_cocac and a.ide_geani = b.ide_geani"
+				+" 	where b.ide_cocac is null;";
+	//System.out.println("imprimir sql insert "+sql);
+	utilitario.getConexion().ejecutarSql(sql);
+	
+	// actualizo bance inicial
+	String sql_inicial ="update cont_balance_comprobacion"
+			+" set debe_inicial_cobac = debe ,"
+			+" haber_inicial_cobac=haber"
+			+" from ( "
+				+" 	select ide_cocac,sum(debe) as debe,sum(haber) as haber"
+				+" 	from cont_movimiento a"
+				+" 	left join ( select (case when debe_codem is null then 0 else debe_codem end) as debe," 
+				+" 			(case when haber_codem is null then 0 else haber_codem end) as haber,ide_comov,ide_cocac"
+				+" 			from cont_detalle_movimiento ) b on  a.ide_comov = b.ide_comov"
+				+" 			where  ide_geani = "+anio+"  and  ide_cotia= "+tipo_asiento+" and not ide_cocac is null"
+				+" 			group by ide_cocac"
+				+" 	) a"
+				+" 	where a.ide_cocac = cont_balance_comprobacion.ide_cocac";
+	
+	utilitario.getConexion().ejecutarSql(sql_inicial);
+
+	String var_sql_periodo=" and mov_fecha_comov between '"+fecha_inicial+"' and '"+fecha_final+"'";
+	String var_sql_acumulado=" and 1 !=1 ";
+	
+	TablaGenerica tab_mes_actual=utilitario.consultar("select 1 as codigo, 2 as resultado from tes_caja where not extract(month from cast('"+fecha_inicial+"' as date)) =extract(month from cast('"+fecha_final+"' as date))");
+	if(tab_mes_actual.getTotalFilas()>0){
+		var_sql_periodo=" and mov_fecha_comov between cast (date_trunc('month',cast('"+fecha_final+"' as date))  as date) and '"+fecha_final+"'";
+		var_sql_acumulado=" and 1=1";
+	}
+	// actualizo ejecutado periodo
+	String sql_periodo="update cont_balance_comprobacion"
+			+" 	set debe_periodo_cobac = debe ,"
+			+" 	haber_periodo_cobac = haber"
+			+" 	from ( "
+				+" 		select ide_cocac,round(sum(debe),2) as debe,round(sum(haber),2) as haber"
+				+" 		from cont_movimiento a"
+				+" 		left join ( select (case when debe_codem is null then 0 else debe_codem end) as debe," 
+				+" 				(case when haber_codem is null then 0 else haber_codem end) as haber,ide_comov,ide_cocac"
+				+" 				from cont_detalle_movimiento ) b on  a.ide_comov = b.ide_comov"
+				+" 				where  ide_geani = "+anio+" and not ide_cocac is null and not ide_cotia= "+tipo_asiento+var_sql_periodo
+				+" 				group by ide_cocac"
+				+" 		) a"
+				+" 		where a.ide_cocac = cont_balance_comprobacion.ide_cocac";
+	
+	//System.out.println("sql_periodo "+sql_periodo);
+	utilitario.getConexion().ejecutarSql(sql_periodo);
+	
+	// actualizo ejecutado acumulado
+	String sql_acumulado="update cont_balance_comprobacion"
+			+" set debe_acumulado_cobac = debe ,"
+			+" haber_acumulado_cobac = haber"
+			+" from ( "
+				+"	select ide_cocac,round(sum(debe),2) as debe,round(sum(haber),2) as haber"
+				+"	from cont_movimiento a"
+				+"	left join ( select (case when debe_codem is null then 0 else debe_codem end) as debe," 
+				+"			(case when haber_codem is null then 0 else haber_codem end) as haber,ide_comov,ide_cocac"
+				+"			from cont_detalle_movimiento ) b on  a.ide_comov = b.ide_comov"
+				+"			where  ide_geani = "+anio+" and not ide_cocac is null and not ide_cotia= "+tipo_asiento+" and mov_fecha_comov between '"+fecha_inicial+"' and cast (  extract (year from cast('"+fecha_final+"' as date))||'-'|| extract (month from cast('"+fecha_final+"' as date)) -1 ||'-'||extract (day from (select date_trunc('month',cast((cast('"+fecha_final+"' as date) - interval '1 month') as date)) +'1month' ::interval -'1sec' ::interval))  as date)"
+				+"	group by ide_cocac"
+				+"	) a where a.ide_cocac = cont_balance_comprobacion.ide_cocac "+var_sql_acumulado;
+	//System.out.println("sql_periodo "+sql_acumulado);
+	utilitario.getConexion().ejecutarSql(sql_acumulado);
+	
+	TablaGenerica tab_nivel=utilitario.consultar("select 1 as codigo, max(nivel_cocac) as maximo from cont_catalogo_cuenta");
+	int int_nivel=Integer.parseInt(tab_nivel.getValor("maximo"));
+	
+	for(int i=0;i <int_nivel;i++){
+		
+		int valor=int_nivel-i;
+		String sql_actualiza_niveles="update cont_balance_comprobacion"
+				+" set debe_inicial_cobac= debe_inicial,"
+				+" haber_inicial_cobac=haber_inicial,"
+				+" debe_acumulado_cobac=debe_acumulado,"
+				+" haber_acumulado_cobac=haber_acumulado,"
+				+" debe_periodo_cobac=debe_periodo,"
+				+" haber_periodo_cobac=haber_periodo"
+				+" from ("
+					+"	select con_ide_cocac,round(sum(debe_inicial_cobac),2) as debe_inicial,round(sum(haber_inicial_cobac),2) as haber_inicial,"
+					+"	round(sum(debe_acumulado_cobac),2) as debe_acumulado, round(sum(haber_acumulado_cobac),2) as haber_acumulado,round(sum(debe_periodo_cobac),2) as debe_periodo,round(sum(haber_periodo_cobac),2) as haber_periodo"
+					+"	from  cont_catalogo_cuenta a ,cont_balance_comprobacion b"
+					+"	where a.ide_cocac = b.ide_cocac and nivel_cocac ="+valor+" group by con_ide_cocac"
+					+"	) a where a.con_ide_cocac = cont_balance_comprobacion.ide_cocac";
+		//System.out.println("sql_actualiza_niveles "+sql_actualiza_niveles);
+
+		utilitario.getConexion().ejecutarSql(sql_actualiza_niveles);
+		}
+	
+	String sql_acumulado_total="update cont_balance_comprobacion"
+			+" set debe_acumulado_cobac=debe_inicial_cobac+debe_acumulado_cobac,"
+			+" haber_acumulado_cobac=haber_inicial_cobac+haber_acumulado_cobac";
+	utilitario.getConexion().ejecutarSql(sql_acumulado_total);
+
+	
+	String sql_saldo="update cont_balance_comprobacion"
+			+" set debe_saldo_cobac =saldo_deudor,"
+			+" haber_saldo_cobac = saldo_acreedor"
+			+" from ("
+				+" 	select a.ide_cocac,(case when saldo_cocac =1 then (debe_acumulado_cobac +debe_periodo_cobac) - (haber_acumulado_cobac + haber_periodo_cobac) else 0 end) as saldo_deudor,"
+				+" 	(case when saldo_cocac =2 then (haber_acumulado_cobac + haber_periodo_cobac) - (debe_acumulado_cobac +debe_periodo_cobac) else 0 end) as saldo_acreedor from cont_balance_comprobacion a, cont_catalogo_cuenta b where a.ide_cocac=b.ide_cocac"
+				+" 	) a where a.ide_cocac = cont_balance_comprobacion.ide_cocac";
+	
+	utilitario.getConexion().ejecutarSql(sql_saldo);
 }
 }
 
