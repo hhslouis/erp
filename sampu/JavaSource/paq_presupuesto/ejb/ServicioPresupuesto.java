@@ -42,6 +42,38 @@ public class ServicioPresupuesto {
 	 return tab_presupesto;
 			 
  }
+ 
+public String getCatalogoPresupuestario2(String activo){
+	 
+	 String tab_presupesto="SELECT ide_prcla,codigo_clasificador_prcla || ' - ' || descripcion_clasificador_prcla " +
+	 		" FROM pre_clasificador where activo_prcla in (" +activo+")"+
+				" ORDER BY codigo_clasificador_prcla";
+	 return tab_presupesto;
+			 
+ }
+ 
+ public String getCatalogoPoa(String activo){
+	 
+	 String tab_presupesto="select a.ide_prfup"
+	 	  + " , substring(programa || ' - ' || detalle_programa from 1 for 39) as programa "
+	  	  + ", substring(' - ' || proyecto || ' - ' || detalle_proyecto from 1 for 40) as proyecto "
+		  + ", substring(' - ' || producto || ' - ' || detalle_producto from 1 for 40) as producto "
+		  + ", ' - SUBACTIVIDAD - ' || detalle_subactividad || ' - CODIGO - ' || codigo_subactividad as subactividad "
+		  +"from ( select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_subactividad,detalle_prfup as detalle_subactividad,detalle_prnfp as subactividad from pre_funcion_programa a, pre_nivel_funcion_programa b  "
+		  +"where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =5 ) a ,   "
+		  +"( select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_actividad,detalle_prfup as detalle_actividad,detalle_prnfp as actividad  "
+		  +"from pre_funcion_programa a, pre_nivel_funcion_programa b where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =4 ) b,    "
+		  +"( select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_producto,detalle_prfup as detalle_producto,detalle_prnfp as producto, codigo_pry_prd_prfup as cod_prod   "
+		  +"from pre_funcion_programa a, pre_nivel_funcion_programa b where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =3 ) c,       "
+		  +"( select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_proyecto,detalle_prfup as detalle_proyecto,detalle_prnfp as proyecto, codigo_pry_prd_prfup as cod_pry   "
+		  +"from pre_funcion_programa a, pre_nivel_funcion_programa b where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =2 ) d,   "
+		  +"( select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_programa,detalle_prfup as detalle_programa,detalle_prnfp as programa   "
+		  +"from pre_funcion_programa a, pre_nivel_funcion_programa b where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =1 ) e   "
+		  +"where a.pre_ide_prfup = b.ide_prfup and b.pre_ide_prfup = c.ide_prfup and c.pre_ide_prfup = d.ide_prfup and d.pre_ide_prfup = e.ide_prfup; ";
+	 return tab_presupesto;
+			 
+ }
+ 
  public TablaGenerica getTablaCatalogoPresupuestario(String ideClasificador){
 	 
 	 TablaGenerica tab_presupesto=utilitario.consultar("SELECT ide_prcla,codigo_clasificador_prcla,descripcion_clasificador_prcla " +
@@ -57,7 +89,7 @@ public class ServicioPresupuesto {
 	
 }
  public String getCatalogoContabilizar(String tramite_presupuestario,String tipo_mov_presupuestario){
-	String tab_funcion=" select ide_prasp,a.ide_prcla, codigo_clasificador_prcla,descripcion_clasificador_prcla ,cue_codigo_cocac,cue_descripcion_cocac,d.ide_gelua,detalle_gelua,devengado,ide_prmop"
+	String tab_funcion=" select ide_prasp,a.ide_prcla,cue_codigo_cocac,cue_descripcion_cocac, codigo_clasificador_prcla,descripcion_clasificador_prcla ,d.ide_gelua,detalle_gelua,devengado,ide_prmop"
 			+" from pre_asociacion_presupuestaria a, pre_clasificador b,cont_catalogo_cuenta c, gen_lugar_aplica d"
 			+" where a.ide_prcla = b.ide_prcla and a.ide_cocac= c.ide_cocac and a.ide_gelua = d.ide_gelua"
 			+" and b.ide_prcla in ("
@@ -68,6 +100,23 @@ public class ServicioPresupuesto {
 	return tab_funcion;
 	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 TablaGenerica getTablaGenericaFuncionPro(String ideanio){
 	TablaGenerica tab_funcion_progra=utilitario.consultar("select ide_prfup,detalle_prfup from pre_funcion_programa " +
 			" where ide_prfup in (select ide_prfup from cont_vigente where ide_geani=" +ideanio+
@@ -77,7 +126,7 @@ TablaGenerica getTablaGenericaFuncionPro(String ideanio){
 	
 }
 public String getTramite (String activo){
-	String tab_tramite="select ide_prtra,ide_prtra as nro_compromiso,numero_oficio_prtra from pre_tramite where activo_prtra in ("+activo+") " +
+	String tab_tramite="select ide_prtra,ide_prtra as nro_compromiso,numero_oficio_prtra,fecha_tramite_prtra,observaciones_prtra from pre_tramite where activo_prtra in ("+activo+") " +
 			" order by numero_oficio_prtra";
 	return tab_tramite;
 	
@@ -88,6 +137,21 @@ public TablaGenerica getTablaGenericaTramite (String ide_prtra ){
 			" order by numero_oficio_prtra");
 	return tab_tramite;
 }
+
+public TablaGenerica getTablaGenericaComp (String ide_prtra ){
+	TablaGenerica tab_tramite=utilitario.consultar("select distinct b.ide_prpoa,b.ide_prfuf,a.ide_prtra,b.comprometido_prpot,b.ide_prpot,(case when valor_devengado is null then 0 else valor_devengado end) as devengado, "
+			+"b.comprometido_prpot - (case when valor_devengado is null then 0 else valor_devengado end) as saldo_devengar,observaciones_prtra "
+			+"from pre_tramite a "
+			+"left join pre_poa_tramite b on a.ide_prtra = b.ide_prtra "
+			+"left join (select b.ide_prpoa,a.ide_prtra,a.ide_prfuf,comp.ide_prpot, sum(devengado_prmen) as valor_devengado " 	
+			+"from pre_mensual a, pre_anual b, pre_poa_tramite comp "					
+			+"where a.ide_pranu = b.ide_pranu and a.ide_prfuf=comp.ide_prfuf and  a.ide_prtra=comp.ide_prtra and b.ide_prpoa=comp.ide_prpoa "			
+			+"group by b.ide_prpoa,a.ide_prtra,a.ide_prfuf,comp.ide_prpot ) c on b.ide_prpot = c.ide_prpot where a.ide_prtra in ("+ide_prtra+")");
+	tab_tramite.imprimirSql();
+
+	return tab_tramite;
+}
+
 public String getPoa (String ide_geani,String activo,String presupuesto){
 	String tab_poa=("select a.ide_prpoa,detalle_subactividad,presupuesto_inicial_prpoa,codigo_clasificador_prcla,codigo_subactividad,detalle_programa,descripcion_clasificador_prcla,programa," +
 			" detalle_proyecto,proyecto,detalle_producto,producto,detalle_actividad,actividad," +
@@ -107,15 +171,17 @@ public String getPoa (String ide_geani,String activo,String presupuesto){
 			" from pre_funcion_programa a, pre_nivel_funcion_programa b where a.ide_prnfp = b.ide_prnfp and a.ide_prnfp =1) e where a.pre_ide_prfup = b.ide_prfup" +
 			" and b.pre_ide_prfup = c.ide_prfup and c.pre_ide_prfup = d.ide_prfup and d.pre_ide_prfup = e.ide_prfup ) f on a.ide_prfup = f.ide_prfup" +
 			" left join gen_area g on a.ide_geare=g.ide_geare where a.ide_geani= "+ide_geani+" and activo_prpoa in ("+activo+") and ejecutado_presupuesto_prpoa in ("+presupuesto+") order by codigo_subactividad,a.ide_prpoa");
-		return tab_poa;
+	
+	System.out.println("getPoa: "+tab_poa);
+	return tab_poa;
 }  
 public String cetificacion(String anio){
 	String sql="select ide_prcer,nro_certificacion_prcer,detalle_prcer,num_documento_prcer,valor_certificacion_prcer from pre_certificacion where ide_geani in ("+anio+") order by num_documento_prcer";
 	return sql;
 }
 public String getPoaNombre (String ide_geani){
-	String tab_poa=("select a.ide_prpoa,'Partida Presupuestaria:   '||codigo_clasificador_prcla as codigo_clasificador_prcla,'	|	Codigo SUB-ACTIVIDAD:	'||codigo_subactividad as codigo_subactividad,'		|	Programa: 	'||detalle_programa as detalle_programa,'	|	Proyecto: 	'||detalle_proyecto as detalle_proyecto,'	|	Producto: 	'||detalle_producto as detalle_producto,"
-			+" '	|	Nombre Cuenta Presupuestaria: 	'||descripcion_clasificador_prcla as descripcion_clasificador_prcla,'	|	Actividad:	 '||detalle_actividad as detalle_actividad,'	|	Sub Actividad:	'||detalle_subactividad as detalle_subactividad"
+	String tab_poa=("select a.ide_prpoa,'Partida Presupuestaria:   '|| case when codigo_clasificador_prcla is null then 'N/A' else codigo_clasificador_prcla end as codigo_clasificador_prcla,'	|	Codigo SUB-ACTIVIDAD:	'||codigo_subactividad as codigo_subactividad,'		|	Programa: 	'||detalle_programa as detalle_programa,'	|	Proyecto: 	'||detalle_proyecto as detalle_proyecto,'	|	Producto: 	'||detalle_producto as detalle_producto,"
+			+" '	|	Nombre Cuenta Presupuestaria: 	'|| case when descripcion_clasificador_prcla is null then 'N/A' else descripcion_clasificador_prcla end as descripcion_clasificador_prcla,'	|	Actividad:	 '||detalle_actividad as detalle_actividad,'	|	Sub Actividad:	'||detalle_subactividad as detalle_subactividad"
 			+" from pre_poa a left join  gen_anio b on a.ide_geani= b.ide_geani left join pre_clasificador c on a.ide_prcla = c.ide_prcla left join" 
 			+" (select a.ide_prfup,codigo_subactividad,detalle_subactividad,subactividad,detalle_actividad,actividad,detalle_producto,producto,detalle_proyecto,"
 			+" proyecto,detalle_programa ,programa from (select ide_prfup ,pre_ide_prfup,codigo_prfup as codigo_subactividad,detalle_prfup as detalle_subactividad,"
@@ -185,9 +251,11 @@ public String getPoaSaldosFuenteFinanciamiento(String ide_geani,String ide_prfuf
 			+" from ("
 			+" select ide_prpoa,a.ide_prfuf,detalle_prfuf,sum(valor_financiamiento_prpof ) as valor_asignado"
 			+" from pre_poa_financiamiento a, pre_fuente_financiamiento b where a.ide_prfuf = b.ide_prfuf group by ide_prpoa,a.ide_prfuf,detalle_prfuf"
+
 			+" ) a left join ("
 			+" select ide_prpoa,ide_prfuf,sum(valor_reformado_prprf) as valor_reformado from pre_poa_reforma_fuente group by ide_prpoa,ide_prfuf"
 			+" ) b on a.ide_prpoa = b.ide_prpoa and a.ide_prfuf = b.ide_prfuf"
+
 			+" ) b on a.ide_prpoa = b.ide_prpoa where b.ide_prfuf ="+ide_prfuf
 			+" order by detalle_subactividad,a.ide_prpoa,b.ide_prfuf";
 	      if(tipo.equals("1")){
@@ -214,11 +282,12 @@ public TablaGenerica getTablaGenericaCert(String ide_prpoa) {
 	
 }
 public String getSaldoPoa(String ide_prpoa){
-	String tab_programa=("select a.ide_prpoa,valor_financiamiento_prpof + (case when valor_reformado is null then 0 else valor_reformado end )- (case when valor_certificado_prpoc is null then 0 else valor_certificado_prpoc end) as saldo_poa,c.ide_prfuf,valor_financiamiento_prpof,"
-			+" valor_certificado_prpoc,valor_reformado from pre_poa a left join pre_poa_financiamiento c on a.ide_prpoa=c.ide_prpoa" 
+	String tab_programa=("select a.ide_prpoa,(valor_financiamiento_prpof + (case when valor_reformado is null then 0 else valor_reformado end )) - ((case when valor_certificado_prpoc is null then 0 else valor_certificado_prpoc end) + (case when valor_liquidado is null then 0 else valor_liquidado end)-(case when valor_liquidado is null then 0 else valor_liquidado end)) as saldo_poa,"
+			+" c.ide_prfuf,valor_financiamiento_prpof,valor_certificado_prpoc,valor_reformado,valor_liquidado from pre_poa a left join pre_poa_financiamiento c on a.ide_prpoa=c.ide_prpoa"
 			+" left join (select (case when  sum(valor_certificado_prpoc) is null then 0 else sum(valor_certificado_prpoc) end) as valor_certificado_prpoc,ide_prpoa,ide_prfuf from pre_poa_certificacion group by ide_prpoa,ide_prfuf) b on a.ide_prpoa = b.ide_prpoa and b.ide_prfuf = c.ide_prfuf"
-			+" left join ( select sum(valor_reformado_prprf) as valor_reformado,ide_prpoa,ide_prfuf from pre_poa_reforma_fuente group by ide_prpoa,ide_prfuf) d on a.ide_prpoa = d.ide_prpoa and d.ide_prfuf=c.ide_prfuf"
-			+" where a.ide_prpoa = "+ide_prpoa);
+				+" left join ( select sum(valor_reformado_prprf) as valor_reformado,ide_prpoa,ide_prfuf from pre_poa_reforma_fuente group by ide_prpoa,ide_prfuf) d on a.ide_prpoa = d.ide_prpoa and d.ide_prfuf=c.ide_prfuf"
+				+" left join (select sum(valor_liquidado_prdcl) as valor_liquidado,ide_prpoa,ide_prfuf from  pre_detalle_liquida_certif group by ide_prpoa,ide_prfuf) e on a.ide_prpoa = e.ide_prpoa and b.ide_prfuf=e.ide_prfuf"
+				+" where a.ide_prpoa = "+ide_prpoa);
 	return tab_programa;
 	
 }
@@ -229,13 +298,18 @@ public String getPrograma (String activo){
 	return tab_programa;
 	
 }
+public String getTotalCertificadoPoa (String ide_prcer){
+	String tab_certificacion=("select ide_prcer,ide_prpoa,sum(valor_certificado_prpoc)  as total_certificado from pre_poa_certificacion where ide_prcer in ("+ide_prcer+") group by ide_prcer,ide_prpoa");
+	return tab_certificacion;
+	
+}
 public TablaGenerica getTablaGenericaPrograma(String ide_prpro){
 	TablaGenerica tab_programa=utilitario.consultar("select  ide_prpro,cod_programa_prpro from pre_programa where ide_prpro in ("+ide_prpro+")" +
 			" order by cod_programa_prpro");
 	return tab_programa;
 }
 public String getCertificacion(String activo){
-	String tab_certificacion=("select ide_prcer,nro_certificacion_prcer,num_documento_prcer,detalle_prcer,fecha_prcer " +
+	String tab_certificacion=("select ide_prcer,nro_certificacion_prcer,num_documento_prcer,fecha_prcer,detalle_prcer " +
 			"from pre_certificacion where activo_prcer  in ("+activo+") order by num_documento_prcer");
 	return tab_certificacion;
 	
@@ -412,7 +486,7 @@ public void trigEjecutaCertificacion(String ide_prpoa,String ide_prfuf){
 	 sql="update pre_poa_fuente_ejecucion set valor_certificado_prpfe=valor from ("
 			 +"  select ide_prpoa,sum(valor_certificado_prpoc) as valor,activo_prpoc,ide_prfuf from pre_poa_certificacion where activo_prpoc = true and ide_prpoa="+ide_prpoa+" and ide_prfuf ="+ide_prfuf+" group by ide_prpoa,activo_prpoc,ide_prfuf"
 		 +" ) a where a.ide_prpoa = pre_poa_fuente_ejecucion.ide_prpoa  and a.ide_prfuf = pre_poa_fuente_ejecucion.ide_prfuf; ";
-	utilitario.getConexion().ejecutarSql(sql);
+	 utilitario.getConexion().ejecutarSql(sql);
 
 }
 public void trigActualizaCertificadoPoa(String ide_prpoa){
