@@ -9,6 +9,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 import framework.aplicacion.TablaGenerica;
 import framework.componentes.Boton;
 import framework.componentes.Combo;
+import framework.componentes.Confirmar;
 import framework.componentes.Division;
 import framework.componentes.Etiqueta;
 import framework.componentes.PanelTabla;
@@ -35,6 +36,8 @@ public class pre_certificacion extends Pantalla{
 	private Reporte rep_reporte = new Reporte();
 	private SeleccionFormatoReporte self_reporte = new SeleccionFormatoReporte();
 	private Map map_parametros = new HashMap();
+	
+	private Confirmar con_eliminar = new Confirmar();
 
 
   
@@ -160,6 +163,12 @@ private ServicioSeguridad ser_seguridad = (ServicioSeguridad) utilitario.instanc
 		set_poa.getTab_seleccion().getColumna("NUM_RESOLUCION_PRPOA").setFiltro(true);
 		set_poa.getBot_aceptar().setMetodo("aceptarPoa");
 		agregarComponente(set_poa);
+		
+		con_eliminar.setId("con_eliminar");
+		con_eliminar.setMessage("ESTA SEGURO DE ELIMINAR");
+		con_eliminar.setTitle("CONFIRMACION ELIMINACION ");
+		con_eliminar.getBot_aceptar().setMetodo("eliminar");
+		agregarComponente(con_eliminar);
 
 	}
 	
@@ -386,10 +395,19 @@ public void aceptarReporte(){
 
 	@Override
 	public void eliminar() {
-		// TODO Auto-generated method stub
-		
-		utilitario.getTablaisFocus().eliminar();
+
+		if(con_eliminar.isVisible()){
+			if(tab_poa_certificacion.isFocus()){
+			tab_poa_certificacion.eliminar();
+			tab_poa_certificacion.guardar();
+			}			
+			guardarPantalla();
+			con_eliminar.cerrar();
+		}
 		//calcularCertificacion ();
+		else {
+			con_eliminar.dibujar();
+		}
 	}
 
 	public Tabla getTab_certificacion() {
@@ -452,6 +470,14 @@ public void aceptarReporte(){
 
 	public void setMap_parametros(Map map_parametros) {
 		this.map_parametros = map_parametros;
+	}
+
+	public Confirmar getCon_eliminar() {
+		return con_eliminar;
+	}
+
+	public void setCon_eliminar(Confirmar con_eliminar) {
+		this.con_eliminar = con_eliminar;
 	}
 	
 
