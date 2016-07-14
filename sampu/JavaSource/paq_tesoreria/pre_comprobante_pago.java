@@ -9,6 +9,8 @@ import java.util.Map;
 import javax.ejb.EJB;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import org.codehaus.groovy.tools.shell.commands.SetCommand;
+
 import framework.aplicacion.TablaGenerica;
 import framework.componentes.Boton;
 import framework.componentes.Calendario;
@@ -40,7 +42,8 @@ public class pre_comprobante_pago extends Pantalla {
     private Tabla tab_detalle_movimiento =new Tabla();
     private Tabla tab_retencion =new Tabla();
     private Tabla tab_detalle_retencion=new Tabla();
-    private Tabla tab_pre_mensual=new Tabla();    
+    private Tabla tab_pre_mensual=new Tabla();
+    private Tabla tab_comprobante_poa= new Tabla();
     private SeleccionTabla set_solicitud=new SeleccionTabla();
     private SeleccionTabla set_tramite=new SeleccionTabla();
     private SeleccionTabla set_contabilizar=new SeleccionTabla();
@@ -49,8 +52,15 @@ public class pre_comprobante_pago extends Pantalla {
     private Calendario cal_fecha_inicial = new Calendario();
     private SeleccionTabla set_impuesto=new SeleccionTabla();
     private SeleccionTabla set_retencion=new SeleccionTabla();
+    private SeleccionTabla set_presupuesto_devengado=new SeleccionTabla();
+    private SeleccionTabla set_compromiso_detalle=new SeleccionTabla();
+    private SeleccionTabla set_consulta_factura = new SeleccionTabla();
+    private SeleccionTabla set_consulta_devengado = new SeleccionTabla();
     private Dialogo dia_anticipo=new Dialogo();
 	private Confirmar con_guardar=new Confirmar();
+	private Confirmar con_aplica_gasto=new Confirmar();
+	private Dialogo dia_presupuesto = new  Dialogo();
+	private Dialogo dia_ejecucion_devengado= new Dialogo();
 	private Reporte rep_reporte=new Reporte();
 	private SeleccionFormatoReporte sef_reporte=new SeleccionFormatoReporte();
 	private Map p_parametros=new HashMap();
@@ -161,9 +171,12 @@ public class pre_comprobante_pago extends Pantalla {
          tab_comprobante.getColumna("valor_retencion_tecpo").setMetodoChange("valorPago");
          tab_comprobante.getColumna("valor_pago_tecpo").setEtiqueta();
          tab_comprobante.getColumna("valor_pago_tecpo").setEstilo("font-size:15px;font-weight: bold;text-decoration: underline;color:red");//Estilo
-         
+         tab_comprobante.getColumna("ide_prtra").setVisible(false);
+         tab_comprobante.getColumna("ide_adsoc").setVisible(false);
+         tab_comprobante.getColumna("ide_adsoc").setLectura(true);
+
          tab_comprobante.setTipoFormulario(true);
-         tab_comprobante.getGrid().setColumns(4);
+         tab_comprobante.getGrid().setColumns(6);
          tab_comprobante.dibujar();
          PanelTabla pat_comprobante=new PanelTabla();
          pat_comprobante.setPanelTabla(tab_comprobante);
@@ -199,7 +212,9 @@ public class pre_comprobante_pago extends Pantalla {
          tab_detalle_movimiento.getColumna("activo_codem").setValorDefecto("true");
          tab_detalle_movimiento.getColumna("haber_codem").setMetodoChange("calcularTotal");            
          tab_detalle_movimiento.setColumnaSuma("haber_codem,debe_codem");            
-         tab_detalle_movimiento.getColumna("debe_codem").setMetodoChange("calcularTotal");            
+         tab_detalle_movimiento.getColumna("debe_codem").setMetodoChange("calcularTotal");   
+         tab_detalle_movimiento.agregarRelacion(tab_pre_mensual);
+         
          tab_detalle_movimiento.getGrid().setColumns(4);
          tab_detalle_movimiento.dibujar();
          PanelTabla pat_detalle_movimiento=new PanelTabla();
@@ -207,22 +222,86 @@ public class pre_comprobante_pago extends Pantalla {
          
          
          tab_pre_mensual.setId("tab_pre_mensual");
+         tab_pre_mensual.setHeader("EJECUCION PRESUPUESTARIA");
          tab_pre_mensual.setTabla("pre_mensual", "ide_prmen", 3);
+         tab_pre_mensual.setCondicion(" not ide_codem is null ");
+         tab_pre_mensual.getColumna("ide_prfuf").setCombo("pre_fuente_financiamiento", "ide_prfuf","detalle_prfuf","");
+         tab_pre_mensual.getColumna("ide_pranu").setCombo(ser_Tesoreria.getCuentaPresupuestariaGastos());
+         tab_pre_mensual.getColumna("ide_gemes").setVisible(false);
+         tab_pre_mensual.getColumna("ide_comov").setVisible(false);
+         tab_pre_mensual.getColumna("ide_gemes").setVisible(false);
+         tab_pre_mensual.getColumna("ide_prtra").setVisible(false);
+         tab_pre_mensual.getColumna("cobrado_prmen").setVisible(false);
+         tab_pre_mensual.getColumna("cobradoc_prmen").setVisible(false);
+         tab_pre_mensual.getColumna("pagado_prmen").setVisible(false);
+         tab_pre_mensual.getColumna("certificado_prmen").setVisible(false);
+         tab_pre_mensual.getColumna("ide_prcer").setVisible(false);
+         tab_pre_mensual.getColumna("ide_tecpo").setVisible(false);
+         tab_pre_mensual.setColumnaSuma("devengado_prmen,comprometido_prmen");
          tab_pre_mensual.dibujar();
          PanelTabla pat_pre_mensual= new PanelTabla();
          pat_pre_mensual.setPanelTabla(tab_pre_mensual);
          
          
          Division div_division =new Division();
-         div_division.dividir2(pat_comprobante, pat_detalle_movimiento, "50%", "H");
+         //div_division.dividir3(pat_comprobante, pat_detalle_movimiento, "50%", "H");
+         div_division.dividir3(pat_comprobante, pat_detalle_movimiento, pat_pre_mensual, "50%", "30%", "H");
          agregarComponente(div_division);
-       
+
+         tab_comprobante_poa.setId("tab_comprobante_poa");
+         tab_comprobante_poa.setTabla("tes_comprobante_poa", "ide_tecmp", 4);
+         tab_comprobante_poa.getColumna("ide_prpot").setCombo("select ide_prpot,ide_prtra from pre_poa_tramite");
+         tab_comprobante_poa.getColumna("ide_prpot").setAutoCompletar();
+         tab_comprobante_poa.getColumna("ide_prpot").setLectura(true);
+         tab_comprobante_poa.getColumna("ide_prfuf").setCombo("pre_fuente_financiamiento", "ide_prfuf","detalle_prfuf","");
+         tab_comprobante_poa.getColumna("ide_prfuf").setAutoCompletar();
+         tab_comprobante_poa.getColumna("ide_prfuf").setLectura(true);
+         tab_comprobante_poa.getColumna("ide_prpoa").setCombo(ser_Tesoreria.getPoaResumen());
+         tab_comprobante_poa.getColumna("ide_prpoa").setAutoCompletar();
+         tab_comprobante_poa.getColumna("ide_prpoa").setLectura(true);
+         tab_comprobante_poa.getColumna("ide_tecpo").setCombo("select ide_tecpo,comprobante_egreso_tecpo from tes_comprobante_pago");
+         tab_comprobante_poa.getColumna("ide_tecpo").setAutoCompletar();
+         tab_comprobante_poa.getColumna("ide_tecpo").setLectura(true); 
+         tab_comprobante_poa.getColumna("ide_tecmp").setNombreVisual("CODIGO");
+         tab_comprobante_poa.getColumna("ide_prpot").setNombreVisual("NRO. COMPROMISO");
+         tab_comprobante_poa.getColumna("ide_prfuf").setNombreVisual("FUENTE FINANCIAMIENTO");
+         tab_comprobante_poa.getColumna("ide_prpoa").setNombreVisual("PARTIDA PRESUPUESTARIA");
+         tab_comprobante_poa.getColumna("ide_tecpo").setNombreVisual("COMPROBANTE PAGO");
+         tab_comprobante_poa.getColumna("saldo_devengar_tecmp").setNombreVisual("SALDO POR DEVENGAR");
+         tab_comprobante_poa.getColumna("valor_devengar_tecmp").setNombreVisual("VALOR DEVENGAR");
+         tab_comprobante_poa.getColumna("aplica_iva_tecmp").setNombreVisual("APLICA IVA");
+         
+ 		Grid gri_datos_pre=new Grid();
+ 		gri_datos_pre.getChildren().add(tab_comprobante_poa);
+ 		gri_datos_pre.setStyle("width:" + (dia_ejecucion_devengado.getAnchoPanel() - 5) + "px;height:" + dia_ejecucion_devengado.getAltoPanel() + "px;overflow: auto;display: block;");
+ 		dia_ejecucion_devengado.setDialogo(gri_datos_pre);
+ 		dia_ejecucion_devengado.getBot_aceptar().setMetodo("aceptarCompromiso");
+ 		agregarComponente(dia_ejecucion_devengado);
+ 		
+ 		
+         ///certificacion presupuestaria
+         Boton bot_compras=new Boton();
+         bot_compras.setIcon("ui-icon-person");
+         bot_compras.setValue("Adjuntar Facturas");
+         bot_compras.setMetodo("importarFactura");
+         bar_botones.agregarBoton(bot_compras);
+         
          set_solicitud.setId("set_solicitud");
-         set_solicitud.setSeleccionTabla(ser_Adquisicion.getSolicitudCompra("true"),"ide_adsoc");
-         set_solicitud.setTitle("SELECCION UNA SOLICITUD DE COMPRA");        
-         set_solicitud.getBot_aceptar().setMetodo("aceptarSolicitudCompra");
-         set_solicitud.setRadio();
+         set_solicitud.setSeleccionTabla(ser_Tesoreria.getFacturasComprobantes(" and 1 != 1"),"ide_adfac");
+         set_solicitud.getTab_seleccion().getColumna("num_factura_adfac").setFiltro(true);
+         set_solicitud.getTab_seleccion().getColumna("detalle_adfac").setFiltro(true);
+
+         set_solicitud.setTitle("SELECCION UNA FACTURA DE COMPRA");        
+         set_solicitud.getBot_aceptar().setMetodo("aceptarFactura");
+         //set_solicitud.setRadio();
          agregarComponente(set_solicitud);
+         
+		con_aplica_gasto.setId("con_aplica_gasto");
+		con_aplica_gasto.setMessage("SI DESEA APLICAR AL GASTO PRESIONE ACEPTAR, CASO CONTRARIO CANCELAR");
+		con_aplica_gasto.setTitle("CONFIRMACION DE APLICACION AL GASTO");
+		con_aplica_gasto.getBot_aceptar().setMetodo("aceptarFactura");
+		agregarComponente(con_aplica_gasto);
+			
          ///certificacion presupuestaria
          Boton bot_busca=new Boton();
          bot_busca.setIcon("ui-icon-person");
@@ -236,10 +315,21 @@ public class pre_comprobante_pago extends Pantalla {
          set_tramite.getTab_seleccion().getColumna("nro_compromiso").setFiltro(true);
          set_tramite.getTab_seleccion().getColumna("numero_oficio_prtra").setFiltro(true);
          set_tramite.getTab_seleccion().getColumna("observaciones_prtra").setFiltro(true);
+         set_tramite.getBot_aceptar().setMetodo("aceptarCompromiso");
          
-         set_tramite.getBot_aceptar().setMetodo("aceptarCertificacionPresupuestaria");
-         set_tramite.setRadio();
+//         set_tramite.getBot_aceptar().setMetodo("aceptarCertificacionPresupuestaria"); inicialmente se encontraba ejecutando este metodo
          agregarComponente(set_tramite);
+
+         
+         /// cargo sel tabla detalle de los compromisos
+         set_compromiso_detalle.setId("set_compromiso_detalle");
+         set_compromiso_detalle.setSeleccionTabla(ser_Tesoreria.getSaldoFuenteDevengar("-1"),"ide_prpot");
+         set_compromiso_detalle.setTitle("SELECCION UN COMPROMISO PRESUPUESTARIO");  
+         set_compromiso_detalle.getTab_seleccion().getColumna("ide_prtra").setFiltro(true);
+         set_compromiso_detalle.getTab_seleccion().getColumna("detalle_prfuf").setFiltro(true);
+         set_compromiso_detalle.getTab_seleccion().getColumna("detalle_claificador").setFiltro(true);
+         set_compromiso_detalle.getBot_aceptar().setMetodo("aceptarCompromiso");
+         agregarComponente(set_compromiso_detalle);        
          
          ///generar asiento conmtable
          Boton bot_contabilizar=new Boton();
@@ -249,10 +339,9 @@ public class pre_comprobante_pago extends Pantalla {
          bar_botones.agregarBoton(bot_contabilizar);
 
          set_contabilizar.setId("set_contabilizar");
-         set_contabilizar.setSeleccionTabla(ser_Presupuesto.getCatalogoContabilizar("-1","-1"),"ide_prasp");
+        // set_contabilizar.setSeleccionTabla(ser_Presupuesto.getCatalogoContabilizarDevengados("-1","-1"),"ide_prasp");
          set_contabilizar.setTitle("SELECCIONE LA CUENTA CONTABLE A EJECUTAR");   
          set_contabilizar.getTab_seleccion().getColumna("ide_prcla").setVisible(false);
-
          set_contabilizar.getBot_aceptar().setMetodo("aceptarAsiento");
          agregarComponente(set_contabilizar);
          
@@ -295,7 +384,205 @@ public class pre_comprobante_pago extends Pantalla {
      		con_guardar.getBot_cancelar().setMetodo("cancelarRetencion");
 			agregarComponente(con_guardar);
 
+			
+	         //generar cuenta presupuetso devengado
+	         Boton bot_devengado=new Boton();
+	         bot_devengado.setIcon("ui-icon-person");
+	         bot_devengado.setValue("Devengado Presupuesto");
+	         bot_devengado.setMetodo("devengarPresupuesto");
+	         //bar_botones.agregarBoton(bot_devengado);
+	         
+	         set_presupuesto_devengado.setId("set_presupuesto_devengado");
+	         set_presupuesto_devengado.setSeleccionTabla(ser_Tesoreria.getSaldoDevengado("-1", "-1"),"codigo");
+	         set_presupuesto_devengado.setTitle("SELECCIONE LA CUENTA CONTABLE A EJECUTAR");
+	         set_presupuesto_devengado.getBot_aceptar().setMetodo("aceptarDevengarPresupuesto");
+	         agregarComponente(set_presupuesto_devengado);
+	         
+	        // consultar facturas adjuntas
+	         Boton bot_consulta_factura=new Boton();
+	         bot_consulta_factura.setIcon("ui-icon-person");
+	         bot_consulta_factura.setValue("Consulta Facturas");
+	         bot_consulta_factura.setMetodo("consultaFacturas");
+	         bar_botones.agregarBoton(bot_consulta_factura);
+	         
+	         set_consulta_factura.setId("set_consulta_factura");
+	         set_consulta_factura.setSeleccionTabla(ser_Tesoreria.getFacturasComprobante("-1"),"ide_adfac");
+	         set_consulta_factura.setTitle("CONSULTA DE FACTURAS ADJUNTAS");
+	         set_consulta_factura.getBot_aceptar().setRendered(false);
+	         agregarComponente(set_consulta_factura);
+
+	         // consultar compromisos adjuntos
+	         Boton bot_consulta_devengado=new Boton();
+	         bot_consulta_devengado.setIcon("ui-icon-person");
+	         bot_consulta_devengado.setValue("Consulta Compromisos");
+	         bot_consulta_devengado.setMetodo("consultaCompromisos");
+	         bar_botones.agregarBoton(bot_consulta_devengado);
+	         
+	         set_consulta_devengado.setId("set_consulta_devengado");
+	         set_consulta_devengado.setSeleccionTabla(ser_Tesoreria.getComprobantePoa("-1"),"ide_tecmp");
+	         set_consulta_devengado.setTitle("CONSULTA DE PRESUPUESTO DEVENGADO");
+	         set_consulta_devengado.getBot_aceptar().setRendered(false);
+	         agregarComponente(set_consulta_devengado);
      }
+    public void consultaFacturas(){
+     	//System.out.println("entra a metodo impostar solicitud");
+     	 if(!tab_comprobante.getValor("ide_tecpo").equals("")){
+     		set_consulta_factura.getTab_seleccion().setSql(ser_Tesoreria.getFacturasComprobante(tab_comprobante.getValor("ide_tecpo")));
+     		set_consulta_factura.getTab_seleccion().ejecutarSql();
+     		set_consulta_factura.dibujar();
+     	 }
+     	 else {
+     		 utilitario.agregarMensajeError("No existe un registro", "Para agregar facturas asegurese de tener guardado el comprobante de pago");
+     	 }
+
+     }
+    public void consultaCompromisos(){
+     	//System.out.println("entra a metodo impostar solicitud");
+     	 if(!tab_comprobante.getValor("ide_tecpo").equals("")){
+     		set_consulta_devengado.getTab_seleccion().setSql(ser_Tesoreria.getComprobantePoa(tab_comprobante.getValor("ide_tecpo")));
+     		set_consulta_devengado.getTab_seleccion().ejecutarSql();
+     		set_consulta_devengado.dibujar();
+     	 }
+     	 else {
+     		 utilitario.agregarMensajeError("No existe un registro", "Para agregar facturas asegurese de tener guardado el comprobante de pago");
+     	 }
+
+     }
+    public void aceptarCompromiso(){
+    	
+		if (set_tramite.isVisible()) {
+			String str_seleccionados = set_tramite.getSeleccionados();
+			if (str_seleccionados != null) {
+				set_tramite.cerrar();
+				set_compromiso_detalle.getTab_seleccion().setSql(ser_Tesoreria.getSaldoFuenteDevengar(str_seleccionados));
+				set_compromiso_detalle.getTab_seleccion().ejecutarSql();
+				set_compromiso_detalle.dibujar();
+
+			} else {
+				utilitario.agregarMensajeInfo("Seleccione un Registro","Seleccione un registro para continuar");
+			}
+		}
+		else if (set_compromiso_detalle.isVisible()){
+			String str_seleccionado_detalle = set_compromiso_detalle.getSeleccionados();
+			if (str_seleccionado_detalle != null) {
+				for (int i = 0; i < set_compromiso_detalle.getNumeroSeleccionados(); i++) {
+					tab_comprobante_poa.limpiar();
+					tab_comprobante_poa.insertar();
+					tab_comprobante_poa.setValor("ide_tecpo", tab_comprobante.getValor("ide_tecpo"));
+					tab_comprobante_poa.setValor("ide_prpot", set_compromiso_detalle.getTab_seleccion().getValor(i, "ide_prpot"));
+					tab_comprobante_poa.setValor("ide_prpoa", set_compromiso_detalle.getTab_seleccion().getValor(i, "ide_prpoa"));
+					tab_comprobante_poa.setValor("ide_prfuf", set_compromiso_detalle.getTab_seleccion().getValor(i, "ide_prfuf"));
+					tab_comprobante_poa.setValor("saldo_devengar_tecmp", set_compromiso_detalle.getTab_seleccion().getValor(i, "saldo_devengar"));
+					tab_comprobante_poa.setValor("valor_devengar_tecmp", "0");
+					tab_comprobante_poa.setValor("aplica_iva_tecmp", "false");
+					tab_comprobante_poa.setValor("valor_iva_tecmp", "0");
+					tab_comprobante_poa.guardar();
+					guardarPantalla();
+				}
+				
+				set_compromiso_detalle.cerrar();
+				if(tab_comprobante.getValor("aplica_gasto_tecpo").equals("false")){
+					tab_comprobante_poa.getColumna("aplica_iva_tecmp").setVisible(false);
+					tab_comprobante_poa.getColumna("valor_iva_tecmp").setVisible(false);
+				}
+				tab_comprobante_poa.setCondicion("ide_tecpo="+tab_comprobante.getValor("ide_tecpo"));
+				tab_comprobante_poa.dibujar();
+				dia_ejecucion_devengado.dibujar();
+			} else {
+				utilitario.agregarMensajeInfo("Seleccione un Registro","Seleccione un registro para continuar");
+			}
+		}
+		else if(dia_ejecucion_devengado.isVisible()){
+			tab_comprobante_poa.guardar();
+			guardarPantalla();
+			dia_ejecucion_devengado.cerrar();
+		}
+    }
+    public void importarFactura(){
+     	//System.out.println("entra a metodo impostar solicitud");
+     	 if(!tab_comprobante.getValor("ide_tecpo").equals("")){
+         set_solicitud.getTab_seleccion().setSql(ser_Tesoreria.getFacturasComprobantes(" and 1=1"));
+         set_solicitud.getTab_seleccion().ejecutarSql();
+         set_solicitud.dibujar();
+     	 }
+     	 else {
+     		 utilitario.agregarMensajeError("No existe un registro", "Para agregar facturas asegurese de tener guardado el comprobante de pago");
+     	 }
+
+     }
+
+     public void aceptarFactura(){
+    	 
+		if (set_solicitud.isVisible()) {
+			String str_seleccionado = set_solicitud.getSeleccionados();
+			if (str_seleccionado != null) {
+
+				for (int i = 0; i < set_solicitud.getNumeroSeleccionados(); i++) {
+
+					String sql = "update adq_factura set ide_tecpo="+ tab_comprobante.getValor("ide_tecpo")	+ " where ide_adfac="+ set_solicitud.getTab_seleccion().getValor(i,"ide_adfac");
+					utilitario.getConexion().ejecutarSql(sql);
+				}
+				
+				TablaGenerica tab_totales_factura=utilitario.consultar(ser_Tesoreria.getTotalFacturaComprobante(tab_comprobante.getValor("ide_tecpo")));
+				TablaGenerica tab_totales_retencion=utilitario.consultar(ser_Tesoreria.getTotalRetencionComprobante(tab_comprobante.getValor("ide_tecpo")));
+				
+				String sql_act_total_fac="update tes_comprobante_pago set valor_iva_tecpo="+tab_totales_factura.getValor("valor_iva")+",subtotal_tecpo="+tab_totales_factura.getValor("subtotal")+" ,valor_retencion_tecpo="+tab_totales_retencion.getValor("total_retenido")+",valor_compra_tecpo= "+tab_totales_factura.getValor("valor_iva")+"+"+tab_totales_factura.getValor("subtotal")+"  ,valor_pago_tecpo="+tab_totales_factura.getValor("valor_iva")+"+"+tab_totales_factura.getValor("subtotal")+" -"+tab_totales_retencion.getValor("total_retenido")+"  where ide_tecpo="+tab_comprobante.getValor("ide_tecpo");						
+				utilitario.getConexion().ejecutarSql(sql_act_total_fac);
+				tab_comprobante.ejecutarSql();
+				set_solicitud.cerrar();
+				con_aplica_gasto.dibujar();
+
+			} else {
+				utilitario.agregarMensajeInfo("Seleccione un Registro","Seleccione un registro para continuar");
+			}
+		}
+		else if(con_aplica_gasto.isVisible()){
+			utilitario.getConexion().ejecutarSql("update tes_comprobante_pago set aplica_gasto_tecpo= true where ide_tecpo="+ tab_comprobante.getValor("ide_tecpo"));
+			con_aplica_gasto.cerrar();
+			utilitario.agregarMensaje("Ejecutado","Se Agregaron Facturas al Comprobante de Pago");
+			utilitario.addUpdateTabla(tab_comprobante, "aplica_gasto_tecpo", "");
+
+		}
+     }
+     
+    public void devengarPresupuesto(){
+    	set_presupuesto_devengado.getTab_seleccion().setSql(ser_Tesoreria.getSaldoDevengado(tab_detalle_movimiento.getFilaSeleccionada().getRowKey(),tab_comprobante.getValor("ide_tecpo")));
+    	set_presupuesto_devengado.getTab_seleccion().ejecutarSql();
+    	set_presupuesto_devengado.dibujar();
+
+    }
+    public void aceptarDevengarPresupuesto(){
+    	if(set_presupuesto_devengado.isVisible()){
+    		
+    		for(int i=0;i<set_presupuesto_devengado.getTab_seleccion().getTotalFilas();i++){
+    			tab_pre_mensual.insertar();
+    			tab_pre_mensual.setValor("ide_pranu",set_presupuesto_devengado.getTab_seleccion().getValor(i, "ide_pranu"));
+    			tab_pre_mensual.setValor("ide_prtra",tab_comprobante.getValor("ide_prtra"));
+    			tab_pre_mensual.setValor("ide_comov",tab_comprobante.getValor("ide_comov"));
+    			tab_pre_mensual.setValor("ide_codem",tab_detalle_movimiento.getFilaSeleccionada().getRowKey());
+    			tab_pre_mensual.setValor("fecha_ejecucion_prmen",tab_comprobante.getValor("fecha_tecpo"));
+    			tab_pre_mensual.setValor("comprobante_prmen",tab_comprobante.getValor("comprobante_egreso_tecpo"));
+    			tab_pre_mensual.setValor("devengado_prmen",set_presupuesto_devengado.getTab_seleccion().getValor(i, "saldo_compromiso"));
+    			tab_pre_mensual.setValor("cobrado_prmen","0");
+    			tab_pre_mensual.setValor("cobradoc_prmen","0");
+    			tab_pre_mensual.setValor("pagado_prmen","0");
+    			tab_pre_mensual.setValor("comprometido_prmen","0");
+    			tab_pre_mensual.setValor("valor_anticipo_prmen","0");
+    			tab_pre_mensual.setValor("activo_prmen","true");
+    			tab_pre_mensual.setValor("ide_prfuf",set_presupuesto_devengado.getTab_seleccion().getValor(i, "ide_prfuf"));
+    			tab_pre_mensual.setValor("ide_tecpo",tab_comprobante.getValor("ide_tecpo"));
+    			
+    		}
+    		
+			set_presupuesto_devengado.cerrar();
+
+    	}
+    	else {
+        	set_presupuesto_devengado.getTab_seleccion().setSql(ser_Tesoreria.getSaldoDevengado(tab_detalle_movimiento.getFilaSeleccionada().getRowKey(),tab_comprobante.getValor("ide_tecpo")));
+        	set_presupuesto_devengado.getTab_seleccion().ejecutarSql();
+        	set_presupuesto_devengado.dibujar();
+    	}
+    }
     public void seleccionarAnticipo(){
     	set_anticipo_empleado.getTab_seleccion().setSql(ser_contabilidad.getConsultaAnticipos());
     	set_anticipo_empleado.getTab_seleccion().ejecutarSql();
@@ -401,30 +688,32 @@ public class pre_comprobante_pago extends Pantalla {
     	
     	}
     }
+    public void aceptarAsientoDevengados(){
+    	
+    }
     public void aceptarAsiento(){
         String str_seleccionado = set_contabilizar.getSeleccionados();
         String valor_debe="0";
         String valor_haber="0";
         TablaGenerica tab_asociacion=utilitario.consultar("SELECT ide_prasp, ide_prcla, ide_cocac, ide_gelua, ide_prmop, activo_prasp, cuenta_padre_prasp,devengado FROM pre_asociacion_presupuestaria where ide_prasp in ("+str_seleccionado+");");
 		TablaGenerica tab_valor_comprobante=utilitario.consultar("select ide_tecpo,"+par_valor_devengar+" as valor,valor_iva_tecpo,valor_pago_tecpo from tes_comprobante_pago where ide_tecpo ="+tab_comprobante.getValor("ide_tecpo"));
-		//System.out.println("tab_asociacion ");
-		//tab_asociacion.imprimirSql();
-		//System.out.println("tab_valor_comprobante ");
-		//tab_valor_comprobante.imprimirSql();
+		System.out.println("acpetar aceptarAsiento ");
 
         ser_contabilidad.limpiarAcceso("cont_detalle_movimiento");
+        ser_contabilidad.limpiarAcceso("pre_mensual");
+
         if(tab_asociacion.getTotalFilas()>0){
     		for(int i= 0;i< tab_asociacion.getTotalFilas();i++){
     			
     			
     			//isnerta debe
-    			if(tab_asociacion.getValor(i,"ide_gelua").equals(par_debe)){
-    				valor_debe=tab_valor_comprobante.getValor("valor");
+    			if(set_contabilizar.getTab_seleccion().getValor(i,"ide_gelua").equals(par_debe)){
+    				valor_debe=set_contabilizar.getTab_seleccion().getValor(i,"valor_devengar");
     				valor_haber="0";
     			}
     			//isnerta haber
-    			else if(tab_asociacion.getValor(i,"ide_gelua").equals(par_haber)){
-    				valor_haber=tab_valor_comprobante.getValor("valor");   
+    			else if(set_contabilizar.getTab_seleccion().getValor(i,"ide_gelua").equals(par_haber)){
+    				valor_haber=set_contabilizar.getTab_seleccion().getValor(i,"valor_devengar");   
     				valor_debe="0";
     			}
     			
@@ -438,6 +727,22 @@ public class pre_comprobante_pago extends Pantalla {
     					+" values ( "+maximo_detalle+","+tab_comprobante.getValor("ide_comov")+","+valor_debe+","+valor_haber+",true,"+tab_asociacion.getValor(i,"ide_cocac")+","+tab_asociacion.getValor(i,"ide_gelua")+" );";
     			utilitario.getConexion().ejecutarSql(sqlinsertaprimeralinea);
     			//System.out.println("sqlinsertaprimeralinea "+sqlinsertaprimeralinea);
+    			
+    			
+    			
+    			// CODIGO DE CUENTA DE CLASIFICADOR
+    			TablaGenerica tab_codigo_presupuesto=utilitario.consultar("select ide_prcla,codigo_clasificador_prcla from pre_clasificador where ide_prcla ="+tab_asociacion.getValor(i, "ide_prcla"));
+    			//INSERTO LA EJECUCION PRESUPUESTARIA
+    			String sqlinsertaPresupuesto= "insert into pre_mensual (ide_prmen,ide_pranu,ide_prtra,ide_comov,ide_codem,fecha_ejecucion_prmen,comprobante_prmen,devengado_prmen,cobrado_prmen,cobradoc_prmen,pagado_prmen,"
+    					+" comprometido_prmen,valor_anticipo_prmen,activo_prmen,ide_prfuf,ide_tecpo)"
+    					+" select row_number()over(order by d.ide_prcla)+(select max(ide_prmen) as cdoigo from pre_mensual ) as codigo,a.ide_pranu,e.ide_prtra,ide_comov,"+maximo_detalle+", '"+tab_comprobante.getValor("fecha_tecpo")+"',comprobante_egreso_tecpo,valor_devengar_tecmp,0,0,0,0,0,true,b.ide_prfuf,c.ide_tecpo"
+    					+" from pre_anual a,tes_comprobante_poa b,tes_comprobante_pago c,pre_poa d,pre_poa_tramite e"
+    					+" where a.ide_prpoa = b.ide_prpoa and b.ide_tecpo = c.ide_tecpo"
+    					+" and a.ide_prpoa = d.ide_prpoa and b.ide_prpot = e.ide_prpot"
+    					+" and d.ide_prcla in ( select ide_prcla from pre_clasificador where codigo_clasificador_prcla ='"+tab_codigo_presupuesto.getValor("codigo_clasificador_prcla")+"' )"
+    					+" and b.ide_tecpo="+tab_comprobante.getValor("ide_tecpo");
+    			utilitario.getConexion().ejecutarSql(sqlinsertaPresupuesto);
+    			
     			//inserto las cuentas por pagar tanto al debe como al haber
     	        TablaGenerica tab_cuenta_pagar=utilitario.consultar("SELECT ide_prasp, ide_prcla, ide_cocac, ide_gelua, ide_prmop, activo_prasp, cuenta_padre_prasp FROM pre_asociacion_presupuestaria where ide_prcla in ("+tab_asociacion.getValor(i,"devengado")+");");
     			//System.out.println("tab_cuenta_pagar ");
@@ -465,6 +770,11 @@ public class pre_comprobante_pago extends Pantalla {
         			utilitario.getConexion().ejecutarSql(sqlinsertaprimeralineaj);
         			
     	        }
+    		}
+    		
+    		
+    		for(int j=1; j<set_contabilizar.getTab_seleccion().getTotalFilas();j++){
+    			
     		}
     	}
         
@@ -544,10 +854,11 @@ public class pre_comprobante_pago extends Pantalla {
         utilitario.addUpdate("tab_detalle_movimiento");
     }
     public void seleccionarAsiento(){
-    	set_contabilizar.getTab_seleccion().setSql(ser_Presupuesto.getCatalogoContabilizar(tab_comprobante.getValor("IDE_PRTRA"),par_movimiento_devengado));
+    	/* comentaco por erro borre la version de presupuesto debai estar la utima del servicio de preupuesto
+    	set_contabilizar.getTab_seleccion().setSql(ser_Presupuesto.getCatalogoContabilizarDevengados(tab_comprobante.getValor("ide_tecpo"),par_movimiento_devengado));
     	set_contabilizar.getTab_seleccion().ejecutarSql();
     	set_contabilizar.dibujar();
-
+	*/
     }
    ///sacar valores
  	
@@ -826,22 +1137,19 @@ public class pre_comprobante_pago extends Pantalla {
 	public void insertar() {
 		// TODO Auto-generated method stub
 		 if (tab_comprobante.isFocus()) {
-			 utilitario.agregarMensajeInfo("No puede insertar", "Debe buscar Solicitud de Compra o una certificaciòn presupuestaria");
-			 //tab_comprobante.insertar();
+			 //utilitario.agregarMensajeInfo("No puede insertar", "Debe buscar Solicitud de Compra o una certificaciòn presupuestaria");
+			 tab_comprobante.insertar();
 	        }
 
 	        else if (tab_detalle_movimiento.isFocus()){
 	            tab_detalle_movimiento.insertar();
 	            tab_detalle_movimiento.setValor("ide_comov", tab_comprobante.getValor("ide_comov"));
+	            utilitario.addUpdate("tab_detalle_movimiento");
 	        }
-	        else if (tab_retencion.isFocus()) {
-	            tab_retencion.insertar();
-
+	        else if(tab_pre_mensual.isFocus()){
+	        	tab_pre_mensual.insertar();
+	        	tab_pre_mensual.setValor("ide_codem", tab_detalle_movimiento.getValor("ide_codem"));
 	        }
-	        else if (tab_detalle_retencion.isFocus()) {
-	            utilitario.agregarMensajeInfo("No puede insertar", "Debe generar una Retencion");
-
-	        }    
 	
 	}
 
@@ -906,15 +1214,14 @@ public class pre_comprobante_pago extends Pantalla {
 		 if (tab_comprobante.guardar()) {
 
 	            if (tab_detalle_movimiento.guardar()) {
-	                if( tab_retencion.guardar()){
-	                    if(tab_detalle_retencion.guardar()){
+	                if( tab_pre_mensual.guardar()){
 	                        guardarPantalla();
 
 	                        tab_comprobante.ejecutarSql();
 	                        tab_detalle_movimiento.setCondicion("ide_comov="+tab_comprobante.getValor("ide_comov"));    
 	                        tab_detalle_movimiento.ejecutarSql();
 	                    
-	                    }
+	                    
 	                }
 	            }
 
@@ -1091,6 +1398,55 @@ public class pre_comprobante_pago extends Pantalla {
 	}
 	public void setSef_reporte(SeleccionFormatoReporte sef_reporte) {
 		this.sef_reporte = sef_reporte;
+	}
+	public Dialogo getDia_presupuesto() {
+		return dia_presupuesto;
+	}
+	public void setDia_presupuesto(Dialogo dia_presupuesto) {
+		this.dia_presupuesto = dia_presupuesto;
+	}
+	public SeleccionTabla getSet_presupuesto_devengado() {
+		return set_presupuesto_devengado;
+	}
+	public void setSet_presupuesto_devengado(
+			SeleccionTabla set_presupuesto_devengado) {
+		this.set_presupuesto_devengado = set_presupuesto_devengado;
+	}
+	public Confirmar getCon_aplica_gasto() {
+		return con_aplica_gasto;
+	}
+	public void setCon_aplica_gasto(Confirmar con_aplica_gasto) {
+		this.con_aplica_gasto = con_aplica_gasto;
+	}
+	public SeleccionTabla getSet_compromiso_detalle() {
+		return set_compromiso_detalle;
+	}
+	public void setSet_compromiso_detalle(SeleccionTabla set_compromiso_detalle) {
+		this.set_compromiso_detalle = set_compromiso_detalle;
+	}
+	public Tabla getTab_comprobante_poa() {
+		return tab_comprobante_poa;
+	}
+	public void setTab_comprobante_poa(Tabla tab_comprobante_poa) {
+		this.tab_comprobante_poa = tab_comprobante_poa;
+	}
+	public Dialogo getDia_ejecucion_devengado() {
+		return dia_ejecucion_devengado;
+	}
+	public void setDia_ejecucion_devengado(Dialogo dia_ejecucion_devengado) {
+		this.dia_ejecucion_devengado = dia_ejecucion_devengado;
+	}
+	public SeleccionTabla getSet_consulta_factura() {
+		return set_consulta_factura;
+	}
+	public void setSet_consulta_factura(SeleccionTabla set_consulta_factura) {
+		this.set_consulta_factura = set_consulta_factura;
+	}
+	public SeleccionTabla getSet_consulta_devengado() {
+		return set_consulta_devengado;
+	}
+	public void setSet_consulta_devengado(SeleccionTabla set_consulta_devengado) {
+		this.set_consulta_devengado = set_consulta_devengado;
 	}
 
 
