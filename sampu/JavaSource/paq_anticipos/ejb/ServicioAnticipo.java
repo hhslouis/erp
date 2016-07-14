@@ -24,10 +24,9 @@ public class ServicioAnticipo{
 				"where GAR.IDE_GEEDP in ( " +
 				"select IDE_GEEDP from NRH_GARANTE where IDE_GEEDP="+ide_geedp+" " +
 				") " +
-				"AND ANT.ANTICIPO_NRANT=true " +
-				"AND ANT.APROBADO_NRANT=true " +
+				"AND ANT.ANTICIPO_NRANT=true " +				
 				"AND ANT.ACTIVO_NRANT=true");
-		
+		tab_garante.imprimirSql();
 		if (tab_garante.getTotalFilas()>0){
 			return tab_garante.getTotalFilas();
 		}
