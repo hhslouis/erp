@@ -159,7 +159,7 @@ public class pre_poa_reforma_fuente extends Pantalla {
 	    
        	//che_aprobado.setValue("true");
      
-       	gri_guarda_reforma.getChildren().add(rad_aprobado);
+       	//gri_guarda_reforma.getChildren().add(rad_aprobado);
        	
        	dia_datos_reforma.setId("dia_datos_reforma");
        	dia_datos_reforma.setTitle("Ingrese los Siguientes Datos para Realizar la Reforma");
@@ -333,13 +333,13 @@ public class pre_poa_reforma_fuente extends Pantalla {
 			double ejecucion=0;
 			double asi_inicial=0;
 						
-			System.out.println("total_ejecutado "+total_ejecutado+" valor_ingresado " +valor_ingresado);
+			//System.out.println("total_ejecutado "+total_ejecutado+" valor_ingresado " +valor_ingresado);
 			
 			if(valor_ingresado<0){
 				valor_ingresado=valor_ingresado*(-1);
 				
 					if(valor_ingresado>total_ejecutado){
-						System.out.println("intrego ver saldo insuficiente "+total_ejecutado+"   xxx  "+valor_ingresado);
+						//System.out.println("intrego ver saldo insuficiente "+total_ejecutado+"   xxx  "+valor_ingresado);
 						//utilitario.agregarMensajeError("Saldo Insuficiente", "No se puede ejecutar la reforma solo dispone de un saldo incluido el valor certificado de: "+total_ejecutado);
 						eti_mensajesaldos.setValue("<img src='imagenes/stop.png' /> No se puede ejecutar la reforma solo dispone de un saldo incluido el valor certificado de: "+total_ejecutado);
 
@@ -489,12 +489,13 @@ public class pre_poa_reforma_fuente extends Pantalla {
 				
 				for(int i=0;i<tab_poa_reforma_fuenta.getTotalFilas();i++){
 					
-					String sql_actualiza="update pre_poa_reforma_fuente set fecha_prprf='"+cal_fecha_reforma.getFecha()+"',resolucion_prprf='"+txt_num_resolucion_guarda.getValue().toString()+"',aprobado_prprf='"+rad_aprobado.getValue()+"' where ide_prprf="+tab_poa_reforma_fuenta.getValor(i, "ide_prprf");
+					String sql_actualiza="update pre_poa_reforma_fuente set fecha_prprf='"+cal_fecha_reforma.getFecha()+"',resolucion_prprf='"+txt_num_resolucion_guarda.getValue().toString()+"',aprobado_prprf='false' where ide_prprf="+tab_poa_reforma_fuenta.getValor(i, "ide_prprf");
 					utilitario.getConexion().ejecutarSql(sql_actualiza);
 					//actualizarSaldosReforma(tab_poa_reforma_fuenta.getValor(i, "ide_prpoa"), tab_poa_reforma_fuenta.getValor(i, "valor_reformado_prprf"), txt_num_resolucion_guarda.getValue().toString(), cal_fecha_reforma.getFecha(), tab_poa_reforma_fuenta.getValor(i, "saldo_actual_prprf"),che_aprobado.getValue().toString());
+					/*Esto comento de lo ultimo que funcionaba porque la aprobacion se la realiza desde una interfaz aprobacion de resoluciones POA
 					ser_presupuesto.trigActualizaReformaFuente(tab_poa_reforma_fuenta.getValor(i, "ide_prpoa"));
 					ser_presupuesto.trigActualizaReforma(tab_poa_reforma_fuenta.getValor(i, "ide_prpoa"));
-					
+					*/
 				}
 				tab_poa_reforma_fuenta.setCondicion("resolucion_prprf='"+txt_num_resolucion_guarda.getValue().toString()+"'");
 				tab_poa_reforma_fuenta.ejecutarSql();
@@ -507,14 +508,15 @@ public class pre_poa_reforma_fuente extends Pantalla {
 				borrarContadores(txt_num_resolucion_guarda.getValue().toString());
 				
 				for(int i=0;i<tab_poa_reforma_fuenta.getTotalFilas();i++){
-					String sql_actualiza="update pre_poa_reforma_fuente set fecha_prprf='"+cal_fecha_reforma.getFecha()+"',resolucion_prprf='"+txt_num_resolucion_guarda.getValue().toString()+"',aprobado_prprf='"+rad_aprobado.getValue()+"' where ide_prprf="+tab_poa_reforma_fuenta.getValor(i, "ide_prprf");
+					String sql_actualiza="update pre_poa_reforma_fuente set fecha_prprf='"+cal_fecha_reforma.getFecha()+"',resolucion_prprf='"+txt_num_resolucion_guarda.getValue().toString()+"',aprobado_prprf='false' where ide_prprf="+tab_poa_reforma_fuenta.getValor(i, "ide_prprf");
 					utilitario.getConexion().ejecutarSql(sql_actualiza);
 					//actualizarSaldosReforma(tab_poa_reforma_fuenta.getValor(i, "ide_prpoa"), tab_poa_reforma_fuenta.getValor(i, "valor_reformado_prprf"), txt_num_resolucion_guarda.getValue().toString(), cal_fecha_reforma.getFecha(), tab_poa_reforma_fuenta.getValor(i, "saldo_actual_prprf"),che_aprobado.getValue().toString());
-					
+
+					/*Esto comento de lo ultimo que funcionaba porque la aprobacion se la realiza desde una interfaz aprobacion de resoluciones POA
 					//triguers actualiza reformas.
 					ser_presupuesto.trigActualizaReformaFuente(tab_poa_reforma_fuenta.getValor(i, "ide_prpoa"));
 					ser_presupuesto.trigActualizaReforma(tab_poa_reforma_fuenta.getValor(i, "ide_prpoa"));
-
+					*/
 				}
 				tab_poa_reforma_fuenta.setCondicion("resolucion_prprf='"+txt_num_resolucion_guarda.getValue().toString()+"'");
 				tab_poa_reforma_fuenta.setCampoOrden("ide_prprf desc");
