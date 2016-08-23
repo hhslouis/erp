@@ -1,5 +1,8 @@
 package paq_contabilidad;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.ejb.EJB;
 
 import com.sun.org.apache.bcel.internal.generic.NEW;
@@ -12,7 +15,9 @@ import framework.componentes.Division;
 import framework.componentes.Etiqueta;
 import framework.componentes.PanelTabla;
 import framework.componentes.Radio;
+import framework.componentes.Reporte;
 import framework.componentes.SeleccionCalendario;
+import framework.componentes.SeleccionFormatoReporte;
 import framework.componentes.SeleccionTabla;
 import framework.componentes.Tabla;
 import paq_contabilidad.ejb.ServicioContabilidad;
@@ -30,7 +35,10 @@ public class pre_balance_general extends Pantalla{
 	
 	public static String par_tipo_asiento_inicial;
 	private SeleccionCalendario sel_calendario=new SeleccionCalendario();
-
+	private Reporte rep_reporte = new Reporte();
+	private SeleccionFormatoReporte sel_rep = new SeleccionFormatoReporte();
+	private Map map_parametros = new HashMap();
+	
 	
 	@EJB
 	private ServicioContabilidad ser_contabilidad = (ServicioContabilidad ) utilitario.instanciarEJB(ServicioContabilidad.class);
@@ -49,6 +57,15 @@ public class pre_balance_general extends Pantalla{
 				bot_limpiar.setMetodo("limpiar");
 				bar_botones.agregarBoton(bot_limpiar);
 				
+				
+				rep_reporte.setId("rep_reporte");
+				rep_reporte.getBot_aceptar().setMetodo("aceptarReporte");
+				agregarComponente(rep_reporte);
+				
+				bar_botones.agregarReporte();
+				
+				sel_rep.setId("sel_rep");
+				agregarComponente(sel_rep);	
 		tab_balance_inicial.setId("tab_balance_inicial");  
 		tab_balance_inicial.setTabla("cont_balance_general", "ide_balance", 1);	
 		tab_balance_inicial.setHeader("BALANCE GENERAL");
@@ -97,13 +114,52 @@ public class pre_balance_general extends Pantalla{
 		if(sel_calendario.isVisible()){
 			sel_calendario.cerrar();
 
+			
+			
+			
+			
 			ser_contabilidad.generarBalComprobacion(com_anio.getValue().toString(), sel_calendario.getFecha1().toString(), sel_calendario.getFecha2().toString(), par_tipo_asiento_inicial);
 			TablaGenerica tab_meses = utilitario.consultar("select 1 as codigo,extract(month from cast('"+sel_calendario.getFecha1String()+"' as date)) as mes_inicial, extract(month from cast('"+sel_calendario.getFecha2String()+"' as date)) as mes_final");
+			
+			//// RECALCULO ESTADO DE RESULTADO
+				
+			String actualiza_tabla_estado="update cont_estado_resultado"
+					+" set valor = 0,"
+					+" periodo_inicial="+tab_meses.getValor("mes_inicial") +","
+					+" periodo_final="+tab_meses.getValor("mes_final")+","
+					+" fecha_inicial='"+sel_calendario.getFecha1String()+"',"
+					+" fecha_final='"+sel_calendario.getFecha2String()+"'";
+			utilitario.getConexion().ejecutarSql(actualiza_tabla_estado);
+			
+			
+			String traspasa_valores_estado="update cont_estado_resultado"
+					+" set valor = nuevovalor* signo"
+					+" from ("
+					+" select ide_cocac,(case when debe_saldo_cobac = 0 then haber_saldo_cobac else debe_saldo_cobac end) as nuevovalor from cont_balance_comprobacion ) a where ide_cocac=ide_cuenta";
+			utilitario.getConexion().ejecutarSql(traspasa_valores_estado);
+			
+			String calcula_tabla_estado="update cont_estado_resultado"
+					+" set valor = val"
+					+" from ("
+					+" select sum(valor) as val,con_ide_estado_resultado"
+					+" from cont_estado_resultado"
+					+" group by con_ide_estado_resultado"
+					+" ) a where a.con_ide_estado_resultado = cont_estado_resultado.ide_estado_resultado";
+			int k=0;
+			while (k<=3){
+			utilitario.getConexion().ejecutarSql(calcula_tabla_estado);
+			 k++;
+            }
+			
+			//// HASTA AQUI RECALCULO ESTADO DE RESULTADO
+
 			
 			String actualiza_tabla="update cont_balance_general"
 					+" set valor = 0,"
 					+" periodo_inicial="+tab_meses.getValor("mes_inicial") +","
-					+" periodo_final="+tab_meses.getValor("mes_final");
+					+" periodo_final="+tab_meses.getValor("mes_final") +","
+					+" fecha_inicial='"+sel_calendario.getFecha1String()+"',"
+					+" fecha_final='"+sel_calendario.getFecha2String()+"'";
 			utilitario.getConexion().ejecutarSql(actualiza_tabla);
 			
 			
@@ -112,6 +168,9 @@ public class pre_balance_general extends Pantalla{
 					+" from ("
 					+" select ide_cocac,(case when debe_saldo_cobac = 0 then haber_saldo_cobac else debe_saldo_cobac end) as nuevovalor from cont_balance_comprobacion ) a where ide_cocac=ide_cuenta";
 			utilitario.getConexion().ejecutarSql(traspasa_valores);
+
+			String resultado_ejercicio="update cont_balance_general set valor = a.valor from (select valor from cont_estado_resultado where ide_estado_resultado =54) a where ide_balance=314";
+			utilitario.getConexion().ejecutarSql(resultado_ejercicio);			
 			
 			String calcula_tabla="update cont_balance_general"
 					+" set valor = val"
@@ -157,6 +216,39 @@ public class pre_balance_general extends Pantalla{
 			utilitario.addUpdate("tab_balance_inicial");
 		
 	}
+		
+		public void generarEstadoResultado(){
+			ser_contabilidad.generarBalComprobacion(com_anio.getValue().toString(), sel_calendario.getFecha1().toString(), sel_calendario.getFecha2().toString(), par_tipo_asiento_inicial);
+			TablaGenerica tab_meses = utilitario.consultar("select 1 as codigo,extract(month from cast('"+sel_calendario.getFecha1String()+"' as date)) as mes_inicial, extract(month from cast('"+sel_calendario.getFecha2String()+"' as date)) as mes_final");
+			
+			String actualiza_tabla="update cont_estado_resultado"
+					+" set valor = 0,"
+					+" periodo_inicial="+tab_meses.getValor("mes_inicial") +","
+					+" periodo_final="+tab_meses.getValor("mes_final")+","
+					+" fecha_inicial='"+sel_calendario.getFecha1String()+"',"
+					+" fecha_final='"+sel_calendario.getFecha2String()+"'";
+			utilitario.getConexion().ejecutarSql(actualiza_tabla);
+			
+			
+			String traspasa_valores="update cont_estado_resultado"
+					+" set valor = nuevovalor* signo"
+					+" from ("
+					+" select ide_cocac,(case when debe_saldo_cobac = 0 then haber_saldo_cobac else debe_saldo_cobac end) as nuevovalor from cont_balance_comprobacion ) a where ide_cocac=ide_cuenta";
+			utilitario.getConexion().ejecutarSql(traspasa_valores);
+			
+			String calcula_tabla="update cont_estado_resultado"
+					+" set valor = val"
+					+" from ("
+					+" select sum(valor) as val,con_ide_estado_resultado"
+					+" from cont_estado_resultado"
+					+" group by con_ide_estado_resultado"
+					+" ) a where a.con_ide_estado_resultado = cont_estado_resultado.ide_estado_resultado";
+			int i=0;
+			while (i<=3){
+			utilitario.getConexion().ejecutarSql(calcula_tabla);
+			 i++;
+            }
+		}
 	/**
 	 * limpia toda la pantalla incluyendo el autocompletar
 	 */
@@ -183,7 +275,33 @@ public class pre_balance_general extends Pantalla{
 		// TODO Auto-generated method stub
 		tab_balance_inicial.eliminar();
 	}
+	@Override
+	public void abrirListaReportes() {
+		// TODO Auto-generated method stub
+		rep_reporte.dibujar();
+	}
+	@Override
+	public void aceptarReporte() {
+		// TODO Auto-generated method stub
+		if(rep_reporte.getReporteSelecionado().equals("Balance General")){
+			
+		
+			
+			if (rep_reporte.isVisible()){
+				rep_reporte.cerrar();	
+				map_parametros.put("titulo","ESTADO DE SITUACION FINANCIERA");
+				
+					
+				map_parametros.put("contador_general",  utilitario.getVariable("p_nombre_contador"));				
+				map_parametros.put("coordinador_finaciero",  utilitario.getVariable("p_nombre_coordinador_fin"));
+				map_parametros.put("gerente",  utilitario.getVariable("p_nombre_gerente"));				
+				map_parametros.put("cargo_gerente",  utilitario.getVariable("p_cargo_gerente"));
 
+				sel_rep.setSeleccionFormatoReporte(map_parametros,rep_reporte.getPath());
+				sel_rep.dibujar();
+				}
+		} 
+	}
 	public Tabla getTab_balance_inicial() {
 		return tab_balance_inicial;
 	}
@@ -229,6 +347,18 @@ public class pre_balance_general extends Pantalla{
 	}
 	public void setSel_calendario(SeleccionCalendario sel_calendario) {
 		this.sel_calendario = sel_calendario;
+	}
+	public Reporte getRep_reporte() {
+		return rep_reporte;
+	}
+	public void setRep_reporte(Reporte rep_reporte) {
+		this.rep_reporte = rep_reporte;
+	}
+	public SeleccionFormatoReporte getSel_rep() {
+		return sel_rep;
+	}
+	public void setSel_rep(SeleccionFormatoReporte sel_rep) {
+		this.sel_rep = sel_rep;
 	}
 
 	
